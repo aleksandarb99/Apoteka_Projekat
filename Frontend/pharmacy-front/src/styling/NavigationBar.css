@@ -1,0 +1,22 @@
+nav {
+  background-color: cadetblue;
+  height: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+span {
+  display: inline-block;
+  color: darkslategrey;
+  padding: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  height: 30%;
+}
+
+span:hover {
+  color: darkslateblue;
+  scale: 10%;
+}
