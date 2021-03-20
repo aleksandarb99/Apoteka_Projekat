@@ -7,4 +7,5 @@ import java.util.List;
 
 public class Dermatologist extends PharmacyWorker {
     private List<DermatologistWorkplace> workplaces;
+
 }
