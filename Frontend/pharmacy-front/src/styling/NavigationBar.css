@@ -5,18 +5,16 @@ nav {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 span {
-  display: inline-block;
-  color: darkslategrey;
-  padding: 20px;
-  font-size: 1.2rem;
+  color: #dddddd;
+  font-size: 1rem;
   font-weight: bold;
-  height: 30%;
 }
 
 span:hover {
-  color: darkslateblue;
-  scale: 10%;
+  color: #cccccc;
 }
