@@ -16,6 +16,16 @@ function HomePage() {
     fetchMedicines();
   }, []);
 
+  useEffect(() => {
+    async function fetchMedicines() {
+      const request = await axios.get("http://localhost:8080/api/medicine/");
+      setMedicines(request.data);
+
+      return request;
+    }
+    fetchMedicines();
+  }, []);
+
   return (
     <main>
       <div className="row">
