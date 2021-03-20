@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/pharmacy")
 public class PharmacyController {
@@ -25,6 +27,11 @@ public class PharmacyController {
         }
 
         return new ResponseEntity<Pharmacy>(pharmacy, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Pharmacy>> getAllPharmacies(){
+        return new ResponseEntity<>(pharmacyService.getAllPharmacies(), HttpStatus.OK);
     }
 
 }
