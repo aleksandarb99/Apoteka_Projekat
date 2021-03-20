@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.users.user;
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.enums.UserType;
 
+
 public class User {
    private Long id;
    private String password;
