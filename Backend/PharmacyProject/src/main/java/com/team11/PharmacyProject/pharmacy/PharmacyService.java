@@ -29,4 +29,13 @@ public class PharmacyService {
     public Pharmacy getPharmacyById(Long id) {
         return pharmacyRepository.getPharmacyById(id);
     }
+
+    public boolean insertPharmacy(Pharmacy pharmacy) {
+        if (pharmacy != null) {
+            pharmacyRepository.save(pharmacy);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
