@@ -3,6 +3,12 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import Map from "ol/Map";
+import OSM from "ol/source/OSM";
+import TileLayer from "ol/layer/Tile";
+import View from "ol/View";
+import { fromLonLat } from "ol/proj";
+
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -35,13 +41,38 @@ function PharmacyProfile() {
     }
   };
 
+  useEffect(() => {
+    return calculateMaxPag();
+  }, [details]);
+
   let calculateMaxPag = () => {
-    let maxNumber = Math.floor(details?.appointments.length / 4) - 1;
-    if (details?.appointments.length / 4 - 1 > maxNumber) {
+    let maxNumber = Math.floor(details?.appointments?.length / 4) - 1;
+    if (details?.appointments?.length / 4 - 1 > maxNumber) {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
   };
+
+  useEffect(() => {
+    return new Map({
+      target: "mapCol",
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+        }),
+      ],
+
+      view: new View({
+        center: fromLonLat([
+          details?.location?.longitude,
+          details?.location?.latitude,
+        ]),
+        zoom: 10,
+        minZoom: 5,
+        maxZoom: 12,
+      }),
+    });
+  }, []);
 
   useEffect(() => {
     let first = pagNumber * 4;
@@ -58,7 +89,6 @@ function PharmacyProfile() {
         `http://localhost:8080/api/pharmacy/${id}`
       );
       setPharmacyDetails(request.data);
-      calculateMaxPag();
       return request;
     }
     fetchPharmacy();
@@ -93,6 +123,7 @@ function PharmacyProfile() {
               ))}
             </ListGroup>
           </Col>
+          <Col id="mapCol"></Col>
         </Row>
       </Container>
       <div className="row2">
