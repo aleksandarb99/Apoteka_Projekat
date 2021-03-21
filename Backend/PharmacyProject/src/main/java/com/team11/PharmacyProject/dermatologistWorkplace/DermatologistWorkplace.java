@@ -13,4 +13,12 @@ public class DermatologistWorkplace extends Workplace {
     public DermatologistWorkplace(Long id, List<WorkDay> workDays) {
         super(id, workDays);
     }
+
+    public Dermatologist getDermatologist() {
+        return dermatologist;
+    }
+
+    public void setDermatologist(Dermatologist dermatologist) {
+        this.dermatologist = dermatologist;
+    }
 }

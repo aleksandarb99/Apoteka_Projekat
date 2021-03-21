@@ -1,5 +1,5 @@
 import React from "react";
-import "./styling/medicineComponent.css";
+import "../styling/medicineComponent.css";
 import GradeIcon from "@material-ui/icons/Grade";
 
 function MedicineComponent({ name, code, content, avgGrade }) {
