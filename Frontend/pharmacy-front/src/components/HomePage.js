@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MedicineComponent from "./MedicineComponent";
-import "./styling/unregistered.css";
+import "../styling/unregistered.css";
 import axios from "axios";
 
 function HomePage() {
