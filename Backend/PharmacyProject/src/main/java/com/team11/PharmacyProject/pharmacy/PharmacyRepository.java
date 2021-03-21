@@ -97,4 +97,14 @@ public class PharmacyRepository {
     public void delete(long id) {
         pharmacyList.removeIf(pharmacy -> pharmacy.getId() == id);
     }
+
+
+    public void update(long id, Pharmacy pharmacy) {
+        Pharmacy oldPharmacy = pharmacyList.stream().filter(ph -> ph.getId() == id).findFirst().orElse(null);
+        if (oldPharmacy != null) {
+            int oldPharmacyIndex = pharmacyList.indexOf(oldPharmacy);
+            pharmacy.setId(oldPharmacy.getId());
+            pharmacyList.set(oldPharmacyIndex, pharmacy);
+        }
+    }
 }

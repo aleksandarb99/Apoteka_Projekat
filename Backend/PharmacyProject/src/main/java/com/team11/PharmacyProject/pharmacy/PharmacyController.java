@@ -49,6 +49,16 @@ public class PharmacyController {
         }
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<String> updatePharmacy(@PathVariable("id") long id, @RequestBody PharmacyDTO pharmacyDTO) {
+        Pharmacy pharmacy = convertToEntity(pharmacyDTO);
+        if (pharmacyService.update(id, pharmacy)) {
+            return new ResponseEntity<>("Pharmacy updated successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     private PharmacyDTO convertToDto(Pharmacy pharmacy) {
         return modelMapper.map(pharmacy, PharmacyDTO.class);
     }

@@ -47,4 +47,13 @@ public class PharmacyService {
             return false;
         }
     }
+
+    public boolean update(long id, Pharmacy pharmacy) {
+        if (pharmacyRepository.getPharmacyById(id) != null) {
+            pharmacyRepository.update(id, pharmacy);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
