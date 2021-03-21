@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 public class PharmacyRepository {
 
     private List<Pharmacy> pharmacyList;
+    // TODO remove after db is implemented
+    private static long counter = 2;
 
     public PharmacyRepository() {
         this.pharmacyList = new ArrayList<>();
@@ -87,6 +89,12 @@ public class PharmacyRepository {
     }
 
     public void save(Pharmacy pharmacy) {
+        pharmacy.setId(counter);
+        counter += 1;
         pharmacyList.add(pharmacy);
+    }
+
+    public void delete(long id) {
+        pharmacyList.removeIf(pharmacy -> pharmacy.getId() == id);
     }
 }

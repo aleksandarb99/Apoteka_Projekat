@@ -38,4 +38,13 @@ public class PharmacyService {
             return false;
         }
     }
+
+    public boolean delete(long id) {
+        if (pharmacyRepository.getPharmacyById(id) != null) {
+            pharmacyRepository.delete(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
