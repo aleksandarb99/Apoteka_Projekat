@@ -1,0 +1,23 @@
+footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 20vh;
+  background-color: #141518;
+  color: #cccccc;
+}
+
+p {
+  text-align: center;
+}
+
+p:first-child {
+  font-size: 1.3rem;
+}
+
+p:nth-child(2) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
