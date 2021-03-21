@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.dto.PharmacyDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.enums.Weekday;
@@ -55,5 +56,9 @@ public class PharmacyService {
         } else {
             return false;
         }
+    }
+
+    public List<Pharmacy> getAll() {
+        return pharmacyRepository.getAll();
     }
 }

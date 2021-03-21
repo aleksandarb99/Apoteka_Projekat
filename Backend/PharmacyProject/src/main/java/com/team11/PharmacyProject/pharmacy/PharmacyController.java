@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/pharmacy")
@@ -50,13 +52,19 @@ public class PharmacyController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<String> updatePharmacy(@PathVariable("id") long id, @RequestBody PharmacyDTO pharmacyDTO) {
+    public ResponseEntity<String> updatePharmacy(@PathVariable("id") long id, @Valid @RequestBody PharmacyDTO pharmacyDTO) {
         Pharmacy pharmacy = convertToEntity(pharmacyDTO);
         if (pharmacyService.update(id, pharmacy)) {
             return new ResponseEntity<>("Pharmacy updated successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PharmacyDTO>> getAllPharmacies() {
+        List<PharmacyDTO> pharmacyDTOs = pharmacyService.getAll().stream().map(this::convertToDto).collect(Collectors.toList());
+        return new ResponseEntity<>(pharmacyDTOs, HttpStatus.OK);
     }
 
     private PharmacyDTO convertToDto(Pharmacy pharmacy) {

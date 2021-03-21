@@ -107,4 +107,8 @@ public class PharmacyRepository {
             pharmacyList.set(oldPharmacyIndex, pharmacy);
         }
     }
+
+    public List<Pharmacy> getAll() {
+        return pharmacyList;
+    }
 }
