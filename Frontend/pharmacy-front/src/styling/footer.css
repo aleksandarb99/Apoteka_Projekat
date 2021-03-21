@@ -8,15 +8,15 @@ footer {
   color: #cccccc;
 }
 
-p {
+footer p {
   text-align: center;
 }
 
-p:first-child {
+footer p:first-child {
   font-size: 1.3rem;
 }
 
-p:nth-child(2) {
+footer p:nth-child(2) {
   display: flex;
   justify-content: space-between;
   align-items: center;

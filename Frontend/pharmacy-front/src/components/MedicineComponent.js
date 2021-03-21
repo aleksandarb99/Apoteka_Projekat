@@ -4,8 +4,8 @@ import GradeIcon from "@material-ui/icons/Grade";
 
 function MedicineComponent({ name, code, content, avgGrade }) {
   return (
-    <div className="card">
-      <div className="card-title">
+    <div className="card2">
+      <div className="card2-title">
         <p>{name}</p>
         <p>#{code}</p>
       </div>
