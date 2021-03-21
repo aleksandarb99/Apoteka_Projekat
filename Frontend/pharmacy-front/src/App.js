@@ -1,8 +1,9 @@
 import React from 'react';
+import DermHomePage from './dermatologist/home_page_dermatologist'
 
 function App() {
   return (
-    <p>Hola hola</p>
+    <DermHomePage></DermHomePage>
   );
 }
 
