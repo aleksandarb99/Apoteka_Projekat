@@ -62,7 +62,7 @@ function AddPharmacyModal(props) {
         <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Dodavanje apoteke
+                    Add new pharmacy
                 </Modal.Title>
             </Modal.Header>
                 <Modal.Body>
