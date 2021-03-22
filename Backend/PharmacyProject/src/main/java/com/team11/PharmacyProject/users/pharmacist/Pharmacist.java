@@ -12,7 +12,8 @@ import java.util.List;
 public class Pharmacist extends PharmacyWorker {
     private PharmacistWorkplace workplace;
 
-    public Pharmacist(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, double avgGrade, WorkCalendar calendar, List<Appointment> list, PharmacistWorkplace workplace) {
+    public Pharmacist(Long id, String password, String firstName, String lastName, String email, String telephone,
+                      UserType userType, Address address, double avgGrade, WorkCalendar calendar, List<Appointment> list, PharmacistWorkplace workplace) {
         super(id, password, firstName, lastName, email, telephone, userType, address, avgGrade, calendar, list);
         this.workplace = workplace;
     }

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import  {Row, Col, Navbar, Nav, NavDropdown} from "react-bootstrap";
-import AppointmentDerm from "../appointment_component";
+import AppointmentPharm from "../appointment_component_pharm";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 
 function PharmHomePage() {
   const [appointments, setAppointments] = useState([]); 
 
-  // useEffect(() => {
-  //   async function fetchAppointments() {
-  //     const request = await axios.get("http://localhost:8080/api/dermatologist/upcomming/1");
-  //     setAppointments(request.data.sort((a, b) => a.date - b.date));
+  useEffect(() => {
+    async function fetchAppointments() {
+      const request = await axios.get("http://localhost:8080/api/pharmacist/upcomming/1");
+      setAppointments(request.data.sort((a, b) => a.date - b.date));
 
-  //     return request;
-  //   }
-  //   fetchAppointments();
-  // }, []);
+      return request;
+    }
+    fetchAppointments();
+  }, []);
 
   return (
     <div>
@@ -42,34 +42,31 @@ function PharmHomePage() {
 
         <Row className="justify-content-center m-3 align-items-center"><h2>Upcomming appointments</h2></Row>
         
-        {appointments.length == 0 &&
+        {appointments.length === 0 &&
           <Row className="justify-content-center m-3 align-items-center"><h3>There are no upcomming appointments!</h3></Row>
         }
 
         {appointments.map((value, index) => {
-          if (value){
-            // if (isToday(value.date)){
-            //   <p>Today</p>
-            // }else{
-            //   <p>not today</p>
-            // }
+          // if (isToday(value.date)){
+          //   <p>Today</p>
+          // }else{
+          //   <p>not today</p>
+          // }
 
-            // <Row className="justify-content-center m-3 align-items-center" key={index}>
-            return (<Row className="justify-content-center m-5 align-items-center" key={index}>
-              <Col md={8}>
-                <h3>{value.startTime}</h3>
-                {/* {isToday(value.date) ?  */}
-                    {/*  : <h3>{value.date.getDate() + "/" + (value.date.getMonth()+1) + 
-                    "/" + value.date.getFullYear()}</h3> } */}
-              <AppointmentDerm 
-              // time={value.date.getHours() + ":" + value.date.getMinutes()}
-              time="12:00"
-              pharmacy={value.pharmacy.name}
-              price={value.price}
-              patient={value.patient ? value.patient.firstName + " " + value.patient.lastName : 'EMPTY'}
-              id={index}></AppointmentDerm></Col>
-              </Row>)
-          }
+          // <Row className="justify-content-center m-3 align-items-center" key={index}>
+          return (<Row className="justify-content-center m-5 align-items-center" key={index}>
+            <Col md={8}>
+              <h3>{value.startTime}</h3>
+              {/* {isToday(value.date) ?  */}
+                  {/*  : <h3>{value.date.getDate() + "/" + (value.date.getMonth()+1) + 
+                  "/" + value.date.getFullYear()}</h3> } */}
+            <AppointmentPharm 
+            // time={value.date.getHours() + ":" + value.date.getMinutes()}
+            time="12:00"
+            price={value.price}
+            patient={value.patient ? value.patient.firstName + " " + value.patient.lastName : 'EMPTY'}
+            id={index}></AppointmentPharm></Col>
+            </Row>);
          })}
     </div>
   );
