@@ -28,10 +28,10 @@ function HomePage() {
 
   return (
     <main>
-      <div className="row">
+      <div className="row2">
         <p>Pharmacies</p>
       </div>
-      <div className="row">
+      <div className="row2">
         <p>Medicines</p>
         <div className="card_row">
           {medicines.map((medicine) => (

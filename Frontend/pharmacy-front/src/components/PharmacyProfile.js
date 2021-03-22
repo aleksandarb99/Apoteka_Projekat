@@ -3,12 +3,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-import Map from "ol/Map";
-import OSM from "ol/source/OSM";
-import TileLayer from "ol/layer/Tile";
-import View from "ol/View";
-import { fromLonLat } from "ol/proj";
-
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -17,15 +11,16 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Pagination from "react-bootstrap/Pagination";
 
-import MedicineComponent from "./MedicineComponent";
-
 import "../styling/pharmacy.css";
 
 function PharmacyProfile() {
   const [details, setPharmacyDetails] = useState({});
   const [pagNumber, setPugNummber] = useState(0);
+  const [pagNumberM, setPugNummberM] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
+  const [maxPagM, setMaxPagM] = useState(0);
   const [showedAppointment, setShowedAppointment] = useState([]);
+  const [showedMedicine, setShowedMedicine] = useState([]);
 
   let { id } = useParams();
 
@@ -35,14 +30,32 @@ function PharmacyProfile() {
     }
   };
 
+  let handleSlideLeftM = () => {
+    if (pagNumberM !== 0) {
+      setPugNummberM(pagNumberM - 1);
+    }
+  };
+
   let handleSlideRight = () => {
     if (pagNumber !== maxPag) {
       setPugNummber(pagNumber + 1);
     }
   };
 
+  let handleSlideRightM = () => {
+    if (pagNumberM !== maxPagM) {
+      setPugNummberM(pagNumberM + 1);
+    }
+  };
+
   useEffect(() => {
+    calculateMaxPag();
     return calculateMaxPag();
+  }, [details]);
+
+  useEffect(() => {
+    calculateMaxPagM();
+    return calculateMaxPagM();
   }, [details]);
 
   let calculateMaxPag = () => {
@@ -53,26 +66,14 @@ function PharmacyProfile() {
     setMaxPag(maxNumber);
   };
 
-  useEffect(() => {
-    return new Map({
-      target: "mapCol",
-      layers: [
-        new TileLayer({
-          source: new OSM(),
-        }),
-      ],
-
-      view: new View({
-        center: fromLonLat([
-          details?.location?.longitude,
-          details?.location?.latitude,
-        ]),
-        zoom: 10,
-        minZoom: 5,
-        maxZoom: 12,
-      }),
-    });
-  }, []);
+  let calculateMaxPagM = () => {
+    let maxNumber =
+      Math.floor(details?.priceList?.medicineItems?.length / 4) - 1;
+    if (details?.priceList?.medicineItems?.length / 4 - 1 > maxNumber) {
+      maxNumber = maxNumber + 1;
+    }
+    setMaxPagM(maxNumber);
+  };
 
   useEffect(() => {
     let first = pagNumber * 4;
@@ -82,6 +83,15 @@ function PharmacyProfile() {
         : first + 4;
     setShowedAppointment(details?.appointments?.slice(first, max));
   }, [details, pagNumber]);
+
+  useEffect(() => {
+    let first = pagNumberM * 4;
+    let max =
+      details?.priceList?.medicineItems?.length < first + 4
+        ? details?.priceList?.medicineItems?.length
+        : first + 4;
+    setShowedMedicine(details?.priceList?.medicineItems?.slice(first, max));
+  }, [details, pagNumberM]);
 
   useEffect(() => {
     async function fetchPharmacy() {
@@ -122,30 +132,58 @@ function PharmacyProfile() {
                 </ListGroup.Item>
               ))}
             </ListGroup>
+            <Button variant="info">Check availability</Button>
+            <Button variant="primary">Subscribe</Button>
           </Col>
-          <Col id="mapCol"></Col>
         </Row>
       </Container>
-      <div className="row2">
-        <p>Medicines</p>
-        <div className="card_row">
-          {details?.priceList?.medicineItems.map((medicine) => (
-            <MedicineComponent
-              key={medicine.id}
-              name={medicine.medicine.name}
-              code={medicine.medicine.code}
-              content={medicine.medicine.content}
-              avgGrade={medicine.medicine.avgGrade}
-            />
-          ))}
-        </div>
-      </div>
-      <div className="row2">
-        <p>Free appointments</p>
+
+      <h3>Medicines</h3>
+      <Container fluid>
+        <Row>
+          {showedMedicine &&
+            showedMedicine.map((m) => (
+              <Col lg={3} md={6} sm={12}>
+                <Card>
+                  <Card.Header as="h5">Medicine</Card.Header>
+                  <Card.Body>
+                    <Card.Title>{m?.medicine.name}</Card.Title>
+                    <Card.Text>Content: {m?.medicine.content}</Card.Text>
+                    <Card.Text>
+                      Avarage rating: {m?.medicine.avgGrade}
+                    </Card.Text>
+                    <Card.Text>Price: {m?.medicine.avgGrade}</Card.Text>
+                    <Button variant="primary">Reserve</Button>
+                    <Button variant="info">Show more info</Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+        </Row>
+
+        <Row>
+          <Col className="center">
+            <Pagination size="lg">
+              <Pagination.Prev
+                disabled={pagNumberM === 0}
+                onClick={handleSlideLeftM}
+              />
+              <Pagination.Item disabled>{pagNumberM}</Pagination.Item>
+              <Pagination.Next
+                disabled={pagNumberM === maxPagM}
+                onClick={handleSlideRightM}
+              />
+            </Pagination>
+          </Col>
+        </Row>
+      </Container>
+
+      <h3>Free appointments</h3>
+      <Container fluid>
         <Row>
           {showedAppointment &&
             showedAppointment.map((a) => (
-              <Col lg={3} md={4} sm={6}>
+              <Col lg={3} md={6} sm={12}>
                 <Card>
                   <Card.Header as="h5">Appointment</Card.Header>
                   <Card.Body>
@@ -170,8 +208,9 @@ function PharmacyProfile() {
               </Col>
             ))}
         </Row>
+
         <Row>
-          <Col>
+          <Col className="center">
             <Pagination size="lg">
               <Pagination.Prev
                 disabled={pagNumber === 0}
@@ -185,7 +224,7 @@ function PharmacyProfile() {
             </Pagination>
           </Col>
         </Row>
-      </div>
+      </Container>
     </main>
   );
 }
