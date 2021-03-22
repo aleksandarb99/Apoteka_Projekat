@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import MedicineComponent from "./MedicineComponent";
+import PharmacyComponent from "./PharmacyComponent";
 import "../styling/unregistered.css";
 import axios from "axios";
 
 function HomePage() {
   const [medicines, setMedicines] = useState([]);
+  const [pharmacies, setPharmacies] = useState([]);
 
   useEffect(() => {
     async function fetchMedicines() {
@@ -17,23 +19,33 @@ function HomePage() {
   }, []);
 
   useEffect(() => {
-    async function fetchMedicines() {
-      const request = await axios.get("http://localhost:8080/api/medicine/");
-      setMedicines(request.data);
+    async function fetchPharmacies() {
+      const request = await axios.get("http://localhost:8080/api/pharmacy/");
+      setPharmacies(request.data);
 
       return request;
     }
-    fetchMedicines();
+    fetchPharmacies();
   }, []);
 
   return (
     <main>
-      <div className="row">
+      <div className="row2">
         <p>Pharmacies</p>
+        <div className="card_row2">
+          {pharmacies.map((pharmacy) => (
+            <PharmacyComponent
+              key={pharmacy.id}
+              name={pharmacy.name}
+              description={pharmacy.description}
+              avgGrade={pharmacy.avgGrade}
+            />
+          ))}
+        </div>
       </div>
-      <div className="row">
+      <div className="row2">
         <p>Medicines</p>
-        <div className="card_row">
+        <div className="card_row2">
           {medicines.map((medicine) => (
             <MedicineComponent
               key={medicine.id}

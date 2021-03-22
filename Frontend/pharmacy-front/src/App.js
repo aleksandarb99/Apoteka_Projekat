@@ -2,8 +2,8 @@ import React from "react";
 import LogIn from "./components/LogIn";
 import Registration from "./components/Registration";
 import HomePage from "./components/HomePage";
-import NavigationBar from "./components/NavigationBar";
 import Footer from "./components/Footer";
+import { Navbar, Nav } from "react-bootstrap";
 import PharmacyProfile from "./components/PharmacyProfile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -12,7 +12,16 @@ function App() {
   return (
     <Router>
       <div>
-        <NavigationBar />
+        <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="/">Home</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="m-auto">
+              <Nav.Link href="/registration">Register</Nav.Link>
+              <Nav.Link href="/login">Log In</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
 
         <Switch>
           <Route path="/" exact component={HomePage} />

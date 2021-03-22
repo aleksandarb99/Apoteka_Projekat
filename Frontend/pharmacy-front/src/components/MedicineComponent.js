@@ -1,18 +1,18 @@
 import React from "react";
 import "../styling/medicineComponent.css";
-import GradeIcon from "@material-ui/icons/Grade";
+import { StarFill } from "react-bootstrap-icons";
 
 function MedicineComponent({ name, code, content, avgGrade }) {
   return (
-    <div className="card">
-      <div className="card-title">
+    <div className="card2">
+      <div className="card2-title">
         <p>{name}</p>
         <p>#{code}</p>
       </div>
       <p>Content: {content}</p>
       <div>
         {[...Array(avgGrade)].map(() => (
-          <GradeIcon />
+          <StarFill />
         ))}
       </div>
     </div>

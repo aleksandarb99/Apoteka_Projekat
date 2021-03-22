@@ -1,4 +1,4 @@
-footer {
+.my-footer {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -8,15 +8,15 @@ footer {
   color: #cccccc;
 }
 
-p {
+.my-footer p {
   text-align: center;
 }
 
-p:first-child {
+.my-footer p:first-child {
   font-size: 1.3rem;
 }
 
-p:nth-child(2) {
+.my-footer p:nth-child(2) {
   display: flex;
   justify-content: space-between;
   align-items: center;

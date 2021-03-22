@@ -6,12 +6,10 @@ public class Location extends Address {
    private double longitude;
    private double latitude;
 
-   public Location(double longitude, double latitude) {
+   public Location(Long id, String street, String city, String country, double longitude, double latitude) {
+      super(id, street, city, country);
       this.longitude = longitude;
       this.latitude = latitude;
-   }
-
-   public Location() {
    }
 
    public double getLongitude() {
