@@ -1,26 +1,24 @@
 import React from "react";
 import "../styling/footer.css";
-import InstagramIcon from "@material-ui/icons/Instagram";
-import FacebookIcon from "@material-ui/icons/Facebook";
-import TwitterIcon from "@material-ui/icons/Twitter";
-import { IconButton } from "@material-ui/core";
+import { Facebook, Instagram, Twitter } from "react-bootstrap-icons";
+import { Button } from "react-bootstrap";
 
 function Footer() {
   return (
-    <footer>
+    <footer className="my-footer">
       <p>Copyright &#169; 2021</p>
       <p>
         Produced by: Dejan Todorovic, Aleksandar Buljevic, Darko Tica and Jovan
         Simic
-        <IconButton>
-          <InstagramIcon />
-        </IconButton>
-        <IconButton>
-          <FacebookIcon />
-        </IconButton>
-        <IconButton>
-          <TwitterIcon />
-        </IconButton>
+        <Button variant="dark">
+          <Facebook />
+        </Button>
+        <Button variant="dark">
+          <Instagram />
+        </Button>
+        <Button variant="dark">
+          <Twitter />
+        </Button>
       </p>
     </footer>
   );
