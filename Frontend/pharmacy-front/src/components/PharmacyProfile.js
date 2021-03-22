@@ -11,6 +11,12 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Pagination from "react-bootstrap/Pagination";
 
+import Map from "ol/Map";
+import OSM from "ol/source/OSM";
+import TileLayer from "ol/layer/Tile";
+import View from "ol/View";
+import { fromLonLat } from "ol/proj";
+
 import "../styling/pharmacy.css";
 
 function PharmacyProfile() {
@@ -49,31 +55,39 @@ function PharmacyProfile() {
   };
 
   useEffect(() => {
-    calculateMaxPag();
-    return calculateMaxPag();
-  }, [details]);
+    return new Map({
+      target: "mapCol",
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+        }),
+      ],
+
+      view: new View({
+        center: fromLonLat([20.457273, 44.787197]),
+        zoom: 10,
+        minZoom: 5,
+        maxZoom: 12,
+      }),
+    });
+  }, []);
 
   useEffect(() => {
-    calculateMaxPagM();
-    return calculateMaxPagM();
-  }, [details]);
-
-  let calculateMaxPag = () => {
     let maxNumber = Math.floor(details?.appointments?.length / 4) - 1;
     if (details?.appointments?.length / 4 - 1 > maxNumber) {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
-  };
+  }, [details]);
 
-  let calculateMaxPagM = () => {
+  useEffect(() => {
     let maxNumber =
       Math.floor(details?.priceList?.medicineItems?.length / 4) - 1;
     if (details?.priceList?.medicineItems?.length / 4 - 1 > maxNumber) {
       maxNumber = maxNumber + 1;
     }
     setMaxPagM(maxNumber);
-  };
+  }, [details]);
 
   useEffect(() => {
     let first = pagNumber * 4;
@@ -135,6 +149,7 @@ function PharmacyProfile() {
             <Button variant="info">Check availability</Button>
             <Button variant="primary">Subscribe</Button>
           </Col>
+          <Col id="mapCol"></Col>
         </Row>
       </Container>
 
@@ -152,7 +167,7 @@ function PharmacyProfile() {
                     <Card.Text>
                       Avarage rating: {m?.medicine.avgGrade}
                     </Card.Text>
-                    <Card.Text>Price: {m?.medicine.avgGrade}</Card.Text>
+                    <Card.Text>Price: {m?.medicinePrices[0].price}</Card.Text>
                     <Button variant="primary">Reserve</Button>
                     <Button variant="info">Show more info</Button>
                   </Card.Body>
