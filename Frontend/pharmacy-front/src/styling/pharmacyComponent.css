@@ -1,4 +1,4 @@
-.card {
+.card2 {
   min-width: 20%;
   min-height: 90%;
   height: 100%;
@@ -17,7 +17,24 @@
   color: rgb(17, 30, 37);
 }
 
-.card:hover {
+.card2:hover {
   cursor: pointer;
   transform: scale(1.05);
+}
+
+.card2-title {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card2-title > p:first-child {
+  font-size: 1.5rem;
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+.card2-title > p:nth-child(2) {
+  margin-right: 10px;
 }

@@ -1,10 +1,10 @@
 import React from "react";
-import "./styling/pharmacyComponent.css";
+import "../styling/pharmacyComponent.css";
 import GradeIcon from "@material-ui/icons/Grade";
 
-function PharmacyComponent({ name, location, description, avgGrade }) {
+function PharmacyComponent({ name, description, avgGrade }) {
   return (
-    <div className="card">
+    <div className="card2">
       <p>{name}</p>
       <p>Description: {description}</p>
       <div>

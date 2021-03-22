@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MedicineComponent from "./MedicineComponent";
 import PharmacyComponent from "./PharmacyComponent";
-import "./styling/unregistered.css";
+import "../styling/unregistered.css";
 import axios from "axios";
 
 function HomePage() {
@@ -37,7 +37,6 @@ function HomePage() {
             <PharmacyComponent
               key={pharmacy.id}
               name={pharmacy.name}
-              location={pharmacy.location}
               description={pharmacy.description}
               avgGrade={pharmacy.avgGrade}
             />
