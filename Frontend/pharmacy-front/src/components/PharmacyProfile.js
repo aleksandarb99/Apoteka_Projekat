@@ -3,6 +3,12 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import Map from "ol/Map";
+import OSM from "ol/source/OSM";
+import TileLayer from "ol/layer/Tile";
+import View from "ol/View";
+import { fromLonLat } from "ol/proj";
+
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -10,12 +16,6 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Pagination from "react-bootstrap/Pagination";
-
-import Map from "ol/Map";
-import OSM from "ol/source/OSM";
-import TileLayer from "ol/layer/Tile";
-import View from "ol/View";
-import { fromLonLat } from "ol/proj";
 
 import "../styling/pharmacy.css";
 
