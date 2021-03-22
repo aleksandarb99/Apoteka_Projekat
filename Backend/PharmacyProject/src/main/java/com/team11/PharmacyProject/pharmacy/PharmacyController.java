@@ -64,7 +64,7 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PharmacyDTO>> getAllPharmacies() {
+    public ResponseEntity<List<PharmacyDTO>> getAllPharmaciesDTO() {
         List<PharmacyDTO> pharmacyDTOs = pharmacyService.getAll().stream().map(this::convertToDto).collect(Collectors.toList());
         return new ResponseEntity<>(pharmacyDTOs, HttpStatus.OK);
     }
@@ -76,6 +76,7 @@ public class PharmacyController {
     private Pharmacy convertToEntity(PharmacyDTO pharmacyDto) {
         return modelMapper.map(pharmacyDto, Pharmacy.class);
     }
+
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Pharmacy>> getAllPharmacies(){
         return new ResponseEntity<>(pharmacyService.getAllPharmacies(), HttpStatus.OK);

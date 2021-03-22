@@ -60,6 +60,7 @@ public class PharmacyService {
 
     public List<Pharmacy> getAll() {
         return pharmacyRepository.getAll();
+    }
       
     public List<Pharmacy> getAllPharmacies() {
         Pharmacy p1 = new Pharmacy(1L, "Apoteka Jankovic", "Najbolja apoteka u gradu i samo za vas!", 5.0,
