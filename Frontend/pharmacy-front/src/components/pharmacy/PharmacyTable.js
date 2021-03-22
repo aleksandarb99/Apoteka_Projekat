@@ -1,11 +1,14 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Row, Table } from 'react-bootstrap'
+import { act } from 'react-dom/test-utils';
+import DeleteModal from '../modals/DeleteModal';
 import AddPharmacyModal from './AddPharmacyModal';
 
 function PharmacyTable(props) {
 
     const [reload, setReload] = useState(false);
+    const [selected, setSelected] = useState({});
 
     const [pharmacies, setPharmacies] = useState([]);
     const [showAddModal, setShowAddModal] = useState(false);
@@ -22,6 +25,20 @@ function PharmacyTable(props) {
         setReload(!reload)
     }
 
+    const deletePharmacy = () => {        
+        axios
+            .delete("http://localhost:8080/api/pharmacy/" + selected.id)
+            .then(() => {
+                reloadTable()
+                alert("Pharmacy deleted successfully")
+                setShowDeleteModal(false)
+            })
+    }
+
+    const updateSelected = (selectedPharmacy) => {
+        setSelected(selectedPharmacy)
+    }
+
     return (
         <Container style={{ marginTop: '100px' }}>
             <Button variant="secondary" style={{ float: 'right', margin: '20px' }} onClick={() => setShowAddModal(true)}>Add new pharmacy</Button>
@@ -35,13 +52,13 @@ function PharmacyTable(props) {
                 </thead>
                 <tbody>
                     {pharmacies.map((pharmacy) => (
-                        <tr>
+                        <tr onClick={() => updateSelected(pharmacy)}>
                         <td>{pharmacy.name}</td>
                         <td>{pharmacy.description}</td>
                         <td>
                             <Button>Edit</Button> 
                             <Button variant="info">Details</Button> 
-                            <Button variant="danger">Delete</Button>
+                            <Button variant="danger" onClick={() => setShowDeleteModal(true)}>Delete</Button>
                         </td>
                         </tr>
                     ))}
@@ -49,6 +66,7 @@ function PharmacyTable(props) {
             </Table>
             
             <AddPharmacyModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess = {reloadTable}/>
+            <DeleteModal title={"Remove " + selected.name} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete = {deletePharmacy}/>
       </Container>
     )
 }
