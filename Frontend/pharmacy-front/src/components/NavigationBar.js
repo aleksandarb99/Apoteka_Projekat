@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import HomeIcon from "@material-ui/icons/Home";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import "./styling/NavigationBar.css";
+import "../styling/NavigationBar.css";
 
 function NavigationBar() {
   return (

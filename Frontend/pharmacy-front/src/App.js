@@ -1,10 +1,12 @@
 import React from "react";
-import LogIn from "./LogIn";
-import Registration from "./Registration";
-import HomePage from "./HomePage";
-import NavigationBar from "./NavigationBar";
-import Footer from "./Footer";
+import LogIn from "./components/LogIn";
+import Registration from "./components/Registration";
+import HomePage from "./components/HomePage";
+import NavigationBar from "./components/NavigationBar";
+import Footer from "./components/Footer";
+import PharmacyProfile from "./components/PharmacyProfile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
           <Route path="/" exact component={HomePage} />
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LogIn} />
+          <Route path="/pharmacy/:id" component={PharmacyProfile} />
         </Switch>
 
         <Footer />
