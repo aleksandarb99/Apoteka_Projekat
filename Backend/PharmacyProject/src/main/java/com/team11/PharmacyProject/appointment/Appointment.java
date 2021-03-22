@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.appointment;
 
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 
@@ -18,10 +19,27 @@ public class Appointment {
    private AppointmentType appointmentType;
    private Patient patient;
    private PharmacyWorker worker;
+   private Pharmacy pharmacy;
 
    public Appointment(Long id, LocalDate startTime, LocalDate endTime, int duration, AppointmentState appointmentState,
                       String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker) {
       this.id = id;
+      this.pharmacy = null;
+      this.startTime = startTime;
+      this.endTime = endTime;
+      this.duration = duration;
+      this.appointmentState = appointmentState;
+      this.info = info;
+      this.price = price;
+      this.appointmentType = appointmentType;
+      this.patient = patient;
+      this.worker = worker;
+   }
+
+   public Appointment(Long id, LocalDate startTime, LocalDate endTime, int duration, AppointmentState appointmentState,
+                      String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker, Pharmacy pharmacy) {
+      this.id = id;
+      this.pharmacy = pharmacy;
       this.startTime = startTime;
       this.endTime = endTime;
       this.duration = duration;
@@ -34,6 +52,14 @@ public class Appointment {
    }
 
    public Appointment() {
+   }
+
+   public Pharmacy getPharmacy() {
+      return pharmacy;
+   }
+
+   public void setPharmacy(Pharmacy pharmacy) {
+      this.pharmacy = pharmacy;
    }
 
    public Long getId() {
