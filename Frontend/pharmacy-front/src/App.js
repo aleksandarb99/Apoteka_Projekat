@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import PharmacyProfile from "./components/PharmacyProfile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LogIn} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
+          <Route path="/admin/pharmacies" component={PharmacyCrud} />
         </Switch>
 
         <Footer />

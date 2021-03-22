@@ -88,7 +88,7 @@ public class PharmacyRepository {
 
         Pharmacy pharmacy = new Pharmacy(1L, "Zelena Apoteka", "Najbolja apoteka u gradu.",
                 4.2, new ArrayList<>(), new PriceList(1L, medicineItemList), appointmentList,
-                new Location(22.22, 11.11), new ArrayList<>());
+                null, new ArrayList<>());
 
 
         pharmacyList.add(pharmacy);
