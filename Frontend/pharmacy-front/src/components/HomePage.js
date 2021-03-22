@@ -32,7 +32,7 @@ function HomePage() {
     <main>
       <div className="row2">
         <p>Pharmacies</p>
-        <div className="card_row">
+        <div className="card_row2">
           {pharmacies.map((pharmacy) => (
             <PharmacyComponent
               key={pharmacy.id}
@@ -45,7 +45,7 @@ function HomePage() {
       </div>
       <div className="row2">
         <p>Medicines</p>
-        <div className="card_row">
+        <div className="card_row2">
           {medicines.map((medicine) => (
             <MedicineComponent
               key={medicine.id}
