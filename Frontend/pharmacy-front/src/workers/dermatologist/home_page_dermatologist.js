@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import  {Container, Row, Col, Button, Navbar, Nav, NavDropdown, Form, FormControl} from "react-bootstrap";
-import AppointmentDerm from "./appointment_component";
+import  {Row, Col, Navbar, Nav, NavDropdown} from "react-bootstrap";
+import AppointmentDerm from "../appointment_component";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 
