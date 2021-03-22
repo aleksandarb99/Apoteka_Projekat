@@ -1,6 +1,6 @@
 import React from "react";
 import "../styling/pharmacyComponent.css";
-import GradeIcon from "@material-ui/icons/Grade";
+import { StarFill } from "react-bootstrap-icons";
 
 function PharmacyComponent({ name, description, avgGrade }) {
   return (
@@ -9,7 +9,7 @@ function PharmacyComponent({ name, description, avgGrade }) {
       <p>Description: {description}</p>
       <div>
         {[...Array(avgGrade)].map(() => (
-          <GradeIcon />
+          <StarFill />
         ))}
       </div>
     </div>
