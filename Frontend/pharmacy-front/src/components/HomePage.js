@@ -30,7 +30,7 @@ function HomePage() {
 
   return (
     <main>
-      <div className="row">
+      <div className="row2">
         <p>Pharmacies</p>
         <div className="card_row">
           {pharmacies.map((pharmacy) => (
@@ -44,7 +44,7 @@ function HomePage() {
           ))}
         </div>
       </div>
-      <div className="row">
+      <div className="row2">
         <p>Medicines</p>
         <div className="card_row">
           {medicines.map((medicine) => (
