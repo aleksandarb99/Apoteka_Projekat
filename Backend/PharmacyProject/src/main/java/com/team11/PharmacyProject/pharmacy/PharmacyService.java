@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.dto.PharmacyDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.enums.Weekday;
@@ -30,6 +31,36 @@ public class PharmacyService {
         return pharmacyRepository.getPharmacyById(id);
     }
 
+    public boolean insertPharmacy(Pharmacy pharmacy) {
+        if (pharmacy != null) {
+            pharmacyRepository.save(pharmacy);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean delete(long id) {
+        if (pharmacyRepository.getPharmacyById(id) != null) {
+            pharmacyRepository.delete(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean update(long id, Pharmacy pharmacy) {
+        if (pharmacyRepository.getPharmacyById(id) != null) {
+            pharmacyRepository.update(id, pharmacy);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public List<Pharmacy> getAll() {
+        return pharmacyRepository.getAll();
+      
     public List<Pharmacy> getAllPharmacies() {
         Pharmacy p1 = new Pharmacy(1L, "Apoteka Jankovic", "Najbolja apoteka u gradu i samo za vas!", 5.0,
                 null, null, null, null, null);
