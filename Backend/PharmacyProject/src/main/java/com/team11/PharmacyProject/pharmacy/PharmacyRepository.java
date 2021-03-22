@@ -70,16 +70,26 @@ public class PharmacyRepository {
         MedicineItem medicineItem3 = new MedicineItem(3L, 200, prices3, medicine3);
 
         medicineItemList.add(medicineItem2);
+        medicineItemList.add(medicineItem2);
+        medicineItemList.add(medicineItem2);
+        medicineItemList.add(medicineItem2);
+        medicineItemList.add(medicineItem2);
 
         ArrayList<Appointment> appointmentList = new ArrayList<>();
         Appointment appointment1 = new Appointment(1L, LocalDate.now(), LocalDate.now(), 15, AppointmentState.EMPTY, "Informacije o sastanku", 2000, AppointmentType.CHECKUP, null, null);
         Appointment appointment2 = new Appointment(2L, LocalDate.now(), LocalDate.now(), 25, AppointmentState.EMPTY, "Informacije o sastanku", 2500, AppointmentType.CHECKUP, null, null);
         appointmentList.add(appointment1);
+        appointmentList.add(appointment1);
+        appointmentList.add(appointment1);
+        appointmentList.add(appointment1);
+        appointmentList.add(appointment2);
+        appointmentList.add(appointment2);
         appointmentList.add(appointment2);
 
         Pharmacy pharmacy = new Pharmacy(1L, "Zelena Apoteka", "Najbolja apoteka u gradu.",
                 4.2, new ArrayList<>(), new PriceList(1L, medicineItemList), appointmentList,
                 new Location(22.22, 11.11), new ArrayList<>());
+
 
         pharmacyList.add(pharmacy);
     }

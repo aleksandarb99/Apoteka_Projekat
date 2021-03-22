@@ -12,6 +12,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/pharmacy")
 public class PharmacyController {
@@ -61,7 +63,7 @@ public class PharmacyController {
         }
     }
 
-    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyDTO>> getAllPharmacies() {
         List<PharmacyDTO> pharmacyDTOs = pharmacyService.getAll().stream().map(this::convertToDto).collect(Collectors.toList());
         return new ResponseEntity<>(pharmacyDTOs, HttpStatus.OK);
@@ -74,4 +76,9 @@ public class PharmacyController {
     private Pharmacy convertToEntity(PharmacyDTO pharmacyDto) {
         return modelMapper.map(pharmacyDto, Pharmacy.class);
     }
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Pharmacy>> getAllPharmacies(){
+        return new ResponseEntity<>(pharmacyService.getAllPharmacies(), HttpStatus.OK);
+    }
+
 }

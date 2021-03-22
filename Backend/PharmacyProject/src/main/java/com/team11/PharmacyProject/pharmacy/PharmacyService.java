@@ -60,5 +60,24 @@ public class PharmacyService {
 
     public List<Pharmacy> getAll() {
         return pharmacyRepository.getAll();
+      
+    public List<Pharmacy> getAllPharmacies() {
+        Pharmacy p1 = new Pharmacy(1L, "Apoteka Jankovic", "Najbolja apoteka u gradu i samo za vas!", 5.0,
+                null, null, null, null, null);
+        Pharmacy p2 = new Pharmacy(2L, "Zelena Apoteka", "Kod nikoga kao kod nas", 4.0,
+                null, null, null, null, null);
+        Pharmacy p3 = new Pharmacy(3L, "Misa i Glisa", "Najjaci smo bre", 5.0,
+                null, null, null, null, null);
+        Pharmacy p4 = new Pharmacy(4L, "Hola Hola", "Alo Alo", 1.0,
+                null, null, null, null, null);
+        Pharmacy p5 = new Pharmacy(5L, "Crvena Apoteka", "Ponestaje mi ideja", 3.0,
+                null, null, null, null, null);
+        Pharmacy p6 = new Pharmacy(6L, "Apoteka Stamenkovic", "Samo po niskim cenama", 2.0,
+                null, null, null,null, null);
+        Pharmacy p7 = new Pharmacy(7L, "Apoteka Maric", "Ne znam vise", 5.0,
+                null, null, null, null, null);
+        Pharmacy p8 = new Pharmacy(8L, "Kristal", "Odustajem", 4.0,
+                null, null, null, null, null);
+        return List.of(p1, p2, p3, p4, p5, p6, p7, p8);
     }
 }
