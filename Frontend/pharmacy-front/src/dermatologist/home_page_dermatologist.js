@@ -2,26 +2,33 @@ import React, { useState, useEffect } from "react";
 import  {Container, Row, Col, Button, Navbar, Nav, NavDropdown, Form, FormControl} from "react-bootstrap";
 import AppointmentDerm from "./appointment_component";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from "axios";
 
-const isToday = (someDate) => {
-  const today = new Date()
-  return someDate.getDate() == today.getDate() &&
-    someDate.getMonth() == today.getMonth() &&
-    someDate.getFullYear() == today.getFullYear()
-}
+// const isToday = (someDate) => {
+//   const today = new Date()
+//   return someDate.getDate() == today.getDate() &&
+//     someDate.getMonth() == today.getMonth() &&
+//     someDate.getFullYear() == today.getFullYear()
+// }
 
 function DermHomePage() {
-  const [appointments, setAppointments] = useState([
-    {"date":new Date('2021-05-11T15:24:00'), "price": "3000", "patient": {"firstName": "djura", "lastName": "djuric"}}, 
-    {"date":new Date('2021-04-12T12:24:00'), "price": "3000", "patient": {"firstName": "djura2", "lastName": "djuric2"}},
-    {"date":new Date('2021-01-09T16:24:00'), "price": "3000", "patient": {"firstName": "djura3", "lastName": "djuric3"}},
-    {"date":new Date('2021-03-11T14:24:00'), "price": "3000", "patient": {"firstName": "djura4", "lastName": "djuric4"}},
-    {"date":new Date('2021-02-22T03:24:00'), "price": "3000", "patient": {"firstName": "djura5", "lastName": "djuric5"}}
-  ].sort((a, b) => a.date - b.date)); // sortiramo ih - proveri tamo negde kada da ih sortiras
+  const [appointments, setAppointments] = useState([]); 
+  // sortiramo ih - proveri tamo negde kada da ih sortiras
+  // TODO fixovati hardkodovano dermatologist id, kao i time
+
+  useEffect(() => {
+    async function fetchAppointments() {
+      const request = await axios.get("http://localhost:8080/api/dermatologist/upcomming/1");
+      setAppointments(request.data.sort((a, b) => a.date - b.date));
+
+      return request;
+    }
+    fetchAppointments();
+  }, []);
 
   return (
     <div>
-      <Container>
+      
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="#home">Dermatologist</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -41,50 +48,37 @@ function DermHomePage() {
         </Navbar.Collapse>
         </Navbar>
 
-
+        <Row className="justify-content-center m-3 align-items-center"><h2>Upcomming appointments</h2></Row>
+        
         {appointments.length == 0 &&
           <h1>There are no upcomming appointments!</h1>
         }
 
         {appointments.map((value, index) => {
           if (value){
-            if (isToday(value.date)){
-              <p>Today</p>
-            }else{
-              <p>not today</p>
-            }
+            // if (isToday(value.date)){
+            //   <p>Today</p>
+            // }else{
+            //   <p>not today</p>
+            // }
 
-            let currDate = value.date;
-            return (<Row className="justify-content-center m-5" key={index}>
+            // <Row className="justify-content-center m-3 align-items-center" key={index}>
+            return (<Row className="justify-content-center m-5 align-items-center" key={index}>
               <Col md={8}>
-                {isToday(value.date) ? 
-                    <h3>Today</h3> : <h3>{value.date.getDate() + "/" + (value.date.getMonth()+1) + 
-                    "/" + value.date.getFullYear()}</h3> }
+                <h3>{value.startTime}</h3>
+                {/* {isToday(value.date) ?  */}
+                    {/*  : <h3>{value.date.getDate() + "/" + (value.date.getMonth()+1) + 
+                    "/" + value.date.getFullYear()}</h3> } */}
               <AppointmentDerm 
-              time={value.date.getHours() + ":" + value.date.getMinutes()}
-              pharmacy={value.pharmacy}
+              // time={value.date.getHours() + ":" + value.date.getMinutes()}
+              time="12:00"
+              pharmacy={value.pharmacy.name}
               price={value.price}
-              patient={value.patient}
+              patient={value.patient ? value.patient.firstName + " " + value.patient.lastName : 'EMPTY'}
               id={index}></AppointmentDerm></Col>
               </Row>)
           }
          })}
-
-        
-        {/* <Row className="justify-content-center m-5">
-          <Col md={8}  ><AppointmentDerm></AppointmentDerm></Col>
-        </Row>
-        <Row className="justify-content-center m-5">
-          <Col md={8}  ><AppointmentDerm></AppointmentDerm></Col>
-        </Row>
-        <Row className="justify-content-center m-5">
-          <Col md={8}  ><AppointmentDerm></AppointmentDerm></Col>
-        </Row>
-        <Row className="justify-content-center m-5">
-          <Col md={8}  ><AppointmentDerm></AppointmentDerm></Col>
-        </Row> */}
-        
-      </Container>
     </div>
   );
 }

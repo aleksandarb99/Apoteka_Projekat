@@ -10,7 +10,7 @@ function AppointmentDerm({time, pharmacy, price, patient, id}) {
         <Card.Body>
             <Card.Title>{time} </Card.Title>
             <Card.Subtitle className="mb-2">Pharmacy: {pharmacy}</Card.Subtitle>
-            <Card.Subtitle className="mb-2">Patient: {patient.firstName + " " + patient.lastName}</Card.Subtitle>
+            <Card.Subtitle className="mb-2">Patient: {patient}</Card.Subtitle>
             <Card.Subtitle className="mb-2">Price: {price}</Card.Subtitle>
             <Card.Link href="#">Initiate appointment</Card.Link>
         </Card.Body>
