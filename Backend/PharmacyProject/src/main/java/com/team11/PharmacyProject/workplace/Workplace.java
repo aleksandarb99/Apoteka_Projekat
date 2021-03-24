@@ -3,11 +3,17 @@ package com.team11.PharmacyProject.workplace;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.workDay.WorkDay;
 
+import javax.persistence.*;
 import java.util.List;
 
-
+@Entity
 public class Workplace {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @OneToMany(mappedBy = "workplace", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
    private List<WorkDay> workDays;
 
    public Workplace() {

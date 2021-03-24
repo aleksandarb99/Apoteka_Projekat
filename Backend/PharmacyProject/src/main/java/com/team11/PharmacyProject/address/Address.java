@@ -1,9 +1,20 @@
 package com.team11.PharmacyProject.address;
 
+import javax.persistence.*;
+
+@Entity
 public class Address {
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @Column(name = "street", unique = true, nullable = false)
    private String street;
+
+   @Column(name = "city", nullable = false)
    private String city;
+
+   @Column(name = "country", nullable = false)
    private String country;
 
    public Address() {
