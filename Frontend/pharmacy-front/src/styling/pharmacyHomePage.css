@@ -1,0 +1,16 @@
+.my-panel {
+  min-height: 90vh;
+}
+
+.sideBar {
+  background-color: rgba(173, 173, 173, 0.452);
+}
+
+a {
+  color: #343a40;
+}
+
+.nav-item {
+  margin-top: 2vh;
+  margin-left: 1vw;
+}
