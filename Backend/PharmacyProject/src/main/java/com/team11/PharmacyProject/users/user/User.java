@@ -3,15 +3,36 @@ package com.team11.PharmacyProject.users.user;
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.enums.UserType;
 
+import javax.persistence.*;
 
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @Column(name = "password", nullable = false)
    private String password;
+
+   @Column(name = "firstName", nullable = false)
    private String firstName;
+
+   @Column(name = "lastName", nullable = false)
    private String lastName;
+
+   @Column(name = "email", unique = true, nullable = false)
    private String email;
+
+   @Column(name = "telephone", unique = true, nullable = false)
    private String telephone;
+
+   @Column(name = "userType", nullable = false)
    private UserType userType;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "address_id")
    private Address address;
 
    public User() {

@@ -1,7 +1,6 @@
 package com.team11.PharmacyProject.workDay;
 
 import com.team11.PharmacyProject.enums.Weekday;
-import com.team11.PharmacyProject.workplace.Workplace;
 
 import javax.persistence.*;
 
@@ -12,9 +11,6 @@ public class WorkDay {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @ManyToOne(fetch = FetchType.EAGER)
-   private Workplace workplace;                 // Ovaj atribut sam dodao
-
    @Column(name = "weekday", nullable = false)
    private Weekday weekday;
 
@@ -24,15 +20,14 @@ public class WorkDay {
    @Column(name = "endTime", nullable = false)
    private int endTime;
 
-   public WorkDay(Long id, Weekday weekday, int startTime, int endTime, Workplace workplace) {
+   public WorkDay() {
+   }
+
+   public WorkDay(Long id, Weekday weekday, int startTime, int endTime) {
       this.id = id;
       this.weekday = weekday;
       this.startTime = startTime;
       this.endTime = endTime;
-      this.workplace = workplace;
-   }
-
-   public WorkDay() {
    }
 
    public Long getId() {
@@ -41,14 +36,6 @@ public class WorkDay {
 
    public void setId(Long id) {
       this.id = id;
-   }
-
-   public Workplace getWorkplace() {
-      return workplace;
-   }
-
-   public void setWorkplace(Workplace workplace) {
-      this.workplace = workplace;
    }
 
    public Weekday getWeekday() {

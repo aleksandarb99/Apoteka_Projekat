@@ -6,12 +6,22 @@ import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.users.user.User;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Patient extends User {
+
+   @Column(name = "points", nullable = false)
    private int points;
+
+   @Column(name = "penalties", nullable = false)
    private int penalties;
+
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<MedicineReservation> medicineReservation;
+
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Medicine> allergies;
 
    public Patient() {

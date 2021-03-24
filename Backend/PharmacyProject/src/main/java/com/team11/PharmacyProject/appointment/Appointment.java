@@ -6,22 +6,47 @@ import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 
-import java.time.LocalDate;
+import javax.persistence.*;
 
+@Entity
 public class Appointment {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
-   private LocalDate startTime;
-   private LocalDate endTime;
+
+   @Column(name = "startTime", nullable = false)
+   private Long startTime;
+
+   @Column(name = "endTime", nullable = false)
+   private Long endTime;
+
+   @Column(name = "duration", nullable = false)
    private int duration;
+
+   @Column(name = "appointmentState", nullable = false)
    private AppointmentState appointmentState;
+
+   @Column(name = "info", nullable = false)
    private String info;
+
+   @Column(name = "price", nullable = false)
    private double price;
+
+   @Column(name = "appointmentType", nullable = false)
    private AppointmentType appointmentType;
+
+   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "patient_id")
    private Patient patient;
+
+   @ManyToOne(fetch = FetchType.EAGER)
    private PharmacyWorker worker;
+
+   @ManyToOne(fetch = FetchType.EAGER)
    private Pharmacy pharmacy;
 
-   public Appointment(Long id, LocalDate startTime, LocalDate endTime, int duration, AppointmentState appointmentState,
+   public Appointment(Long id, Long startTime, Long endTime, int duration, AppointmentState appointmentState,
                       String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker) {
       this.id = id;
       this.pharmacy = null;
@@ -36,7 +61,7 @@ public class Appointment {
       this.worker = worker;
    }
 
-   public Appointment(Long id, LocalDate startTime, LocalDate endTime, int duration, AppointmentState appointmentState,
+   public Appointment(Long id, Long startTime, Long endTime, int duration, AppointmentState appointmentState,
                       String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker, Pharmacy pharmacy) {
       this.id = id;
       this.pharmacy = pharmacy;
@@ -70,19 +95,19 @@ public class Appointment {
       this.id = id;
    }
 
-   public LocalDate getStartTime() {
+   public Long getStartTime() {
       return startTime;
    }
 
-   public void setStartTime(LocalDate startTime) {
+   public void setStartTime(Long startTime) {
       this.startTime = startTime;
    }
 
-   public LocalDate getEndTime() {
+   public Long getEndTime() {
       return endTime;
    }
 
-   public void setEndTime(LocalDate endTime) {
+   public void setEndTime(Long endTime) {
       this.endTime = endTime;
    }
 

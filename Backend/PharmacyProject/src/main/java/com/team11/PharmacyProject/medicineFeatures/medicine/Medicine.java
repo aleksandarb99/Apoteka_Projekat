@@ -5,22 +5,56 @@ import com.team11.PharmacyProject.medicineFeatures.manufacturer.Manufacturer;
 import com.team11.PharmacyProject.medicineFeatures.medicineForm.MedicineForm;
 import com.team11.PharmacyProject.medicineFeatures.medicineType.MedicineType;
 
+import javax.persistence.*;
 import java.util.*;
 
+@Entity
 public class Medicine {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @Column(name = "name", unique = true, nullable = false)
    private String name;
+
+   @Column(name = "code", unique = true, nullable = false)
    private String code;
+
+   @Column(name = "content", nullable = false)
    private String content;
+
+   @Column(name = "sideEffects")
    private String sideEffects;
+
+   @Column(name = "dailyIntake", nullable = false)
    private double dailyIntake;
+
+   @Column(name = "recipeRequired", nullable = false)
    private RecipeRegime recipeRequired;
+
+   @Column(name = "additionalNotes")
    private String additionalNotes;
+
+   @Column(name = "avgGrade")
    private double avgGrade;
+
+   @Column(name = "points", nullable = false)
    private int points;
+
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Medicine> alternativeMedicine;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "medicineType_id")
    private MedicineType medicineType;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "medicineForm_id")
    private MedicineForm medicineForm;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "manufacturer_id")
    private Manufacturer manufacturer;
 
    public Medicine() {

@@ -2,25 +2,38 @@ package com.team11.PharmacyProject.users.pharmacyWorker;
 
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.users.user.User;
 import com.team11.PharmacyProject.workCalendar.WorkCalendar;
 
+import javax.persistence.*;
 import java.util.List;
 
-public abstract class PharmacyWorker extends User {
+@Entity
+public class PharmacyWorker extends User {
+
+	@Column(name = "avgGrade")
 	private double avgGrade;
+
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "workCalendar_id")
 	private WorkCalendar workCalendar;
+
+	@OneToMany(mappedBy = "worker", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Appointment> appointmentList;
 
+	@OneToMany(mappedBy = "worker", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Workplace> workplaces;
 
+	public PharmacyWorker() {}
 
-	public PharmacyWorker(Long id, String password, String firstName, String lastName, String email,
-						  String telephone, UserType userType, Address address, double avgGrade, WorkCalendar calendar,List<Appointment> list) {
-		super(id,password, firstName, lastName, email, telephone, userType, address);
+	public PharmacyWorker(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, double avgGrade, WorkCalendar workCalendar, List<Appointment> appointmentList, List<Workplace> workplaces) {
+		super(id, password, firstName, lastName, email, telephone, userType, address);
 		this.avgGrade = avgGrade;
-		this.workCalendar = calendar;
-		this.appointmentList = list;
+		this.workCalendar = workCalendar;
+		this.appointmentList = appointmentList;
+		this.workplaces = workplaces;
 	}
 
 	public double getAvgGrade() {
@@ -45,5 +58,13 @@ public abstract class PharmacyWorker extends User {
 
 	public void setAppointmentList(List<Appointment> appointmentList) {
 		this.appointmentList = appointmentList;
+	}
+
+	public List<Workplace> getWorkplaces() {
+		return workplaces;
+	}
+
+	public void setWorkplaces(List<Workplace> workplaces) {
+		this.workplaces = workplaces;
 	}
 }
