@@ -5,22 +5,57 @@ import com.team11.PharmacyProject.medicineFeatures.manufacturer.Manufacturer;
 import com.team11.PharmacyProject.medicineFeatures.medicineForm.MedicineForm;
 import com.team11.PharmacyProject.medicineFeatures.medicineType.MedicineType;
 
+import javax.persistence.*;
 import java.util.*;
 
+@Entity
 public class Medicine {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @Column(name = "name", unique = true, nullable = false)
    private String name;
+
+   @Column(name = "code", unique = true, nullable = false)
    private String code;
+
+   @Column(name = "content", nullable = false)
    private String content;
+
+   @Column(name = "side_effects")
    private String sideEffects;
+
+   @Column(name = "daily_intake", nullable = false)
    private double dailyIntake;
+
+   @Column(name = "recipe_required", nullable = false)
+   @Enumerated(EnumType.STRING)
    private RecipeRegime recipeRequired;
+
+   @Column(name = "additional_notes")
    private String additionalNotes;
+
+   @Column(name = "avg_grade")
    private double avgGrade;
+
+   @Column(name = "points", nullable = false)
    private int points;
+
+   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Medicine> alternativeMedicine;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "medicine_type_id")
    private MedicineType medicineType;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "medicine_form_id")
    private MedicineForm medicineForm;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "manufacturer_id")
    private Manufacturer manufacturer;
 
    public Medicine() {

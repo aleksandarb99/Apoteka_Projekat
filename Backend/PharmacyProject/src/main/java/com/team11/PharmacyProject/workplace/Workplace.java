@@ -1,44 +1,66 @@
 package com.team11.PharmacyProject.workplace;
 
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.workDay.WorkDay;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+public class Workplace  {
 
-public class Workplace {
-   private Long id;
-   private List<WorkDay> workDays;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-   public Workplace() {
-   }
+    @ManyToOne(fetch = FetchType.EAGER)
+    private PharmacyWorker worker;
 
-   public Workplace(Long id, List<WorkDay> workDays) {
-      this.id = id;
-      this.workDays = workDays;
-   }
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<WorkDay> workDays;
 
-   public Long getId() {
-      return id;
-   }
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Pharmacy pharmacy;
 
-   public List<WorkDay> getWorkDays() {
-      return workDays;
-   }
+    public Workplace() {}
 
-   public void setId(Long id) {
-      this.id = id;
-   }
+    public Workplace(Long id, PharmacyWorker worker, List<WorkDay> workDays, Pharmacy pharmacy) {
+        this.id = id;
+        this.worker = worker;
+        this.workDays = workDays;
+        this.pharmacy = pharmacy;
+    }
 
-   public void setWorkDays(List<WorkDay> workDays) {
-      this.workDays = workDays;
-   }
+    public Long getId() {
+        return id;
+    }
 
-   @Override
-   public String toString() {
-      return "Workplace{" +
-              "id=" + id +
-              ", workDays=" + workDays +
-              '}';
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public PharmacyWorker getWorker() {
+        return worker;
+    }
+
+    public void setWorker(PharmacyWorker worker) {
+        this.worker = worker;
+    }
+
+    public List<WorkDay> getWorkDays() {
+        return workDays;
+    }
+
+    public void setWorkDays(List<WorkDay> workDays) {
+        this.workDays = workDays;
+    }
+
+    public Pharmacy getPharmacy() {
+        return pharmacy;
+    }
+
+    public void setPharmacy(Pharmacy pharmacy) {
+        this.pharmacy = pharmacy;
+    }
 }

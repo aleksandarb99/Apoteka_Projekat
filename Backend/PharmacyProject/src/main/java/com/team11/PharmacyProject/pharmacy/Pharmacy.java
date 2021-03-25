@@ -5,17 +5,41 @@ import com.team11.PharmacyProject.location.Location;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.priceList.PriceList;
 import com.team11.PharmacyProject.workplace.Workplace;
+
+import javax.persistence.*;
 import java.util.*;
 
+@Entity
 public class Pharmacy {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @Column(name = "name", nullable = false)
    private String name;
+
+   @Column(name = "description")
    private String description;
+
+   @Column(name = "avg_grade")
    private Double avgGrade;
+
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Patient> subscribers;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "price_list_id")
    private PriceList priceList;
-   private ArrayList<Appointment> appointments;
+
+   @OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   private List<Appointment> appointments;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "location_id")
    private Location location;
+
+   @OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Workplace> workplaces;
 
    public Pharmacy() {
@@ -83,7 +107,7 @@ public class Pharmacy {
       this.priceList = priceList;
    }
 
-   public ArrayList<Appointment> getAppointments() {
+   public List<Appointment> getAppointments() {
       return appointments;
    }
 

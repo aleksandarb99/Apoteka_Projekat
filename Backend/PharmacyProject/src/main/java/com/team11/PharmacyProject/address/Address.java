@@ -1,10 +1,27 @@
 package com.team11.PharmacyProject.address;
 
+import com.team11.PharmacyProject.location.Location;
+
+import javax.persistence.*;
+
+@Entity
 public class Address {
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @Column(name = "street", unique = true, nullable = false)
    private String street;
+
+   @Column(name = "city", nullable = false)
    private String city;
+
+   @Column(name = "country", nullable = false)
    private String country;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "location_id")
+   private Location location;
 
    public Address() {
    }
@@ -14,6 +31,14 @@ public class Address {
       this.street = street;
       this.city = city;
       this.country = country;
+   }
+
+   public Address(Long id, String street, String city, String country, Location location) {
+      this.id = id;
+      this.street = street;
+      this.city = city;
+      this.country = country;
+      this.location = location;
    }
 
    public Long getId() {
@@ -46,5 +71,13 @@ public class Address {
 
    public void setCountry(String country) {
       this.country = country;
+   }
+
+   public Location getLocation() {
+      return location;
+   }
+
+   public void setLocation(Location location) {
+      this.location = location;
    }
 }
