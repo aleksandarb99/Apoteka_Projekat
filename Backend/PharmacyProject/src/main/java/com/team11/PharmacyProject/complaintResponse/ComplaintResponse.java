@@ -1,7 +1,7 @@
 package com.team11.PharmacyProject.complaintResponse;
 
 import com.team11.PharmacyProject.complaint.Complaint;
-import com.team11.PharmacyProject.users.user.User;
+import com.team11.PharmacyProject.users.user.MyUser;
 
 import javax.persistence.*;
 
@@ -24,11 +24,11 @@ public class ComplaintResponse {
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    @JoinColumn(name = "user_id")
-   private User user;
+   private MyUser user;
 
    public ComplaintResponse() {}
 
-   public ComplaintResponse(Long id, String responseText, Long date, Complaint complaint, User user) {
+   public ComplaintResponse(Long id, String responseText, Long date, Complaint complaint, MyUser user) {
       this.id = id;
       this.responseText = responseText;
       this.date = date;
@@ -68,11 +68,11 @@ public class ComplaintResponse {
       this.complaint = complaint;
    }
 
-   public User getUser() {
+   public MyUser getUser() {
       return user;
    }
 
-   public void setUser(User user) {
+   public void setUser(MyUser user) {
       this.user = user;
    }
 }

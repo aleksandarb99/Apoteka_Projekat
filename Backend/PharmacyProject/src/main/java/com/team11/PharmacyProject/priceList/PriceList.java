@@ -13,6 +13,7 @@ public class PriceList {
    private Long id;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "price_list_id")
    private List<MedicineItem> medicineItems;
 
    public PriceList(Long id, List<MedicineItem> medicineItems) {

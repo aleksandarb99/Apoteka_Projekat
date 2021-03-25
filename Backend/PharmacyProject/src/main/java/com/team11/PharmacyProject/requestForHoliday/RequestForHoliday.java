@@ -5,7 +5,6 @@ import com.team11.PharmacyProject.enums.AbsenceType;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 public class RequestForHoliday {
@@ -35,7 +34,17 @@ public class RequestForHoliday {
 
    public RequestForHoliday() {}
 
-   public Long getId() {
+    public RequestForHoliday(Long id, Long startDate, Long endDate, AbsenceRequestState requestState, AbsenceType absenceType, String declineText, PharmacyWorker pharmacyWorker) {
+        this.id = id;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.requestState = requestState;
+        this.absenceType = absenceType;
+        this.declineText = declineText;
+        this.pharmacyWorker = pharmacyWorker;
+    }
+
+    public Long getId() {
       return id;
    }
 

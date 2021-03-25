@@ -4,21 +4,20 @@ import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.offer.Offer;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
-import com.team11.PharmacyProject.users.user.User;
+import com.team11.PharmacyProject.users.user.MyUser;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Supplier extends User {
+public class Supplier extends MyUser {
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "supplier_id")
    private List<SupplierItem> supplierItems;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "supplier_id")
    private List<Offer> offers;
 
    public Supplier() {

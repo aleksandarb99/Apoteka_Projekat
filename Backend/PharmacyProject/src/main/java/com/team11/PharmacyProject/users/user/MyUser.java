@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
+public class MyUser {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +35,10 @@ public class User {
    @JoinColumn(name = "address_id")
    private Address address;
 
-   public User() {
+   public MyUser() {
    }
 
-   public User(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address) {
+   public MyUser(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address) {
       this.id = id;
       this.password = password;
       this.firstName = firstName;

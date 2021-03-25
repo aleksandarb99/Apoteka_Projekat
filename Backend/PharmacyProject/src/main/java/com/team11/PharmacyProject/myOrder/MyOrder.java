@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject.order;
+package com.team11.PharmacyProject.myOrder;
 
 import com.team11.PharmacyProject.orderItem.OrderItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Order {
+public class MyOrder {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +21,12 @@ public class Order {
    private Pharmacy pharmacy;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "order_id")
    private List<OrderItem> orderItem;
 
-   public Order() {}
+   public MyOrder() {}
 
-   public Order(Long id, Long deadline, Pharmacy pharmacy, List<OrderItem> orderItem) {
+   public MyOrder(Long id, Long deadline, Pharmacy pharmacy, List<OrderItem> orderItem) {
       this.id = id;
       this.deadline = deadline;
       this.pharmacy = pharmacy;

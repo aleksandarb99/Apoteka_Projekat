@@ -4,14 +4,14 @@ import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.enums.UserType;
-import com.team11.PharmacyProject.users.user.User;
+import com.team11.PharmacyProject.users.user.MyUser;
 import com.team11.PharmacyProject.workCalendar.WorkCalendar;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class PharmacyWorker extends User {
+public class PharmacyWorker extends MyUser {
 
 	@Column(name = "avgGrade")
 	private double avgGrade;

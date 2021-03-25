@@ -1,7 +1,7 @@
 package com.team11.PharmacyProject.offer;
 
 import com.team11.PharmacyProject.enums.OfferState;
-import com.team11.PharmacyProject.order.Order;
+import com.team11.PharmacyProject.myOrder.MyOrder;
 
 import javax.persistence.*;
 import java.util.*;
@@ -24,11 +24,11 @@ public class Offer {
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    @JoinColumn(name = "order_id")
-   private Order order;
+   private MyOrder order;
 
    public Offer() {}
 
-   public Offer(Long id, double price, Long deliveryDate, OfferState offerState, Order order) {
+   public Offer(Long id, double price, Long deliveryDate, OfferState offerState, MyOrder order) {
       this.id = id;
       this.price = price;
       this.deliveryDate = deliveryDate;
@@ -68,11 +68,11 @@ public class Offer {
       this.offerState = offerState;
    }
 
-   public Order getOrder() {
+   public MyOrder getOrder() {
       return order;
    }
 
-   public void setOrder(Order order) {
+   public void setOrder(MyOrder order) {
       this.order = order;
    }
 }

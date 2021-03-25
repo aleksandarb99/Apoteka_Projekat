@@ -22,14 +22,15 @@ public class Pharmacy {
    @Column(name = "description")
    private String description;
 
-   @Column(name = "avgGrade")
+   @Column(name = "avg_grade")
    private Double avgGrade;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "pharmacy_id")
    private List<Patient> subscribers;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "priceList_id")
+   @JoinColumn(name = "price_list_id")
    private PriceList priceList;
 
    @OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

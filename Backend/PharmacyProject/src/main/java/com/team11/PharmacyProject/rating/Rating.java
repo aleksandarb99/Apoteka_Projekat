@@ -4,7 +4,6 @@ import com.team11.PharmacyProject.enums.GradedType;
 import com.team11.PharmacyProject.users.patient.Patient;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 public class Rating {

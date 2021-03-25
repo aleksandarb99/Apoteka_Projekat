@@ -4,13 +4,13 @@ import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
-import com.team11.PharmacyProject.users.user.User;
+import com.team11.PharmacyProject.users.user.MyUser;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Patient extends User {
+public class Patient extends MyUser {
 
    @Column(name = "points", nullable = false)
    private int points;
@@ -19,9 +19,11 @@ public class Patient extends User {
    private int penalties;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "patient_id")
    private List<MedicineReservation> medicineReservation;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "patientAllergy_id")
    private List<Medicine> allergies;
 
    public Patient() {

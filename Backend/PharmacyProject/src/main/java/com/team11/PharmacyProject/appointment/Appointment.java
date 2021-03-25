@@ -61,21 +61,6 @@ public class Appointment {
       this.worker = worker;
    }
 
-   public Appointment(Long id, Long startTime, Long endTime, int duration, AppointmentState appointmentState,
-                      String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker, Pharmacy pharmacy) {
-      this.id = id;
-      this.pharmacy = pharmacy;
-      this.startTime = startTime;
-      this.endTime = endTime;
-      this.duration = duration;
-      this.appointmentState = appointmentState;
-      this.info = info;
-      this.price = price;
-      this.appointmentType = appointmentType;
-      this.patient = patient;
-      this.worker = worker;
-   }
-
    public Appointment() {
    }
 

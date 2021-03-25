@@ -24,6 +24,7 @@ public class ERecipe {
    private String code;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "erecipe_id")
    private List<ERecipeItem> eRecipeItems;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

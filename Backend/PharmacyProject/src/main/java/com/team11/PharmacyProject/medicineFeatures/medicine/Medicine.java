@@ -43,6 +43,7 @@ public class Medicine {
    private int points;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "alternativeMedicine_id")
    private List<Medicine> alternativeMedicine;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
