@@ -15,7 +15,7 @@ public class MedicinePrice {
    @Column(name = "price", nullable = false)
    private double price;
 
-   @Column(name = "startDate", nullable = false)
+   @Column(name = "start_date", nullable = false)
    private Long startDate;
 
    @ManyToMany(mappedBy = "medicineList")

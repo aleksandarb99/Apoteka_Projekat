@@ -9,10 +9,10 @@ public class ERecipeItem {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @Column(name = "medicineCode", nullable = false)
+   @Column(name = "medicine_code", nullable = false)
    private String medicineCode;
 
-   @Column(name = "medicineName", nullable = false)
+   @Column(name = "medicine_name", nullable = false)
    private String medicineName;
 
    @Column(name = "quantity", nullable = false)

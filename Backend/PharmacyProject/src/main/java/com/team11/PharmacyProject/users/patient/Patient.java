@@ -19,11 +19,9 @@ public class Patient extends MyUser {
    private int penalties;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "patient_id")
    private List<MedicineReservation> medicineReservation;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "patientAllergy_id")
    private List<Medicine> allergies;
 
    public Patient() {

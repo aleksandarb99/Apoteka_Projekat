@@ -13,7 +13,6 @@ public class WorkCalendar {
    private Long id;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "workcalendar_id")
    private List<Appointment> appointments;
 
    public WorkCalendar() {}

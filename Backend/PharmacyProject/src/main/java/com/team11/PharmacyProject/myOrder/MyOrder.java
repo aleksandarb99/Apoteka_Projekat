@@ -13,7 +13,7 @@ public class MyOrder {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @Column(name = "startTime", nullable = false)
+   @Column(name = "start_time", nullable = false)
    private Long deadline;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -21,7 +21,6 @@ public class MyOrder {
    private Pharmacy pharmacy;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "order_id")
    private List<OrderItem> orderItem;
 
    public MyOrder() {}

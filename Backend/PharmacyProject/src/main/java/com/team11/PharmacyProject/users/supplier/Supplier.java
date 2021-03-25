@@ -13,11 +13,9 @@ import java.util.List;
 public class Supplier extends MyUser {
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "supplier_id")
    private List<SupplierItem> supplierItems;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "supplier_id")
    private List<Offer> offers;
 
    public Supplier() {

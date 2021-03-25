@@ -12,7 +12,7 @@ public class ComplaintResponse {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @Column(name = "responseText", nullable = false)
+   @Column(name = "response_text", nullable = false)
    private String responseText;
 
    @Column(name = "date", nullable = false)

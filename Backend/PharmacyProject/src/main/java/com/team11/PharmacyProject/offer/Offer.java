@@ -4,7 +4,6 @@ import com.team11.PharmacyProject.enums.OfferState;
 import com.team11.PharmacyProject.myOrder.MyOrder;
 
 import javax.persistence.*;
-import java.util.*;
 
 @Entity
 public class Offer {
@@ -16,10 +15,10 @@ public class Offer {
    @Column(name = "price", nullable = false)
    private double price;
 
-   @Column(name = "deliveryDate", nullable = false)
+   @Column(name = "delivery_date", nullable = false)
    private Long deliveryDate;
 
-   @Column(name = "offerState", nullable = false)
+   @Column(name = "offer_state", nullable = false)
    private OfferState offerState;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

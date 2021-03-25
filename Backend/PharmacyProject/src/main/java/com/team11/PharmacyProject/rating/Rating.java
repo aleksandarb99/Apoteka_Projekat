@@ -15,7 +15,7 @@ public class Rating {
    @Column(name = "grade", nullable = false)
    private int grade;
 
-   @Column(name = "gradedType", nullable = false)
+   @Column(name = "graded_type", nullable = false)
    private GradedType gradedType;
 
    @Column(name = "gradedID", nullable = false)

@@ -15,10 +15,10 @@ public class Complaint {
    @Column(name = "content", nullable = false)
    private String content;
 
-   @Column(name = "ComplaintOn", nullable = false)
+   @Column(name = "complaint_on", nullable = false)
    private String complaintOn;
 
-   @Column(name = "complaintOnId", nullable = false)
+   @Column(name = "complaint_on_id", nullable = false)
    private Long complaintOnId;
 
    @Column(name = "type", nullable = false)

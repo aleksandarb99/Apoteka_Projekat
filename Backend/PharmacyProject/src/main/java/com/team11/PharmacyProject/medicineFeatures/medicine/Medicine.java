@@ -24,34 +24,33 @@ public class Medicine {
    @Column(name = "content", nullable = false)
    private String content;
 
-   @Column(name = "sideEffects")
+   @Column(name = "side_effects")
    private String sideEffects;
 
-   @Column(name = "dailyIntake", nullable = false)
+   @Column(name = "daily_intake", nullable = false)
    private double dailyIntake;
 
-   @Column(name = "recipeRequired", nullable = false)
+   @Column(name = "recipe_required", nullable = false)
    private RecipeRegime recipeRequired;
 
-   @Column(name = "additionalNotes")
+   @Column(name = "additional_notes")
    private String additionalNotes;
 
-   @Column(name = "avgGrade")
+   @Column(name = "avg_grade")
    private double avgGrade;
 
    @Column(name = "points", nullable = false)
    private int points;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "alternativeMedicine_id")
    private List<Medicine> alternativeMedicine;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "medicineType_id")
+   @JoinColumn(name = "medicine_type_id")
    private MedicineType medicineType;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "medicineForm_id")
+   @JoinColumn(name = "medicine_form_id")
    private MedicineForm medicineForm;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

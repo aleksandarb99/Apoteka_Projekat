@@ -13,11 +13,11 @@ import java.util.List;
 @Entity
 public class PharmacyWorker extends MyUser {
 
-	@Column(name = "avgGrade")
+	@Column(name = "avg_grade")
 	private double avgGrade;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "workCalendar_id")
+	@JoinColumn(name = "workcalendar_id")
 	private WorkCalendar workCalendar;
 
 	@OneToMany(mappedBy = "worker", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

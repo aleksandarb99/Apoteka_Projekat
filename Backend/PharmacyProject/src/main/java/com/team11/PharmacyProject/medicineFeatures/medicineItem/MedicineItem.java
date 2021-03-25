@@ -17,7 +17,6 @@ public class MedicineItem {
    private int amount;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "medicine_item_id")
    public List<MedicinePrice> medicinePrices;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

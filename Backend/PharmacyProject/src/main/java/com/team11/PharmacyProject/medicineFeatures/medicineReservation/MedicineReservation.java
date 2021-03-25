@@ -13,7 +13,7 @@ public class MedicineReservation {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @Column(name = "pickupDate", nullable = false)
+   @Column(name = "pickup_date", nullable = false)
    private Long pickupDate;
 
    @Column(name = "reservationID", nullable = false)
@@ -23,7 +23,7 @@ public class MedicineReservation {
    private ReservationState state;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "medicinePrice_id")
+   @JoinColumn(name = "medicine_price_id")
    private MedicinePrice medicinePrice;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -13,23 +13,23 @@ public class RequestForHoliday {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @Column(name = "startDate", nullable = false)
+   @Column(name = "start_date", nullable = false)
    private Long startDate;
 
-   @Column(name = "endDate", nullable = false)
+   @Column(name = "end_date", nullable = false)
    private Long endDate;
 
-   @Column(name = "requestState", nullable = false)
+   @Column(name = "request_state", nullable = false)
    private AbsenceRequestState requestState;
 
-   @Column(name = "absenceType", nullable = false)
+   @Column(name = "absence_type", nullable = false)
    private AbsenceType absenceType;
 
-   @Column(name = "declineText", nullable = false)
+   @Column(name = "decline_text", nullable = false)
    private String declineText;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "pharmacyWorker_id")
+   @JoinColumn(name = "pharmacy_worker_id")
    private PharmacyWorker pharmacyWorker;
 
    public RequestForHoliday() {}

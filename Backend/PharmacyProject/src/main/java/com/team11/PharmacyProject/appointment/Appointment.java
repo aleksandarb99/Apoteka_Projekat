@@ -15,29 +15,28 @@ public class Appointment {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @Column(name = "startTime", nullable = false)
+   @Column(name = "start_time", nullable = false)
    private Long startTime;
 
-   @Column(name = "endTime", nullable = false)
+   @Column(name = "end_time", nullable = false)
    private Long endTime;
 
    @Column(name = "duration", nullable = false)
    private int duration;
 
-   @Column(name = "appointmentState", nullable = false)
+   @Column(name = "appointment_state", nullable = false)
    private AppointmentState appointmentState;
 
-   @Column(name = "info", nullable = false)
+   @Column(name = "info")
    private String info;
 
    @Column(name = "price", nullable = false)
    private double price;
 
-   @Column(name = "appointmentType", nullable = false)
+   @Column(name = "appointment_type", nullable = false)
    private AppointmentType appointmentType;
 
    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "patient_id")
    private Patient patient;
 
    @ManyToOne(fetch = FetchType.EAGER)

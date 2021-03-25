@@ -14,24 +14,24 @@ public class Advertisement {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @Column(name = "startDate", nullable = false)
+   @Column(name = "start_date", nullable = false)
    private Long startDate;
 
-   @Column(name = "endDate", nullable = false)
+   @Column(name = "end_date", nullable = false)
    private Long endDate;
 
-   @Column(name = "advertisementText")
+   @Column(name = "advertisement_text")
    private String advertisementText;
 
    @ManyToMany
-   @JoinTable(name = "advertising", joinColumns = @JoinColumn(name = "advertisement_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicinePrice_id", referencedColumnName = "id"))
+   @JoinTable(name = "advertising", joinColumns = @JoinColumn(name = "advertisement_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicine_price_id", referencedColumnName = "id"))
    private List<MedicinePrice> medicineList;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    @JoinColumn(name = "pharmacy_id")
    private Pharmacy pharmacy;
 
-   @Column(name = "discountPercent", nullable = false)
+   @Column(name = "discount_percent", nullable = false)
    private double discountPercent;
 
    @Column(name = "type", nullable = false)

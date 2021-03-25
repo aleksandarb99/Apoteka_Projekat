@@ -18,7 +18,6 @@ public class Workplace  {
     private PharmacyWorker worker;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "workplace_id")
     private List<WorkDay> workDays;
 
     @ManyToOne(fetch = FetchType.EAGER)

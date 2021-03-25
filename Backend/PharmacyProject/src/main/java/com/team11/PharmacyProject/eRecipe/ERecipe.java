@@ -14,7 +14,7 @@ public class ERecipe {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @Column(name = "dispensingDate", nullable = false)
+   @Column(name = "dispensing_date", nullable = false)
    private Long dispensingDate;
 
    @Column(name = "state", nullable = false)
@@ -24,7 +24,6 @@ public class ERecipe {
    private String code;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "erecipe_id")
    private List<ERecipeItem> eRecipeItems;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

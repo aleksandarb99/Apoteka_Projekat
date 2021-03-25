@@ -14,10 +14,10 @@ public class WorkDay {
    @Column(name = "weekday", nullable = false)
    private Weekday weekday;
 
-   @Column(name = "startTime", nullable = false)
+   @Column(name = "start_time", nullable = false)
    private int startTime;
 
-   @Column(name = "endTime", nullable = false)
+   @Column(name = "end_time", nullable = false)
    private int endTime;
 
    public WorkDay() {

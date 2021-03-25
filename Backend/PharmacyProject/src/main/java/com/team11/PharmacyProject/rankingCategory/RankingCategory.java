@@ -12,7 +12,7 @@ public class RankingCategory {
    @Column(name = "name", nullable = false)
    private String name;
 
-   @Column(name = "pointsRequired", nullable = false)
+   @Column(name = "points_required", nullable = false)
    private int pointsRequired;
 
    @Column(name = "discount", nullable = false)

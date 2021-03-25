@@ -26,7 +26,6 @@ public class Pharmacy {
    private Double avgGrade;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "pharmacy_id")
    private List<Patient> subscribers;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
