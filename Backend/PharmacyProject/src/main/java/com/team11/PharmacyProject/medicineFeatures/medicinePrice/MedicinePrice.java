@@ -2,23 +2,33 @@ package com.team11.PharmacyProject.medicineFeatures.medicinePrice;
 
 import com.team11.PharmacyProject.advertisement.Advertisement;
 
-import java.time.LocalDate;
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class MedicinePrice {
-   private Long id;
-   private double price;
-   private LocalDate startDate;
-   private List<Advertisement> advertisemens;
 
-   public MedicinePrice(Long id, double price, LocalDate startDate, List<Advertisement> advertisemens) {
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
+
+   @Column(name = "price", nullable = false)
+   private double price;
+
+   @Column(name = "start_date", nullable = false)
+   private Long startDate;
+
+   @ManyToMany(mappedBy = "medicineList")
+   private List<Advertisement> advertisements;
+
+   public MedicinePrice() {
+   }
+
+   public MedicinePrice(Long id, double price, Long startDate, List<Advertisement> advertisements) {
       this.id = id;
       this.price = price;
       this.startDate = startDate;
-      this.advertisemens = advertisemens;
-   }
-
-   public MedicinePrice() {
+      this.advertisements = advertisements;
    }
 
    public Long getId() {
@@ -37,19 +47,19 @@ public class MedicinePrice {
       this.price = price;
    }
 
-   public LocalDate getStartDate() {
+   public Long getStartDate() {
       return startDate;
    }
 
-   public void setStartDate(LocalDate startDate) {
+   public void setStartDate(Long startDate) {
       this.startDate = startDate;
    }
 
    public List<Advertisement> getAdvertisemens() {
-      return advertisemens;
+      return advertisements;
    }
 
    public void setAdvertisemens(List<Advertisement> advertisemens) {
-      this.advertisemens = advertisemens;
+      this.advertisements = advertisemens;
    }
 }

@@ -2,22 +2,33 @@ package com.team11.PharmacyProject.workDay;
 
 import com.team11.PharmacyProject.enums.Weekday;
 
-import java.time.LocalDate;
+import javax.persistence.*;
 
+@Entity
 public class WorkDay {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @Column(name = "weekday", nullable = false)
+   @Enumerated(EnumType.STRING)
    private Weekday weekday;
+
+   @Column(name = "start_time", nullable = false)
    private int startTime;
+
+   @Column(name = "end_time", nullable = false)
    private int endTime;
+
+   public WorkDay() {
+   }
 
    public WorkDay(Long id, Weekday weekday, int startTime, int endTime) {
       this.id = id;
       this.weekday = weekday;
       this.startTime = startTime;
       this.endTime = endTime;
-   }
-
-   public WorkDay() {
    }
 
    public Long getId() {

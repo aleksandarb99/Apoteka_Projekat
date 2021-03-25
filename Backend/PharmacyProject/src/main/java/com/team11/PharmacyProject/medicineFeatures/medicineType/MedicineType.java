@@ -1,7 +1,15 @@
 package com.team11.PharmacyProject.medicineFeatures.medicineType;
 
+import javax.persistence.*;
+
+@Entity
 public class MedicineType {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @Column(name = "name", unique = true, nullable = false)
    private String name;
 
    public MedicineType() {

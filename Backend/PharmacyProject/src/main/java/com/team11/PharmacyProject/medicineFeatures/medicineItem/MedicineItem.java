@@ -3,12 +3,24 @@ package com.team11.PharmacyProject.medicineFeatures.medicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class MedicineItem {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @Column(name = "amount", nullable = false)
    private int amount;
+
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    public List<MedicinePrice> medicinePrices;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "medicine_id")
    public Medicine medicine;
 
    public MedicineItem() {

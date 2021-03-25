@@ -2,10 +2,17 @@ package com.team11.PharmacyProject.priceList;
 
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class PriceList {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<MedicineItem> medicineItems;
 
    public PriceList(Long id, List<MedicineItem> medicineItems) {

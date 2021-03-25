@@ -3,21 +3,46 @@ package com.team11.PharmacyProject.users.user;
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.enums.UserType;
 
+import javax.persistence.*;
 
-public class User {
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class MyUser {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
+
+   @Column(name = "password", nullable = false)
    private String password;
+
+   @Column(name = "first_name", nullable = false)
    private String firstName;
+
+   @Column(name = "last_name", nullable = false)
    private String lastName;
+
+   @Column(name = "email", unique = true, nullable = false)
    private String email;
+
+   @Column(name = "telephone", unique = true, nullable = false)
    private String telephone;
+
+   @Column(name = "user_type", nullable = false)
+   @Enumerated(EnumType.STRING)
    private UserType userType;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "address_id")
    private Address address;
 
-   public User() {
+   @Column(name = "is_password_changed", nullable = false)
+   private boolean isPasswordChanged;
+
+   public MyUser() {
    }
 
-   public User(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address) {
+   public MyUser(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, boolean isPasswordChanged) {
       this.id = id;
       this.password = password;
       this.firstName = firstName;
@@ -26,6 +51,7 @@ public class User {
       this.telephone = telephone;
       this.userType = userType;
       this.address = address;
+      this.isPasswordChanged = isPasswordChanged;
    }
 
    public Long getId() {
@@ -90,5 +116,13 @@ public class User {
 
    public void setAddress(Address address) {
       this.address = address;
+   }
+
+   public boolean isPasswordChanged() {
+      return isPasswordChanged;
+   }
+
+   public void setPasswordChanged(boolean passwordChanged) {
+      isPasswordChanged = passwordChanged;
    }
 }
