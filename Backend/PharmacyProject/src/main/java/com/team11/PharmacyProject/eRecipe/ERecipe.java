@@ -18,6 +18,7 @@ public class ERecipe {
    private Long dispensingDate;
 
    @Column(name = "state", nullable = false)
+   @Enumerated(EnumType.STRING)
    private ERecipeState state;
 
    @Column(name = "code", unique = true, nullable = false)

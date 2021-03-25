@@ -13,7 +13,7 @@ public class MyOrder {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @Column(name = "start_time", nullable = false)
+   @Column(name = "deadline", nullable = false)
    private Long deadline;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

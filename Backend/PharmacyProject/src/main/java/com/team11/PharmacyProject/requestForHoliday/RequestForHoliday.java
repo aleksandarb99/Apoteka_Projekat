@@ -20,9 +20,11 @@ public class RequestForHoliday {
    private Long endDate;
 
    @Column(name = "request_state", nullable = false)
+   @Enumerated(EnumType.STRING)
    private AbsenceRequestState requestState;
 
    @Column(name = "absence_type", nullable = false)
+   @Enumerated(EnumType.STRING)
    private AbsenceType absenceType;
 
    @Column(name = "decline_text", nullable = false)

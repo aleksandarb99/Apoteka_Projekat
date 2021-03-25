@@ -31,6 +31,7 @@ public class Medicine {
    private double dailyIntake;
 
    @Column(name = "recipe_required", nullable = false)
+   @Enumerated(EnumType.STRING)
    private RecipeRegime recipeRequired;
 
    @Column(name = "additional_notes")

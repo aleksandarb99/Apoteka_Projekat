@@ -16,10 +16,10 @@ public class MyUser {
    @Column(name = "password", nullable = false)
    private String password;
 
-   @Column(name = "firstName", nullable = false)
+   @Column(name = "first_name", nullable = false)
    private String firstName;
 
-   @Column(name = "lastName", nullable = false)
+   @Column(name = "last_name", nullable = false)
    private String lastName;
 
    @Column(name = "email", unique = true, nullable = false)
@@ -28,7 +28,8 @@ public class MyUser {
    @Column(name = "telephone", unique = true, nullable = false)
    private String telephone;
 
-   @Column(name = "userType", nullable = false)
+   @Column(name = "user_type", nullable = false)
+   @Enumerated(EnumType.STRING)
    private UserType userType;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

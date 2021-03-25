@@ -20,6 +20,7 @@ public class MedicineReservation {
    private Long reservationID;
 
    @Column(name = "state", nullable = false)
+   @Enumerated(EnumType.STRING)
    private ReservationState state;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

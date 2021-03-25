@@ -35,6 +35,7 @@ public class Advertisement {
    private double discountPercent;
 
    @Column(name = "type", nullable = false)
+   @Enumerated(EnumType.STRING)
    private AdvertisementType type;
 
    public Advertisement() {}

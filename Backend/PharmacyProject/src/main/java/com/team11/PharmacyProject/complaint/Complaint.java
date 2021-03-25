@@ -22,6 +22,7 @@ public class Complaint {
    private Long complaintOnId;
 
    @Column(name = "type", nullable = false)
+   @Enumerated(EnumType.STRING)
    private ComplaintType type;
 
    @Column(name = "date", nullable = false)

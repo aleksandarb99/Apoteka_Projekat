@@ -19,6 +19,7 @@ public class Offer {
    private Long deliveryDate;
 
    @Column(name = "offer_state", nullable = false)
+   @Enumerated(EnumType.STRING)
    private OfferState offerState;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

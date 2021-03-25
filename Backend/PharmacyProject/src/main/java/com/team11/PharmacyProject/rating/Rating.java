@@ -16,6 +16,7 @@ public class Rating {
    private int grade;
 
    @Column(name = "graded_type", nullable = false)
+   @Enumerated(EnumType.STRING)
    private GradedType gradedType;
 
    @Column(name = "gradedID", nullable = false)

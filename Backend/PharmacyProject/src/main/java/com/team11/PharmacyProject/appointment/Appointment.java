@@ -25,6 +25,7 @@ public class Appointment {
    private int duration;
 
    @Column(name = "appointment_state", nullable = false)
+   @Enumerated(EnumType.STRING)
    private AppointmentState appointmentState;
 
    @Column(name = "info")
@@ -34,6 +35,7 @@ public class Appointment {
    private double price;
 
    @Column(name = "appointment_type", nullable = false)
+   @Enumerated(EnumType.STRING)
    private AppointmentType appointmentType;
 
    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

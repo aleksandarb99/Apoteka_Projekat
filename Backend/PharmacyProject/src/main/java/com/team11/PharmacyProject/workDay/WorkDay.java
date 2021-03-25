@@ -12,6 +12,7 @@ public class WorkDay {
    private Long id;
 
    @Column(name = "weekday", nullable = false)
+   @Enumerated(EnumType.STRING)
    private Weekday weekday;
 
    @Column(name = "start_time", nullable = false)
