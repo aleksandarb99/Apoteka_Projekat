@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { Button, Form, Modal, Table } from 'react-bootstrap'
+import { Button, Form, Modal } from 'react-bootstrap'
 
 function AddPharmacyModal(props) {
 

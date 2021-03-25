@@ -10,6 +10,7 @@ import DermHomePage from "./workers/dermatologist/home_page_dermatologist";
 import PharmHomePage from "./workers/pharmacist/home_page_pharmacist";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
+import UserCrud from "./components/users/UserCrud";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/dermatologist" component={DermHomePage} />
           <Route path="/pharmacist" component={PharmHomePage} />
           <Route path="/admin/pharmacies" component={PharmacyCrud} />
+          <Route path="/admin/users" component={UserCrud} />
         </Switch>
 
         <Footer />
