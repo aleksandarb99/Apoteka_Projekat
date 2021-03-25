@@ -21,7 +21,7 @@ public class Patient extends MyUser {
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<MedicineReservation> medicineReservation;
 
-   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Medicine> allergies;
 
    public Patient() {
@@ -29,8 +29,8 @@ public class Patient extends MyUser {
 
    public Patient(Long id, String password, String firstName, String lastName, String email, String telephone,
                   UserType userType, Address address, int points, int penalties,
-                  List<MedicineReservation> medicineReservation, List<Medicine> allergies) {
-      super(id, password, firstName, lastName, email, telephone, userType, address);
+                  List<MedicineReservation> medicineReservation, List<Medicine> allergies, boolean isPasswordChanged) {
+      super(id, password, firstName, lastName, email, telephone, userType, address, isPasswordChanged);
       this.points = points;
       this.penalties = penalties;
       this.medicineReservation = medicineReservation;

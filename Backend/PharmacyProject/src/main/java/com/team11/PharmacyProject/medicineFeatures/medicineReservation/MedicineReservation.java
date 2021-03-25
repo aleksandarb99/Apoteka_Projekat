@@ -17,7 +17,7 @@ public class MedicineReservation {
    private Long pickupDate;
 
    @Column(name = "reservationID", nullable = false)
-   private Long reservationID;
+   private String reservationID;
 
    @Column(name = "state", nullable = false)
    @Enumerated(EnumType.STRING)
@@ -49,11 +49,11 @@ public class MedicineReservation {
       this.pickupDate = pickupDate;
    }
 
-   public Long getReservationID() {
+   public String getReservationID() {
       return reservationID;
    }
 
-   public void setReservationID(Long reservationID) {
+   public void setReservationID(String reservationID) {
       this.reservationID = reservationID;
    }
 

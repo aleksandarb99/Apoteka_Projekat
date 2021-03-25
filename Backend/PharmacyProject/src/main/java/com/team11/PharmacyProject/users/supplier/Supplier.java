@@ -22,8 +22,8 @@ public class Supplier extends MyUser {
 
    }
 
-   public Supplier(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, List<SupplierItem> supplierItems, List<Offer> offers) {
-      super(id, password, firstName, lastName, email, telephone, userType, address);
+   public Supplier(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, List<SupplierItem> supplierItems, List<Offer> offers, boolean isPasswordChanged) {
+      super(id, password, firstName, lastName, email, telephone, userType, address, isPasswordChanged);
       this.supplierItems = supplierItems;
       this.offers = offers;
    }

@@ -28,8 +28,8 @@ public class PharmacyWorker extends MyUser {
 
 	public PharmacyWorker() {}
 
-	public PharmacyWorker(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, double avgGrade, WorkCalendar workCalendar, List<Appointment> appointmentList, List<Workplace> workplaces) {
-		super(id, password, firstName, lastName, email, telephone, userType, address);
+	public PharmacyWorker(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, double avgGrade, WorkCalendar workCalendar, List<Appointment> appointmentList, List<Workplace> workplaces, boolean isPasswordChanged) {
+		super(id, password, firstName, lastName, email, telephone, userType, address, isPasswordChanged);
 		this.avgGrade = avgGrade;
 		this.workCalendar = workCalendar;
 		this.appointmentList = appointmentList;

@@ -106,22 +106,22 @@ insert into work_day (weekday, start_time, end_time) values ('THU', 7, 15);
 insert into work_day (weekday, start_time, end_time) values ('FRI', 7, 15);
 
 /*MyUsers*/
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id)
-                    values ('pera123', 'Petar', 'Markovic', 'perazdera@gmail.com', '0642312343', 'PATIENT', 4);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id)
-                    values ('mika123', 'Mitar', 'Zivkovic', 'mitazita87@gmail.com', '06433332343', 'PATIENT', 4);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id)
-                    values ('zile123', 'Zdravko', 'Mitic', 'zlegenda78@gmail.com', '06233552343', 'SUPPLIER', 3);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id)
-                    values ('sima123', 'Slavko', 'Vasic', 'slavisa@gmail.com', '0632232343', 'SUPPLIER', 3);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id)
-                    values ('lukibuki', 'Nebojsa', 'Radovanovic', 'nebojsa@gmail.com', '0637732343', 'PHARMACIST', 3);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id)
-                    values ('lilecile', 'Marko', 'Maric', 'marcius@gmail.com', '0634632343', 'DERMATOLOGIST', 3);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id)
-                    values ('cile', 'Dusko', 'Dragic', 'duskousko@gmail.com', '0628832343', 'ADMIN', 3);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id)
-                    values ('bile', 'Branko', 'Krasic', 'branimirko@gmail.com', '0658852343', 'PHARMACY_ADMIN', 3);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
+                    values ('pera123', 'Petar', 'Markovic', 'perazdera@gmail.com', '0642312343', 'PATIENT', 4, false);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
+                    values ('mika123', 'Mitar', 'Zivkovic', 'mitazita87@gmail.com', '06433332343', 'PATIENT', 4, false);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
+                    values ('zile123', 'Zdravko', 'Mitic', 'zlegenda78@gmail.com', '06233552343', 'SUPPLIER', 3, false);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
+                    values ('sima123', 'Slavko', 'Vasic', 'slavisa@gmail.com', '0632232343', 'SUPPLIER', 3, false);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
+                    values ('lukibuki', 'Nebojsa', 'Radovanovic', 'nebojsa@gmail.com', '0637732343', 'PHARMACIST', 3, false);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
+                    values ('lilecile', 'Marko', 'Maric', 'marcius@gmail.com', '0634632343', 'DERMATOLOGIST', 3, false);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
+                    values ('cile', 'Dusko', 'Dragic', 'duskousko@gmail.com', '0628832343', 'ADMIN', 3, false);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
+                    values ('bile', 'Branko', 'Krasic', 'branimirko@gmail.com', '0658852343', 'PHARMACY_ADMIN', 3, false);
 
 /*Pharmacy Workers*/
 insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.9, 1, 5);
@@ -135,6 +135,7 @@ insert into patient (points, penalties, id) values (43, 0, 2);
 insert into patient_allergies (patient_id, allergies_id) values (1, 3);
 insert into patient_allergies (patient_id, allergies_id) values (1, 4);
 insert into patient_allergies (patient_id, allergies_id) values (2, 5);
+insert into patient_allergies (patient_id, allergies_id) values (2, 4);
 
 /*Suppliers*/
 insert into supplier (id) values (3);
@@ -271,7 +272,7 @@ insert into advertising (advertisement_id, medicine_price_id) values (2, 3);
 
 /*MedicineReservations*/
 insert into medicine_reservation (pickup_date, reservationid, state, medicine_price_id, pharmacy_id)
-                    values (1620817200, 1, 'RESERVED', 1, 1);
+                    values (1620817200, '1234', 'RESERVED', 1, 1);
 
 /*Patient - MedicineReservations*/
 insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 1);
@@ -281,3 +282,4 @@ insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id)
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (2, 1);
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (3, 4);
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (4, 5);
+insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (1, 5);

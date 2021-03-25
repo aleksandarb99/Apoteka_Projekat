@@ -36,10 +36,13 @@ public class MyUser {
    @JoinColumn(name = "address_id")
    private Address address;
 
+   @Column(name = "is_password_changed", nullable = false)
+   private boolean isPasswordChanged;
+
    public MyUser() {
    }
 
-   public MyUser(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address) {
+   public MyUser(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, boolean isPasswordChanged) {
       this.id = id;
       this.password = password;
       this.firstName = firstName;
@@ -48,6 +51,7 @@ public class MyUser {
       this.telephone = telephone;
       this.userType = userType;
       this.address = address;
+      this.isPasswordChanged = isPasswordChanged;
    }
 
    public Long getId() {
@@ -112,5 +116,13 @@ public class MyUser {
 
    public void setAddress(Address address) {
       this.address = address;
+   }
+
+   public boolean isPasswordChanged() {
+      return isPasswordChanged;
+   }
+
+   public void setPasswordChanged(boolean passwordChanged) {
+      isPasswordChanged = passwordChanged;
    }
 }
