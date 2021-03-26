@@ -12,6 +12,7 @@ public class PharmacyDTO {
     @NotBlank
     private String description;
 
+    private Double avgGrade;
     @NotNull
     private Address address;
 
@@ -45,5 +46,13 @@ public class PharmacyDTO {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Double getAvgGrade() {
+        return avgGrade;
+    }
+
+    public void setAvgGrade(Double avgGrade) {
+        this.avgGrade = avgGrade;
     }
 }

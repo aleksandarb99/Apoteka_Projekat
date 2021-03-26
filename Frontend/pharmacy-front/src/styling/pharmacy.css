@@ -2,13 +2,52 @@ li a span {
   color: blue;
 }
 
-.mapCol {
-  width: 100%;
-  height: 100px;
-}
-
 .center {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+#mapCol {
+  margin-top: 1vh;
+  border: 3px solid #343a40;
+  width: 100%;
+  min-height: 30vh;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.row-content {
+  padding: 0 1vw;
+}
+
+.row-content h1 {
+  text-align: center;
+}
+
+.row-content h5 {
+  text-align: center;
+  font-family: "Fira Sans", serif;
+  font-style: italic;
+}
+
+.row-content h4 {
+  text-align: center;
+  font-family: "Fira Sans", serif;
+}
+
+.row-content button {
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+}
+
+.my__star {
+  width: 2em;
+}
+
+.my-vertical-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
