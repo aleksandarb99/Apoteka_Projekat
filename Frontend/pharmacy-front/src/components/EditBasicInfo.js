@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import axios from "axios";
+
 import Tab from "react-bootstrap/Tab";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -15,7 +17,8 @@ import { fromLonLat, toLonLat } from "ol/proj";
 
 import "../styling/pharmacyHomePage.css";
 
-function EditBasicInfo({ pharmacyDetails }) {
+function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
+  const [showAlert, setShowAlert] = useState(false);
   const [fixing, setFixing] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [valid, setValid] = useState(true);
@@ -38,6 +41,7 @@ function EditBasicInfo({ pharmacyDetails }) {
   };
 
   let editClickHandler = () => {
+    setShowAlert(false);
     setEditMode(true);
   };
 
@@ -45,9 +49,33 @@ function EditBasicInfo({ pharmacyDetails }) {
     if (valid) {
       setEditMode(false);
     }
+    let dto = {
+      id: pharmacyDetails.id,
+      name: text.name,
+      description: text.description,
+      address: {
+        id: pharmacyDetails.address.id,
+        country: text.country,
+        city: text.city,
+        street: text.street,
+        location: {
+          id: pharmacyDetails.address.location.id,
+          longitude: text.longitude,
+          latitude: text.latitude,
+        },
+      },
+    };
+
+    axios
+      .put(`http://localhost:8080/api/pharmacy/${pharmacyDetails.id}`, dto)
+      .then((res) => {
+        changedPharmacy();
+        setShowAlert(true);
+      });
   };
 
   let cancelClickHandler = () => {
+    setShowAlert(false);
     setValid(true);
     setAlertText("");
     setEditMode(false);
@@ -299,6 +327,12 @@ function EditBasicInfo({ pharmacyDetails }) {
                 <Alert variant="warning">
                   <Alert.Heading>Warning</Alert.Heading>
                   {alertText}
+                </Alert>
+              )}
+              {showAlert && (
+                <Alert variant="success">
+                  <Alert.Heading>Congratulations!</Alert.Heading>
+                  <p>You have successfully changed the pharmacy!</p>
                 </Alert>
               )}
             </Col>

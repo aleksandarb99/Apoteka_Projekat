@@ -15,13 +15,18 @@ import EditBasicInfo from "./EditBasicInfo";
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
 
+  async function fetchPharmacy() {
+    // TODO vidi koji je user pa uzmi apoteku koja ti treba
+    const request = await axios.get("http://localhost:8080/api/pharmacy/1");
+    setPharmacyDetails(request.data);
+    return request;
+  }
+
+  let changedPharmacy = () => {
+    fetchPharmacy();
+  };
+
   useEffect(() => {
-    async function fetchPharmacy() {
-      // TODO vidi koji je user pa uzmi apoteku koja ti treba
-      const request = await axios.get("http://localhost:8080/api/pharmacy/1");
-      setPharmacyDetails(request.data);
-      return request;
-    }
     fetchPharmacy();
   }, []);
 
@@ -61,7 +66,10 @@ function PharmacyAdminHomePage() {
           </Col>
           <Col sm={9} md={9} lg={10} xs={12}>
             <Tab.Content>
-              <EditBasicInfo pharmacyDetails={pharmacyDetails} />
+              <EditBasicInfo
+                pharmacyDetails={pharmacyDetails}
+                changedPharmacy={changedPharmacy}
+              />
               <Tab.Pane eventKey="second">
                 <div></div>
               </Tab.Pane>

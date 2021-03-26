@@ -42,6 +42,7 @@ public class PharmacyService {
             p2.setDescription(pharmacy.getDescription());
             p2.setAddress(pharmacy.getAddress());
             p2.setName(pharmacy.getName());
+            p2.setAddress(pharmacy.getAddress());
             pharmacyRepository.save(p2);
             return true;
         } else {

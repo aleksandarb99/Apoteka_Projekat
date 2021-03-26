@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.dto;
 import com.team11.PharmacyProject.address.Address;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class PharmacyDTO {
     private long id;
@@ -11,7 +12,7 @@ public class PharmacyDTO {
     @NotBlank
     private String description;
 
-    @NotBlank
+    @NotNull
     private Address address;
 
     public long getId() {
