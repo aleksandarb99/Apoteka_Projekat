@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.dto;
 
+import com.team11.PharmacyProject.address.Address;
+
 import javax.validation.constraints.NotBlank;
 
 public class PharmacyDTO {
@@ -8,9 +10,9 @@ public class PharmacyDTO {
     private String name;
     @NotBlank
     private String description;
-    // TODO change to Location after implementing maps
+
     @NotBlank
-    private String location;
+    private Address address;
 
     public long getId() {
         return id;
@@ -36,11 +38,11 @@ public class PharmacyDTO {
         this.description = description;
     }
 
-    public String getLocation() {
-        return location;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
