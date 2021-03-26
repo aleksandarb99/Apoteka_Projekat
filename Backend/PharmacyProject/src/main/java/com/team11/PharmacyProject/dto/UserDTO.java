@@ -2,33 +2,53 @@ package com.team11.PharmacyProject.dto;
 
 import com.team11.PharmacyProject.address.Address;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 public class UserDTO {
 
-    @NotBlank
+
+    private Long id;
+
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^*_=+-]).{8,12}$")
     private String password;
-    @NotBlank
+
+    @NotEmpty
     private String firstName;
-    @NotBlank
+
+    @NotEmpty
     private String lastName;
-    @NotBlank
+
+    @NotEmpty
     private String email;
-    @NotBlank
+
+    @NotEmpty
+    @Pattern(regexp="(^$|[0-9]{10})")
     private String telephone;
-    @NotBlank
+
+    @NotNull
     private Address address;
 
     public UserDTO() {
     }
 
-    public UserDTO(String password, String firstName, String lastName, String email, String telephone, Address address) {
+    public UserDTO(Long id, String password, String firstName, String lastName, String email, String telephone, Address address) {
+        this.id = id;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.telephone = telephone;
         this.address = address;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPassword() {
