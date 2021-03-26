@@ -38,3 +38,7 @@ button {
 h1 {
   color: #343a40;
 }
+
+.alert {
+  margin-top: 3vh;
+}
