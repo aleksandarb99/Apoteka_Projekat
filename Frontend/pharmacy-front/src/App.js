@@ -5,6 +5,7 @@ import LogIn from "./components/LogIn";
 import Registration from "./components/Registration";
 import HomePage from "./components/HomePage";
 import PharmacyAdminHomePage from "./components/PharmacyAdminHomePage";
+import UserProfile from "./components/UserProfile";
 import Footer from "./components/Footer";
 import { Navbar, Nav } from "react-bootstrap";
 import PharmacyProfile from "./components/PharmacyProfile";
@@ -22,6 +23,7 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="m-auto">
+              <Nav.Link href="/profile">Profile</Nav.Link>
               <Nav.Link href="/registration">Register</Nav.Link>
               <Nav.Link href="/login">Log In</Nav.Link>
             </Nav>
@@ -30,6 +32,7 @@ function App() {
 
         <Switch>
           <Route path="/" exact component={HomePage} />
+          <Route path="/profile" exact component={UserProfile} />
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LogIn} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
