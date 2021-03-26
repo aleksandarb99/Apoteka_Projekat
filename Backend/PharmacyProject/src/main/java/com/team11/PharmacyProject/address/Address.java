@@ -19,7 +19,7 @@ public class Address {
    @Column(name = "country", nullable = false)
    private String country;
 
-   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
    @JoinColumn(name = "location_id")
    private Location location;
 
