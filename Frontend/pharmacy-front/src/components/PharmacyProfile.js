@@ -62,7 +62,7 @@ function PharmacyProfile() {
                 medicines={details?.priceList?.medicineItems}
                 isAdmin={true}
               />
-              <AppointmentView />
+              <AppointmentView pharmacyId={id} />
             </Tab.Content>
           </Col>
         </Row>

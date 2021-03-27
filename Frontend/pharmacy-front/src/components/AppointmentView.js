@@ -9,6 +9,7 @@ import {
   ListGroupItem,
   Pagination,
   Nav,
+  Button,
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
@@ -16,21 +17,25 @@ import axios from "axios";
 
 import "./../styling/pharmaciesAndMedicines.css";
 
-function AppointmentView() {
+function AppointmentView({ pharmacyId }) {
   const [appointsments, setAppointsments] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
   const [showedAppointsments, setShowedAppointsments] = useState([]);
 
   useEffect(() => {
-    async function fetchAppointsments() {
-      const request = await axios.get("http://localhost:8080/api/pharmacy/");
-      setAppointsments(request.data);
+    if (pharmacyId != undefined) {
+      async function fetchAppointsments() {
+        const request = await axios.get(
+          `http://localhost:8080/api/appointment/bypharmacyid/${pharmacyId}`
+        );
+        setAppointsments(request.data);
 
-      return request;
+        return request;
+      }
+      fetchAppointsments();
     }
-    fetchAppointsments();
-  }, []);
+  }, [pharmacyId]);
 
   useEffect(() => {
     let maxNumber = Math.floor(appointsments?.length / 12) - 1;
@@ -68,33 +73,27 @@ function AppointmentView() {
               <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
                 <Card className="my__card" style={{ width: "18rem" }}>
                   <Card.Body>
-                    <Card.Title>{appointsment.name}</Card.Title>
-                    <Card.Text>{appointsment.description}</Card.Text>
+                    <Card.Title>{appointsment?.appointmentType}</Card.Title>
+                    <Card.Text>
+                      {appointsment?.startTime} - {appointsment?.endTime}
+                    </Card.Text>
+                    <Card.Text>{appointsment?.info}</Card.Text>
+                    <Card.Text>{appointsment?.price}$</Card.Text>
+                    <Button variant="secondary">Reserve</Button>
                   </Card.Body>
                   <ListGroup className="list-group-flush">
                     <ListGroupItem className="my__flex">
-                      {[...Array(Math.ceil(appointsment.avgGrade))].map(() => (
+                      {/* {[...Array(Math.ceil(appointsment.avgGrade))].map(() => (
                         <StarFill className="my__star" />
-                      ))}
+                      ))} */}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
-                      {appointsment.address.street}
+                      {appointsment?.address?.street}
                     </ListGroupItem>
                   </ListGroup>
                 </Card>
               </Col>
             ))}
-          <Col className="my__flex" lg={3} md={6} sm={12}>
-            <Card className="my__card" style={{ width: "18rem" }}>
-              <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
         </Row>
 
         <Row className="my__row__pagination">
