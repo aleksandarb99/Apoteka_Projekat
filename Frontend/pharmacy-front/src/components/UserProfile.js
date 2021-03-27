@@ -89,12 +89,12 @@ function UserProfile() {
 
   const validate = () => {
     let value = document.getElementsByName("password2")[0].value;
-    return value == showUser.password ? true : false;
+    return value === showUser.password ? true : false;
   };
 
   const matchPasswords = (event) => {
     let value = event.target.value;
-    value == showUser.password ? setMatch(true) : setMatch(false);
+    value === showUser.password ? setMatch(true) : setMatch(false);
   };
 
   return (

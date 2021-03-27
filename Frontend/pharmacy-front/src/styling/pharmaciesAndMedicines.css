@@ -1,0 +1,36 @@
+.my__flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.my__card {
+  height: 30vh;
+  margin-top: 50px;
+  box-shadow: 0px 0px 20px #020c0c;
+  transition: transform 450ms;
+  max-width: 15vw;
+}
+
+.my__card:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+.my__star {
+  width: 2em;
+}
+
+.my__row__pagination {
+  margin-top: 50px;
+}
+
+.my__nav__link__card:hover {
+  color: black;
+}
+
+@media screen and (max-width: 774px) {
+  .my__card {
+    min-width: 50vw;
+  }
+}
