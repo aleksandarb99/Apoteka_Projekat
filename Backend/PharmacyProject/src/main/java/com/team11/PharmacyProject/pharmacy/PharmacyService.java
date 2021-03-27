@@ -14,6 +14,7 @@ public class PharmacyService {
 
     public Pharmacy getPharmacyById(Long id) {
         Optional<Pharmacy> pharmacy = pharmacyRepository.findById(id);
+
         return pharmacy.orElse(null);
     }
 

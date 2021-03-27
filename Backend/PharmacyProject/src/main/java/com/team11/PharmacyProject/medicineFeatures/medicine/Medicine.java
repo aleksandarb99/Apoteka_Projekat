@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team11.PharmacyProject.enums.RecipeRegime;
 import com.team11.PharmacyProject.medicineFeatures.manufacturer.Manufacturer;
 import com.team11.PharmacyProject.medicineFeatures.medicineForm.MedicineForm;
@@ -43,18 +44,19 @@ public class Medicine {
    @Column(name = "points", nullable = false)
    private int points;
 
+   @JsonIgnore
    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Medicine> alternativeMedicine;
 
-   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
    @JoinColumn(name = "medicine_type_id")
    private MedicineType medicineType;
 
-   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
    @JoinColumn(name = "medicine_form_id")
    private MedicineForm medicineForm;
 
-   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
    @JoinColumn(name = "manufacturer_id")
    private Manufacturer manufacturer;
 

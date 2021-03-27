@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 import PharmacyBasic from "./PharmacyBasic";
+import MedicinesAdminView from "./MedicineAdminView";
+import AppointmentView from "./AppointmentView";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -56,9 +58,11 @@ function PharmacyProfile() {
           <Col sm={9} md={9} lg={10} xs={12}>
             <Tab.Content>
               <PharmacyBasic details={details} />
-              <Tab.Pane eventKey="second">
-                <div></div>
-              </Tab.Pane>
+              <MedicinesAdminView
+                medicines={details?.priceList?.medicineItems}
+                isAdmin={true}
+              />
+              <AppointmentView />
             </Tab.Content>
           </Col>
         </Row>
