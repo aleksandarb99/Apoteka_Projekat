@@ -1,4 +1,4 @@
-.my-footer {
+.my__footer {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -8,16 +8,27 @@
   color: #cccccc;
 }
 
-.my-footer p {
+.my__footer p {
   text-align: center;
 }
 
-.my-footer p:first-child {
+.my__footer p:first-child {
   font-size: 1.3rem;
 }
 
-.my-footer p:nth-child(2) {
+.my__footer p:nth-child(2) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.my__footer__btn {
+  background-color: #141518;
+  border-color: #141518;
+}
+
+.my__footer__btn:hover,
+.my__footer__btn:focus {
+  background-color: #141518;
+  border-color: #141518;
 }

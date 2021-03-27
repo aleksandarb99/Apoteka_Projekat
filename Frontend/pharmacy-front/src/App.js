@@ -14,18 +14,38 @@ import DermHomePage from "./workers/dermatologist/home_page_dermatologist";
 import PharmHomePage from "./workers/pharmacist/home_page_pharmacist";
 import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
 
+import "./styling/navbar.css";
+import { House } from "react-bootstrap-icons";
+
 function App() {
   return (
     <Router>
       <div>
-        <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">Home</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar className="my__navbar" sticky="top" expand="lg">
+          <Navbar.Brand
+            style={{ color: "white" }}
+            className="my__navbar__house"
+            href="/"
+          >
+            <House /> Home
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="m-auto">
-              <Nav.Link href="/profile">Profile</Nav.Link>
-              <Nav.Link href="/registration">Register</Nav.Link>
-              <Nav.Link href="/login">Log In</Nav.Link>
+            <Nav className="mr-auto">
+              <Nav.Link style={{ color: "white" }} href="/profile">
+                Profile
+              </Nav.Link>
+              <Nav.Link style={{ color: "white" }} href="/">
+                Another link here
+              </Nav.Link>
+            </Nav>
+            <Nav>
+              <Nav.Link style={{ color: "white" }} href="/registration">
+                Register
+              </Nav.Link>
+              <Nav.Link style={{ color: "white" }} href="/login">
+                Log In
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
