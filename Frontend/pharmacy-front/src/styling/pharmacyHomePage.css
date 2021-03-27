@@ -3,7 +3,11 @@
 }
 
 .sideBar {
-  background-color: rgba(173, 173, 173, 0.452);
+  background: linear-gradient(
+    rgba(172, 214, 208, 0.452),
+    rgba(31, 59, 59, 0.452)
+  );
+  border-right: 1px solid rgba(47, 49, 49, 0.452);
 }
 
 a {
