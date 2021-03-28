@@ -14,6 +14,7 @@ import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
 
 import "../styling/pharmacy.css";
+import "../styling/unregistered.css";
 
 function PharmacyProfile() {
   const [details, setPharmacyDetails] = useState({});
@@ -38,25 +39,33 @@ function PharmacyProfile() {
           <Col sm={3} md={3} lg={2} xs={12} className="sideBar">
             <Nav variant="pills" className="flex-column">
               <Nav.Item>
-                <Nav.Link eventKey="first">Basic informations</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="first">
+                  Basic informations
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="second">Medicines</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="second">
+                  Medicines
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="third">Appointsments</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="third">
+                  Appointsments
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="forth">
+                <Nav.Link className="my__nav__link" eventKey="forth">
                   Pharmacists and dermatologists
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="fifth">Check availability</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="fifth">
+                  Check availability
+                </Nav.Link>
               </Nav.Item>
             </Nav>
           </Col>
-          <Col sm={9} md={9} lg={10} xs={12}>
+          <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
             <Tab.Content>
               <PharmacyBasic details={details} />
               <MedicinesAdminView
