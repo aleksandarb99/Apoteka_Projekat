@@ -13,6 +13,8 @@ import {
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
+import Moment from "react-moment";
+
 import axios from "axios";
 
 import "./../styling/pharmaciesAndMedicines.css";
@@ -74,21 +76,27 @@ function AppointmentView({ pharmacyId }) {
                 <Card className="my__card" style={{ width: "18rem" }}>
                   <Card.Body>
                     <Card.Title>{appointsment?.appointmentType}</Card.Title>
-                    <Card.Text>
-                      {appointsment?.startTime} - {appointsment?.endTime}
-                    </Card.Text>
-                    <Card.Text>{appointsment?.info}</Card.Text>
-                    <Card.Text>{appointsment?.price}$</Card.Text>
-                    <Button variant="secondary">Reserve</Button>
                   </Card.Body>
                   <ListGroup className="list-group-flush">
                     <ListGroupItem className="my__flex">
-                      {/* {[...Array(Math.ceil(appointsment.avgGrade))].map(() => (
-                        <StarFill className="my__star" />
-                      ))} */}
+                      <Moment format="DD.MM.yyyy" unix>
+                        {appointsment?.startTime}
+                      </Moment>
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
-                      {appointsment?.address?.street}
+                      <Moment format="hh:mm" unix>
+                        {appointsment?.startTime}
+                      </Moment>{" "}
+                      -{" "}
+                      <Moment format="hh:mm" unix>
+                        {appointsment?.endTime}
+                      </Moment>
+                    </ListGroupItem>
+                    <ListGroupItem className="my__flex">
+                      {appointsment?.price}$
+                    </ListGroupItem>
+                    <ListGroupItem className="my__flex">
+                      <Button variant="secondary">Reserve</Button>
                     </ListGroupItem>
                   </ListGroup>
                 </Card>
