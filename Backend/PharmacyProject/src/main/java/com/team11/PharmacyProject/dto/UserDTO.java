@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.dto;
 
 import com.team11.PharmacyProject.address.Address;
+import com.team11.PharmacyProject.enums.UserType;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -33,7 +34,7 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(Long id, String password, String firstName, String lastName, String email, String telephone, Address address) {
+    public UserDTO(Long id, @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^*_=+-]).{8,12}$") String password, @NotEmpty String firstName, @NotEmpty String lastName, @NotEmpty String email, @NotEmpty @Pattern(regexp = "(^$|[0-9]{10})") String telephone, @NotNull Address address) {
         this.id = id;
         this.password = password;
         this.firstName = firstName;
