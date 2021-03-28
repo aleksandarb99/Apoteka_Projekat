@@ -59,7 +59,7 @@ function MedicinesView({ medicines }) {
                     <Card.Title>{medicine?.medicine?.name}</Card.Title>
                     <Card.Text>#{medicine?.medicine?.code}</Card.Text>
                     <Card.Text>{medicine?.medicine?.content}</Card.Text>
-                    <Card.Text>{medicine?.medicinePrices[0]?.price}$</Card.Text>
+                    <Card.Text>{medicine?.price}$</Card.Text>
 
                     <Button size="lg" variant="secondary">
                       Buy

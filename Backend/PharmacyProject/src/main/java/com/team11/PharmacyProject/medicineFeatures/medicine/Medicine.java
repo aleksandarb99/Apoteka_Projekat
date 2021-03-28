@@ -1,6 +1,5 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team11.PharmacyProject.enums.RecipeRegime;
 import com.team11.PharmacyProject.medicineFeatures.manufacturer.Manufacturer;
 import com.team11.PharmacyProject.medicineFeatures.medicineForm.MedicineForm;
@@ -44,7 +43,6 @@ public class Medicine {
    @Column(name = "points", nullable = false)
    private int points;
 
-   @JsonIgnore
    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Medicine> alternativeMedicine;
 

@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,31 @@ public class PharmacyService {
         Optional<Pharmacy> pharmacy = pharmacyRepository.findById(id);
 
         return pharmacy.orElse(null);
+    }
+
+    public double getMedicineItemPrice(Long pharmacyId, Long medicineItemId) {
+        Optional<Pharmacy> pharmacy = pharmacyRepository.findById(pharmacyId);
+        if(pharmacy.isPresent()){
+            Pharmacy p = pharmacy.get();
+            for (MedicineItem item: p.getPriceList().getMedicineItems()) {
+                if(item.getId().equals(medicineItemId)){
+                    return calculatePrice(item.getMedicinePrices());
+                }
+            }
+        }
+        return 0;
+    }
+
+    public double calculatePrice(List<MedicinePrice> prices){
+        long max = 0;
+        double priceLast = 0;
+        for (MedicinePrice price: prices) {
+            if(price.getStartDate() > max){
+                max = price.getStartDate();
+                priceLast = price.getPrice();
+            }
+        }
+        return priceLast;
     }
 
     public boolean insertPharmacy(Pharmacy pharmacy) {

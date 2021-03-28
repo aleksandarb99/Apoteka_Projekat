@@ -24,11 +24,13 @@ public class AppointmentDTO {
 
     private double price;
 
+    private PharmacyWorkerDTO worker;
+
     private AppointmentType appointmentType;
 
     public AppointmentDTO(Long id, Long startTime, Long endTime, int duration,
                           AppointmentState appointmentState, String info, double price,
-                          AppointmentType appointmentType) {
+                          PharmacyWorkerDTO worker, AppointmentType appointmentType) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -36,12 +38,20 @@ public class AppointmentDTO {
         this.appointmentState = appointmentState;
         this.info = info;
         this.price = price;
+        this.worker = worker;
         this.appointmentType = appointmentType;
     }
 
     public AppointmentDTO() {
     }
 
+    public PharmacyWorkerDTO getWorker() {
+        return worker;
+    }
+
+    public void setWorker(PharmacyWorkerDTO worker) {
+        this.worker = worker;
+    }
 
     public Long getId() {
         return id;

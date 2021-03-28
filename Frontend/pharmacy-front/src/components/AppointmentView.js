@@ -86,14 +86,15 @@ function AppointmentView({ pharmacyId }) {
                     <ListGroupItem className="my__flex">
                       <Moment format="hh:mm" unix>
                         {appointsment?.startTime}
-                      </Moment>{" "}
-                      -{" "}
+                      </Moment>
+                      -
                       <Moment format="hh:mm" unix>
                         {appointsment?.endTime}
                       </Moment>
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
-                      {appointsment?.price}$
+                      {appointsment?.worker?.lastName}{" "}
+                      {appointsment?.worker?.firstName}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
                       <Button variant="secondary">Reserve</Button>

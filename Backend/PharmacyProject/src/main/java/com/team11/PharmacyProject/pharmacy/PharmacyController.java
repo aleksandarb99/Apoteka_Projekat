@@ -1,6 +1,8 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import com.team11.PharmacyProject.dto.MedicineItemDTO;
 import com.team11.PharmacyProject.dto.PharmacyDTO;
+import com.team11.PharmacyProject.dto.PharmacyWorkerDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +32,12 @@ public class PharmacyController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(convertToDto(pharmacy), HttpStatus.OK);
+        PharmacyDTO dto = convertToDto(pharmacy);
+        for (MedicineItemDTO item:
+             dto.getPriceList().getMedicineItems()) {
+            item.setPrice(pharmacyService.getMedicineItemPrice(id, item.getId()));
+        }
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)

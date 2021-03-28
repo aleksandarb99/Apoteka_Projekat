@@ -17,13 +17,25 @@ public class PharmacyDTO {
     @NotNull
     private Address address;
 
-    private PriceList priceList;
+    private PriceListDTO priceList;
 
-    public PriceList getPriceList() {
+    public PharmacyDTO() {
+    }
+
+    public PharmacyDTO(long id, @NotBlank String name, @NotBlank String description, Double avgGrade, @NotNull Address address, PriceListDTO priceList) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.avgGrade = avgGrade;
+        this.address = address;
+        this.priceList = priceList;
+    }
+
+    public PriceListDTO getPriceList() {
         return priceList;
     }
 
-    public void setPriceList(PriceList priceList) {
+    public void setPriceList(PriceListDTO priceList) {
         this.priceList = priceList;
     }
 
