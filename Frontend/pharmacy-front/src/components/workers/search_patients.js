@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import  {Row, Form, Button, Container, Col, Card, ButtonGroup} from "react-bootstrap";
+import  {Row, Form, Button, Container, Col, Card} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 
 function SearchPatPage() {
-  const [patients, setPatients] = useState([]); 
+  const [patients, setPatients] = useState([]);
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState(""); 
 
   useEffect(() => {
     async function fetchPatients() {
@@ -18,20 +20,20 @@ function SearchPatPage() {
 
   const formSearch = event => {
     event.preventDefault();
-    let fName = event.target.firstName.value;
-    let lName = event.target.lastName.value;
     console.log("fn" + fName);
     console.log("fn" + lName);
     if (fName.length === 0 &&  lName.length === 0 ){
-      const request = axios.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data));
+      axios.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data));
     }else{
-      const request = axios.get("http://localhost:8080/api/patients/search", 
-            { params: {firstName:fName}}).then((resp)=>setPatients(resp.data));
+      axios.get("http://localhost:8080/api/patients/search", 
+            { params: {firstName:fName, lastName:lName}}).then((resp)=>setPatients(resp.data));
     } 
   }
 
   const resetSearch = function() {
     axios.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data));
+    setFName("");
+    setLName("");
   }
 
   return (
@@ -46,12 +48,14 @@ function SearchPatPage() {
               <Form.Group as={Row} className="align-items-center">
                   <Form.Label> First name: </Form.Label>
                   <Col>
-                  <Form.Control type="text" name="firstName" placeholder="Enter first name..." />
+                  <Form.Control type="text" name="firstName" value={fName} onChange={(e)=>setFName(e.target.value)}
+                          placeholder="Enter first name..." />
                   </Col>
 
                   <Form.Label> Last name: </Form.Label>
                   <Col>
-                  <Form.Control type="text" name="lastName" placeholder="Enter last name..." />
+                  <Form.Control type="text" name="lastName" value={lName} onChange={(e)=>setLName(e.target.value)}
+                          placeholder="Enter last name..." />
                   </Col>
 
                   <Col className="justify-content-center">
