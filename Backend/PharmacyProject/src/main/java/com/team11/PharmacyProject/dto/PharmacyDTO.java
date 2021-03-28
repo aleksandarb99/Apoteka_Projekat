@@ -2,9 +2,11 @@ package com.team11.PharmacyProject.dto;
 
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.priceList.PriceList;
+import com.team11.PharmacyProject.workplace.Workplace;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class PharmacyDTO {
     private long id;
@@ -22,7 +24,8 @@ public class PharmacyDTO {
     public PharmacyDTO() {
     }
 
-    public PharmacyDTO(long id, @NotBlank String name, @NotBlank String description, Double avgGrade, @NotNull Address address, PriceListDTO priceList) {
+    public PharmacyDTO(long id, @NotBlank String name, @NotBlank String description,
+                       Double avgGrade, @NotNull Address address, PriceListDTO priceList) {
         this.id = id;
         this.name = name;
         this.description = description;

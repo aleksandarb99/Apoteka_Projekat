@@ -5,6 +5,7 @@ import axios from "axios";
 import PharmacyBasic from "./PharmacyBasic";
 import MedicinesAdminView from "./MedicineAdminView";
 import AppointmentView from "./AppointmentView";
+import WorkersView from "./WorkersView";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -63,6 +64,7 @@ function PharmacyProfile() {
                 isAdmin={true}
               />
               <AppointmentView pharmacyId={id} />
+              <WorkersView pharmacyId={id} />
             </Tab.Content>
           </Col>
         </Row>

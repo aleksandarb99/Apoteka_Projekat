@@ -60,12 +60,13 @@ function MedicinesView({ medicines }) {
                     <Card.Text>#{medicine?.medicine?.code}</Card.Text>
                     <Card.Text>{medicine?.medicine?.content}</Card.Text>
                     <Card.Text>{medicine?.price}$</Card.Text>
-
-                    <Button size="lg" variant="secondary">
-                      Buy
-                    </Button>
                   </Card.Body>
                   <ListGroup className="list-group-flush">
+                    <ListGroupItem className="my__flex">
+                      <Button size="lg" variant="secondary">
+                        Buy
+                      </Button>
+                    </ListGroupItem>
                     <ListGroupItem className="my__flex">
                       {medicines &&
                         [

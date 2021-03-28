@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.workplace.Workplace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,6 @@ public class PharmacyService {
 
     public Pharmacy getPharmacyById(Long id) {
         Optional<Pharmacy> pharmacy = pharmacyRepository.findById(id);
-
         return pharmacy.orElse(null);
     }
 

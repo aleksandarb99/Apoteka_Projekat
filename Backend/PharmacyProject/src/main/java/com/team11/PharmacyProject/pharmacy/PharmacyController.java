@@ -33,8 +33,7 @@ public class PharmacyController {
         }
 
         PharmacyDTO dto = convertToDto(pharmacy);
-        for (MedicineItemDTO item:
-             dto.getPriceList().getMedicineItems()) {
+        for (MedicineItemDTO item: dto.getPriceList().getMedicineItems()) {
             item.setPrice(pharmacyService.getMedicineItemPrice(id, item.getId()));
         }
         return new ResponseEntity<>(dto, HttpStatus.OK);

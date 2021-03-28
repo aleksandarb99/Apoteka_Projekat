@@ -19,40 +19,39 @@ import axios from "axios";
 
 import "./../styling/pharmaciesAndMedicines.css";
 
-function AppointmentView({ pharmacyId }) {
-  const [appointsments, setAppointsments] = useState([]);
+function WorkersView({ pharmacyId }) {
+  const [workers, setWorkers] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
-  const [showedAppointsments, setShowedAppointsments] = useState([]);
+  const [showedWorkers, setShowedWorkers] = useState([]);
 
   useEffect(() => {
     if (pharmacyId != undefined) {
-      async function fetchAppointsments() {
+      async function fetchWorkers() {
         const request = await axios.get(
-          `http://localhost:8080/api/appointment/bypharmacyid/${pharmacyId}`
+          `http://localhost:8080/api/workplace/bypharmacyid/${pharmacyId}`
         );
-        setAppointsments(request.data);
+        setWorkers(request.data);
 
         return request;
       }
-      fetchAppointsments();
+      fetchWorkers();
     }
   }, [pharmacyId]);
 
   useEffect(() => {
-    let maxNumber = Math.floor(appointsments?.length / 12) - 1;
-    if (appointsments?.length / 12 - 1 > maxNumber) {
+    let maxNumber = Math.floor(workers?.length / 12) - 1;
+    if (workers?.length / 12 - 1 > maxNumber) {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
-  }, [appointsments]);
+  }, [workers]);
 
   useEffect(() => {
     let first = pagNumber * 12;
-    let max =
-      appointsments.length < first + 12 ? appointsments?.length : first + 12;
-    setShowedAppointsments(appointsments?.slice(first, max));
-  }, [appointsments, pagNumber]);
+    let max = workers.length < first + 12 ? workers?.length : first + 12;
+    setShowedWorkers(workers?.slice(first, max));
+  }, [workers, pagNumber]);
 
   let handleSlideLeft = () => {
     if (pagNumber !== 0) {
@@ -67,37 +66,29 @@ function AppointmentView({ pharmacyId }) {
   };
 
   return (
-    <Tab.Pane eventKey="third">
+    <Tab.Pane eventKey="forth">
       <Container fluid>
         <Row>
-          {showedAppointsments &&
-            showedAppointsments.map((appointsment, index) => (
+          {showedWorkers &&
+            showedWorkers.map((worker, index) => (
               <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
                 <Card className="my__card" style={{ width: "18rem" }}>
                   <Card.Body>
-                    <Card.Title>{appointsment?.appointmentType}</Card.Title>
-                    <Card.Text>
-                      <Moment format="DD.MM.yyyy" unix>
-                        {appointsment?.startTime}
-                      </Moment>
-                    </Card.Text>
-                    <Card.Text>
-                      <Moment format="hh:mm" unix>
-                        {appointsment?.startTime}
-                      </Moment>
-                      -
-                      <Moment format="hh:mm" unix>
-                        {appointsment?.endTime}
-                      </Moment>
-                    </Card.Text>
+                    <Card.Title>
+                      {worker?.worker?.lastName} {worker?.worker?.firstName}
+                    </Card.Title>
+                    <Card.Text>{worker?.worker?.email}</Card.Text>
+                    <Card.Text>{worker?.worker?.telephone}</Card.Text>
                   </Card.Body>
                   <ListGroup className="list-group-flush">
                     <ListGroupItem className="my__flex">
-                      {appointsment?.worker?.lastName}{" "}
-                      {appointsment?.worker?.firstName}
+                      {worker?.worker?.userType}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
-                      <Button variant="secondary">Reserve</Button>
+                      {worker &&
+                        [
+                          ...Array(Math.ceil(worker?.worker?.avgGrade)),
+                        ].map(() => <StarFill className="my__star" />)}
                     </ListGroupItem>
                   </ListGroup>
                 </Card>
@@ -125,4 +116,4 @@ function AppointmentView({ pharmacyId }) {
   );
 }
 
-export default AppointmentView;
+export default WorkersView;
