@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import LogIn from "./components/LogIn";
@@ -13,6 +14,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DermHomePage from "./workers/dermatologist/home_page_dermatologist";
 import PharmHomePage from "./workers/pharmacist/home_page_pharmacist";
 import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
+import WorkerProfile from "./workers/profile_page";
 
 import "./styling/navbar.css";
 import { House } from "react-bootstrap-icons";
@@ -23,16 +25,17 @@ function App() {
       <div>
         <Navbar className="my__navbar" sticky="top" expand="lg">
           <Navbar.Brand
+            as={Link}
             style={{ color: "white" }}
             className="my__navbar__house"
-            href="/"
+            to="/"
           >
             <House /> Home
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link style={{ color: "white" }} href="/profile">
+              <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
                 Profile
               </Nav.Link>
               <Nav.Link style={{ color: "white" }} href="/">
@@ -40,10 +43,10 @@ function App() {
               </Nav.Link>
             </Nav>
             <Nav>
-              <Nav.Link style={{ color: "white" }} href="/registration">
+              <Nav.Link as={Link} style={{ color: "white" }} to="/registration">
                 Register
               </Nav.Link>
-              <Nav.Link style={{ color: "white" }} href="/login">
+              <Nav.Link as={Link} style={{ color: "white" }} to="/login">
                 Log In
               </Nav.Link>
             </Nav>
@@ -60,6 +63,7 @@ function App() {
           <Route path="/pharmacist" component={PharmHomePage} />
           <Route path="/pharmacyAdmin" component={PharmacyAdminHomePage} />
           <Route path="/admin/pharmacies" component={PharmacyCrud} />
+          <Route path="/wp" component={WorkerProfile} />
         </Switch>
 
         <Footer />
