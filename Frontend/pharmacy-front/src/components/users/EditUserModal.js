@@ -83,11 +83,11 @@ function EditUserModal(props) {
 
     return (
         <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered onShow={showHandler}>
-            <Modal.Heade closeButton>
+            <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Edit {props.user.firstName + ' ' + props.user.lastName}
                 </Modal.Title>
-            </Modal.Heade>
+            </Modal.Header>
             <Modal.Body>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <FirstNameFormGroup
