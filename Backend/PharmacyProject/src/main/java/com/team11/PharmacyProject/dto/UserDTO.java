@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.dto;
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.enums.UserType;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -29,6 +30,9 @@ public class UserDTO {
 
     @NotNull
     private Address address;
+
+    @NotBlank
+    private UserType userType;
 
     public UserDTO() {
     }
@@ -97,5 +101,13 @@ public class UserDTO {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }

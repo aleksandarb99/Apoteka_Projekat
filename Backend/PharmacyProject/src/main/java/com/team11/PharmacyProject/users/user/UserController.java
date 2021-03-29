@@ -29,7 +29,7 @@ public class UserController {
     private ModelMapper mapper;
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> addUser(@Valid UserDTO userDto) {
+    public ResponseEntity<String> addUser(@RequestBody UserDTO userDto) {
         MyUser user = convertToEntity(userDto);
         if (userService.insertUser(user)) {
             return new ResponseEntity<>("User added successfully", HttpStatus.OK);
