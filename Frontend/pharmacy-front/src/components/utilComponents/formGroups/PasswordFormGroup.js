@@ -19,7 +19,7 @@ function PasswordFormGroup({ name, minLength, maxLength, onChange, ...props }) {
         setErrors(error)
     }
 
-    useEffect(findGroupErrors)
+    useEffect(findGroupErrors, [])
 
     const handleChange = (event) => {
         onChange(event)
