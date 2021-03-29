@@ -1,19 +1,19 @@
 import React from 'react'
 import TextFormGroup from './TextFormGroup'
 
-function FirstNameFormGroup(props) {
+function StreetFormGroup(props) {
 
     return (
         <TextFormGroup
             {...props}
-            name={"First Name"}
-            placeholder={"Enter first name..."}
+            name={"Street"}
+            placeholder={"Enter street..."}
             minLength={1}
-            maxLength={30}
+            maxLength={150}
             onChange={(event) => { props.onChange(event) }}
             required={true}
         ></TextFormGroup>
     )
 }
 
-export default FirstNameFormGroup
+export default StreetFormGroup

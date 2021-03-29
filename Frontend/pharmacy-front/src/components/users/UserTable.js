@@ -18,14 +18,18 @@ function UserTable({ initialUserType }) {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    useEffect(async () => {
-        const request = await axios.get('http://localhost:8080/api/users/?type=' + currentUserType);
-        setUsers(request.data);
+    // TODO check
+    useEffect(() => {
+        async function fetchData() {
+            const response = await axios.get('http://localhost:8080/api/users/?type=' + currentUserType);
+            setUsers(response.data);
+        }
+        fetchData();
     }, [reload, currentUserType]);
 
     useEffect(function () {
         setCurrentUserType(initialUserType)
-    }, [])
+    }, [initialUserType])
 
     const updateCurrentUserType = (event) => {
         setCurrentUserType(event.target.value);
@@ -45,6 +49,8 @@ function UserTable({ initialUserType }) {
                 return "System Admin"
             case "pharmacyAdmin":
                 return "Pharmacy Admin"
+            default:
+                return ""
         }
     }
 
@@ -98,11 +104,10 @@ function UserTable({ initialUserType }) {
                     ))}
                 </tbody>
             </Table>
-
+            <AddUserModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} userType={currentUserType} />
+            <DeleteModal title={"Remove " + selected.firstName + " " + selected.lastName} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deleteUser} />
         </Container>/*
-      <AddUserModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess = {reloadTable}/>
-      <EditUserModal show={showEditModal} user={selected} onHide={() => setShowEditModal(false)} onSuccess = {reloadTable}/>
-      <DeleteModal title={"Remove " + selected.firstName + " " + selected.lastName} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete = {deleteUser}/>*/
+      <EditUserModal show={showEditModal} user={selected} onHide={() => setShowEditModal(false)} onSuccess = {reloadTable}/>*/
     )
 }
 

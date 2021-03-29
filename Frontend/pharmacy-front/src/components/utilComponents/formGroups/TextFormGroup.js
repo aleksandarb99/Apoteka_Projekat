@@ -2,35 +2,52 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form } from 'react-bootstrap';
 
-function TextFormGroup({ name, placeholder, minLength, maxLength, defaultValue, required }) {
+function TextFormGroup({ name, placeholder, minLength, maxLength, defaultValue, required, pattern, onChange, ...props }) {
 
     const [errors, setErrors] = useState("")
+    const [regex, setRegex] = useState()
 
     useEffect(() => {
-        findGroupErrors()
+        if (!!pattern) {
+            const main = pattern.match(/\/(.+)\/.*/)[1]
+            const options = pattern.match(/\/.+\/(.*)/)[1]
+            setRegex(new RegExp(main, options))
+        }
+        findGroupErrors(defaultValue)
     }, [])
 
     const findGroupErrors = (fieldText) => {
+        let error = '';
 
-        if (!fieldText || fieldText === '')
-            setErrors('This field cannot be blank!')
+        if (required && (!fieldText || fieldText === ''))
+            error = 'This field cannot be blank!'
+
+        else if (!!pattern) {
+            if (!regex.test(fieldText)) {
+                error = 'Input data is not in a valid format'
+            }
+        }
 
         else if (!!minLength && fieldText.length < minLength)
-            setErrors('Minimum number of characters is ' + minLength + ' !')
+            error = 'Minimum number of characters is ' + minLength + '.'
 
-        else if (!!maxLength && fieldText.length > maxLength)
-            setErrors('Maximum number of characters is ' + maxLength + ' !')
+        else if (!!maxLength && fieldText.length > maxLength) {
+            error = 'Maximum number of characters is ' + maxLength + '.'
+        }
 
         else
-            setErrors('')
+            error = ''
+
+        setErrors(error)
     }
 
     const handleChange = (event) => {
+        onChange(event)
         findGroupErrors(event.target.value)
     }
 
     return (
-        <Form.Group>
+        <Form.Group {...props}>
             <Form.Label>{name}</Form.Label>
             <Form.Control
                 type="text"
@@ -55,13 +72,15 @@ TextFormGroup.propTypes = {
     maxLength: PropTypes.number,
     defaultValue: PropTypes.string,
     required: PropTypes.bool,
-    onChange: PropTypes.func
+    pattern: PropTypes.string
 }
 
 TextFormGroup.defaultProps = {
     required: false,
     minLength: 0,
-    maxLength: 100
+    onChange: () => { },
+    maxLength: 100,
+    pattern: ""
 }
 
 export default TextFormGroup

@@ -1,17 +1,17 @@
 import React from 'react'
 import TextFormGroup from './TextFormGroup'
 
-function FirstNameFormGroup(props) {
+function FirstNameFormGroup({ onChange }) {
 
     return (
         <TextFormGroup
-            {...props}
-            name={"First Name"}
-            placeholder={"Enter first name..."}
+            name={"Phone Number"}
+            placeholder={"Enter phone number..."}
             minLength={1}
             maxLength={30}
-            onChange={(event) => { props.onChange(event) }}
             required={true}
+            onChange={onChange}
+            pattern={"/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$/"}
         ></TextFormGroup>
     )
 }
