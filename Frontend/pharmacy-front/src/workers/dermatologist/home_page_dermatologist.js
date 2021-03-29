@@ -51,7 +51,7 @@ function DermHomePage() {
         <Row className="justify-content-center m-3 align-items-center"><h2>Upcomming appointments</h2></Row>
         
         {appointments.length === 0 &&
-          <h1>There are no upcomming appointments!</h1>
+          <Row className="justify-content-center m-3 align-items-center"><h3>There are no upcomming appointments!</h3></Row>
         }
 
         {appointments.map((value, index) => {
