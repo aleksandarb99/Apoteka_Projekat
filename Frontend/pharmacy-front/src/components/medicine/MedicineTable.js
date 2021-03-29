@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Container, Row, Table } from 'react-bootstrap';
 import MedicineRow from "./MedicineRow"
 import AddMedicineModal from "./AddMedicineModal"
+import DeleteModal from "../utilComponents/DeleteModal"
 
 function MedicineTable() {
 
@@ -31,6 +32,16 @@ function MedicineTable() {
         setSelected(selectedMedicine)
     };
 
+    const deleteMedicine = () => {
+        axios
+            .delete("http://localhost:8080/api/medicine/" + selected.id)
+            .then(() => {
+                reloadTable()
+                alert("Medicine deleted successfully")
+                setShowDeleteModal(false)
+            })
+    }
+
     return (
         <Container style={{ marginTop: '10px' }} className="justify-content-center">
             <Row className="justify-content-md-between">
@@ -58,6 +69,7 @@ function MedicineTable() {
                 </tbody>
             </Table>
             <AddMedicineModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} />
+            <DeleteModal title={"Remove " + selected.name} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deleteMedicine} />
         </Container>
     )
 }
