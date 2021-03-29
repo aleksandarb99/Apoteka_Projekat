@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Container, Row, Table } from 'react-bootstrap';
 import MedicineRow from "./MedicineRow"
 import AddMedicineModal from "./AddMedicineModal"
+import EditMedicineModal from "./EditMedicineModal"
 import DeleteModal from "../utilComponents/DeleteModal"
 
 function MedicineTable() {
@@ -18,7 +19,7 @@ function MedicineTable() {
 
     useEffect(() => {
         async function fetchData() {
-            const response = await axios.get('http://localhost:8080/api/medicine/');
+            const response = await axios.get('http://localhost:8080/api/medicine/crud');
             setMedicine(response.data);
         }
         fetchData();
@@ -70,6 +71,7 @@ function MedicineTable() {
             </Table>
             <AddMedicineModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} />
             <DeleteModal title={"Remove " + selected.name} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deleteMedicine} />
+            <EditMedicineModal show={showEditModal} medicine={selected} onHide={() => setShowEditModal(false)} onSuccess={reloadTable} />
         </Container>
     )
 }
