@@ -8,7 +8,7 @@
 }
 
 .sideBar {
-  background-color: rgba(173, 173, 173, 0.452);
+  background-color: rgba(173, 173, 173, 0.452) !important;
   border-right: 1px solid black;
 }
 

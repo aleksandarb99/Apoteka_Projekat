@@ -29,7 +29,7 @@ public class Pharmacy {
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Patient> subscribers;
 
-   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
    @JoinColumn(name = "price_list_id")
    private PriceList priceList;
 

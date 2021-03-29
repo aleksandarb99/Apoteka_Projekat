@@ -71,7 +71,9 @@ function PharmacyAdminHomePage() {
                 changedPharmacy={changedPharmacy}
               />
               <Tab.Pane eventKey="second">
-                <div></div>
+                <div>
+                  <h1>aca</h1>
+                </div>
               </Tab.Pane>
             </Tab.Content>
           </Col>

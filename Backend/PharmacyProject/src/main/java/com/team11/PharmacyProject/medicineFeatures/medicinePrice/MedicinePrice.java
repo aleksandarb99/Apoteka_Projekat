@@ -18,7 +18,7 @@ public class MedicinePrice {
    @Column(name = "start_date", nullable = false)
    private Long startDate;
 
-   @ManyToMany(mappedBy = "medicineList")
+   @ManyToMany(mappedBy = "medicineList", fetch = FetchType.EAGER)
    private List<Advertisement> advertisements;
 
    public MedicinePrice() {

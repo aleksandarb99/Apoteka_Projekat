@@ -14,7 +14,9 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DermHomePage from "./workers/dermatologist/home_page_dermatologist";
 import PharmHomePage from "./workers/pharmacist/home_page_pharmacist";
 import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
+
 import WorkerProfile from "./workers/profile_page";
+import UserCrud from "./components/users/UserCrud";
 
 import "./styling/navbar.css";
 import { House } from "react-bootstrap-icons";
@@ -64,6 +66,7 @@ function App() {
           <Route path="/pharmacyAdmin" component={PharmacyAdminHomePage} />
           <Route path="/admin/pharmacies" component={PharmacyCrud} />
           <Route path="/wp" component={WorkerProfile} />
+          <Route path="/admin/users" component={UserCrud} />
         </Switch>
 
         <Footer />
