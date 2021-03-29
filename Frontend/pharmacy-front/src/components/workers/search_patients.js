@@ -68,25 +68,26 @@ function SearchPatPage() {
               
             </Form>
         </Row>
+        <Row className="justify-content-center m-3">
+          <Col md={8}>
+            {patients.length === 0 &&
+              <Row className="justify-content-center m-3 align-items-center"><h3>No result!</h3></Row>
+            }
 
-        <Container md={6} fluid>
-          {patients.length === 0 &&
-            <Row className="justify-content-center m-3 align-items-center"><h3>No result!</h3></Row>
-          }
-
-          {patients.map((value, index) => {
-            return (<Row className="justify-content-center m-5 align-items-center" key={index}>
-              <Col>
-              <Card fluid>
-                <Card.Body>
-                  <Card.Title>{value.firstName + " " + value.lastName} </Card.Title>
-                </Card.Body>
-              </Card>
-              </Col>
-              </Row>);
-          })}
-         </Container>
-        
+            {patients.map((value, index) => {
+              return (<Row className="justify-content-center m-5 align-items-center" key={index}>
+                <Col>
+                <Card fluid>
+                  <Card.Body>
+                    <Card.Title>{value.firstName + " " + value.lastName} </Card.Title>
+                    <Card.Link as={Link} className="mb-2"> Upcomming appointments</Card.Link>
+                  </Card.Body>
+                </Card>
+                </Col>
+                </Row>);
+            })}
+          </Col>
+         </Row>
       </Container>
     
   );

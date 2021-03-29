@@ -13,5 +13,5 @@ import java.util.List;
 public interface AppointmentRepository extends CrudRepository<Appointment, Long> {
     @Query("select a from Appointment  a where a.appointmentState = 'RESERVED' and " +
             "a.patient.id = ?1 and a.worker.id = ?2 order by a.startTime asc ")
-    Appointment getUpcommingAppointment(Long patientID, Long workerID, Pageable pg);
+    List<Appointment> getUpcommingAppointment(Long patientID, Long workerID, Pageable pg);
 }
