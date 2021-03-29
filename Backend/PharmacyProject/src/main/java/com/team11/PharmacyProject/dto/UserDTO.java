@@ -9,7 +9,6 @@ import javax.validation.constraints.Pattern;
 
 public class UserDTO {
 
-
     private Long id;
 
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^*_=+-]).{8,12}$")

@@ -1,9 +1,11 @@
 package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.UserDTO;
+import com.team11.PharmacyProject.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,5 +35,20 @@ public class UserServiceImpl implements UserService{
             return updatedUser;
         }
         return null;
+    }
+
+    @Override
+    public boolean insertUser(MyUser user) {
+        if (user != null) {
+            userRepository.save(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public List<MyUser> getUsersByUserType(UserType type) {
+        return userRepository.findAllByUserType(type);
     }
 }
