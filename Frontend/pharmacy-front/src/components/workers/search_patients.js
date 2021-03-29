@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import  {Row, Form, Button, Container, Col, Card} from "react-bootstrap";
+import  {Row, Form, Button, Container, Col, Card, Modal} from "react-bootstrap";
+import AppointmentsModal from "./appointments_modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 
@@ -7,6 +8,8 @@ function SearchPatPage() {
   const [patients, setPatients] = useState([]);
   const [fName, setFName] = useState("");
   const [lName, setLName] = useState(""); 
+  const [patient, setPatient] = useState({});  //appointments of currently picked patient
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     async function fetchPatients() {
@@ -31,9 +34,19 @@ function SearchPatPage() {
   }
 
   const resetSearch = function() {
-    axios.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data));
+    axios.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data)).catch((resp) => setPatients([]));
     setFName("");
     setLName("");
+  }
+
+  const onShowAppointmentsButton = function(pat_to_show){
+    setPatient({
+      "patient": pat_to_show?.email,
+      "worker": 5, //TODO promeniti, hardkodovano
+      "patientName": pat_to_show?.firstName + " " + pat_to_show?.lastName
+    });
+    console.log(pat_to_show);
+    setShowModal(true);
   }
 
   return (
@@ -75,12 +88,13 @@ function SearchPatPage() {
             }
 
             {patients.map((value, index) => {
+              console.log(value);
               return (<Row className="justify-content-center m-5 align-items-center" key={index}>
                 <Col>
                 <Card fluid>
                   <Card.Body>
                     <Card.Title>{value.firstName + " " + value.lastName} </Card.Title>
-                    <Card.Link as={Link} className="mb-2"> Upcomming appointments</Card.Link>
+                    <Button variant="secondary" onClick={() => onShowAppointmentsButton(value)}> Upcomming appointments </Button>
                   </Card.Body>
                 </Card>
                 </Col>
@@ -88,6 +102,8 @@ function SearchPatPage() {
             })}
           </Col>
          </Row>
+         <AppointmentsModal show={showModal} info={patient} onHide={() => {setShowModal(false); setPatient({})}}></AppointmentsModal>
+         
       </Container>
     
   );

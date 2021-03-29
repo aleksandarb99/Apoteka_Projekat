@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Container, Form, Row, Col, ButtonGroup, Card } from "react-bootstrap";
 import axios from "axios";
-import UserInfo from "../components/UserInfoComponent";
+import UserInfo from "../UserInfoComponent";
 
 function WorkerProfile() {
   return(
