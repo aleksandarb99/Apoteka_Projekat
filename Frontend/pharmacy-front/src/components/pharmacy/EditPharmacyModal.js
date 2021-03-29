@@ -14,7 +14,6 @@ function EditPharmacyModal(props) {
             'location': props.pharmacy.location
         }
         setForm(defaultForm)
-        console.log(form)
         findFormErrors();
     }
 

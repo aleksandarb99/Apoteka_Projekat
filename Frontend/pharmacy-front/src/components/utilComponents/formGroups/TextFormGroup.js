@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form } from 'react-bootstrap';
 
-function TextFormGroup({ name, placeholder, minLength, maxLength, defaultValue, required, pattern, onChange, ...props }) {
+function TextFormGroup({ name, placeholder, minLength, maxLength, defaultValue, required, pattern, onChange, disabled, ...props }) {
 
     const [errors, setErrors] = useState("")
     const [regex, setRegex] = useState()
@@ -11,9 +11,10 @@ function TextFormGroup({ name, placeholder, minLength, maxLength, defaultValue, 
         if (!!pattern) {
             const main = pattern.match(/\/(.+)\/.*/)[1]
             const options = pattern.match(/\/.+\/(.*)/)[1]
-            setRegex(new RegExp(main, options))
+            let re = new RegExp(main, options)
+            setRegex(re)
         }
-        findGroupErrors(defaultValue)
+        //findGroupErrors(defaultValue)
     }, [])
 
     const findGroupErrors = (fieldText) => {
@@ -56,6 +57,7 @@ function TextFormGroup({ name, placeholder, minLength, maxLength, defaultValue, 
                 isInvalid={!!errors}
                 onChange={handleChange.bind(this)}
                 required={required}
+                disabled={disabled}
             />
             <Form.Control.Feedback type='invalid'>
                 {errors}
@@ -80,7 +82,8 @@ TextFormGroup.defaultProps = {
     minLength: 0,
     onChange: () => { },
     maxLength: 100,
-    pattern: ""
+    pattern: "",
+    disabled: false
 }
 
 export default TextFormGroup

@@ -6,28 +6,20 @@ function PasswordFormGroup({ name, minLength, maxLength, onChange, ...props }) {
 
     const [errors, setErrors] = useState("")
 
-    useEffect(() => {
-        findGroupErrors()
-    }, [])
-
     const findGroupErrors = (fieldText) => {
-
         let error = '';
-
         if (!fieldText || fieldText === '')
             error = 'Password cannot be blank!'
-
         else if (!!minLength && fieldText.length < minLength)
             error = 'Minimum number of characters is ' + minLength + '.'
-
         else if (!!maxLength && fieldText.length > maxLength)
             error = 'Maximum number of characters is ' + maxLength + '.'
-
         else
             error = ''
-
         setErrors(error)
     }
+
+    useEffect(findGroupErrors)
 
     const handleChange = (event) => {
         onChange(event)

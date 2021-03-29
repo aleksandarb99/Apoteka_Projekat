@@ -9,6 +9,7 @@ import PasswordFormGroup from '../utilComponents/formGroups/PasswordFormGroup'
 import CityFormGroup from '../utilComponents/formGroups/CityFormGroup'
 import StreetFormGroup from '../utilComponents/formGroups/StreetFormGroup'
 import CountryFormGroup from '../utilComponents/formGroups/CountryFormGroup'
+import axios from 'axios'
 
 function AddUserModal(props) {
 
@@ -28,21 +29,52 @@ function AddUserModal(props) {
 
         const f = event.currentTarget;
 
-        if (f.checkValidity() === false) {
-            alert('format error - user')
-        } else {
-            alert('send request')
-            setValidated(true);
-            console.log(form);
+        if (f.checkValidity() === true) {
+            setValidated(true)
+            sendPostRequest()
+        }
+    }
+
+    const sendPostRequest = () => {
+        const newForm = convertForm(form);
+        console.log(newForm)
+        axios
+            .post('http://localhost:8080/api/users/', newForm)
+            .then(() => {
+                setForm({})
+                props.onSuccess()
+                props.onHide()
+                alert('User added successfully')
+            })
+            .catch(() => {
+                alert('Server error')
+            })
+    }
+
+    const convertForm = () => {
+        let address = {
+            'city': form['city'],
+            'street': form['street'],
+            'country': form['country'],
         }
 
+        let newForm = {
+            ...form,
+            'address': address
+        }
+
+        delete newForm['city']
+        delete newForm['street']
+        delete newForm['country']
+
+        return newForm
     }
 
     return (
         <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Add new {props.userType}
+                    Add new {props.usertype}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -50,7 +82,7 @@ function AddUserModal(props) {
                     <FirstNameFormGroup onChange={(event) => setField('firstName', event.target.value)} />
                     <LastNameFormGroup onChange={(event) => setField('lastName', event.target.value)} />
                     <EmailFormGroup onChange={(event) => setField('email', event.target.value)}></EmailFormGroup>
-                    <PasswordFormGroup onChange={(event) => setField('email', event.target.value)}></PasswordFormGroup>
+                    <PasswordFormGroup onChange={(event) => setField('password', event.target.value)}></PasswordFormGroup>
                     <PhoneNumberFormGroup onChange={(event) => setField('telephone', event.target.value)}></PhoneNumberFormGroup>
                     <CityFormGroup onChange={(event) => setField('city', event.target.value)}></CityFormGroup>
                     <StreetFormGroup onChange={(event) => setField('street', event.target.value)}></StreetFormGroup>
@@ -65,6 +97,6 @@ function AddUserModal(props) {
 }
 
 AddUserModal.propTypes = {
-    userType: PropTypes.string.isRequired
+    usertype: PropTypes.string.isRequired
 }
 export default AddUserModal

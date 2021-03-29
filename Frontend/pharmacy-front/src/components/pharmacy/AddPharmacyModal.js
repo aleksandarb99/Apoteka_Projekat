@@ -47,7 +47,6 @@ function AddPharmacyModal(props) {
     }
 
     const sendPostRequest = () => {
-        console.log(form)
         axios
             .post('http://localhost:8080/api/pharmacy/', form)
             .then(() => {

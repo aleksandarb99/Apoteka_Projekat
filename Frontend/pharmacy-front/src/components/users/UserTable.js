@@ -96,6 +96,7 @@ function UserTable({ initialUserType }) {
                 <tbody>
                     {users.map((user) => (
                         <UserRow
+                            key={user.id}
                             user={user}
                             onClick={() => updateSelected(user)}
                             editClick={() => setShowEditModal(true)}
@@ -104,10 +105,10 @@ function UserTable({ initialUserType }) {
                     ))}
                 </tbody>
             </Table>
-            <AddUserModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} userType={currentUserType} />
+            <AddUserModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} usertype={currentUserType} />
             <DeleteModal title={"Remove " + selected.firstName + " " + selected.lastName} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deleteUser} />
-        </Container>/*
-      <EditUserModal show={showEditModal} user={selected} onHide={() => setShowEditModal(false)} onSuccess = {reloadTable}/>*/
+            <EditUserModal show={showEditModal} user={selected} onHide={() => setShowEditModal(false)} onSuccess={reloadTable} />
+        </Container>
     )
 }
 
