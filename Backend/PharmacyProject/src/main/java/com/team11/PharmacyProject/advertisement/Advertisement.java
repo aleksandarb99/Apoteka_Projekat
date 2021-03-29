@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.advertisement;
 
+
 import com.team11.PharmacyProject.enums.AdvertisementType;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
@@ -23,7 +24,7 @@ public class Advertisement {
    @Column(name = "advertisement_text")
    private String advertisementText;
 
-   @ManyToMany
+   @ManyToMany(fetch = FetchType.LAZY)
    @JoinTable(name = "advertising", joinColumns = @JoinColumn(name = "advertisement_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicine_price_id", referencedColumnName = "id"))
    private List<MedicinePrice> medicineList;
 

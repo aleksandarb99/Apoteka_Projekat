@@ -1,6 +1,12 @@
 package com.team11.PharmacyProject.dto;
 
+import com.team11.PharmacyProject.address.Address;
+import com.team11.PharmacyProject.priceList.PriceList;
+import com.team11.PharmacyProject.workplace.Workplace;
+
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class PharmacyDTO {
     private long id;
@@ -8,9 +14,33 @@ public class PharmacyDTO {
     private String name;
     @NotBlank
     private String description;
-    // TODO change to Location after implementing maps
-    @NotBlank
-    private String location;
+
+    private Double avgGrade;
+    @NotNull
+    private Address address;
+
+    private PriceListDTO priceList;
+
+    public PharmacyDTO() {
+    }
+
+    public PharmacyDTO(long id, @NotBlank String name, @NotBlank String description,
+                       Double avgGrade, @NotNull Address address, PriceListDTO priceList) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.avgGrade = avgGrade;
+        this.address = address;
+        this.priceList = priceList;
+    }
+
+    public PriceListDTO getPriceList() {
+        return priceList;
+    }
+
+    public void setPriceList(PriceListDTO priceList) {
+        this.priceList = priceList;
+    }
 
     public long getId() {
         return id;
@@ -36,11 +66,20 @@ public class PharmacyDTO {
         this.description = description;
     }
 
-    public String getLocation() {
-        return location;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setAddress(Address address) {
+        this.address = address;
     }
+
+    public Double getAvgGrade() {
+        return avgGrade;
+    }
+
+    public void setAvgGrade(Double avgGrade) {
+        this.avgGrade = avgGrade;
+    }
+
 }

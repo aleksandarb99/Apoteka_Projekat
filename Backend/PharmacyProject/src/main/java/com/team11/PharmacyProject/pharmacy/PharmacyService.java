@@ -1,84 +1,85 @@
-//package com.team11.PharmacyProject.pharmacy;
-//
-//import com.team11.PharmacyProject.appointment.Appointment;
-//import com.team11.PharmacyProject.dto.PharmacyDTO;
-//import com.team11.PharmacyProject.enums.AppointmentState;
-//import com.team11.PharmacyProject.enums.AppointmentType;
-//import com.team11.PharmacyProject.enums.Weekday;
-//import com.team11.PharmacyProject.location.Location;
-//import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
-//import com.team11.PharmacyProject.priceList.PriceList;
-//import com.team11.PharmacyProject.users.dermatologist.Dermatologist;
-//import com.team11.PharmacyProject.users.patient.Patient;
-//import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
-//import com.team11.PharmacyProject.workDay.WorkDay;
-//import com.team11.PharmacyProject.workplace.Workplace;
-//import org.apache.tomcat.jni.Local;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import java.time.LocalDate;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//@Service
-//public class PharmacyService {
-//
-//    @Autowired
-//    PharmacyRepository pharmacyRepository;
-//
-//    public Pharmacy getPharmacyById(Long id) {
-//        return pharmacyRepository.getPharmacyById(id);
-//    }
-//
-//    public boolean insertPharmacy(Pharmacy pharmacy) {
-//        if (pharmacy != null) {
-//            pharmacyRepository.save(pharmacy);
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    public boolean delete(long id) {
-//        if (pharmacyRepository.getPharmacyById(id) != null) {
-//            pharmacyRepository.delete(id);
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    public boolean update(long id, Pharmacy pharmacy) {
-//        if (pharmacyRepository.getPharmacyById(id) != null) {
-//            pharmacyRepository.update(id, pharmacy);
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    public List<Pharmacy> getAll() {
-//        return pharmacyRepository.getAll();
-//    }
-//
-//    public List<Pharmacy> getAllPharmacies() {
-//        Pharmacy p1 = new Pharmacy(1L, "Apoteka Jankovic", "Najbolja apoteka u gradu i samo za vas!", 5.0,
-//                null, null, null, null, null);
-//        Pharmacy p2 = new Pharmacy(2L, "Zelena Apoteka", "Kod nikoga kao kod nas", 4.0,
-//                null, null, null, null, null);
-//        Pharmacy p3 = new Pharmacy(3L, "Misa i Glisa", "Najjaci smo bre", 5.0,
-//                null, null, null, null, null);
-//        Pharmacy p4 = new Pharmacy(4L, "Hola Hola", "Alo Alo", 1.0,
-//                null, null, null, null, null);
-//        Pharmacy p5 = new Pharmacy(5L, "Crvena Apoteka", "Ponestaje mi ideja", 3.0,
-//                null, null, null, null, null);
-//        Pharmacy p6 = new Pharmacy(6L, "Apoteka Stamenkovic", "Samo po niskim cenama", 2.0,
-//                null, null, null,null, null);
-//        Pharmacy p7 = new Pharmacy(7L, "Apoteka Maric", "Ne znam vise", 5.0,
-//                null, null, null, null, null);
-//        Pharmacy p8 = new Pharmacy(8L, "Kristal", "Odustajem", 4.0,
-//                null, null, null, null, null);
-//        return List.of(p1, p2, p3, p4, p5, p6, p7, p8);
-//    }
-//}
+package com.team11.PharmacyProject.pharmacy;
+
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.workplace.Workplace;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class PharmacyService {
+
+    @Autowired
+    PharmacyRepository pharmacyRepository;
+
+    public Pharmacy getPharmacyById(Long id) {
+        Optional<Pharmacy> pharmacy = pharmacyRepository.findById(id);
+        return pharmacy.orElse(null);
+    }
+
+    public double getMedicineItemPrice(Long pharmacyId, Long medicineItemId) {
+        Optional<Pharmacy> pharmacy = pharmacyRepository.findById(pharmacyId);
+        if(pharmacy.isPresent()){
+            Pharmacy p = pharmacy.get();
+            for (MedicineItem item: p.getPriceList().getMedicineItems()) {
+                if(item.getId().equals(medicineItemId)){
+                    return calculatePrice(item.getMedicinePrices());
+                }
+            }
+        }
+        return 0;
+    }
+
+    public double calculatePrice(List<MedicinePrice> prices){
+        long max = 0;
+        double priceLast = 0;
+        for (MedicinePrice price: prices) {
+            if(price.getStartDate() > max){
+                max = price.getStartDate();
+                priceLast = price.getPrice();
+            }
+        }
+        return priceLast;
+    }
+
+    public boolean insertPharmacy(Pharmacy pharmacy) {
+        if (pharmacy != null) {
+            pharmacyRepository.save(pharmacy);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean delete(long id) {
+        if (pharmacyRepository.findById(id).isPresent()) {
+            pharmacyRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean update(long id, Pharmacy pharmacy) {
+        Optional<Pharmacy> p = pharmacyRepository.findById(id);
+        if (p.isPresent()) {
+            Pharmacy p2 = p.get();
+            p2.setDescription(pharmacy.getDescription());
+            p2.setAddress(pharmacy.getAddress());
+            p2.setName(pharmacy.getName());
+            p2.setAddress(pharmacy.getAddress());
+            pharmacyRepository.save(p2);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public List<Pharmacy> getAll() {
+        return (List<Pharmacy>)pharmacyRepository.findAll();
+    }
+
+}

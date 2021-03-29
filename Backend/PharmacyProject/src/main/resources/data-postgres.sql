@@ -197,11 +197,11 @@ insert into complaint_response (response_text, date, complaint_id, user_id)
                     values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602, 2, 7);
 
 /*Pharmacies*/
-insert into pharmacy (avg_grade, description, name, location_id, price_list_id)
+insert into pharmacy (avg_grade, description, name, address_id, price_list_id)
                     values (4.4, 'Najjaca apoteka u gradu.', 'Zelena Apoteka', 1, 1);
-insert into pharmacy (avg_grade, description, name, location_id, price_list_id)
+insert into pharmacy (avg_grade, description, name, address_id, price_list_id)
                     values (4.8, 'Poverenje, sigurnost i dostupnost su, već skoro 30 godina, glavna obeležja Apotekarske ustanove Jankovic.', 'Apoteka Jankovic', 1, 2);
-insert into pharmacy (avg_grade, description, name, location_id, price_list_id)
+insert into pharmacy (avg_grade, description, name, address_id, price_list_id)
                     values (3.9, 'Poručite sve što vam je potrebno na vašu kućnu adresu. Imas veliki izbor i sjajanu cenu samo na BENU online shop-u.', 'Benu Apoteka', 2, 3);
 
 /*Pharmacy - Subscribers*/

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Container, Row, Table } from 'react-bootstrap'
-import DeleteModal from '../modals/DeleteModal';
+import { Button, Container, Table } from 'react-bootstrap'
+import DeleteModal from '../utilComponents/DeleteModal';
 import AddPharmacyModal from './AddPharmacyModal';
 import EditPharmacyModal from './EditPharmacyModal';
 
@@ -15,16 +15,19 @@ function PharmacyTable(props) {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    useEffect(async () => {
-            const request = await axios.get("http://localhost:8080/api/pharmacy/all");
-            setPharmacies(request.data);
+    useEffect(() => {
+        async function fetchData() {
+            const response = await axios.get("http://localhost:8080/api/pharmacy/all");
+            setPharmacies(response.data);
+        }
+        fetchData();
     }, [reload]);
 
     const reloadTable = () => {
         setReload(!reload)
     }
 
-    const deletePharmacy = () => {        
+    const deletePharmacy = () => {
         axios
             .delete("http://localhost:8080/api/pharmacy/" + selected.id)
             .then(() => {
@@ -44,30 +47,30 @@ function PharmacyTable(props) {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                    <th>Name</th>
-                    <th>Descriptioin</th>
-                    <th>Actions</th>
+                        <th>Name</th>
+                        <th>Descriptioin</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {pharmacies.map((pharmacy) => (
                         <tr onClick={() => updateSelected(pharmacy)} key={pharmacy.id}>
-                        <td>{pharmacy.name}</td>
-                        <td>{pharmacy.description}</td>
-                        <td>
-                            <Button onClick={() => setShowEditModal(true)}>Edit</Button> 
-                            <Button variant="info">Details</Button> 
-                            <Button variant="danger" onClick={() => setShowDeleteModal(true)}>Delete</Button>
-                        </td>
+                            <td>{pharmacy.name}</td>
+                            <td>{pharmacy.description}</td>
+                            <td>
+                                <Button onClick={() => setShowEditModal(true)}>Edit</Button>
+                                <Button variant="info">Details</Button>
+                                <Button variant="danger" onClick={() => setShowDeleteModal(true)}>Delete</Button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
-            
-            <AddPharmacyModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess = {reloadTable}/>
-            <EditPharmacyModal show={showEditModal} pharmacy={selected} onHide={() => setShowEditModal(false)} onSuccess = {reloadTable}/>
-            <DeleteModal title={"Remove " + selected.name} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete = {deletePharmacy}/>
-      </Container>
+
+            <AddPharmacyModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} />
+            <EditPharmacyModal show={showEditModal} pharmacy={selected} onHide={() => setShowEditModal(false)} onSuccess={reloadTable} />
+            <DeleteModal title={"Remove " + selected.name} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deletePharmacy} />
+        </Container>
     )
 }
 

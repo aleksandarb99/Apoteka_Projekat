@@ -20,7 +20,7 @@ public class Workplace  {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<WorkDay> workDays;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Pharmacy pharmacy;
 
     public Workplace() {}

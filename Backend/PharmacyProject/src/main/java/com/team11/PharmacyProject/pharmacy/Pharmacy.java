@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.location.Location;
 import com.team11.PharmacyProject.users.patient.Patient;
@@ -28,16 +29,16 @@ public class Pharmacy {
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Patient> subscribers;
 
-   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
    @JoinColumn(name = "price_list_id")
    private PriceList priceList;
 
    @OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Appointment> appointments;
 
-   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "location_id")
-   private Location location;
+   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   @JoinColumn(name = "address_id")
+   private Address address;
 
    @OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Workplace> workplaces;
@@ -47,7 +48,7 @@ public class Pharmacy {
 
    public Pharmacy(Long id, String name, String description, Double avgGrade,
                    List<Patient> subscribers, PriceList priceList, ArrayList<Appointment> appointments,
-                   Location location, List<Workplace> workplaces) {
+                   Address address, List<Workplace> workplaces) {
       this.id = id;
       this.name = name;
       this.description = description;
@@ -55,7 +56,7 @@ public class Pharmacy {
       this.subscribers = subscribers;
       this.priceList = priceList;
       this.appointments = appointments;
-      this.location = location;
+      this.address = address;
       this.workplaces = workplaces;
    }
 
@@ -115,12 +116,12 @@ public class Pharmacy {
       this.appointments = appointments;
    }
 
-   public Location getLocation() {
-      return location;
+   public Address getAddress() {
+      return address;
    }
 
-   public void setLocation(Location location) {
-      this.location = location;
+   public void setAddress(Address address) {
+      this.address = address;
    }
 
    public List<Workplace> getWorkplaces() {
@@ -153,7 +154,7 @@ public class Pharmacy {
               ", subscribers=" + subscribers +
               ", priceList=" + priceList +
               ", appointments=" + appointments +
-              ", location=" + location +
+              ", address=" + address +
               ", workplaces=" + workplaces +
               '}';
    }
