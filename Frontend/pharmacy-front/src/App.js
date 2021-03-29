@@ -11,11 +11,12 @@ import Footer from "./components/Footer";
 import { Navbar, Nav } from "react-bootstrap";
 import PharmacyProfile from "./components/PharmacyProfile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import DermHomePage from "./workers/dermatologist/home_page_dermatologist";
-import PharmHomePage from "./workers/pharmacist/home_page_pharmacist";
+import DermHomePage from "./components/workers/dermatologist/home_page_dermatologist";
+import PharmHomePage from "./components/workers/pharmacist/home_page_pharmacist";
 import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
+import SearchPatPage from "./components/workers/search_patients";
 
-import WorkerProfile from "./workers/profile_page";
+import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
 
 import "./styling/navbar.css";
@@ -65,6 +66,8 @@ function App() {
           <Route path="/pharmacist" component={PharmHomePage} />
           <Route path="/pharmacyAdmin" component={PharmacyAdminHomePage} />
           <Route path="/admin/pharmacies" component={PharmacyCrud} />
+
+          <Route path="/worker/search-patients" component={SearchPatPage} />
           <Route path="/wp" component={WorkerProfile} />
           <Route path="/admin/users" component={UserCrud} />
         </Switch>
