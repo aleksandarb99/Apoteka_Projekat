@@ -31,7 +31,6 @@ public class UserDTO {
     @NotNull
     private Address address;
 
-    @NotBlank
     private UserType userType;
 
     public UserDTO() {

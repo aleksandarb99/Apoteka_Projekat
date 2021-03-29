@@ -29,7 +29,7 @@ public class UserController {
     private ModelMapper mapper;
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> addUser(@RequestBody UserDTO userDto) {
+    public ResponseEntity<String> addUser(@Valid @RequestBody UserDTO userDto) {
         MyUser user = convertToEntity(userDto);
         if (userService.insertUser(user)) {
             return new ResponseEntity<>("User added successfully", HttpStatus.OK);
@@ -42,6 +42,16 @@ public class UserController {
     public ResponseEntity<List<UserCrudDTO>> getUsers(@RequestParam UserType type) {
         List<UserCrudDTO> users = userService.getUsersByUserType(type).stream().map(this::convertToCrudDto).collect(Collectors.toList());
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    // TODO check database
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) {
+        if (userService.delete(id)) {
+            return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

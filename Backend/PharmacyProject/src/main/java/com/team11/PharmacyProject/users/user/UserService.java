@@ -11,4 +11,5 @@ public interface UserService {
     MyUser updateUser(UserDTO user);
     boolean insertUser(MyUser user);
     List<MyUser> getUsersByUserType(UserType type);
+    boolean delete(long id);
 }

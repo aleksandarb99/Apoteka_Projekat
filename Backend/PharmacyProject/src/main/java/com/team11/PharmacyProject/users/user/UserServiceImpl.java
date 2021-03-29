@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public MyUser updateUser(UserDTO user) {
 
+        // TODO check when DTO attributes are null
         Optional<MyUser> dbUser = userRepository.findById(user.getId());
         if(dbUser.isPresent()) {
             MyUser updatedUser = dbUser.get();
@@ -50,5 +51,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<MyUser> getUsersByUserType(UserType type) {
         return userRepository.findAllByUserType(type);
+    }
+
+    @Override
+    public boolean delete(long id) {
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -51,9 +51,9 @@ function EditUserModal(props) {
             .put('http://localhost:8080/api/users/' + props.user.id, newForm)
             .then(() => {
                 setForm({})
+                alert('User updated successfully')
                 props.onSuccess()
                 props.onHide()
-                alert('User added successfully')
             })
             .catch(() => {
                 alert('Server error')
@@ -62,6 +62,7 @@ function EditUserModal(props) {
 
     const convertForm = () => {
         let address = {
+            ...props.user.address,
             'city': form['city'],
             'street': form['street'],
             'country': form['country'],
