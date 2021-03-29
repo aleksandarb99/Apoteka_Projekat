@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.dto.MedicineItemDTO;
+import com.team11.PharmacyProject.dto.PharmacyCrudDTO;
 import com.team11.PharmacyProject.dto.PharmacyDTO;
 import com.team11.PharmacyProject.dto.PharmacyWorkerDTO;
 import org.modelmapper.ModelMapper;
@@ -69,17 +70,9 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PharmacyDTO>> getAllPharmaciesDTO() {
-        List<PharmacyDTO> pharmacyDTOs = pharmacyService.getAll().stream().map(this::convertToDto).collect(Collectors.toList());
-        return new ResponseEntity<>(pharmacyDTOs, HttpStatus.OK);
-    }
-
-    private PharmacyDTO convertToDto(Pharmacy pharmacy) {
-        return modelMapper.map(pharmacy, PharmacyDTO.class);
-    }
-
-    private Pharmacy convertToEntity(PharmacyDTO pharmacyDto) {
-        return modelMapper.map(pharmacyDto, Pharmacy.class);
+    public ResponseEntity<List<PharmacyCrudDTO>> getAllPharmaciesDTO() {
+        List<PharmacyCrudDTO> pharmacyCrudDTOs = pharmacyService.getAll().stream().map(this::convertToCrudDTO).collect(Collectors.toList());
+        return new ResponseEntity<>(pharmacyCrudDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -91,6 +84,22 @@ public class PharmacyController {
             list.add(convertToDto(p));
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    private PharmacyDTO convertToDto(Pharmacy pharmacy) {
+        return modelMapper.map(pharmacy, PharmacyDTO.class);
+    }
+
+    private Pharmacy convertToEntity(PharmacyDTO pharmacyDto) {
+        return modelMapper.map(pharmacyDto, Pharmacy.class);
+    }
+
+    private PharmacyCrudDTO convertToCrudDTO(Pharmacy pharmacy) {
+        return modelMapper.map(pharmacy, PharmacyCrudDTO.class);
+    }
+
+    private Pharmacy convertCrudDTOToEntity(PharmacyCrudDTO pharmacyCrudDto) {
+        return modelMapper.map(pharmacyCrudDto, Pharmacy.class);
     }
 
 }
