@@ -14,6 +14,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DermHomePage from "./components/workers/dermatologist/home_page_dermatologist";
 import PharmHomePage from "./components/workers/pharmacist/home_page_pharmacist";
 import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
+import MedicineCrud from "./components/medicine/MedicineCrud";
 import SearchPatPage from "./components/workers/search_patients";
 
 import WorkerProfile from "./components/workers/profile_page";
@@ -66,7 +67,7 @@ function App() {
           <Route path="/pharmacist" component={PharmHomePage} />
           <Route path="/pharmacyAdmin" component={PharmacyAdminHomePage} />
           <Route path="/admin/pharmacies" component={PharmacyCrud} />
-
+          <Route path="/admin/medicine" component={MedicineCrud} />
           <Route path="/worker/search-patients" component={SearchPatPage} />
           <Route path="/wp" component={WorkerProfile} />
           <Route path="/admin/users" component={UserCrud} />

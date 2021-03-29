@@ -18,7 +18,6 @@ function UserTable({ initialUserType }) {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    // TODO check
     useEffect(() => {
         async function fetchData() {
             const response = await axios.get('http://localhost:8080/api/users/?type=' + currentUserType);
