@@ -6,7 +6,7 @@ const UserCrud = props => {
     return (
         <div>
             <UserSearchPanel> </UserSearchPanel>
-            <UserTable initialUserType={"pharmacist"}> </UserTable>
+            <UserTable initialUserType={"PHARMACIST"}> </UserTable>
         </div>
     )
 }

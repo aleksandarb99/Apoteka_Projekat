@@ -41,13 +41,13 @@ function UserTable({ initialUserType }) {
 
     const getFormattedUserType = () => {
         switch (currentUserType) {
-            case "pharmacist":
+            case "PHARMACIST":
                 return "Pharmacist"
-            case "dermatologist":
+            case "DERMATOLOGIST":
                 return "Dermatologist"
-            case "systemAdmin":
+            case "ADMIN":
                 return "System Admin"
-            case "pharmacyAdmin":
+            case "PHARMACY_ADMIN":
                 return "Pharmacy Admin"
             default:
                 return ""
@@ -74,10 +74,10 @@ function UserTable({ initialUserType }) {
                 <Form.Group controlId="userTypeSelect">
                     <Form.Label>User Type</Form.Label>
                     <Form.Control as="select" onChange={updateCurrentUserType.bind(this)}>
-                        <option value="pharmacist">Pharmacist</option>
-                        <option value="dermatologist">Dermatologist</option>
-                        <option value="pharmacyAdmin">Pharmacy Admin</option>
-                        <option value="systemAdmin">System Admin</option>
+                        <option value="PHARMACIST">Pharmacist</option>
+                        <option value="DERMATOLOGIST">Dermatologist</option>
+                        <option value="PHARMACY_ADMIN">Pharmacy Admin</option>
+                        <option value="ADMIN">System Admin</option>
                     </Form.Control>
                 </Form.Group>
                 <Button variant="secondary" style={{ float: 'right', margin: '20px' }} onClick={() => setShowAddModal(true)}>Add new {getFormattedUserType()}</Button>
@@ -107,13 +107,13 @@ function UserTable({ initialUserType }) {
             </Table>
             <AddUserModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} usertype={currentUserType} />
             <DeleteModal title={"Remove " + selected.firstName + " " + selected.lastName} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deleteUser} />
-            <EditUserModal show={showEditModal} user={selected} onHide={() => setShowEditModal(false)} onSuccess={reloadTable} />
+            <EditUserModal show={showEditModal} user={selected} onHide={() => setShowEditModal(false)} onSuccess={reloadTable} usertype={currentUserType} />
         </Container>
     )
 }
 
 UserTable.propTypes = {
-    userType: PropTypes.oneOf(['dermatologist', 'pharmacist', 'pharmacyAdmin', 'systemAdmin'])
+    userType: PropTypes.oneOf(['DERMATOLOGIST', 'PHARMACIST', 'PHARMACY_ADMIN', 'ADMIN'])
 }
 
 export default UserTable
