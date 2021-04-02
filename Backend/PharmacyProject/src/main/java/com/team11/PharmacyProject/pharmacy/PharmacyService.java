@@ -19,6 +19,10 @@ public class PharmacyService {
         return pharmacy.orElse(null);
     }
 
+    public List<Pharmacy> searchPharmaciesByNameOrCity(String searchValue){
+        return pharmacyRepository.searchPharmaciesByNameOrCity(searchValue);
+    }
+
     public double getMedicineItemPrice(Long pharmacyId, Long medicineItemId) {
         Optional<Pharmacy> pharmacy = pharmacyRepository.findById(pharmacyId);
         if(pharmacy.isPresent()){

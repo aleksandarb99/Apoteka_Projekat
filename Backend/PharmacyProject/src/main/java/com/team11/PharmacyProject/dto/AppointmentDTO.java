@@ -1,12 +1,8 @@
 package com.team11.PharmacyProject.dto;
 
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyWorkerDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
-import com.team11.PharmacyProject.pharmacy.Pharmacy;
-import com.team11.PharmacyProject.users.patient.Patient;
-import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
-
-import javax.persistence.*;
 
 public class AppointmentDTO {
 

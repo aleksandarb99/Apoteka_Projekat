@@ -9,8 +9,10 @@ import {
   ListGroupItem,
   Pagination,
   Nav,
+  Form,
+  Button,
 } from "react-bootstrap";
-import { StarFill } from "react-bootstrap-icons";
+import { StarFill, Search, Reply } from "react-bootstrap-icons";
 
 import axios from "axios";
 
@@ -21,6 +23,7 @@ function PharmaciesView() {
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
   const [showedPharmacies, setShowedPharmacies] = useState([]);
+  const [fsearch, setFSearch] = useState("");
 
   useEffect(() => {
     async function fetchPharmacies() {
@@ -31,6 +34,29 @@ function PharmaciesView() {
     }
     fetchPharmacies();
   }, []);
+
+  const formSearch = (event) => {
+    event.preventDefault();
+    if (fsearch.length === 0) {
+      axios
+        .get("http://localhost:8080/api/pharmacy/")
+        .then((resp) => setPharmacies(resp.data));
+    } else {
+      axios
+        .get("http://localhost:8080/api/pharmacy/search", {
+          params: { searchValue: fsearch },
+        })
+        .then((resp) => setPharmacies(resp.data));
+    }
+  };
+
+  const resetSearch = function () {
+    axios
+      .get("http://localhost:8080/api/pharmacy/")
+      .then((resp) => setPharmacies(resp.data))
+      .catch(() => setPharmacies([]));
+    setFSearch("");
+  };
 
   useEffect(() => {
     let maxNumber = Math.floor(pharmacies?.length / 12) - 1;
@@ -61,44 +87,68 @@ function PharmaciesView() {
   return (
     <Tab.Pane eventKey="first">
       <Container fluid>
-        <Row>
-          {showedPharmacies &&
-            showedPharmacies.map((pharmacy, index) => (
-              <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
-                <Nav.Link
-                  className="my__nav__link__card"
-                  href={`/pharmacy/${pharmacy.id}`}
-                >
-                  <Card className="my__card" style={{ width: "18rem" }}>
-                    <Card.Body>
-                      <Card.Title>{pharmacy.name}</Card.Title>
-                      <Card.Text>{pharmacy.description}</Card.Text>
-                    </Card.Body>
-                    <ListGroup className="list-group-flush">
-                      <ListGroupItem className="my__flex">
-                        {[...Array(Math.ceil(pharmacy.avgGrade))].map(() => (
-                          <StarFill className="my__star" />
-                        ))}
-                      </ListGroupItem>
-                      <ListGroupItem className="my__flex">
-                        {pharmacy.address.street}
-                      </ListGroupItem>
-                    </ListGroup>
-                  </Card>
-                </Nav.Link>
+        <Row className="justify-content-center mt-5 mb-0">
+          <Form onSubmit={formSearch} style={{ width: "100%" }}>
+            <Form.Group
+              as={Row}
+              className="justify-content-center align-items-center"
+            >
+              <Col lg={6}>
+                <Form.Control
+                  type="text"
+                  name="searchValue"
+                  value={fsearch}
+                  onChange={(e) => setFSearch(e.target.value)}
+                  placeholder="Enter name or place..."
+                />
               </Col>
-            ))}
-          <Col className="my__flex" lg={3} md={6} sm={12}>
-            <Card className="my__card" style={{ width: "18rem" }}>
-              <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
+
+              <Col className="justify-content-center" lg={2}>
+                <Button type="submit" className="my__search__buttons">
+                  {" "}
+                  <Search />{" "}
+                </Button>
+                <Button className="my__search__buttons" onClick={resetSearch}>
+                  Reset <Reply />
+                </Button>
+              </Col>
+            </Form.Group>
+          </Form>
+        </Row>
+        <Row>
+          {showedPharmacies.length === 0 && (
+            <Row className="justify-content-center m-3 align-items-center">
+              <h3>No result!</h3>
+            </Row>
+          )}
+          {showedPharmacies &&
+            showedPharmacies.map((pharmacy, index) => {
+              return (
+                <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
+                  <Nav.Link
+                    className="my__nav__link__card"
+                    href={`/pharmacy/${pharmacy.id}`}
+                  >
+                    <Card className="my__card" style={{ width: "18rem" }}>
+                      <Card.Body>
+                        <Card.Title>{pharmacy.name}</Card.Title>
+                        <Card.Text>{pharmacy.description}</Card.Text>
+                      </Card.Body>
+                      <ListGroup className="list-group-flush">
+                        <ListGroupItem className="my__flex">
+                          {[...Array(Math.ceil(pharmacy.avgGrade))].map(() => (
+                            <StarFill className="my__star" />
+                          ))}
+                        </ListGroupItem>
+                        <ListGroupItem className="my__flex">
+                          {pharmacy.address.street}
+                        </ListGroupItem>
+                      </ListGroup>
+                    </Card>
+                  </Nav.Link>
+                </Col>
+              );
+            })}
         </Row>
 
         <Row className="my__row__pagination">

@@ -1,14 +1,17 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.dto.MedicineItemDTO;
-import com.team11.PharmacyProject.dto.PharmacyCrudDTO;
-import com.team11.PharmacyProject.dto.PharmacyDTO;
-import com.team11.PharmacyProject.dto.PharmacyWorkerDTO;
+import com.team11.PharmacyProject.dto.UserCrudDTO;
+import com.team11.PharmacyProject.dto.UserDTO;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyAllDTO;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyCrudDTO;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -86,8 +89,26 @@ public class PharmacyController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @GetMapping(value="/search", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PharmacyAllDTO>> searchPharmaciesByNameOrCity
+            (@Valid @RequestParam(value = "searchValue", required = false) String searchValue) throws Exception{
+
+        // TODO vidi kako cemo hanladati errore, da li moram rucno proverati da li je prsledjeni atribut prazan string ili predugacak, null, itd.
+
+        List<Pharmacy> pharmacyResult = pharmacyService.searchPharmaciesByNameOrCity(searchValue);
+        List<PharmacyAllDTO> pharmacyDTOS = new ArrayList<>();
+        for (Pharmacy p: pharmacyResult) {
+            pharmacyDTOS.add(convertToAllDto(p));
+        }
+        return new ResponseEntity<>(pharmacyDTOS, HttpStatus.OK);
+    }
+
     private PharmacyDTO convertToDto(Pharmacy pharmacy) {
         return modelMapper.map(pharmacy, PharmacyDTO.class);
+    }
+
+    private PharmacyAllDTO convertToAllDto(Pharmacy pharmacy) {
+        return modelMapper.map(pharmacy, PharmacyAllDTO.class);
     }
 
     private Pharmacy convertToEntity(PharmacyDTO pharmacyDto) {
@@ -101,5 +122,4 @@ public class PharmacyController {
     private Pharmacy convertCrudDTOToEntity(PharmacyCrudDTO pharmacyCrudDto) {
         return modelMapper.map(pharmacyCrudDto, Pharmacy.class);
     }
-
 }

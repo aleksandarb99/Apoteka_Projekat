@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject.dto;
+package com.team11.PharmacyProject.dto.pharmacy;
 
 import com.team11.PharmacyProject.enums.UserType;
 

@@ -1,11 +1,6 @@
 package com.team11.PharmacyProject.appointment;
 
 import com.team11.PharmacyProject.dto.AppointmentDTO;
-import com.team11.PharmacyProject.dto.MedicineDTO;
-import com.team11.PharmacyProject.dto.PharmacyDTO;
-import com.team11.PharmacyProject.pharmacy.Pharmacy;
-import com.team11.PharmacyProject.pharmacy.PharmacyService;
-import com.team11.PharmacyProject.users.patient.PatientDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
