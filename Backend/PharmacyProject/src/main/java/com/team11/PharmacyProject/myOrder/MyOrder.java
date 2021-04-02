@@ -20,7 +20,7 @@ public class MyOrder {
    @JoinColumn(name = "pharmacy_id")
    private Pharmacy pharmacy;
 
-   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
    private List<OrderItem> orderItem;
 
    public MyOrder() {}
