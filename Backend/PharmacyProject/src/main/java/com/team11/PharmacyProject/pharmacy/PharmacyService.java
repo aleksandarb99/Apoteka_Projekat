@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,14 @@ public class PharmacyService {
         return pharmacyRepository.searchPharmaciesByNameOrCity(searchValue);
     }
 
-    public List<Pharmacy> filterPharmaciesByGrade(String gradeValue){
+    public List<Pharmacy> filterPharmacies(String gradeValue, String distanceValue, double longitude, double latitude){
         List<Pharmacy> pharmacies = pharmacyRepository.findAll();
-        pharmacies = pharmacies.stream().filter(p -> doFilteringByGrade(p.getAvgGrade(), gradeValue)).collect(Collectors.toList());
-
+        if(!gradeValue.equals("")) {
+            pharmacies = pharmacies.stream().filter(p -> doFilteringByGrade(p.getAvgGrade(), gradeValue)).collect(Collectors.toList());
+        }
+        if(!distanceValue.equals("")) {
+            pharmacies = pharmacies.stream().filter(p -> doFilteringByDistance(p.getAddress(), distanceValue, longitude, latitude)).collect(Collectors.toList());
+        }
         return pharmacies;
     }
 
@@ -35,6 +40,29 @@ public class PharmacyService {
         if(gradeValue.equals("HIGH") && avgGrade > 3.0) return true;
         if(gradeValue.equals("MEDIUM") && avgGrade == 3.0) return true;
         return gradeValue.equals("LOW") && avgGrade < 3.0;
+    }
+
+    private boolean doFilteringByDistance(Address address, String distanceValue, double longitude, double latitude) {
+        if(distanceValue.equals("5LESS") && calculateDistance(address, longitude, latitude) <= 5) return true;
+        if(distanceValue.equals("10LESS") && calculateDistance(address, longitude, latitude) <= 10) return true;
+        return distanceValue.equals("10HIGHER") && calculateDistance(address, longitude, latitude) > 10;
+    }
+
+    private double calculateDistance(Address address, double lon2, double lat2) {
+        double lat1 = address.getLocation().getLatitude();
+        double lon1 = address.getLocation().getLongitude();
+
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        }
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            return (dist * 1.609344);
+        }
     }
 
     public double getMedicineItemPrice(Long pharmacyId, Long medicineItemId) {

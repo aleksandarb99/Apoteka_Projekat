@@ -25,7 +25,8 @@ function PharmaciesView() {
   const [maxPag, setMaxPag] = useState(0);
   const [showedPharmacies, setShowedPharmacies] = useState([]);
   const [fsearch, setFSearch] = useState("");
-  const [filterGrade, setFilterGrade] = useState("LOW");
+  const [filterGrade, setFilterGrade] = useState("");
+  const [filterDistance, setFilterDistance] = useState("");
 
   useEffect(() => {
     async function fetchPharmacies() {
@@ -39,6 +40,7 @@ function PharmaciesView() {
 
   const formSearch = (event) => {
     event.preventDefault();
+
     if (fsearch.length === 0) {
       axios
         .get("http://localhost:8080/api/pharmacy/")
@@ -55,13 +57,27 @@ function PharmaciesView() {
   const formFilter = (event) => {
     event.preventDefault();
 
-    if (filterGrade === "") return;
+    if (filterGrade === "" && filterDistance === "") return;
 
-    axios
-      .get("http://localhost:8080/api/pharmacy/filter", {
-        params: { gradeValue: filterGrade },
-      })
-      .then((resp) => setPharmacies(resp.data));
+    axios.get("https://api.ipify.org?format=json").then((res) => {
+      axios
+        .get(
+          "https://api.ipgeolocation.io/ipgeo?apiKey=4939eda48b984abfbb45b4b69f1b6923&ip=" +
+            res.data.ip
+        )
+        .then((res) => {
+          axios
+            .get("http://localhost:8080/api/pharmacy/filter", {
+              params: {
+                gradeValue: filterGrade,
+                distanceValue: filterDistance,
+                longitude: res.data.longitude,
+                latitude: res.data.latitude,
+              },
+            })
+            .then((resp) => setPharmacies(resp.data));
+        });
+    });
   };
 
   const resetSearch = function () {
@@ -145,11 +161,27 @@ function PharmaciesView() {
                     <Form.Control
                       as="select"
                       onChange={(event) => setFilterGrade(event.target.value)}
-                      defaultValue="LOW"
+                      defaultValue=""
                     >
+                      <option value="">Not Selected</option>
                       <option value="LOW">Low</option>
                       <option value="MEDIUM">Medium</option>
                       <option value="HIGH">High</option>
+                    </Form.Control>
+                  </Form.Group>
+                  <Form.Group controlId="distanceSelect">
+                    <Form.Label>Distance</Form.Label>
+                    <Form.Control
+                      as="select"
+                      onChange={(event) =>
+                        setFilterDistance(event.target.value)
+                      }
+                      defaultValue={""}
+                    >
+                      <option value={""}>Not Selected</option>
+                      <option value="5LESS">5km(Less)</option>
+                      <option value="10LESS">10km(Less)</option>
+                      <option value="10HIGHER">10km(Higher)</option>
                     </Form.Control>
                   </Form.Group>
                   <Button type="submit" className="my__search__buttons">

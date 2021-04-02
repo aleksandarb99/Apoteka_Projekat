@@ -1,11 +1,11 @@
 
 /*Locations*/
 insert into location (longitude, latitude) values (19.833549, 45.267136);       /*Novi Sad*/
-insert into location (longitude, latitude) values (20.457273, 44.787197);       /*Beograd*/
+insert into location (longitude, latitude) values (20.43157, 44.80886);       /*Beograd*/
 
 /*Addresses*/
 insert into address (street, city, country, location_id) values ('Omladinska 19', 'Novi Sad', 'Srbija', 1);
-insert into address (street, city, country, location_id) values ('Jevrejska 4', 'Novi Sad', 'Srbija', 1);
+insert into address (street, city, country, location_id) values ('Jevrejska 4', 'Beograd', 'Srbija', 2);
 insert into address (street, city, country, location_id) values ('Bulevar kralja Aleksandra 37', 'Beograd', 'Srbija', 2);
 insert into address (street, city, country, location_id) values ('Fruskogorksa 14', 'Novi Sad', 'Srbija', 1);
 
