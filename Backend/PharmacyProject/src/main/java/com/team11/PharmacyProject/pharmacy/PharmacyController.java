@@ -103,6 +103,20 @@ public class PharmacyController {
         return new ResponseEntity<>(pharmacyDTOS, HttpStatus.OK);
     }
 
+    @GetMapping(value="/filter", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PharmacyAllDTO>> filterPharmaciesByGrade
+            (@Valid @RequestParam(value = "gradeValue", required = false) String gradeValue) throws Exception{
+
+        // TODO vidi kako cemo hanladati errore, da li moram rucno proverati da li je prsledjeni atribut prazan string ili predugacak, null, itd.
+
+        List<Pharmacy> pharmacyResult = pharmacyService.filterPharmaciesByGrade(gradeValue);
+        List<PharmacyAllDTO> pharmacyDTOS = new ArrayList<>();
+        for (Pharmacy p: pharmacyResult) {
+            pharmacyDTOS.add(convertToAllDto(p));
+        }
+        return new ResponseEntity<>(pharmacyDTOS, HttpStatus.OK);
+    }
+
     private PharmacyDTO convertToDto(Pharmacy pharmacy) {
         return modelMapper.map(pharmacy, PharmacyDTO.class);
     }

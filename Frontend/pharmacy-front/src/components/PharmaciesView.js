@@ -5,6 +5,7 @@ import {
   Col,
   Container,
   Card,
+  Accordion,
   ListGroup,
   ListGroupItem,
   Pagination,
@@ -24,6 +25,7 @@ function PharmaciesView() {
   const [maxPag, setMaxPag] = useState(0);
   const [showedPharmacies, setShowedPharmacies] = useState([]);
   const [fsearch, setFSearch] = useState("");
+  const [filterGrade, setFilterGrade] = useState("LOW");
 
   useEffect(() => {
     async function fetchPharmacies() {
@@ -48,6 +50,18 @@ function PharmaciesView() {
         })
         .then((resp) => setPharmacies(resp.data));
     }
+  };
+
+  const formFilter = (event) => {
+    event.preventDefault();
+
+    if (filterGrade === "") return;
+
+    axios
+      .get("http://localhost:8080/api/pharmacy/filter", {
+        params: { gradeValue: filterGrade },
+      })
+      .then((resp) => setPharmacies(resp.data));
   };
 
   const resetSearch = function () {
@@ -105,8 +119,7 @@ function PharmaciesView() {
 
               <Col className="justify-content-center" lg={2}>
                 <Button type="submit" className="my__search__buttons">
-                  {" "}
-                  <Search />{" "}
+                  <Search />
                 </Button>
                 <Button className="my__search__buttons" onClick={resetSearch}>
                   Reset <Reply />
@@ -114,6 +127,38 @@ function PharmaciesView() {
               </Col>
             </Form.Group>
           </Form>
+        </Row>
+        <Row>
+          <Accordion style={{ width: "100%" }}>
+            <Accordion.Toggle
+              as={Button}
+              className="my__search__buttons"
+              eventKey="0"
+            >
+              Filter
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey="0">
+              <div>
+                <Form onSubmit={formFilter} className="my__div__filter">
+                  <Form.Group controlId="gradeSelect">
+                    <Form.Label>Grade</Form.Label>
+                    <Form.Control
+                      as="select"
+                      onChange={(event) => setFilterGrade(event.target.value)}
+                      defaultValue="LOW"
+                    >
+                      <option value="LOW">Low</option>
+                      <option value="MEDIUM">Medium</option>
+                      <option value="HIGH">High</option>
+                    </Form.Control>
+                  </Form.Group>
+                  <Button type="submit" className="my__search__buttons">
+                    <Search />
+                  </Button>
+                </Form>
+              </div>
+            </Accordion.Collapse>
+          </Accordion>
         </Row>
         <Row>
           {showedPharmacies.length === 0 && (

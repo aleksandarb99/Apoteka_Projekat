@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PharmacyService {
@@ -21,6 +22,19 @@ public class PharmacyService {
 
     public List<Pharmacy> searchPharmaciesByNameOrCity(String searchValue){
         return pharmacyRepository.searchPharmaciesByNameOrCity(searchValue);
+    }
+
+    public List<Pharmacy> filterPharmaciesByGrade(String gradeValue){
+        List<Pharmacy> pharmacies = pharmacyRepository.findAll();
+        pharmacies = pharmacies.stream().filter(p -> doFilteringByGrade(p.getAvgGrade(), gradeValue)).collect(Collectors.toList());
+
+        return pharmacies;
+    }
+
+    private boolean doFilteringByGrade(double avgGrade, String gradeValue) {
+        if(gradeValue.equals("HIGH") && avgGrade > 3.0) return true;
+        if(gradeValue.equals("MEDIUM") && avgGrade == 3.0) return true;
+        return gradeValue.equals("LOW") && avgGrade < 3.0;
     }
 
     public double getMedicineItemPrice(Long pharmacyId, Long medicineItemId) {
