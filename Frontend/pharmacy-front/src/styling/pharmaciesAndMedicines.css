@@ -29,6 +29,28 @@
   color: black;
 }
 
+.my__search__buttons {
+  background-color: #475058;
+  border: 1px solid #343a40;
+  color: #fff;
+}
+
+.my__search__buttons:hover {
+  background-color: #343a40;
+  border: 1px solid #475058;
+}
+.my__search__buttons:focus {
+  background-color: #343a40;
+  border: 1px solid #475058;
+}
+
+.my__div__filter {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 @media screen and (max-width: 774px) {
   .my__card {
     min-width: 50vw;

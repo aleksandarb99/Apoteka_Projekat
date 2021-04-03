@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.dto;
 
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyWorkerDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 
