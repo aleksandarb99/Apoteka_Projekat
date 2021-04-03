@@ -79,4 +79,13 @@ public class PatientController {
         }
         return new ResponseEntity<>(patientDTOS, HttpStatus.OK);
     }
+
+    @DeleteMapping(value = "/allergies/{id}/{allergy_id}")
+    public ResponseEntity<String> deleteMedicine(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
+        if (patientService.delete(id, allergy_id)) {
+            return new ResponseEntity<>("Allergy deleted successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

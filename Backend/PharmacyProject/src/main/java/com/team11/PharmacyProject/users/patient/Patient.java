@@ -68,4 +68,8 @@ public class Patient extends MyUser {
    public void setAllergies(List<Medicine> allergies) {
       this.allergies = allergies;
    }
+
+   public boolean removeAllergy(long id) {
+      return allergies.removeIf(allergy -> allergy.getId() == id);
+   }
 }

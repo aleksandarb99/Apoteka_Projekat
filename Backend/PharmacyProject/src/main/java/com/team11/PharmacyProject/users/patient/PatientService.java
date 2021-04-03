@@ -20,6 +20,18 @@ public class PatientService {
         return patientRepository.findByIdAndFetchAllergiesEagerly(id);
     }
 
+    public boolean delete(long id, long allergy_id) {
+        Patient patient = patientRepository.findByIdAndFetchAllergiesEagerly(id);
+        if (patient != null) {
+            if(!patient.removeAllergy(allergy_id)) return false;
+
+            patientRepository.save(patient);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public List<Patient> getAll(){
         return (List<Patient>) patientRepository.findAll();
     }

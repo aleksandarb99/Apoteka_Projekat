@@ -14,7 +14,7 @@ function Allergies() {
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
-        "http://localhost:8080/api/patients/allergies/all/1" //TODO primeniti logiku za dobaljanje konkretnog pacijenta
+        "http://localhost:8080/api/patients/allergies/all/2" //TODO primeniti logiku za dobaljanje konkretnog pacijenta
       );
       setAllergies(response.data);
       if (response.data == "") setAllergies(null);
@@ -27,13 +27,14 @@ function Allergies() {
   };
 
   const deleteAllergy = () => {
-    // axios
-    //   .delete("http://localhost:8080/api/medicine/" + selected.id)
-    //   .then(() => {
-    //     reloadTable();
-    //     alert("Medicine deleted successfully");
-    //     setShowDeleteModal(false);
-    //   });
+    //TODO primeniti logiku za dobaljanje konkretnog pacijenta
+    axios
+      .delete("http://localhost:8080/api/patients/allergies/2/" + selected.id)
+      .then(() => {
+        reloadTable();
+        alert("Allergy deleted successfully");
+        setShowDeleteModal(false);
+      });
   };
 
   const reloadTable = () => {
