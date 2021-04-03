@@ -184,191 +184,185 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
   }, [pharmacyDetails, editMode, handleClickOnMap]);
 
   return (
-    <div>
-      <Tab.Pane eventKey="first">
-        <h1 className="content-header">Basic informations</h1>
+    <Tab.Pane eventKey="first">
+      <h1 className="content-header">Basic informations</h1>
+      <hr></hr>
+      <Form>
+        <Row className="row-content">
+          <Col lg={6} md={12} sm={12}>
+            <Form.Group as={Row} controlId="formHorizontalName">
+              <Form.Label column sm={2}>
+                Name
+              </Form.Label>
+              <Col sm={10}>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  disabled={!editMode || (fixing !== null && fixing !== "name")}
+                  value={text?.name}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} controlId="formHorizontalDescription">
+              <Form.Label column sm={2}>
+                Description
+              </Form.Label>
+              <Col sm={10}>
+                <Form.Control
+                  type="text"
+                  name="description"
+                  placeholder="Description"
+                  disabled={
+                    !editMode || (fixing !== null && fixing !== "description")
+                  }
+                  value={text?.description}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} controlId="formHorizontalCountry">
+              <Form.Label column sm={2}>
+                Country
+              </Form.Label>
+              <Col sm={10}>
+                <Form.Control
+                  type="text"
+                  name="country"
+                  placeholder="Country"
+                  disabled={
+                    !editMode || (fixing !== null && fixing !== "country")
+                  }
+                  value={text?.country}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} controlId="formHorizontalCity">
+              <Form.Label column sm={2}>
+                City
+              </Form.Label>
+              <Col sm={10}>
+                <Form.Control
+                  type="text"
+                  name="city"
+                  placeholder="City"
+                  disabled={!editMode || (fixing !== null && fixing !== "city")}
+                  value={text?.city}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} controlId="formHorizontalStreet">
+              <Form.Label column sm={2}>
+                Street
+              </Form.Label>
+              <Col sm={10}>
+                <Form.Control
+                  type="text"
+                  name="street"
+                  placeholder="Street"
+                  disabled={
+                    !editMode || (fixing !== null && fixing !== "street")
+                  }
+                  value={text?.street}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} controlId="formHorizontalLongitude">
+              <Form.Label column sm={2}>
+                Longitude
+              </Form.Label>
+              <Col sm={10}>
+                <Form.Control
+                  type="text"
+                  name="longitude"
+                  placeholder="Longitude"
+                  disabled={
+                    !editMode || (fixing !== null && fixing !== "longitude")
+                  }
+                  value={text?.longitude}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} controlId="formHorizontalLatitude">
+              <Form.Label column sm={2}>
+                Latitude
+              </Form.Label>
+              <Col sm={10}>
+                <Form.Control
+                  type="text"
+                  name="latitude"
+                  placeholder="Latitude"
+                  disabled={
+                    !editMode || (fixing !== null && fixing !== "latitude")
+                  }
+                  value={text?.latitude}
+                  onChange={handleChange}
+                />
+              </Col>
+            </Form.Group>
+          </Col>
+          <Col lg={6} md={12} sm={12}>
+            <div id="divForMap"></div>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="center">
+            {!valid && (
+              <Alert variant="warning">
+                <Alert.Heading>Warning</Alert.Heading>
+                {alertText}
+              </Alert>
+            )}
+            {showAlert && (
+              <Alert variant="success">
+                <Alert.Heading>Congratulations!</Alert.Heading>
+                <p>You have successfully changed the pharmacy!</p>
+              </Alert>
+            )}
+          </Col>
+        </Row>
         <hr></hr>
-        <Form>
-          <Row className="row-content">
-            <Col lg={6} md={12} sm={12}>
-              <Form.Group as={Row} controlId="formHorizontalName">
-                <Form.Label column sm={2}>
-                  Name
-                </Form.Label>
-                <Col sm={10}>
-                  <Form.Control
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    disabled={
-                      !editMode || (fixing !== null && fixing !== "name")
-                    }
-                    value={text?.name}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </Form.Group>
-
-              <Form.Group as={Row} controlId="formHorizontalDescription">
-                <Form.Label column sm={2}>
-                  Description
-                </Form.Label>
-                <Col sm={10}>
-                  <Form.Control
-                    type="text"
-                    name="description"
-                    placeholder="Description"
-                    disabled={
-                      !editMode || (fixing !== null && fixing !== "description")
-                    }
-                    value={text?.description}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </Form.Group>
-
-              <Form.Group as={Row} controlId="formHorizontalCountry">
-                <Form.Label column sm={2}>
-                  Country
-                </Form.Label>
-                <Col sm={10}>
-                  <Form.Control
-                    type="text"
-                    name="country"
-                    placeholder="Country"
-                    disabled={
-                      !editMode || (fixing !== null && fixing !== "country")
-                    }
-                    value={text?.country}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </Form.Group>
-
-              <Form.Group as={Row} controlId="formHorizontalCity">
-                <Form.Label column sm={2}>
-                  City
-                </Form.Label>
-                <Col sm={10}>
-                  <Form.Control
-                    type="text"
-                    name="city"
-                    placeholder="City"
-                    disabled={
-                      !editMode || (fixing !== null && fixing !== "city")
-                    }
-                    value={text?.city}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </Form.Group>
-
-              <Form.Group as={Row} controlId="formHorizontalStreet">
-                <Form.Label column sm={2}>
-                  Street
-                </Form.Label>
-                <Col sm={10}>
-                  <Form.Control
-                    type="text"
-                    name="street"
-                    placeholder="Street"
-                    disabled={
-                      !editMode || (fixing !== null && fixing !== "street")
-                    }
-                    value={text?.street}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </Form.Group>
-
-              <Form.Group as={Row} controlId="formHorizontalLongitude">
-                <Form.Label column sm={2}>
-                  Longitude
-                </Form.Label>
-                <Col sm={10}>
-                  <Form.Control
-                    type="text"
-                    name="longitude"
-                    placeholder="Longitude"
-                    disabled={
-                      !editMode || (fixing !== null && fixing !== "longitude")
-                    }
-                    value={text?.longitude}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </Form.Group>
-
-              <Form.Group as={Row} controlId="formHorizontalLatitude">
-                <Form.Label column sm={2}>
-                  Latitude
-                </Form.Label>
-                <Col sm={10}>
-                  <Form.Control
-                    type="text"
-                    name="latitude"
-                    placeholder="Latitude"
-                    disabled={
-                      !editMode || (fixing !== null && fixing !== "latitude")
-                    }
-                    value={text?.latitude}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </Form.Group>
-            </Col>
-            <Col lg={6} md={12} sm={12}>
-              <div id="divForMap"></div>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="center">
-              {!valid && (
-                <Alert variant="warning">
-                  <Alert.Heading>Warning</Alert.Heading>
-                  {alertText}
-                </Alert>
-              )}
-              {showAlert && (
-                <Alert variant="success">
-                  <Alert.Heading>Congratulations!</Alert.Heading>
-                  <p>You have successfully changed the pharmacy!</p>
-                </Alert>
-              )}
-            </Col>
-          </Row>
-          <hr></hr>
-          <Row>
-            <Col className="center">
-              <Button
-                variant="primary"
-                size="lg"
-                disabled={!editMode || !valid}
-                onClick={saveClickHandler}
-              >
-                Save
-              </Button>{" "}
-              <Button
-                variant="secondary"
-                size="lg"
-                disabled={editMode}
-                onClick={editClickHandler}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="secondary"
-                size="lg"
-                disabled={!editMode}
-                onClick={cancelClickHandler}
-              >
-                Cancel
-              </Button>
-            </Col>
-          </Row>
-        </Form>
-      </Tab.Pane>
-    </div>
+        <Row>
+          <Col className="center">
+            <Button
+              variant="primary"
+              size="lg"
+              disabled={!editMode || !valid}
+              onClick={saveClickHandler}
+            >
+              Save
+            </Button>{" "}
+            <Button
+              variant="secondary"
+              size="lg"
+              disabled={editMode}
+              onClick={editClickHandler}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="secondary"
+              size="lg"
+              disabled={!editMode}
+              onClick={cancelClickHandler}
+            >
+              Cancel
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </Tab.Pane>
   );
 }
 
