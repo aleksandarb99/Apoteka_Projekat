@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.users.patient;
 
 import com.team11.PharmacyProject.dto.MedicineDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
+import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,9 @@ import java.util.List;
 public class PatientController {
     @Autowired
     private PatientService patientService;
+
+    @Autowired
+    private MedicineService medicineService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -81,11 +85,24 @@ public class PatientController {
     }
 
     @DeleteMapping(value = "/allergies/{id}/{allergy_id}")
-    public ResponseEntity<String> deleteMedicine(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
-        if (patientService.delete(id, allergy_id)) {
+    public ResponseEntity<String> deleteAllergy(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
+        if (patientService.deleteAllergy(id, allergy_id)) {
             return new ResponseEntity<>("Allergy deleted successfully", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            return null;
+        }
+    }
+
+    @PostMapping(value = "/allergies/{id}/{allergy_id}")
+    public ResponseEntity<String> addAllergy(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
+
+        Medicine allergy = medicineService.findOne(allergy_id);
+        if(allergy == null) return null;
+
+        if (patientService.addAllergy(id, allergy)) {
+            return new ResponseEntity<>("Allergy added successfully", HttpStatus.OK);
+        } else {
+            return null;
         }
     }
 }

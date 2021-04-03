@@ -13,6 +13,14 @@ public class MedicineServiceImpl implements MedicineService {
     @Autowired
     private MedicineRepository medicineRepository;
 
+
+    @Override
+    public Medicine findOne(long id) {
+        Optional<Medicine> medicine = medicineRepository.findById(id);
+        return medicine.orElse(null);
+    }
+
+    @Override
     public List<Medicine> getAllMedicines() {
         List<Medicine> medicines = new ArrayList<>();
         medicineRepository.findAll().forEach(medicines::add);

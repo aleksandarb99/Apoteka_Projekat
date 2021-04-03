@@ -1,0 +1,10 @@
+.my__row__selected {
+  background-color: #5eb1db !important;
+}
+
+.my__table__row {
+}
+
+.my__table__row:hover {
+  cursor: pointer;
+}

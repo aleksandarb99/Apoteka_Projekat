@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.users.patient;
 
+import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
+import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
 import com.team11.PharmacyProject.users.user.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ public class PatientService {
         return patientRepository.findByIdAndFetchAllergiesEagerly(id);
     }
 
-    public boolean delete(long id, long allergy_id) {
+    public boolean deleteAllergy(long id, long allergy_id) {
         Patient patient = patientRepository.findByIdAndFetchAllergiesEagerly(id);
         if (patient != null) {
             if(!patient.removeAllergy(allergy_id)) return false;
@@ -30,6 +32,20 @@ public class PatientService {
         } else {
             return false;
         }
+    }
+
+    public boolean addAllergy(long id, Medicine allergy) {
+
+        Patient patient = patientRepository.findByIdAndFetchAllergiesEagerly(id);
+        if (patient == null)
+            return false;
+
+        if(!patient.addAllergy(allergy))
+            return false;
+
+        patientRepository.save(patient);
+        return true;
+
     }
 
     public List<Patient> getAll(){
