@@ -11,6 +11,7 @@ import Col from "react-bootstrap/Col";
 
 import "../styling/pharmacyHomePage.css";
 import EditBasicInfo from "./EditBasicInfo";
+import DisplayPurchaseOrders from "./pharmacyAdmin/DisplayPurchaseOrders";
 
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
@@ -60,7 +61,7 @@ function PharmacyAdminHomePage() {
                 <Nav.Link eventKey="seventh">Reports</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="eighth">Purchase orders</Nav.Link>
+                <Nav.Link eventKey="eight">Purchase orders</Nav.Link>
               </Nav.Item>
             </Nav>
           </Col>
@@ -70,11 +71,7 @@ function PharmacyAdminHomePage() {
                 pharmacyDetails={pharmacyDetails}
                 changedPharmacy={changedPharmacy}
               />
-              <Tab.Pane eventKey="second">
-                <div>
-                  <h1>aca</h1>
-                </div>
-              </Tab.Pane>
+              <DisplayPurchaseOrders idOfPharmacy={pharmacyDetails?.id} />
             </Tab.Content>
           </Col>
         </Row>

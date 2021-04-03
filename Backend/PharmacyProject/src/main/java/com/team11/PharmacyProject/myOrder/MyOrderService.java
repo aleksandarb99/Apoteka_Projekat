@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface MyOrderService {
 
-    List<MyOrder> getOrdersByPharmacyId(Long id);
+    List<MyOrder> getOrdersByPharmacyId(Long id, String filterValue);
 }
