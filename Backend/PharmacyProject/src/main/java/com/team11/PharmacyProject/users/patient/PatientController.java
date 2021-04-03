@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.users.patient;
 
+import com.team11.PharmacyProject.dto.MedicineDTO;
+import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -8,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +41,20 @@ public class PatientController {
             patientDTOS.add(convertToDto(p));
         }
         return new ResponseEntity<>(patientDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/allergies/all/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MedicineDTO>> getAllAllergiesOfPatient(@PathVariable("id") Long id){
+
+        Patient patient = patientService.findOne(id);
+        if(patient == null) return null;
+
+        List<MedicineDTO> allergiesDTOs = new ArrayList<>();
+        for (Medicine m: patient.getAllergies()) {
+            allergiesDTOs.add(modelMapper.map(m, MedicineDTO.class));
+        }
+
+        return new ResponseEntity<>(allergiesDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value="/search", produces=MediaType.APPLICATION_JSON_VALUE)
