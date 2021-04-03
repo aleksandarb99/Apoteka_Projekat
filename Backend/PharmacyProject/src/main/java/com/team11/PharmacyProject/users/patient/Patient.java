@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.users.patient;
 
 import com.team11.PharmacyProject.address.Address;
+import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
@@ -24,17 +25,22 @@ public class Patient extends MyUser {
    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private List<Medicine> allergies;
 
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   private List<Appointment> appointments;
+
    public Patient() {
    }
 
    public Patient(Long id, String password, String firstName, String lastName, String email, String telephone,
                   UserType userType, Address address, int points, int penalties,
-                  List<MedicineReservation> medicineReservation, List<Medicine> allergies, boolean isPasswordChanged) {
+                  List<MedicineReservation> medicineReservation, List<Medicine> allergies, boolean isPasswordChanged,
+                  List<Appointment> appointments) {
       super(id, password, firstName, lastName, email, telephone, userType, address, isPasswordChanged);
       this.points = points;
       this.penalties = penalties;
       this.medicineReservation = medicineReservation;
       this.allergies = allergies;
+      this.appointments = appointments;
    }
 
    public int getPoints() {
@@ -67,5 +73,13 @@ public class Patient extends MyUser {
 
    public void setAllergies(List<Medicine> allergies) {
       this.allergies = allergies;
+   }
+
+   public List<Appointment> getAppointments() {
+      return appointments;
+   }
+
+   public void setAppointments(List<Appointment> appointments) {
+      this.appointments = appointments;
    }
 }
