@@ -1,10 +1,6 @@
 package com.team11.PharmacyProject.workplace;
 
-import com.team11.PharmacyProject.dto.MedicineDTO;
-import com.team11.PharmacyProject.dto.MedicineItemDTO;
-import com.team11.PharmacyProject.dto.PharmacyDTO;
 import com.team11.PharmacyProject.dto.WorkplaceDTO;
-import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

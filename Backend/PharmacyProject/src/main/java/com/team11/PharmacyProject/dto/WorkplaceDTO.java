@@ -1,6 +1,6 @@
 package com.team11.PharmacyProject.dto;
 
-import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyWorkerDTO;
 
 public class WorkplaceDTO {
 

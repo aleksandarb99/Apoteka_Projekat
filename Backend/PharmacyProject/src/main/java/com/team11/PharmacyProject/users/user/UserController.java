@@ -1,11 +1,8 @@
 package com.team11.PharmacyProject.users.user;
 
-import com.team11.PharmacyProject.dto.PharmacyDTO;
 import com.team11.PharmacyProject.dto.UserCrudDTO;
 import com.team11.PharmacyProject.dto.UserDTO;
 import com.team11.PharmacyProject.enums.UserType;
-import com.team11.PharmacyProject.pharmacy.Pharmacy;
-import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

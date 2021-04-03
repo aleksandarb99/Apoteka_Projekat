@@ -1,11 +1,11 @@
 
 /*Locations*/
 insert into location (longitude, latitude) values (19.833549, 45.267136);       /*Novi Sad*/
-insert into location (longitude, latitude) values (20.457273, 44.787197);       /*Beograd*/
+insert into location (longitude, latitude) values (20.43157, 44.80886);       /*Beograd*/
 
 /*Addresses*/
 insert into address (street, city, country, location_id) values ('Omladinska 19', 'Novi Sad', 'Srbija', 1);
-insert into address (street, city, country, location_id) values ('Jevrejska 4', 'Novi Sad', 'Srbija', 1);
+insert into address (street, city, country, location_id) values ('Jevrejska 4', 'Beograd', 'Srbija', 2);
 insert into address (street, city, country, location_id) values ('Bulevar kralja Aleksandra 37', 'Beograd', 'Srbija', 2);
 insert into address (street, city, country, location_id) values ('Fruskogorksa 14', 'Novi Sad', 'Srbija', 1);
 
@@ -205,7 +205,7 @@ insert into pharmacy (avg_grade, description, name, address_id, price_list_id)
 insert into pharmacy (avg_grade, description, name, address_id, price_list_id)
                     values (4.8, 'Poverenje, sigurnost i dostupnost su, već skoro 30 godina, glavna obeležja Apotekarske ustanove Jankovic.', 'Apoteka Jankovic', 1, 2);
 insert into pharmacy (avg_grade, description, name, address_id, price_list_id)
-                    values (3.9, 'Poručite sve što vam je potrebno na vašu kućnu adresu. Imas veliki izbor i sjajanu cenu samo na BENU online shop-u.', 'Benu Apoteka', 2, 3);
+                    values (2.9, 'Poručite sve što vam je potrebno na vašu kućnu adresu. Imas veliki izbor i sjajanu cenu samo na BENU online shop-u.', 'Benu Apoteka', 2, 3);
 
 /*Pharmacy - Subscribers*/
 insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (1, 1);
