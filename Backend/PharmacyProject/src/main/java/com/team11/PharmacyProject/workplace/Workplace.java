@@ -17,7 +17,7 @@ public class Workplace  {
     @ManyToOne(fetch = FetchType.EAGER)
     private PharmacyWorker worker;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<WorkDay> workDays;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject.dto;
+package com.team11.PharmacyProject.dto.workplace;
 
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyWorkerDTO;
 

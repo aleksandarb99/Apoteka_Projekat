@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from "react-datepicker";
-import TimePicker from "react-time-picker";
-
 import axios from "axios";
 
 import Moment from "react-moment";
 
-import { Tab, Row, Col, Table, Form } from "react-bootstrap";
+import { Button, Tab, Row, Col, Table, Form } from "react-bootstrap";
 
 function AddAppointment({ idOfPharmacy }) {
   const [dermatologists, setDermatologists] = useState([]);
@@ -16,6 +12,9 @@ function AddAppointment({ idOfPharmacy }) {
   const [startDate, setStartDate] = useState(new Date());
   const [startHour, setStartHour] = useState("10:00");
   const [dermatogistPicked, setDermatogistPicked] = useState(0);
+  const [duration, setDuration] = useState(15);
+  const [price, setPrice] = useState(2000);
+  const [workDaysLabel, setWorkDaysLabel] = useState("");
 
   useEffect(() => {
     if (idOfPharmacy != undefined) {
@@ -46,6 +45,43 @@ function AddAppointment({ idOfPharmacy }) {
     }
   }, [startDate, dermatogistPicked]);
 
+  let changeDate = (date) => {
+    let array = date.split("-");
+    let d = new Date(
+      Number.parseInt(array[0]),
+      Number.parseInt(array[1]) - 1,
+      Number.parseInt(array[2])
+    );
+    setStartDate(d);
+  };
+
+  useEffect(() => {
+    if (dermatologists !== []) {
+      let i;
+      let flag = false;
+      for (i = 0; i < dermatologists.length; i++) {
+        if (dermatologists[i].worker.id == dermatogistPicked) {
+          let j;
+          for (j = 0; j < dermatologists[i].workDays.length; j++) {
+            if (
+              !dermatologists[i].workDays[j].weekday.localeCompare(
+                startDate.toString().substring(0, 3).toUpperCase()
+              )
+            ) {
+              setWorkDaysLabel(
+                `Workshedule : ${dermatologists[i].workDays[j].startTime} - ${dermatologists[i].workDays[j].endTime}`
+              );
+              flag = true;
+            }
+          }
+        }
+      }
+      if (!flag) {
+        setWorkDaysLabel("");
+      }
+    }
+  }, [dermatogistPicked, startDate]);
+
   return (
     <Tab.Pane eventKey="fifth">
       <h1 className="content-header">Add appointment</h1>
@@ -61,7 +97,7 @@ function AddAppointment({ idOfPharmacy }) {
             >
               <option value="0">Not Selected</option>
               {dermatologists != [] &&
-                dermatologists?.map((dermatologist, index) => (
+                dermatologists?.map((dermatologist) => (
                   <option value={dermatologist.worker.id}>
                     {dermatologist.worker.lastName}{" "}
                     {dermatologist.worker.firstName}
@@ -70,19 +106,53 @@ function AddAppointment({ idOfPharmacy }) {
             </Form.Control>
           </Form.Group>
 
-          <DatePicker
-            disabled={dermatogistPicked == 0}
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-          />
+          <Form.Group controlId="datePicker" di>
+            <Form.Label>Date</Form.Label>
+            <Form.Control
+              type="date"
+              disabled={dermatogistPicked == 0}
+              onChange={(event) => changeDate(event.target.value)}
+            />
+          </Form.Group>
 
-          <TimePicker
-            disabled={dermatogistPicked == 0}
-            onChange={setStartHour}
-            value={startHour}
-          />
+          <Form.Group controlId="timePicker" di>
+            <Form.Label>Start time</Form.Label>
+            <Form.Control
+              type="time"
+              value={startHour}
+              disabled={dermatogistPicked == 0}
+              onChange={(event) => setStartHour(event.target.value)}
+            />
+          </Form.Group>
+
+          <Form.Group controlId="durationPicker" di>
+            <Form.Label>Duration</Form.Label>
+            <Form.Control
+              type="number"
+              value={duration}
+              disabled={dermatogistPicked == 0}
+              onChange={(event) => setDuration(event.target.value)}
+              min="0"
+            />
+          </Form.Group>
+
+          <Form.Group controlId="pricePicker" di>
+            <Form.Label>Price</Form.Label>
+            <Form.Control
+              type="number"
+              value={price}
+              disabled={dermatogistPicked == 0}
+              onChange={(event) => setPrice(event.target.value)}
+              min="0"
+            />
+          </Form.Group>
+
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
         </Col>
         <Col>
+          <h3>{workDaysLabel}</h3>
           <h3>Appointments on that date</h3>
           {appointments != [] && (
             <Table striped bordered>
