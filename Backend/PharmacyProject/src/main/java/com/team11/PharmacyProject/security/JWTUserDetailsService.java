@@ -1,16 +1,12 @@
 package com.team11.PharmacyProject.security;
 
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.users.user.MyUser;
 import com.team11.PharmacyProject.users.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 
 @Service
 public class JWTUserDetailsService implements UserDetailsService {
@@ -24,7 +20,7 @@ public class JWTUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         } else {
-            return new User(user.getEmail(), user.getPassword(), new ArrayList<>());
+            return new JWTUserDetails(user);
         }
     }
 }

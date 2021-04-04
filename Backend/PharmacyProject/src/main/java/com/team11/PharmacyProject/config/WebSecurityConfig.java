@@ -6,6 +6,7 @@ import com.team11.PharmacyProject.security.JWTUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -46,14 +47,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        // We don't need CSRF for this example
         httpSecurity.csrf().disable()
-                // dont authenticate this particular request
-                .authorizeRequests().antMatchers("/authenticate/").permitAll().
-                // all other requests need to be authenticated
-                        anyRequest().authenticated().and().
-                        exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint).and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .authorizeRequests()
+                .antMatchers("/authenticate/").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .anyRequest().authenticated().and()
+                .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint)
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
