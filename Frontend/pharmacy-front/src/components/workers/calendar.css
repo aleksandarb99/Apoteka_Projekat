@@ -1,0 +1,5 @@
+.fc-more-popover {
+  overflow-y: scroll;
+  max-height: 20%;
+  max-width: 14%;
+}
