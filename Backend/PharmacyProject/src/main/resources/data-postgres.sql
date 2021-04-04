@@ -128,6 +128,7 @@ insert into my_user (password, first_name, last_name, email, telephone, user_typ
 /*Pharmacy Workers*/
 insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.9, 1, 5);
 insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 2, 6);
+insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 1, 7);
 
 /*Patients*/
 insert into patient (points, penalties, id) values (50, 2, 1);
@@ -213,6 +214,7 @@ insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (3, 2);
 
 /*Workplaces*/
 insert into workplace (pharmacy_id, worker_id) values (1, 5);
+insert into workplace (pharmacy_id, worker_id) values (1, 7);
 insert into workplace (pharmacy_id, worker_id) values (2, 6);
 insert into workplace (pharmacy_id, worker_id) values (3, 6);
 
@@ -232,6 +234,11 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
                     values ('RESERVED', 'CONSULTATION', 2, 1617800000, 1617800300, 'Placanje u unapred.', 1800, 1, 1, 5);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('RESERVED', 'CONSULTATION', 2, 1617800300, 1617801300, 'Placanje u unapred.', 1800, 3, 1, 5);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('RESERVED', 'CHECKUP', 10, 1617800300000, 1617801300000, 'Placanje u unapred.', 1800, 3, 1, 7);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('RESERVED', 'CHECKUP', 12, 1617800300000, 1617801300000, 'Placanje u unapred 2.', 1700, 2, 1, 7);
+
 
 /*WorkCalendar - Appointments*/
 insert into work_calendar_appointments (work_calendar_id, appointments_id) values (1, 1);

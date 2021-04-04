@@ -21,6 +21,12 @@ public class AppointmentController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @GetMapping(value = "/all/bydermatologistid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AppointmentDTO>> getAllAppointmentsByPharmacyId(@PathVariable("id") Long id, @RequestParam(name="date") Long date ){
+        List<AppointmentDTO> appointmentsDTO = appointmentService.getAllAppointmentsByPharmacyId(id, date).stream().map(m -> modelMapper.map(m, AppointmentDTO.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/bypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AppointmentDTO>> getFreeAppointmentsByPharmacyId(@PathVariable("id") Long id){
         List<AppointmentDTO> appointmentsDTO = appointmentService.getFreeAppointmentsByPharmacyId(id).stream().map(m -> modelMapper.map(m, AppointmentDTO.class)).collect(Collectors.toList());

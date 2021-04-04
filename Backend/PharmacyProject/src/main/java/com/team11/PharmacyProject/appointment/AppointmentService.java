@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.appointment;
 
+import com.team11.PharmacyProject.myOrder.MyOrder;
 import com.team11.PharmacyProject.users.patient.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,8 @@ import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +46,22 @@ public class AppointmentService {
         Date date = new Date();
         Long currentTime = date.getTime();
         appointmentRepository.findFreeAppointmentsByPharmacyId(id, currentTime).forEach(appointments::add);
+        return appointments;
+    }
+
+    public List<Appointment> getAllAppointmentsByPharmacyId(Long id, Long timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        List<Appointment> appointments = new ArrayList<>();
+
+
+        Date dateFromRequest = new Date(timestamp);
+
+        for(Appointment a : appointmentRepository.findAllAppointmentsByDermatologistId(id)){
+            Date d = new Date(a.getStartTime());
+            if(sdf.format(dateFromRequest).equals(sdf.format(d))) {
+                appointments.add(a);
+            }
+        }
         return appointments;
 
     }

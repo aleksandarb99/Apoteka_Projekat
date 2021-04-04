@@ -2,22 +2,11 @@ import React, { useState, useEffect } from "react";
 
 import Moment from "react-moment";
 
-import {
-  Pagination,
-  Table,
-  Tab,
-  Row,
-  Col,
-  Card,
-  ListGroup,
-  ListGroupItem,
-} from "react-bootstrap";
+import { Pagination, Table, Tab, Row, Col, Card } from "react-bootstrap";
 
-import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 
 import axios from "axios";
-import { Filter } from "react-bootstrap-icons";
 
 function DisplayPurchaseOrders({ idOfPharmacy }) {
   const [orders, setOrders] = useState([]);
@@ -153,7 +142,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
       <Row>
         <Col>
           {showedOrder && (
-            <Table striped bordered hover>
+            <Table striped bordered>
               <thead>
                 <tr>
                   <th>#</th>

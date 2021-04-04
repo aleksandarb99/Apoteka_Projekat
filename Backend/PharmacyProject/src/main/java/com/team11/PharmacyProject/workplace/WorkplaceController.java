@@ -24,6 +24,14 @@ public class WorkplaceController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @GetMapping(value = "dermatologists/bypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<WorkplaceDTO>> getDermatologistWorkplacesByPharmacyId(@PathVariable("id") Long id){
+        List<Workplace> workplaceList = workplaceServise.getDermatologistWorkplacesByPharmacyId(id);
+
+        List<WorkplaceDTO> workplaceDTOList = workplaceList.stream().map(m -> modelMapper.map(m, WorkplaceDTO.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(workplaceDTOList, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/bypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<WorkplaceDTO>> getWorkplacesByPharmacyId(@PathVariable("id") Long id){
         List<Workplace> workplaceList = workplaceServise.getWorkplacesByPharmacyId(id);

@@ -17,4 +17,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("select a from Appointment  a where a.appointmentState = 'RESERVED' and " +
             "a.patient.email = ?1 and a.worker.id = ?2")
     List<Appointment> getUpcommingAppointment(String patEmail, Long workerID, Pageable pp);
+
+    //    TODO Promeni da se gleda u buducnost i da gleda prazne apontmente
+    @Query("SELECT u FROM Appointment u WHERE u.worker.id=?1")
+    Iterable<Appointment> findAllAppointmentsByDermatologistId(Long id);
 }
