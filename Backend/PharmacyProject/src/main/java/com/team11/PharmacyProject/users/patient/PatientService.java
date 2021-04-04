@@ -14,6 +14,9 @@ public class PatientService {
     @Autowired
     PatientRepository patientRepository;
 
+    @Autowired
+    MedicineRepository medicineRepository;
+
     public List<Patient> searchPatientsByFirstAndLastName(String firstname, String lastname){
         return patientRepository.searchPatientsByFirstAndLastName(firstname, lastname);
     }
@@ -34,11 +37,16 @@ public class PatientService {
         }
     }
 
-    public boolean addAllergy(long id, Medicine allergy) {
+    public boolean addAllergy(long id, long allergy_id) {
 
         Patient patient = patientRepository.findByIdAndFetchAllergiesEagerly(id);
         if (patient == null)
             return false;
+
+        Optional<Medicine> medicine = medicineRepository.findById(allergy_id);
+        if(medicine.isEmpty())
+            return false;
+        Medicine allergy = medicine.get();
 
         if(!patient.addAllergy(allergy))
             return false;

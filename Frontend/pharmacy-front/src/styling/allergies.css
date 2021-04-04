@@ -2,9 +2,20 @@
   background-color: #5eb1db !important;
 }
 
+.my__table__body {
+  max-height: 30vh;
+  overflow-y: scroll;
+  display: block;
+}
+
 .my__table__row {
 }
 
 .my__table__row:hover {
   cursor: pointer;
+}
+
+.my__allergy__header {
+  margin: 20px auto;
+  text-align: center;
 }

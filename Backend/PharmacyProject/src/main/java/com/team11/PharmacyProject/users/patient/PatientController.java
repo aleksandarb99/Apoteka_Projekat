@@ -11,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +23,6 @@ import java.util.List;
 public class PatientController {
     @Autowired
     private PatientService patientService;
-
-    @Autowired
-    private MedicineService medicineService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -85,6 +84,7 @@ public class PatientController {
     }
 
     @DeleteMapping(value = "/allergies/{id}/{allergy_id}")
+    @Validated
     public ResponseEntity<String> deleteAllergy(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
         if (patientService.deleteAllergy(id, allergy_id)) {
             return new ResponseEntity<>("Allergy deleted successfully", HttpStatus.OK);
@@ -95,11 +95,7 @@ public class PatientController {
 
     @PostMapping(value = "/allergies/{id}/{allergy_id}")
     public ResponseEntity<String> addAllergy(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
-
-        Medicine allergy = medicineService.findOne(allergy_id);
-        if(allergy == null) return null;
-
-        if (patientService.addAllergy(id, allergy)) {
+        if (patientService.addAllergy(id, allergy_id)) {
             return new ResponseEntity<>("Allergy added successfully", HttpStatus.OK);
         } else {
             return null;

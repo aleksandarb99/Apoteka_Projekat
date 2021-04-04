@@ -28,9 +28,7 @@ function Allergies() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(
-        "http://localhost:8080/api/medicine/" //TODO primeniti logiku za dobaljanje konkretnog pacijenta
-      );
+      const response = await axios.get("http://localhost:8080/api/medicine/");
       setMedicines(response.data);
       if (response.data == "") setMedicines(null);
     }
@@ -46,10 +44,9 @@ function Allergies() {
   };
 
   const deleteAllergy = () => {
-    //TODO primeniti logiku za dobaljanje konkretnog pacijenta
     axios
       .delete(
-        "http://localhost:8080/api/patients/allergies/2/" + selectedAllergy.id
+        "http://localhost:8080/api/patients/allergies/2/" + selectedAllergy.id //TODO primeniti logiku za dobaljanje konkretnog pacijenta
       )
       .then((res) => {
         if (res.data === "") {
@@ -69,7 +66,7 @@ function Allergies() {
   const addAllergy = () => {
     axios
       .post(
-        "http://localhost:8080/api/patients/allergies/2/" + selectedMedicine.id
+        "http://localhost:8080/api/patients/allergies/2/" + selectedMedicine.id //TODO primeniti logiku za dobaljanje konkretnog pacijenta
       )
       .then((res) => {
         if (res.data === "") {
@@ -85,7 +82,7 @@ function Allergies() {
 
   return (
     <div>
-      <h3 style={{ textAlign: "center", margin: "20px auto" }}>Allergies</h3>
+      <h3 className="my__allergy__header">Allergies</h3>
       <Table
         striped
         bordered
@@ -101,7 +98,7 @@ function Allergies() {
             <th></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="my__table__body">
           {allergies &&
             allergies.map((a) => (
               <AllergyRow
@@ -152,7 +149,7 @@ function Allergies() {
                 <th>Content</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="my__table__body">
               {medicines &&
                 medicines.map((m) => (
                   <tr
