@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import LogIn from "./components/LogIn";
@@ -26,7 +26,7 @@ import { House } from "react-bootstrap-icons";
 function App() {
   return (
     <Router>
-      <div>
+      <div style={{ minHeight: "100vh" }}>
         <Navbar className="my__navbar" sticky="top" expand="lg">
           <Navbar.Brand
             as={Link}
@@ -72,9 +72,8 @@ function App() {
           <Route path="/wp" component={WorkerProfile} />
           <Route path="/admin/users" component={UserCrud} />
         </Switch>
-
-        <Footer />
       </div>
+      <Footer />
     </Router>
   );
 }
