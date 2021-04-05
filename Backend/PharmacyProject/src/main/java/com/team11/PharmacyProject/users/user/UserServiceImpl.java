@@ -1,6 +1,6 @@
 package com.team11.PharmacyProject.users.user;
 
-import com.team11.PharmacyProject.dto.UserDTO;
+import com.team11.PharmacyProject.dto.user.UserDTO;
 import com.team11.PharmacyProject.dto.UserUpdateDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService{
     public MyUser updateUser(UserUpdateDTO user) {
 
         Optional<MyUser> dbUser = userRepository.findById(user.getId());
-        if(dbUser.isPresent()) {
+        if (dbUser.isPresent()) {
             MyUser updatedUser = dbUser.get();
             updatedUser.setFirstName(user.getFirstName());
             updatedUser.setLastName(user.getLastName());

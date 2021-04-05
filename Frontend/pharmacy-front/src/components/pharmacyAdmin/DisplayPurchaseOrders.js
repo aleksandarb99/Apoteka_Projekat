@@ -1,23 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-import Moment from "react-moment";
+import { Pagination, Table, Tab, Row, Col, Card } from "react-bootstrap";
 
-import {
-  Pagination,
-  Table,
-  Tab,
-  Row,
-  Col,
-  Card,
-  ListGroup,
-  ListGroupItem,
-} from "react-bootstrap";
-
-import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 
 import axios from "axios";
-import { Filter } from "react-bootstrap-icons";
 
 function DisplayPurchaseOrders({ idOfPharmacy }) {
   const [orders, setOrders] = useState([]);
@@ -123,12 +110,11 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
                   <Card.Title>Order {order.id}</Card.Title>
                   <Card.Text>Deadline:</Card.Text>
                   <Card.Text>
-                    <Moment format="DD.MM.yyyy" unix>
-                      {order.deadline}
-                    </Moment>{" "}
-                    <Moment format="hh:mm" unix>
-                      {order.deadline}
-                    </Moment>
+                    {new Date(order.deadline).getDay()}.{" "}
+                    {new Date(order.deadline).getMonth()}.
+                    {new Date(order.deadline).getFullYear()}{" "}
+                    {new Date(order.deadline).getHours()} :{" "}
+                    {new Date(order.deadline).getMinutes()}
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -153,7 +139,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
       <Row>
         <Col>
           {showedOrder && (
-            <Table striped bordered hover>
+            <Table striped bordered>
               <thead>
                 <tr>
                   <th>#</th>

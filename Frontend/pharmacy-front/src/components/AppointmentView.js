@@ -8,12 +8,8 @@ import {
   ListGroup,
   ListGroupItem,
   Pagination,
-  Nav,
   Button,
 } from "react-bootstrap";
-import { StarFill } from "react-bootstrap-icons";
-
-import Moment from "react-moment";
 
 import axios from "axios";
 
@@ -77,18 +73,15 @@ function AppointmentView({ pharmacyId }) {
                   <Card.Body>
                     <Card.Title>{appointsment?.appointmentType}</Card.Title>
                     <Card.Text>
-                      <Moment format="DD.MM.yyyy" unix>
-                        {appointsment?.startTime}
-                      </Moment>
+                      {new Date(appointsment?.startTime).getDay()}.{" "}
+                      {new Date(appointsment?.startTime).getMonth()}.
+                      {new Date(appointsment?.startTime).getFullYear()}
                     </Card.Text>
                     <Card.Text>
-                      <Moment format="hh:mm" unix>
-                        {appointsment?.startTime}
-                      </Moment>
-                      -
-                      <Moment format="hh:mm" unix>
-                        {appointsment?.endTime}
-                      </Moment>
+                      {new Date(appointsment?.startTime).getHours()}:
+                      {new Date(appointsment?.startTime).getMinutes()} -{" "}
+                      {new Date(appointsment?.endTime).getHours()} :
+                      {new Date(appointsment?.endTime).getMinutes()}
                     </Card.Text>
                   </Card.Body>
                   <ListGroup className="list-group-flush">

@@ -1,7 +1,6 @@
-package com.team11.PharmacyProject.dto;
+package com.team11.PharmacyProject.dto.pricelist;
 
-import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
-
+import com.team11.PharmacyProject.dto.medicine.MedicineItemDTO;
 
 import java.util.List;
 

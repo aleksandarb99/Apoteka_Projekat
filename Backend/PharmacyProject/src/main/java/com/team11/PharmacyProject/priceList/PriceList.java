@@ -8,34 +8,34 @@ import java.util.List;
 @Entity
 public class PriceList {
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-   private List<MedicineItem> medicineItems;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<MedicineItem> medicineItems;
 
-   public PriceList(Long id, List<MedicineItem> medicineItems) {
-      this.id = id;
-      this.medicineItems = medicineItems;
-   }
+    public PriceList(Long id, List<MedicineItem> medicineItems) {
+        this.id = id;
+        this.medicineItems = medicineItems;
+    }
 
-   public PriceList() {
-   }
+    public PriceList() {
+    }
 
-   public Long getId() {
-      return id;
-   }
+    public Long getId() {
+        return id;
+    }
 
-   public void setId(Long id) {
-      this.id = id;
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-   public List<MedicineItem> getMedicineItems() {
-      return medicineItems;
-   }
+    public List<MedicineItem> getMedicineItems() {
+        return medicineItems;
+    }
 
-   public void setMedicineItems(List<MedicineItem> medicineItems) {
-      this.medicineItems = medicineItems;
-   }
+    public void setMedicineItems(List<MedicineItem> medicineItems) {
+        this.medicineItems = medicineItems;
+    }
 }

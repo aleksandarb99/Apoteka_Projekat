@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject.dto;
+package com.team11.PharmacyProject.dto.medicine;
 
 import com.team11.PharmacyProject.enums.RecipeRegime;
 

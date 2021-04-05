@@ -1,7 +1,7 @@
 package com.team11.PharmacyProject.users.user;
 
-import com.team11.PharmacyProject.dto.UserCrudDTO;
-import com.team11.PharmacyProject.dto.UserDTO;
+import com.team11.PharmacyProject.dto.user.UserCrudDTO;
+import com.team11.PharmacyProject.dto.user.UserDTO;
 import com.team11.PharmacyProject.dto.UserUpdateDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.modelmapper.ModelMapper;
@@ -36,7 +36,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(value="/")
+    @GetMapping(value = "/")
     public ResponseEntity<List<UserCrudDTO>> getUsers(@RequestParam UserType type) {
         List<UserCrudDTO> users = userService.getUsersByUserType(type).stream().map(this::convertToCrudDto).collect(Collectors.toList());
         return new ResponseEntity<>(users, HttpStatus.OK);
@@ -66,13 +66,13 @@ public class UserController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserUpdateDTO> updateUser(@Valid @RequestBody UserUpdateDTO user, BindingResult result) throws Exception {
 
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             return null;
         }
 
         MyUser updatedUser = userService.updateUser(user);
 
-        if(updatedUser == null) {
+        if (updatedUser == null) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

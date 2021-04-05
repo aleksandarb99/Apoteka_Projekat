@@ -2,8 +2,6 @@ package com.team11.PharmacyProject.dto.pharmacy;
 
 import com.team11.PharmacyProject.enums.UserType;
 
-import javax.persistence.Column;
-
 public class PharmacyWorkerDTO {
 
     private Long id;

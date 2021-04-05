@@ -1,15 +1,11 @@
-package com.team11.PharmacyProject.dto;
-
-import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
+package com.team11.PharmacyProject.dto.medicine;
 
 
 public class MedicineItemDTO {
 
-    private Long id;
-
-    private double price;
-
     public MedicineDTO medicine;
+    private Long id;
+    private double price;
 
     public MedicineItemDTO() {
     }

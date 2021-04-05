@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import {
   Tab,
   Row,
@@ -203,8 +205,9 @@ function PharmaciesView() {
               return (
                 <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
                   <Nav.Link
+                    as={Link}
                     className="my__nav__link__card"
-                    href={`/pharmacy/${pharmacy.id}`}
+                    to={`/pharmacy/${pharmacy.id}`}
                   >
                     <Card className="my__card" style={{ width: "18rem" }}>
                       <Card.Body>

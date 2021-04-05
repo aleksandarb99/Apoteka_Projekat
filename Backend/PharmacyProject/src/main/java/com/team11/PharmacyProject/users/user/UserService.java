@@ -10,6 +10,8 @@ public interface UserService {
     MyUser findOne(Long id);
     MyUser updateUser(UserUpdateDTO user);
     boolean insertUser(MyUser user);
+
     List<MyUser> getUsersByUserType(UserType type);
+
     boolean delete(long id);
 }

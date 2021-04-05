@@ -12,6 +12,7 @@ import Col from "react-bootstrap/Col";
 import "../styling/pharmacyHomePage.css";
 import EditBasicInfo from "./EditBasicInfo";
 import DisplayPurchaseOrders from "./pharmacyAdmin/DisplayPurchaseOrders";
+import AddAppointment from "./pharmacyAdmin/AddAppointment";
 
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
@@ -52,7 +53,7 @@ function PharmacyAdminHomePage() {
                 <Nav.Link eventKey="fourth">Pricelist</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="fifth">Appointsments</Nav.Link>
+                <Nav.Link eventKey="fifth">Add appointment</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link eventKey="sixth">Inquiries</Nav.Link>
@@ -71,6 +72,7 @@ function PharmacyAdminHomePage() {
                 pharmacyDetails={pharmacyDetails}
                 changedPharmacy={changedPharmacy}
               />
+              <AddAppointment idOfPharmacy={pharmacyDetails?.id} />
               <DisplayPurchaseOrders idOfPharmacy={pharmacyDetails?.id} />
             </Tab.Content>
           </Col>

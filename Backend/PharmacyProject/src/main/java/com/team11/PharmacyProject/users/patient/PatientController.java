@@ -5,7 +5,7 @@ import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.patient.PatientDTO;
 import com.team11.PharmacyProject.dto.patient.PatientWorkerSearchDTO;
 
-import com.team11.PharmacyProject.dto.MedicineDTO;
+import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 
@@ -53,11 +53,11 @@ public class PatientController {
         return modelMapper.map(pharmacyDto, Patient.class);
     }
 
-    @GetMapping(value="/all", produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PatientDTO>> getAllPatients(){
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PatientDTO>> getAllPatients() {
         List<Patient> patientsResult = patientService.getAll();
         List<PatientDTO> patientDTOS = new ArrayList<>();
-        for (Patient p:
+        for (Patient p :
                 patientsResult) {
             patientDTOS.add(convertToDto(p));
         }
@@ -131,8 +131,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/getAllExaminedPatients", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PatientWorkerSearchDTO>> getAllExaminedPatients(
-            @RequestParam(value = "workerID") Long workerID)
+    public ResponseEntity<List<PatientWorkerSearchDTO>> getAllExaminedPatients( @RequestParam(value = "workerID") Long workerID)
     {
         //TODO promeniti workerID kad se doda login i jwt
         List<Patient> patients = patientService.getAllExaminedPatients(workerID);
@@ -161,20 +160,20 @@ public class PatientController {
     @GetMapping(value="/search", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PatientDTO>> searchPatientsByFirstAndLastName
             (@RequestParam(value = "firstName", required = false) String firstName,
-             @RequestParam(value = "lastName", required = false) String lastName){
+             @RequestParam(value = "lastName", required = false) String lastName) {
         List<Patient> patientsResult;
 //        if (firstName == null && lastName == null){
 //            // TODO da vrati sve pacijente
 //        }
-        if (firstName == null){
+        if (firstName == null) {
             firstName = "";
         }
-        if (lastName == null){
+        if (lastName == null) {
             lastName = "";
         }
         patientsResult = patientService.searchPatientsByFirstAndLastName(firstName, lastName);
         List<PatientDTO> patientDTOS = new ArrayList<>();
-        for (Patient p:
+        for (Patient p :
                 patientsResult) {
             patientDTOS.add(convertToDto(p));
         }

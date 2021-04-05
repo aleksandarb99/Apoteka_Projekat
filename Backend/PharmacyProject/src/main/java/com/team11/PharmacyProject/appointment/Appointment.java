@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.appointment;
 
+import com.team11.PharmacyProject.dto.appointment.AppointmentDTORequest;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
@@ -11,145 +12,158 @@ import javax.persistence.*;
 @Entity
 public class Appointment {
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-   @Column(name = "start_time", nullable = false)
-   private Long startTime;
+    @Column(name = "start_time", nullable = false)
+    private Long startTime;
 
-   @Column(name = "end_time", nullable = false)
-   private Long endTime;
+    @Column(name = "end_time", nullable = false)
+    private Long endTime;
 
-   @Column(name = "duration", nullable = false)
-   private int duration;
+    @Column(name = "duration", nullable = false)
+    private int duration;
 
-   @Column(name = "appointment_state", nullable = false)
-   @Enumerated(EnumType.STRING)
-   private AppointmentState appointmentState;
+    @Column(name = "appointment_state", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AppointmentState appointmentState;
 
-   @Column(name = "info")
-   private String info;
+    @Column(name = "info")
+    private String info;
 
-   @Column(name = "price", nullable = false)
-   private double price;
+    @Column(name = "price", nullable = false)
+    private double price;
 
-   @Column(name = "appointment_type", nullable = false)
-   @Enumerated(EnumType.STRING)
-   private AppointmentType appointmentType;
+    @Column(name = "appointment_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AppointmentType appointmentType;
 
-   @ManyToOne(fetch = FetchType.EAGER)
-   private Patient patient;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Patient patient;
 
-   @ManyToOne(fetch = FetchType.EAGER)
-   private PharmacyWorker worker;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private PharmacyWorker worker;
 
-   @ManyToOne(fetch = FetchType.EAGER)
-   private Pharmacy pharmacy;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Pharmacy pharmacy;
 
-   public Appointment(Long id, Long startTime, Long endTime, int duration, AppointmentState appointmentState,
-                      String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker) {
-      this.id = id;
-      this.pharmacy = null;
-      this.startTime = startTime;
-      this.endTime = endTime;
-      this.duration = duration;
-      this.appointmentState = appointmentState;
-      this.info = info;
-      this.price = price;
-      this.appointmentType = appointmentType;
-      this.patient = patient;
-      this.worker = worker;
-   }
+    public Appointment(Long id, Long startTime, Long endTime, int duration, AppointmentState appointmentState,
+                       String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker) {
+        this.id = id;
+        this.pharmacy = null;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.duration = duration;
+        this.appointmentState = appointmentState;
+        this.info = info;
+        this.price = price;
+        this.appointmentType = appointmentType;
+        this.patient = patient;
+        this.worker = worker;
+    }
 
-   public Appointment() {
-   }
+    public Appointment(Long pharmacyId, Long dId, AppointmentDTORequest dto) {
+        this.pharmacy = null;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.duration = duration;
+        this.appointmentState = appointmentState;
+        this.info = info;
+        this.price = price;
+        this.appointmentType = appointmentType;
+        this.patient = patient;
+        this.worker = worker;
+    }
 
-   public Pharmacy getPharmacy() {
-      return pharmacy;
-   }
+    public Appointment() {
+    }
 
-   public void setPharmacy(Pharmacy pharmacy) {
-      this.pharmacy = pharmacy;
-   }
+    public Pharmacy getPharmacy() {
+        return pharmacy;
+    }
 
-   public Long getId() {
-      return id;
-   }
+    public void setPharmacy(Pharmacy pharmacy) {
+        this.pharmacy = pharmacy;
+    }
 
-   public void setId(Long id) {
-      this.id = id;
-   }
+    public Long getId() {
+        return id;
+    }
 
-   public Long getStartTime() {
-      return startTime;
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-   public void setStartTime(Long startTime) {
-      this.startTime = startTime;
-   }
+    public Long getStartTime() {
+        return startTime;
+    }
 
-   public Long getEndTime() {
-      return endTime;
-   }
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
+    }
 
-   public void setEndTime(Long endTime) {
-      this.endTime = endTime;
-   }
+    public Long getEndTime() {
+        return endTime;
+    }
 
-   public int getDuration() {
-      return duration;
-   }
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
+    }
 
-   public void setDuration(int duration) {
-      this.duration = duration;
-   }
+    public int getDuration() {
+        return duration;
+    }
 
-   public AppointmentState getAppointmentState() {
-      return appointmentState;
-   }
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 
-   public void setAppointmentState(AppointmentState appointmentState) {
-      this.appointmentState = appointmentState;
-   }
+    public AppointmentState getAppointmentState() {
+        return appointmentState;
+    }
 
-   public String getInfo() {
-      return info;
-   }
+    public void setAppointmentState(AppointmentState appointmentState) {
+        this.appointmentState = appointmentState;
+    }
 
-   public void setInfo(String info) {
-      this.info = info;
-   }
+    public String getInfo() {
+        return info;
+    }
 
-   public double getPrice() {
-      return price;
-   }
+    public void setInfo(String info) {
+        this.info = info;
+    }
 
-   public void setPrice(double price) {
-      this.price = price;
-   }
+    public double getPrice() {
+        return price;
+    }
 
-   public AppointmentType getAppointmentType() {
-      return appointmentType;
-   }
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
-   public void setAppointmentType(AppointmentType appointmentType) {
-      this.appointmentType = appointmentType;
-   }
+    public AppointmentType getAppointmentType() {
+        return appointmentType;
+    }
 
-   public Patient getPatient() {
-      return patient;
-   }
+    public void setAppointmentType(AppointmentType appointmentType) {
+        this.appointmentType = appointmentType;
+    }
 
-   public void setPatient(Patient patient) {
-      this.patient = patient;
-   }
+    public Patient getPatient() {
+        return patient;
+    }
 
-   public PharmacyWorker getWorker() {
-      return worker;
-   }
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 
-   public void setWorker(PharmacyWorker worker) {
-      this.worker = worker;
-   }
+    public PharmacyWorker getWorker() {
+        return worker;
+    }
+
+    public void setWorker(PharmacyWorker worker) {
+        this.worker = worker;
+    }
 }
