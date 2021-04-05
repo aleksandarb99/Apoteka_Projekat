@@ -16,6 +16,7 @@ import PharmHomePage from "./components/workers/pharmacist/home_page_pharmacist"
 import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
 import MedicineCrud from "./components/medicine/MedicineCrud";
 import SearchPatPage from "./components/workers/search_patients";
+import SearchExaminedPatPage from "./components/workers/list_examined";
 
 import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
@@ -71,6 +72,7 @@ function App() {
           <Route path="/worker/search-patients" component={SearchPatPage} />
           <Route path="/wp" component={WorkerProfile} />
           <Route path="/admin/users" component={UserCrud} />
+          <Route path="/worker/examined" component={SearchExaminedPatPage} />
         </Switch>
 
         <Footer />

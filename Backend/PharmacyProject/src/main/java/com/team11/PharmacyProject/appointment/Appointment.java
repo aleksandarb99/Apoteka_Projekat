@@ -38,7 +38,7 @@ public class Appointment {
    @Enumerated(EnumType.STRING)
    private AppointmentType appointmentType;
 
-   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   @ManyToOne(fetch = FetchType.EAGER)
    private Patient patient;
 
    @ManyToOne(fetch = FetchType.EAGER)

@@ -5,6 +5,9 @@ import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.users.patient.Patient;
 
 import javax.validation.constraints.NotNull;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 public class PatientWorkerSearchDTO {
     private Long id;
@@ -33,6 +36,55 @@ public class PatientWorkerSearchDTO {
         this.penalties = patient.getPenalties();
         this.appointmentStart = appointment.getStartTime();
         this.pharmacy = appointment.getPharmacy().getName();
+    }
+
+    public PatientWorkerSearchDTO(@NotNull Patient patient) { //konstruktor za dobavljanje pacijenta, ciji appt nisu sortirani
+        this.id = patient.getId();
+        this.firstName = patient.getFirstName();
+        this.lastName = patient.getLastName();
+        this.email = patient.getEmail();
+        this.telephone = patient.getTelephone();
+        this.address = patient.getAddress();
+        this.points = patient.getPoints();
+        this.penalties = patient.getPenalties();
+        if (patient.getAppointments().isEmpty()){
+            this.appointmentStart = 0L;
+            this.pharmacy = "";
+        }else{
+            Optional<Appointment> latest = patient.getAppointments().stream().max(Comparator.comparing(Appointment::getStartTime));
+            if (latest.isPresent()){
+                this.appointmentStart = latest.get().getStartTime();
+                this.pharmacy = latest.get().getPharmacy() == null ? "" : latest.get().getPharmacy().getName();
+            }else{
+                this.appointmentStart = 0L;
+                this.pharmacy = "";
+            }
+        }
+    }
+
+    public PatientWorkerSearchDTO(@NotNull Patient patient, boolean ascending) { //konstruktor za dobavljanje pacijenta
+        // ciji appt jesu sortirani
+        this.id = patient.getId();
+        this.firstName = patient.getFirstName();
+        this.lastName = patient.getLastName();
+        this.email = patient.getEmail();
+        this.telephone = patient.getTelephone();
+        this.address = patient.getAddress();
+        this.points = patient.getPoints();
+        this.penalties = patient.getPenalties();
+        if (patient.getAppointments().isEmpty()){
+            this.appointmentStart = 0L;
+            this.pharmacy = "";
+        }else {
+            Appointment appt;
+            if (ascending) {
+                appt = patient.getAppointments().get(patient.getAppointments().size()-1); //uzimamo posl
+            }else{
+                appt = patient.getAppointments().get(0);
+            }
+            this.appointmentStart = appt.getStartTime();
+            this.pharmacy = appt.getPharmacy() == null ? "" : appt.getPharmacy().getName();
+        }
     }
 
     public String getFirstName() {
