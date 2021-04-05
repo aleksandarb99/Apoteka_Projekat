@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.users.user;
 import com.team11.PharmacyProject.dto.UserDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public MyUser findOne(Long id) {
@@ -46,6 +49,8 @@ public class UserServiceImpl implements UserService{
     @Override
     public boolean insertUser(MyUser user) {
         if (user != null) {
+            String encoded = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encoded);
             userRepository.save(user);
             return true;
         } else {
