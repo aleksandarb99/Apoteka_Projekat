@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container, Form, Row, Col, ButtonGroup, Card } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Form,
+  Row,
+  Col,
+  ButtonGroup,
+  Card,
+} from "react-bootstrap";
 import axios from "axios";
-import UserInfo from "../UserInfoComponent";
+import UserInfo from "../profile/UserInfoComponent";
 
 function WorkerProfile() {
-  return(
+  return (
     <main>
       <Container>
         <Row className="align-items-center">

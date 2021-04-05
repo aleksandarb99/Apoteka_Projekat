@@ -4,9 +4,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import LogIn from "./components/LogIn";
 import Registration from "./components/Registration";
-import HomePage from "./components/HomePage";
+import HomePage from "./components/unregisteredAndPatient/HomePage";
 import PharmacyAdminHomePage from "./components/PharmacyAdminHomePage";
-import UserProfile from "./components/UserProfile";
+import UserProfile from "./components/profile/UserProfile";
 import Footer from "./components/Footer";
 import { Navbar, Nav } from "react-bootstrap";
 import PharmacyProfile from "./components/PharmacyProfile";
@@ -41,9 +41,6 @@ function App() {
             <Nav className="mr-auto">
               <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
                 Profile
-              </Nav.Link>
-              <Nav.Link style={{ color: "white" }} href="/">
-                Another link here
               </Nav.Link>
             </Nav>
             <Nav>

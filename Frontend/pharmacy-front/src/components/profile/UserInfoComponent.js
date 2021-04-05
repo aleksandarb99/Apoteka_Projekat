@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../styling/profile.css";
+import "../../styling/profile.css";
 import Allergies from "./Allergies";
 import { Button, Form, Alert, Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
@@ -99,7 +99,7 @@ function UserInfo(props) {
   };
 
   return (
-    <Container fluid>
+    <Container>
       <Row className="justify-content-center m-3">
         <h4>{props.title}</h4>
       </Row>

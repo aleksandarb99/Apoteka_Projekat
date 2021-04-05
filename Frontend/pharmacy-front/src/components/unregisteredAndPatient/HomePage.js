@@ -1,5 +1,5 @@
 import React from "react";
-import "../styling/unregistered.css";
+import "../../styling/unregistered.css";
 import { Nav, Tab, Row, Col } from "react-bootstrap";
 import PharmaciesView from "./PharmaciesView";
 import MedicinesView from "./MedicinesView";
