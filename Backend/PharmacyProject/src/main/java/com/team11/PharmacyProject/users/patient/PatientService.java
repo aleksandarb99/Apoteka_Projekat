@@ -35,8 +35,9 @@ public class PatientService {
         return patientRepository.getExaminedPatients(workerID, firstName, lastName, lowerTime, upperTime, sorter);
     }
 
-    public List<Patient> getAllExaminedPatients(Long workerID){
+    public List<Patient> getAllExaminedPatients(Long workerID) {
         return patientRepository.getAllExaminedPatients(workerID);
+    }
 
     public Patient findOne(Long id) {
         return patientRepository.findByIdAndFetchAllergiesEagerly(id);
@@ -45,7 +46,8 @@ public class PatientService {
     public boolean deleteAllergy(long id, long allergy_id) {
         Patient patient = patientRepository.findByIdAndFetchAllergiesEagerly(id);
         if (patient != null) {
-            if(!patient.removeAllergy(allergy_id)) return false;
+            if(!patient.removeAllergy(allergy_id))
+                return false;
 
             patientRepository.save(patient);
             return true;

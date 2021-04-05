@@ -141,6 +141,7 @@ public class PatientController {
             dtos.add(this.convertPatientToWSDTOsorter(pat));
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
 
     @GetMapping(value="/allergies/all/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MedicineDTO>> getAllAllergiesOfPatient(@PathVariable("id") Long id){

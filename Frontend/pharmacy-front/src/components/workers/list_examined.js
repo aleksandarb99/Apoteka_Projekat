@@ -40,10 +40,10 @@ function SearchExaminedPatPage() {
             search_params.append('firstName', lName);
         }
         if (startDate){
-            search_params.append('lowerTime', Math.floor(startDate.getTime()/1000));
+            search_params.append('lowerTime', Math.floor(startDate.getTime()));
         }
         if (endDate){
-            search_params.append('upperTime', Math.floor(endDate.getTime()/1000));
+            search_params.append('upperTime', Math.floor(endDate.getTime()));
         }
         if (fnSort === 'asc' || fnSort === 'desc'){
             search_params.append('sort', 'firstName,' + fnSort);
@@ -191,7 +191,7 @@ function SearchExaminedPatPage() {
                     <Card fluid>
                     <Card.Body>
                         <Card.Title>{value.firstName + " " + value.lastName} </Card.Title>
-                        <Card.Text>{"Last appointment: " + moment.unix(value.appointmentStart).format("DD MMM YYYY hh:mm a")} </Card.Text>
+                        <Card.Text>{"Last appointment: " + moment(value.appointmentStart).format("DD MMM YYYY hh:mm a")} </Card.Text>
                         {/*izmeni ovaj deo da kasnije bude da se prikazu svi sastanci*/}
                         {/* <Button variant="secondary" onClick={() => onShowAppointmentsButton(value)}> Upcomming appointments </Button> */}
                     </Card.Body>

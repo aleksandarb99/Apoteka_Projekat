@@ -1,7 +1,7 @@
 package com.team11.PharmacyProject.myOrder;
 
 import com.team11.PharmacyProject.appointment.AppointmentService;
-import com.team11.PharmacyProject.dto.AppointmentDTO;
+import com.team11.PharmacyProject.dto.appointment.AppointmentDTO;
 import com.team11.PharmacyProject.dto.order.MyOrderDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
