@@ -3,9 +3,10 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  height: 20vh;
+  height: 10vh;
   background-color: #141518;
   color: #cccccc;
+  padding-top: 2vh;
 }
 
 .my__footer p {

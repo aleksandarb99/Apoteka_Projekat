@@ -1,12 +1,12 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import LoginPage from "./components/LoginPage";
 import Registration from "./components/Registration";
-import HomePage from "./components/HomePage";
+import HomePage from "./components/unregisteredAndPatient/HomePage";
 import PharmacyAdminHomePage from "./components/PharmacyAdminHomePage";
-import UserProfile from "./components/UserProfile";
+import UserProfile from "./components/profile/UserProfile";
 import Footer from "./components/Footer";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import PharmacyProfile from "./components/PharmacyProfile";
@@ -16,6 +16,9 @@ import PharmHomePage from "./components/workers/pharmacist/home_page_pharmacist"
 import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
 import MedicineCrud from "./components/medicine/MedicineCrud";
 import SearchPatPage from "./components/workers/search_patients";
+import SearchExaminedPatPage from "./components/workers/list_examined";
+
+import WorkCalendar from "./components/workers/work_calendar";
 
 import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
@@ -30,7 +33,7 @@ function App() {
 
   return (
     <Router>
-      <div>
+      <div style={{ minHeight: "100vh" }}>
         <Navbar className="my__navbar" sticky="top" expand="lg">
           <Navbar.Brand
             as={Link}
@@ -45,9 +48,6 @@ function App() {
             <Nav className="mr-auto">
               <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
                 Profile
-              </Nav.Link>
-              <Nav.Link style={{ color: "white" }} href="/">
-                Another link here
               </Nav.Link>
             </Nav>
             <Nav>
@@ -78,10 +78,11 @@ function App() {
           <Route path="/worker/search-patients" component={SearchPatPage} />
           <Route path="/wp" component={WorkerProfile} />
           <Route path="/admin/users" component={UserCrud} />
+          <Route path="/worker/examined" component={SearchExaminedPatPage} />
+          <Route path="/wc" component={WorkCalendar} />
         </Switch>
-
-        <Footer />
       </div>
+      <Footer />
     </Router>
   );
 }
