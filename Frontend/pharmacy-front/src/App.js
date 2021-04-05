@@ -8,7 +8,7 @@ import HomePage from "./components/HomePage";
 import PharmacyAdminHomePage from "./components/PharmacyAdminHomePage";
 import UserProfile from "./components/UserProfile";
 import Footer from "./components/Footer";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, Button } from "react-bootstrap";
 import PharmacyProfile from "./components/PharmacyProfile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DermHomePage from "./components/workers/dermatologist/home_page_dermatologist";
@@ -22,8 +22,12 @@ import UserCrud from "./components/users/UserCrud";
 
 import "./styling/navbar.css";
 import { House } from "react-bootstrap-icons";
+import { useDispatch } from "react-redux";
+import { logout } from "./app/slices/userSlice";
 
 function App() {
+  const dispatch = useDispatch()
+
   return (
     <Router>
       <div>
@@ -53,6 +57,9 @@ function App() {
               <Nav.Link as={Link} style={{ color: "white" }} to="/login">
                 Log In
               </Nav.Link>
+              <Button as={Link} style={{ color: "white" }} onClick={() => { dispatch(logout()) }}>
+                Log Out
+              </Button>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
