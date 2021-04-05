@@ -153,8 +153,8 @@ insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 
 insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 5);
 
 /*Ratings*/
-insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, 'MEDICINE', 1, 1616510769, 1);
-insert into rating (grade, graded_type, gradedId, date, patient_id) values (5, 'MEDICINE', 3, 1616586369, 2);
+insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, 'MEDICINE', 1, 1616510769000, 1);
+insert into rating (grade, graded_type, gradedId, date, patient_id) values (5, 'MEDICINE', 3, 1616586369000, 2);
 
 /*RankingCategory*/
 insert into ranking_category (name, points_required, discount) values ('Bronza', 50, 5.0);
@@ -166,19 +166,19 @@ insert into erecipe_item (medicine_code, medicine_name, quantity) values ('M01AE
 insert into erecipe_item (medicine_code, medicine_name, quantity) values ('N02BE01', 'Paracetamol', 1);
 
 /*ERecipes*/
-insert into erecipe (dispensing_date, state, code, patient_id) values (1616846400, 'NEW', '1234', 1);
+insert into erecipe (dispensing_date, state, code, patient_id) values (1616846400000, 'NEW', '1234', 1);
 
 /*ERecipes - ERecipes Items*/
 insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 1);
 insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 2);
 
 /*Medicine Prices*/
-insert into medicine_price (price, start_date) values (449, 1616241600);
-insert into medicine_price (price, start_date) values (489, 1616587200);
-insert into medicine_price (price, start_date) values (250, 1616241600);
-insert into medicine_price (price, start_date) values (670, 1616241600);
-insert into medicine_price (price, start_date) values (1200, 1616241600);
-insert into medicine_price (price, start_date) values (879, 1616241600);
+insert into medicine_price (price, start_date) values (449, 1616241600000);
+insert into medicine_price (price, start_date) values (489, 1616587200000);
+insert into medicine_price (price, start_date) values (250, 1616241600000);
+insert into medicine_price (price, start_date) values (670, 1616241600000);
+insert into medicine_price (price, start_date) values (1200, 1616241600000);
+insert into medicine_price (price, start_date) values (879, 1616241600000;
 
 /* MedicineItem - MedicinePrices*/
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (1, 1);
@@ -190,15 +190,15 @@ insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id)
 
 /*Complaints*/
 insert into complaint (content, complaint_on, complaint_on_id, type, date, patient_id)
-                    values ('Nije ispostovan dogovor, trazim da bude sankcionisan.', 'Nebojsa Radovanovic', 5, 'PHARMACIST', 1616587200, 1);
+                    values ('Nije ispostovan dogovor, trazim da bude sankcionisan.', 'Nebojsa Radovanovic', 5, 'PHARMACIST', 1616587200000, 1);
 insert into complaint (content, complaint_on, complaint_on_id, type, date, patient_id)
-                    values ('Neprikladno ponasanje.', 'Marko Maric', 6, 'DERMATOLOGIST', 1616587203, 2);
+                    values ('Neprikladno ponasanje.', 'Marko Maric', 6, 'DERMATOLOGIST', 1616587203000, 2);
 
 /*Complaint Response*/
 insert into complaint_response (response_text, date, complaint_id, user_id)
-                    values ('Bice sakcionisan!', 1616673600, 1, 7);
+                    values ('Bice sakcionisan!', 1616673600000, 1, 7);
 insert into complaint_response (response_text, date, complaint_id, user_id)
-                    values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602, 2, 7);
+                    values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602000, 2, 7);
 
 /*Pharmacies*/
 insert into pharmacy (avg_grade, description, name, address_id, price_list_id)
@@ -227,13 +227,13 @@ insert into workplace_work_days (workplace_id, work_days_id) values (3, 5);
 
 /*Appointments*/
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CONSULTATION', 2, 1637354000, 1617361200, 'Placanje u kesu.', 1500, 1, 1, 5);
+                    values ('RESERVED', 'CONSULTATION', 2, 1637354000000, 1617361200000, 'Placanje u kesu.', 1500, 1, 1, 5);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CHECKUP', 2, 1617354000, 1617361200, 'Placanje u unapred.', 1800, 2, 2, 6);
+                    values ('RESERVED', 'CHECKUP', 2, 1617354000000, 1617361200000, 'Placanje u unapred.', 1800, 2, 2, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CONSULTATION', 2, 1617800000, 1617800300, 'Placanje u unapred.', 1800, 1, 1, 5);
+                    values ('RESERVED', 'CONSULTATION', 2, 1617800000000, 1617800300000, 'Placanje u unapred.', 1800, 1, 1, 5);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CONSULTATION', 2, 1617800300, 1617801300, 'Placanje u unapred.', 1800, 3, 1, 5);
+                    values ('RESERVED', 'CONSULTATION', 2, 1617800300000, 1617801300000, 'Placanje u unapred.', 1800, 3, 1, 5);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('RESERVED', 'CHECKUP', 10, 1617804000000, 1617804000000, 'Placanje u unapred.', 1800, 3, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
@@ -246,13 +246,13 @@ insert into work_calendar_appointments (work_calendar_id, appointments_id) value
 
 /*RequestForHoliday*/
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-                    values ('VACATION', 'Odobreno.', 1619953200, 1620817200, 'ACCEPTED', 5);
+                    values ('VACATION', 'Odobreno.', 1619953200000, 1620817200000, 'ACCEPTED', 5);
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-                    values ('LEAVE', 'Nemoguce da sada dobijete.', 1619953200, 1620817200, 'CANCELLED', 6);
+                    values ('LEAVE', 'Nemoguce da sada dobijete.', 1619953200000, 1620817200000, 'CANCELLED', 6);
 
 /*MyOrders*/
-insert into my_order (deadline, pharmacy_id) values (1620817200, 1);
-insert into my_order (deadline, pharmacy_id) values (1620903600, 2);
+insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
+insert into my_order (deadline, pharmacy_id) values (1620903600000, 2);
 
 /*MyOrders - OrderItems*/
 insert into my_order_order_item (my_order_id, order_item_id) values (1, 1);
@@ -263,11 +263,11 @@ insert into my_order_order_item (my_order_id, order_item_id) values (2, 5);
 
 /*Offers*/
 insert into offer (delivery_date, offer_state, price, order_id)
-                    values (1620730800, 'ACCEPTED', 2300, 1);
+                    values (1620730800000, 'ACCEPTED', 2300, 1);
 insert into offer (delivery_date, offer_state, price, order_id)
-                    values (1620730800, 'PENDING', 2100, 1);
+                    values (1620730800000, 'PENDING', 2100, 1);
 insert into offer (delivery_date, offer_state, price, order_id)
-                    values (1620730800, 'ACCEPTED', 3560, 2);
+                    values (1620730800000, 'ACCEPTED', 3560, 2);
 
 /*Supplier - Offers*/
 insert into supplier_offers (supplier_id, offers_id) values (3, 1);
@@ -276,9 +276,9 @@ insert into supplier_offers (supplier_id, offers_id) values (3, 3);
 
 /*Advertisements*/
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id)
-                    values ('Ne propustite priliku!', 5.0, 1619953200, 1620817200, 'SALE', 1);
+                    values ('Ne propustite priliku!', 5.0, 1619953200000, 1620817200000, 'SALE', 1);
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id)
-                    values ('Odlicna akcija!!!', 30.0, 1619953200, 1620817200, 'SALE', 2);
+                    values ('Odlicna akcija!!!', 30.0, 1619953200000, 1620817200000, 'SALE', 2);
 
 /*Advertising*/
 insert into advertising (advertisement_id, medicine_price_id) values (1, 1);
@@ -286,7 +286,7 @@ insert into advertising (advertisement_id, medicine_price_id) values (2, 3);
 
 /*MedicineReservations*/
 insert into medicine_reservation (pickup_date, reservationid, state, medicine_price_id, pharmacy_id)
-                    values (1620817200, '1234', 'RESERVED', 1, 1);
+                    values (1620817200000, '1234', 'RESERVED', 1, 1);
 
 /*Patient - MedicineReservations*/
 insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 1);
