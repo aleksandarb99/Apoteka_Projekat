@@ -22,107 +22,118 @@ public class MyUser {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "email", unique = true, nullable = false)
-    private String email;
+   @Column(name = "email", unique = true, nullable = false)
+   private String email;
 
-    @Column(name = "telephone", unique = true, nullable = false)
-    private String telephone;
+   @Column(name = "telephone", unique = true, nullable = false)
+   private String telephone;
 
-    @Column(name = "user_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
+   @Column(name = "user_type", nullable = false)
+   @Enumerated(EnumType.STRING)
+   private UserType userType;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
-    private Address address;
+   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   @JoinColumn(name = "address_id")
+   private Address address;
 
-    @Column(name = "is_password_changed", nullable = false)
-    private boolean isPasswordChanged;
+   @Column(name = "is_password_changed", nullable = false)
+   private boolean isPasswordChanged;
 
-    public MyUser() {
-    }
+   @Column(name = "is_email_verified", nullable = false)
+   private boolean emailVerified = false;
 
-    public MyUser(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, boolean isPasswordChanged) {
-        this.id = id;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.telephone = telephone;
-        this.userType = userType;
-        this.address = address;
-        this.isPasswordChanged = isPasswordChanged;
-    }
+   public MyUser() {
+   }
 
-    public Long getId() {
-        return id;
-    }
+   public MyUser(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, boolean isPasswordChanged) {
+      this.id = id;
+      this.password = password;
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.email = email;
+      this.telephone = telephone;
+      this.userType = userType;
+      this.address = address;
+      this.isPasswordChanged = isPasswordChanged;
+   }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+   public Long getId() {
+      return id;
+   }
 
-    public String getPassword() {
-        return password;
-    }
+   public void setId(Long id) {
+      this.id = id;
+   }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+   public String getPassword() {
+      return password;
+   }
 
-    public String getFirstName() {
-        return firstName;
-    }
+   public void setPassword(String password) {
+      this.password = password;
+   }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+   public String getFirstName() {
+      return firstName;
+   }
 
-    public String getLastName() {
-        return lastName;
-    }
+   public void setFirstName(String firstName) {
+      this.firstName = firstName;
+   }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+   public String getLastName() {
+      return lastName;
+   }
 
-    public String getEmail() {
-        return email;
-    }
+   public void setLastName(String lastName) {
+      this.lastName = lastName;
+   }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+   public String getEmail() {
+      return email;
+   }
 
-    public String getTelephone() {
-        return telephone;
-    }
+   public void setEmail(String email) {
+      this.email = email;
+   }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
+   public String getTelephone() {
+      return telephone;
+   }
 
-    public UserType getUserType() {
-        return userType;
-    }
+   public void setTelephone(String telephone) {
+      this.telephone = telephone;
+   }
 
-    public void setUserType(UserType userType) {
-        this.userType = userType;
-    }
+   public UserType getUserType() {
+      return userType;
+   }
 
-    public Address getAddress() {
-        return address;
-    }
+   public void setUserType(UserType userType) {
+      this.userType = userType;
+   }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+   public Address getAddress() {
+      return address;
+   }
 
-    public boolean isPasswordChanged() {
-        return isPasswordChanged;
-    }
+   public void setAddress(Address address) {
+      this.address = address;
+   }
 
-    public void setPasswordChanged(boolean passwordChanged) {
-        isPasswordChanged = passwordChanged;
-    }
+   public boolean isPasswordChanged() {
+      return isPasswordChanged;
+   }
+
+   public void setPasswordChanged(boolean passwordChanged) {
+      isPasswordChanged = passwordChanged;
+   }
+
+   public boolean isEmailVerified() {
+      return emailVerified;
+   }
+
+   public void setEmailVerified(boolean emailVerified) {
+      this.emailVerified = emailVerified;
+   }
 }

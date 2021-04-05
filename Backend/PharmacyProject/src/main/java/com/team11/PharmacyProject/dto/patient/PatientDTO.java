@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject.users.patient;
+package com.team11.PharmacyProject.dto.patient;
 
 import com.team11.PharmacyProject.address.Address;
 

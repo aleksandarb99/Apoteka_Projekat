@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface MedicineService {
 
+    Medicine findOne(long id);
     List<Medicine> getAllMedicines();
 
     boolean insertMedicine(Medicine medicine);

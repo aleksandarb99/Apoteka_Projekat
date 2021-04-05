@@ -1,8 +1,10 @@
 package com.team11.PharmacyProject.users.user;
 
-import com.team11.PharmacyProject.dto.user.UserDTO;
+import com.team11.PharmacyProject.dto.UserDTO;
+import com.team11.PharmacyProject.dto.UserUpdateDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public MyUser findOne(Long id) {
@@ -21,22 +25,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public MyUser updateUser(UserDTO user) {
+    public MyUser updateUser(UserUpdateDTO user) {
 
-        // TODO check when DTO attributes are null
         Optional<MyUser> dbUser = userRepository.findById(user.getId());
         if (dbUser.isPresent()) {
             MyUser updatedUser = dbUser.get();
-            if (user.getPassword() != null)
-                updatedUser.setPassword(user.getPassword());
-            if (user.getFirstName() != null)
-                updatedUser.setFirstName(user.getFirstName());
-            if (user.getLastName() != null)
-                updatedUser.setLastName(user.getLastName());
-            if (user.getTelephone() != null)
-                updatedUser.setTelephone(user.getTelephone());
-            if (user.getAddress() != null)
-                updatedUser.setAddress(user.getAddress());
+            updatedUser.setFirstName(user.getFirstName());
+            updatedUser.setLastName(user.getLastName());
+            updatedUser.setTelephone(user.getTelephone());
+            updatedUser.setAddress(user.getAddress());
             userRepository.save(updatedUser);
             return updatedUser;
         }
@@ -46,6 +43,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean insertUser(MyUser user) {
         if (user != null) {
+            String encoded = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encoded);
             userRepository.save(user);
             return true;
         } else {

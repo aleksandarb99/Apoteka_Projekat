@@ -11,7 +11,7 @@ public class UserDTO {
 
     private Long id;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^*_=+-]).{8,12}$")
+    //@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^*_=+-]).{8,12}$")
     private String password;
 
     @NotEmpty
@@ -24,7 +24,7 @@ public class UserDTO {
     private String email;
 
     @NotEmpty
-    @Pattern(regexp = "(^$|[0-9]{10})")
+    //@Pattern(regexp="(^$|[0-9]{10})")
     private String telephone;
 
     @NotNull

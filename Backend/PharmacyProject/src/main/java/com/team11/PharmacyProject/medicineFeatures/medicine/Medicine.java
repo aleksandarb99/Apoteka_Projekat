@@ -46,17 +46,17 @@ public class Medicine {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Medicine> alternativeMedicine;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "medicine_type_id")
-    private MedicineType medicineType;
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "medicine_type_id")
+   private MedicineType medicineType;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "medicine_form_id")
-    private MedicineForm medicineForm;
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "medicine_form_id")
+   private MedicineForm medicineForm;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "manufacturer_id")
-    private Manufacturer manufacturer;
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "manufacturer_id")
+   private Manufacturer manufacturer;
 
     public Medicine() {
 

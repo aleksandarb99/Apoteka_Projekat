@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
-import "../styling/profile.css";
-import { Button, Form, Alert, Container, Row, Col } from "react-bootstrap";
-import axios from "axios";
+import React from "react";
 import UserInfo from "./UserInfoComponent";
 
+import "../../styling/profile.css";
+
 function UserProfile() {
-  
   return (
     <main>
       <UserInfo title="Patient's information" col_width={6}></UserInfo>
