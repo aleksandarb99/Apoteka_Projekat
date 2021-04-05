@@ -1,6 +1,6 @@
 package com.team11.PharmacyProject.appointment;
 
-import com.team11.PharmacyProject.dto.AppointmentDTO;
+import com.team11.PharmacyProject.dto.appointment.AppointmentDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

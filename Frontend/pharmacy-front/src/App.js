@@ -18,6 +18,8 @@ import MedicineCrud from "./components/medicine/MedicineCrud";
 import SearchPatPage from "./components/workers/search_patients";
 import SearchExaminedPatPage from "./components/workers/list_examined";
 
+import WorkCalendar from "./components/workers/work_calendar";
+
 import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
 
@@ -70,6 +72,7 @@ function App() {
           <Route path="/wp" component={WorkerProfile} />
           <Route path="/admin/users" component={UserCrud} />
           <Route path="/worker/examined" component={SearchExaminedPatPage} />
+          <Route path="/wc" component={WorkCalendar} />
         </Switch>
       </div>
       <Footer />
