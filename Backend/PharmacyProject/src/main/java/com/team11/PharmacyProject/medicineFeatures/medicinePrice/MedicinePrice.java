@@ -8,58 +8,58 @@ import java.util.List;
 @Entity
 public class MedicinePrice {
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-   @Column(name = "price", nullable = false)
-   private double price;
+    @Column(name = "price", nullable = false)
+    private double price;
 
-   @Column(name = "start_date", nullable = false)
-   private Long startDate;
+    @Column(name = "start_date", nullable = false)
+    private Long startDate;
 
-   @ManyToMany(mappedBy = "medicineList", fetch = FetchType.EAGER)
-   private List<Advertisement> advertisements;
+    @ManyToMany(mappedBy = "medicineList", fetch = FetchType.EAGER)
+    private List<Advertisement> advertisements;
 
-   public MedicinePrice() {
-   }
+    public MedicinePrice() {
+    }
 
-   public MedicinePrice(Long id, double price, Long startDate, List<Advertisement> advertisements) {
-      this.id = id;
-      this.price = price;
-      this.startDate = startDate;
-      this.advertisements = advertisements;
-   }
+    public MedicinePrice(Long id, double price, Long startDate, List<Advertisement> advertisements) {
+        this.id = id;
+        this.price = price;
+        this.startDate = startDate;
+        this.advertisements = advertisements;
+    }
 
-   public Long getId() {
-      return id;
-   }
+    public Long getId() {
+        return id;
+    }
 
-   public void setId(Long id) {
-      this.id = id;
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-   public double getPrice() {
-      return price;
-   }
+    public double getPrice() {
+        return price;
+    }
 
-   public void setPrice(double price) {
-      this.price = price;
-   }
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
-   public Long getStartDate() {
-      return startDate;
-   }
+    public Long getStartDate() {
+        return startDate;
+    }
 
-   public void setStartDate(Long startDate) {
-      this.startDate = startDate;
-   }
+    public void setStartDate(Long startDate) {
+        this.startDate = startDate;
+    }
 
-   public List<Advertisement> getAdvertisemens() {
-      return advertisements;
-   }
+    public List<Advertisement> getAdvertisemens() {
+        return advertisements;
+    }
 
-   public void setAdvertisemens(List<Advertisement> advertisemens) {
-      this.advertisements = advertisemens;
-   }
+    public void setAdvertisemens(List<Advertisement> advertisemens) {
+        this.advertisements = advertisemens;
+    }
 }

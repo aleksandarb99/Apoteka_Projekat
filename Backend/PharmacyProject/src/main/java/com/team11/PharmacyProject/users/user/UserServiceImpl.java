@@ -1,6 +1,6 @@
 package com.team11.PharmacyProject.users.user;
 
-import com.team11.PharmacyProject.dto.UserDTO;
+import com.team11.PharmacyProject.dto.user.UserDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService{
 
         // TODO check when DTO attributes are null
         Optional<MyUser> dbUser = userRepository.findById(user.getId());
-        if(dbUser.isPresent()) {
+        if (dbUser.isPresent()) {
             MyUser updatedUser = dbUser.get();
             if (user.getPassword() != null)
                 updatedUser.setPassword(user.getPassword());

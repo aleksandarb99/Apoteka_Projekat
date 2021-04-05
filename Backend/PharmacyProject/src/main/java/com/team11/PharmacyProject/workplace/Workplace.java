@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Workplace  {
+public class Workplace {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,8 @@ public class Workplace  {
     @ManyToOne(fetch = FetchType.LAZY)
     private Pharmacy pharmacy;
 
-    public Workplace() {}
+    public Workplace() {
+    }
 
     public Workplace(Long id, PharmacyWorker worker, List<WorkDay> workDays, Pharmacy pharmacy) {
         this.id = id;

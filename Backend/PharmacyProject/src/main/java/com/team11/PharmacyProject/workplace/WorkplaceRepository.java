@@ -1,6 +1,5 @@
 package com.team11.PharmacyProject.workplace;
 
-import com.team11.PharmacyProject.appointment.Appointment;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

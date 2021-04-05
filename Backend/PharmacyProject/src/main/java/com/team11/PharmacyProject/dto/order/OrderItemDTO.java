@@ -1,6 +1,6 @@
 package com.team11.PharmacyProject.dto.order;
 
-import com.team11.PharmacyProject.dto.MedicineDTO;
+import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 
 
 public class OrderItemDTO {

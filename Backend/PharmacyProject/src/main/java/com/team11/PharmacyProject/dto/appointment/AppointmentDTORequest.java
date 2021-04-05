@@ -3,7 +3,6 @@ package com.team11.PharmacyProject.dto.appointment;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyWorkerDTO;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 
 
 public class AppointmentDTORequest {

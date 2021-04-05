@@ -1,8 +1,7 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
-import com.team11.PharmacyProject.dto.MedicineCrudDTO;
-import com.team11.PharmacyProject.dto.MedicineDTO;
-import org.apache.coyote.Response;
+import com.team11.PharmacyProject.dto.medicine.MedicineCrudDTO;
+import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

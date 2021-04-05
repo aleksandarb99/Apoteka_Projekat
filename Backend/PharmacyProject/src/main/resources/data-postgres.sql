@@ -178,7 +178,7 @@ insert into medicine_price (price, start_date) values (489, 1616587200000);
 insert into medicine_price (price, start_date) values (250, 1616241600000);
 insert into medicine_price (price, start_date) values (670, 1616241600000);
 insert into medicine_price (price, start_date) values (1200, 1616241600000);
-insert into medicine_price (price, start_date) values (879, 1616241600000;
+-- insert into medicine_price (price, start_date) values (879, 1616241600000;
 
 /* MedicineItem - MedicinePrices*/
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (1, 1);
@@ -186,7 +186,7 @@ insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id)
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (2, 3);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (3, 4);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (4, 5);
-insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (5, 6);
+-- insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (5, 6);
 
 /*Complaints*/
 insert into complaint (content, complaint_on, complaint_on_id, type, date, patient_id)

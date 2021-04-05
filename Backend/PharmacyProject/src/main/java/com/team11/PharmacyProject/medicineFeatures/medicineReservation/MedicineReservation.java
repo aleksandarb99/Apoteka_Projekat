@@ -9,75 +9,76 @@ import javax.persistence.*;
 @Entity
 public class MedicineReservation {
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-   @Column(name = "pickup_date", nullable = false)
-   private Long pickupDate;
+    @Column(name = "pickup_date", nullable = false)
+    private Long pickupDate;
 
-   @Column(name = "reservationID", nullable = false)
-   private String reservationID;
+    @Column(name = "reservationID", nullable = false)
+    private String reservationID;
 
-   @Column(name = "state", nullable = false)
-   @Enumerated(EnumType.STRING)
-   private ReservationState state;
+    @Column(name = "state", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ReservationState state;
 
-   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "medicine_price_id")
-   private MedicinePrice medicinePrice;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "medicine_price_id")
+    private MedicinePrice medicinePrice;
 
-   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "pharmacy_id")
-   private Pharmacy pharmacy;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "pharmacy_id")
+    private Pharmacy pharmacy;
 
-   public MedicineReservation() {}
+    public MedicineReservation() {
+    }
 
-   public Long getId() {
-      return id;
-   }
+    public Long getId() {
+        return id;
+    }
 
-   public void setId(Long id) {
-      this.id = id;
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-   public Long getPickupDate() {
-      return pickupDate;
-   }
+    public Long getPickupDate() {
+        return pickupDate;
+    }
 
-   public void setPickupDate(Long pickupDate) {
-      this.pickupDate = pickupDate;
-   }
+    public void setPickupDate(Long pickupDate) {
+        this.pickupDate = pickupDate;
+    }
 
-   public String getReservationID() {
-      return reservationID;
-   }
+    public String getReservationID() {
+        return reservationID;
+    }
 
-   public void setReservationID(String reservationID) {
-      this.reservationID = reservationID;
-   }
+    public void setReservationID(String reservationID) {
+        this.reservationID = reservationID;
+    }
 
-   public ReservationState getState() {
-      return state;
-   }
+    public ReservationState getState() {
+        return state;
+    }
 
-   public void setState(ReservationState state) {
-      this.state = state;
-   }
+    public void setState(ReservationState state) {
+        this.state = state;
+    }
 
-   public MedicinePrice getMedicinePrice() {
-      return medicinePrice;
-   }
+    public MedicinePrice getMedicinePrice() {
+        return medicinePrice;
+    }
 
-   public void setMedicinePrice(MedicinePrice medicinePrice) {
-      this.medicinePrice = medicinePrice;
-   }
+    public void setMedicinePrice(MedicinePrice medicinePrice) {
+        this.medicinePrice = medicinePrice;
+    }
 
-   public Pharmacy getPharmacy() {
-      return pharmacy;
-   }
+    public Pharmacy getPharmacy() {
+        return pharmacy;
+    }
 
-   public void setPharmacy(Pharmacy pharmacy) {
-      this.pharmacy = pharmacy;
-   }
+    public void setPharmacy(Pharmacy pharmacy) {
+        this.pharmacy = pharmacy;
+    }
 }

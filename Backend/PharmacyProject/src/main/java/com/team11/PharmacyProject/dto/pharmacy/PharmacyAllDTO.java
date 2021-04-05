@@ -20,7 +20,7 @@ public class PharmacyAllDTO {
     }
 
     public PharmacyAllDTO(long id, @NotBlank String name, @NotBlank String description,
-                       Double avgGrade, @NotNull Address address) {
+                          Double avgGrade, @NotNull Address address) {
         this.id = id;
         this.name = name;
         this.description = description;

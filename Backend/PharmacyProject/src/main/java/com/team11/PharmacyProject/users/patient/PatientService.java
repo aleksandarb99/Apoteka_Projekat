@@ -10,11 +10,11 @@ public class PatientService {
     @Autowired
     PatientRepository patientRepository;
 
-    public List<Patient> searchPatientsByFirstAndLastName(String firstname, String lastname){
+    public List<Patient> searchPatientsByFirstAndLastName(String firstname, String lastname) {
         return patientRepository.searchPatientsByFirstAndLastName(firstname, lastname);
     }
 
-    public List<Patient> getAll(){
+    public List<Patient> getAll() {
         return (List<Patient>) patientRepository.findAll();
     }
 }

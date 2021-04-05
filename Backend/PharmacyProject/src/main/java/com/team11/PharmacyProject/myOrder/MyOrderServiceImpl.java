@@ -19,12 +19,12 @@ public class MyOrderServiceImpl implements MyOrderService {
         List<MyOrder> myOrderList = new ArrayList<>();
         long currentTime = new Date().getTime();
 
-        for(MyOrder order : myOrderRepository.getOrdersByPharmacyId(id)){
-            if(filterValue.equals("All")) {
+        for (MyOrder order : myOrderRepository.getOrdersByPharmacyId(id)) {
+            if (filterValue.equals("All")) {
                 myOrderList.add(order);
-            } else if(filterValue.equals("InProgress") && currentTime < order.getDeadline()) {
+            } else if (filterValue.equals("InProgress") && currentTime < order.getDeadline()) {
                 myOrderList.add(order);
-            } else if(filterValue.equals("Processed") && currentTime > order.getDeadline()) {
+            } else if (filterValue.equals("Processed") && currentTime > order.getDeadline()) {
                 myOrderList.add(order);
             }
         }

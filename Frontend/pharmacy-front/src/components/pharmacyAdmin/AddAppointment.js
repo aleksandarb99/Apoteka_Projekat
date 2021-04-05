@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import axios from "axios";
 
-import Moment from "react-moment";
-import "moment-timezone";
-
 import { Button, Tab, Row, Col, Table, Form } from "react-bootstrap";
 
 function AddAppointment({ idOfPharmacy }) {
@@ -213,16 +210,10 @@ function AddAppointment({ idOfPharmacy }) {
                       <td>
                         {new Date(appointment.startTime).getHours()} :{" "}
                         {new Date(appointment.startTime).getMinutes()}
-                        {/* <Moment tz="America/Los_Angeles" format="hh:mm" unix>
-                          {appointment.startTime}
-                        </Moment> */}
                       </td>
                       <td>
                         {new Date(appointment.endTime).getHours()} :{" "}
                         {new Date(appointment.endTime).getMinutes()}
-                        {/* <Moment tz="America/Los_Angeles" format="hh:mm" unix>
-                          {appointment.endTime}
-                        </Moment> */}
                       </td>
                       <td>{appointment.appointmentState}</td>
                     </tr>

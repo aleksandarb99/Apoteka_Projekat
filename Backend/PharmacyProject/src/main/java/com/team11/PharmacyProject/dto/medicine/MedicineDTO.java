@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject.dto;
+package com.team11.PharmacyProject.dto.medicine;
 
 public class MedicineDTO {
 
@@ -8,7 +8,8 @@ public class MedicineDTO {
     private String content;
     private double avgGrade;
 
-    public MedicineDTO() {}
+    public MedicineDTO() {
+    }
 
     public Long getId() {
         return id;

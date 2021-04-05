@@ -18,15 +18,15 @@ public class WorkplaceDTOWithWorkdays {
         this.workDays = workDays;
     }
 
+    public WorkplaceDTOWithWorkdays() {
+    }
+
     public List<WorkDay> getWorkDays() {
         return workDays;
     }
 
     public void setWorkDays(List<WorkDay> workDays) {
         this.workDays = workDays;
-    }
-
-    public WorkplaceDTOWithWorkdays() {
     }
 
     public Long getId() {
