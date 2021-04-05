@@ -10,6 +10,7 @@ import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
+import com.team11.PharmacyProject.workplace.WorkplaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +37,9 @@ public class AppointmentService {
 
     @Autowired
     PharmacyWorkerRepository pharmacyWorkerRepository;
+
+    @Autowired
+    WorkplaceRepository workplaceRepository;
 
     public Appointment getNextAppointment(String email, Long workerId) {
         Pageable pp = (Pageable) PageRequest.of(0,1, Sort.by("startTime").ascending());
@@ -107,40 +111,29 @@ public class AppointmentService {
         c.setTime(startTime);
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
-        for (Workplace wp:worker.getWorkplaces()) {
-            if(wp.getPharmacy().getId() == pharmacy.getId()){
-                for (WorkDay wd: wp.getWorkDays()) {
-                    if(wd.getWeekday().ordinal() == dayOfWeek){
-                        Date d1 = new Date(wd.getStartTime());
-                        Date d2 = new Date(wd.getEndTime());
+        for (Workplace wp:workplaceRepository.getWorkplacesByPharmacyIdAndWorkerId(pharmacyId, worker.getId())) {
+            for (WorkDay wd: wp.getWorkDays()) {
+                System.out.println("NAS ENUM");
+                System.out.println(wd.getWeekday().ordinal() + 1);
+                System.out.println("ONAJ OD KALENDARA");
+                System.out.println(dayOfWeek);
+                if(wd.getWeekday().ordinal() + 1 == dayOfWeek){
 
-                        if(startTime.compareTo(d1)==0){
-                            return false;
-                        }
+                    c.setTime(startTime);   // assigns calendar to given date
+                    int hourStart = c.get(Calendar.HOUR_OF_DAY);
+                    c.setTime(endTime);   // assigns calendar to given date
+                    int hourEnd = c.get(Calendar.HOUR_OF_DAY);
 
-                        if(endTime.compareTo(d2)==0){
-                            return false;
-                        }
+                    if(hourStart < wd.getStartTime()){
+                        return false;
+                    }
 
-                        if(startTime.after(d1) && startTime.before(d2)){
-                            return false;
-                        }
-
-                        if(endTime.after(d1) && endTime.before(d2)){
-                            return false;
-                        }
-
-                        if(d1.after(startTime) && d1.before(endTime)){
-                            return false;
-                        }
-
-                        if(d2.after(startTime) && d2.before(endTime)){
-                            return false;
-                        }
+                    if(hourEnd > wd.getEndTime()){
+                        return false;
                     }
                 }
-
             }
+
         }
         for (Appointment appointment: appointmentRepository.findFreeAppointmentsByPharmacyIdAndWorkerId(pharmacyId, worker.getId())) {
             Date d1 = new Date(appointment.getStartTime());
@@ -171,9 +164,6 @@ public class AppointmentService {
             }
         }
 
-        // TODO VIDETI STA S OVIM
-        //worker.getAppointmentList().add(a);
-        //pharmacy.getAppointments().add(a);
         appointmentRepository.save(a);
         return true;
     }

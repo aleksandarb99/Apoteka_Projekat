@@ -211,16 +211,18 @@ function AddAppointment({ idOfPharmacy }) {
                     <tr>
                       <td>{index + 1}</td>
                       <td>
-                        <h1>{appointment.startTime}</h1>
-                        <Moment tz="America/Los_Angeles" format="hh:mm" unix>
+                        {new Date(appointment.startTime).getHours()} :{" "}
+                        {new Date(appointment.startTime).getMinutes()}
+                        {/* <Moment tz="America/Los_Angeles" format="hh:mm" unix>
                           {appointment.startTime}
-                        </Moment>
+                        </Moment> */}
                       </td>
                       <td>
-                        <h1>{appointment.endTime}</h1>
-                        <Moment tz="America/Los_Angeles" format="hh:mm" unix>
+                        {new Date(appointment.endTime).getHours()} :{" "}
+                        {new Date(appointment.endTime).getMinutes()}
+                        {/* <Moment tz="America/Los_Angeles" format="hh:mm" unix>
                           {appointment.endTime}
-                        </Moment>
+                        </Moment> */}
                       </td>
                       <td>{appointment.appointmentState}</td>
                     </tr>

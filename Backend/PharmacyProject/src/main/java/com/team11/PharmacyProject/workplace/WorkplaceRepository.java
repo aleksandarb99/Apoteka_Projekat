@@ -10,5 +10,8 @@ public interface WorkplaceRepository extends CrudRepository<Workplace, Long> {
 
     @Query("SELECT u FROM Workplace u WHERE u.pharmacy.id = ?1")
     Iterable<Workplace> getWorkplacesByPharmacyId(Long pharmacyId);
+
+    @Query("SELECT u FROM Workplace u WHERE u.pharmacy.id = ?1 AND u.worker.id= ?2")
+    Iterable<Workplace> getWorkplacesByPharmacyIdAndWorkerId(Long pharmacyId, Long workerID);
 }
 
