@@ -1,6 +1,11 @@
 package com.team11.PharmacyProject.appointment;
 
 import com.team11.PharmacyProject.dto.AppointmentDTO;
+import com.team11.PharmacyProject.dto.appointment.AppointmentDTORequest;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyDTO;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.pharmacy.PharmacyService;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,10 +22,22 @@ import java.util.stream.Collectors;
 @RequestMapping("api/appointment")
 public class AppointmentController {
 
+
     @Autowired
     AppointmentService appointmentService;
     @Autowired
     private ModelMapper modelMapper;
+
+    @PostMapping(value = "/{idP}/{idD}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> addAppointment(@PathVariable("idP") Long pharmacyId, @PathVariable("idD") Long dId,@Valid @RequestBody AppointmentDTORequest dto ){
+
+        Appointment a = convertToEntity(dto);
+        if (appointmentService.insertAppointment(a, pharmacyId, dId)) {
+            return new ResponseEntity<>("Appointment added successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping(value = "/all/bydermatologistid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AppointmentDTO>> getAllAppointmentsByPharmacyId(@PathVariable("id") Long id, @RequestParam(name="date") Long date ){
@@ -60,6 +78,10 @@ public class AppointmentController {
         }else{
             return new ResponseEntity<List<AppointmentDTO>>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    private Appointment convertToEntity(AppointmentDTORequest dto) {
+        return modelMapper.map(dto, Appointment.class);
     }
 //    @PostMapping(value = "/byPatWorker", produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<AppointmentDTO> getNextAppointment(

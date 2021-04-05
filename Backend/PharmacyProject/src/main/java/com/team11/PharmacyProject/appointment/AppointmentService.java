@@ -1,7 +1,15 @@
 package com.team11.PharmacyProject.appointment;
 
+import com.team11.PharmacyProject.enums.AppointmentState;
+import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.myOrder.MyOrder;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
+import com.team11.PharmacyProject.workDay.WorkDay;
+import com.team11.PharmacyProject.workplace.Workplace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,15 +24,18 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AppointmentService {
     @Autowired
     AppointmentRepository appointmentRepository;
+
+    @Autowired
+    PharmacyRepository pharmacyRepository;
+
+    @Autowired
+    PharmacyWorkerRepository pharmacyWorkerRepository;
 
     public Appointment getNextAppointment(String email, Long workerId) {
         Pageable pp = (Pageable) PageRequest.of(0,1, Sort.by("startTime").ascending());
@@ -64,5 +75,106 @@ public class AppointmentService {
         }
         return appointments;
 
+    }
+
+    public boolean insertAppointment(Appointment a, Long pharmacyId, Long dId) {
+        Optional<Pharmacy> p = pharmacyRepository.findById(pharmacyId);
+        if(p.isEmpty()){
+            return false;
+        }
+        Pharmacy pharmacy = p.get();
+
+        PharmacyWorker worker = pharmacyWorkerRepository.findByIdAndFetchAWorkplaces(dId);
+        if(worker == null){
+            return false;
+        }
+
+        a.setAppointmentState(AppointmentState.EMPTY);
+        a.setAppointmentType(AppointmentType.CHECKUP);
+        a.setPharmacy(pharmacy);
+        a.setWorker(worker);
+        a.setEndTime(a.getStartTime() + a.getDuration() * 60000L);
+
+        Date startTime = new Date(a.getStartTime());
+        Date endTime = new Date(a.getEndTime());
+
+        Date today = new Date();
+        if(startTime.before(today)){
+            return false;
+        }
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(startTime);
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
+        for (Workplace wp:worker.getWorkplaces()) {
+            if(wp.getPharmacy().getId() == pharmacy.getId()){
+                for (WorkDay wd: wp.getWorkDays()) {
+                    if(wd.getWeekday().ordinal() == dayOfWeek){
+                        Date d1 = new Date(wd.getStartTime());
+                        Date d2 = new Date(wd.getEndTime());
+
+                        if(startTime.compareTo(d1)==0){
+                            return false;
+                        }
+
+                        if(endTime.compareTo(d2)==0){
+                            return false;
+                        }
+
+                        if(startTime.after(d1) && startTime.before(d2)){
+                            return false;
+                        }
+
+                        if(endTime.after(d1) && endTime.before(d2)){
+                            return false;
+                        }
+
+                        if(d1.after(startTime) && d1.before(endTime)){
+                            return false;
+                        }
+
+                        if(d2.after(startTime) && d2.before(endTime)){
+                            return false;
+                        }
+                    }
+                }
+
+            }
+        }
+        for (Appointment appointment: appointmentRepository.findFreeAppointmentsByPharmacyIdAndWorkerId(pharmacyId, worker.getId())) {
+            Date d1 = new Date(appointment.getStartTime());
+            Date d2 = new Date(appointment.getEndTime());
+
+            if(startTime.compareTo(d1)==0){
+                return false;
+            }
+
+            if(endTime.compareTo(d2)==0){
+                return false;
+            }
+
+            if(startTime.after(d1) && startTime.before(d2)){
+                return false;
+            }
+
+            if(endTime.after(d1) && endTime.before(d2)){
+                return false;
+            }
+
+            if(d1.after(startTime) && d1.before(endTime)){
+                return false;
+            }
+
+            if(d2.after(startTime) && d2.before(endTime)){
+                return false;
+            }
+        }
+
+        // TODO VIDETI STA S OVIM
+        //worker.getAppointmentList().add(a);
+        //pharmacy.getAppointments().add(a);
+        appointmentRepository.save(a);
+        return true;
     }
 }

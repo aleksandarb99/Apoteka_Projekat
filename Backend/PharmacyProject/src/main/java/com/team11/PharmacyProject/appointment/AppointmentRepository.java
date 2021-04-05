@@ -14,6 +14,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("SELECT u FROM Appointment u WHERE u.appointmentState = 'RESERVED' AND u.pharmacy.id=?1 AND u.startTime < ?2")
     Iterable<Appointment> findFreeAppointmentsByPharmacyId(Long id, Long currentTime);
 
+    @Query("SELECT u FROM Appointment u WHERE u.pharmacy.id=?1 AND u.worker.id =?2")
+    Iterable<Appointment> findFreeAppointmentsByPharmacyIdAndWorkerId(Long id, Long id2);
+
     @Query("select a from Appointment  a where a.appointmentState = 'RESERVED' and " +
             "a.patient.email = ?1 and a.worker.id = ?2")
     List<Appointment> getUpcommingAppointment(String patEmail, Long workerID, Pageable pp);

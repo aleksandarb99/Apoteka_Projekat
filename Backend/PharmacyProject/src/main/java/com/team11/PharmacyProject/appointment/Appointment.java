@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.appointment;
 
+import com.team11.PharmacyProject.dto.appointment.AppointmentDTORequest;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
@@ -50,6 +51,19 @@ public class Appointment {
    public Appointment(Long id, Long startTime, Long endTime, int duration, AppointmentState appointmentState,
                       String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker) {
       this.id = id;
+      this.pharmacy = null;
+      this.startTime = startTime;
+      this.endTime = endTime;
+      this.duration = duration;
+      this.appointmentState = appointmentState;
+      this.info = info;
+      this.price = price;
+      this.appointmentType = appointmentType;
+      this.patient = patient;
+      this.worker = worker;
+   }
+
+   public Appointment(Long pharmacyId, Long dId, AppointmentDTORequest dto) {
       this.pharmacy = null;
       this.startTime = startTime;
       this.endTime = endTime;

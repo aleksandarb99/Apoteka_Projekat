@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import Moment from "react-moment";
+import "moment-timezone";
 
 import { Button, Tab, Row, Col, Table, Form } from "react-bootstrap";
 
@@ -15,6 +16,7 @@ function AddAppointment({ idOfPharmacy }) {
   const [duration, setDuration] = useState(15);
   const [price, setPrice] = useState(2000);
   const [workDaysLabel, setWorkDaysLabel] = useState("");
+  const [refresh, setRefresh] = useState(true);
 
   useEffect(() => {
     if (idOfPharmacy != undefined) {
@@ -43,7 +45,7 @@ function AddAppointment({ idOfPharmacy }) {
     } else {
       setAppointments([]);
     }
-  }, [startDate, dermatogistPicked]);
+  }, [startDate, dermatogistPicked, refresh]);
 
   let changeDate = (date) => {
     let array = date.split("-");
@@ -81,6 +83,36 @@ function AddAppointment({ idOfPharmacy }) {
       }
     }
   }, [dermatogistPicked, startDate]);
+
+  let sendAppointment = () => {
+    let date = startDate;
+    let hour = startHour;
+    let array = hour.split(":");
+    date.setHours(Number.parseInt(array[0]), Number.parseInt(array[1]), 0);
+    let long = date.getTime();
+    let request = { duration, price: price, startTime: long };
+    console.log(request);
+
+    axios
+      .post(
+        `http://localhost:8080/api/appointment/${idOfPharmacy}/${dermatogistPicked}`,
+        request
+      )
+      .then((res) => {
+        alert("Appointment added successfully");
+        reloadForm();
+      })
+      .catch((res) => {
+        alert("Appointment is not added successfully");
+      });
+  };
+
+  let reloadForm = () => {
+    setStartHour("10:00");
+    setDuration(15);
+    setRefresh(!refresh);
+    setPrice(2000);
+  };
 
   return (
     <Tab.Pane eventKey="fifth">
@@ -131,7 +163,9 @@ function AddAppointment({ idOfPharmacy }) {
               type="number"
               value={duration}
               disabled={dermatogistPicked == 0}
-              onChange={(event) => setDuration(event.target.value)}
+              onChange={(event) =>
+                setDuration(Number.parseInt(event.target.value))
+              }
               min="0"
             />
           </Form.Group>
@@ -142,12 +176,19 @@ function AddAppointment({ idOfPharmacy }) {
               type="number"
               value={price}
               disabled={dermatogistPicked == 0}
-              onChange={(event) => setPrice(event.target.value)}
+              onChange={(event) =>
+                setPrice(Number.parseInt(event.target.value))
+              }
               min="0"
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit">
+          <Button
+            disabled={dermatogistPicked == 0}
+            variant="primary"
+            type="submit"
+            onClick={sendAppointment}
+          >
             Submit
           </Button>
         </Col>
@@ -170,12 +211,14 @@ function AddAppointment({ idOfPharmacy }) {
                     <tr>
                       <td>{index + 1}</td>
                       <td>
-                        <Moment format="hh:mm" unix>
+                        <h1>{appointment.startTime}</h1>
+                        <Moment tz="America/Los_Angeles" format="hh:mm" unix>
                           {appointment.startTime}
                         </Moment>
                       </td>
                       <td>
-                        <Moment format="hh:mm" unix>
+                        <h1>{appointment.endTime}</h1>
+                        <Moment tz="America/Los_Angeles" format="hh:mm" unix>
                           {appointment.endTime}
                         </Moment>
                       </td>
