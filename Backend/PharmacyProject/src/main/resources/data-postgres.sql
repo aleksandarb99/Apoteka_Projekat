@@ -106,30 +106,33 @@ insert into work_day (weekday, start_time, end_time) values ('THU', 7, 15);
 insert into work_day (weekday, start_time, end_time) values ('FRI', 7, 15);
 
 /*MyUsers*/
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('pera123', 'Petar', 'Markovic', 'perazdera@gmail.com', '0642312343', 'PATIENT', 4, false);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('mika123', 'Mitar', 'Zivkovic', 'mitazita87@gmail.com', '06433332343', 'PATIENT', 4, false);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('djuradjura', 'Djura', 'Djuraa', 'djule@gmail.com', '06433332341', 'PATIENT', 4, false);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('zile123', 'Zdravko', 'Mitic', 'zlegenda78@gmail.com', '06233552343', 'SUPPLIER', 3, false);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('sima123', 'Slavko', 'Vasic', 'slavisa@gmail.com', '0632232343', 'SUPPLIER', 3, false);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('lukibuki', 'Nebojsa', 'Radovanovic', 'nebojsa@gmail.com', '0637732343', 'PHARMACIST', 3, false);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('lilecile', 'Marko', 'Maric', 'marcius@gmail.com', '0634632343', 'DERMATOLOGIST', 3, false);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('cile', 'Dusko', 'Dragic', 'duskousko@gmail.com', '0628832343', 'ADMIN', 3, false);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('bile', 'Branko', 'Krasic', 'branimirko@gmail.com', '0658852343', 'PHARMACY_ADMIN', 3, false);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('djdjjdjdjd', 'Marko', 'Markovic', 'merezdera@gmail.com', '0602512343', 'PATIENT', 4, false); --10
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('djdjjdjdjd', 'Sava', 'Savic', 'meresdera@gmail.com', '0622312383', 'PATIENT', 4, false); --11
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed)
-                    values ('djdjjdjdjd', 'Petar', 'Peric', 'serazdera@gmail.com', '0612312943', 'PATIENT', 4, false); --12
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$qPMQwhqxS29Pn4bdnxtVROQXoFAHvLHpXfcWN70Ib8TASAzyN3nfq',
+                            'Petar', 'Markovic', 'perazdera@gmail.com', '0642312343', 'PATIENT', 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$rjq.xA4OJ1hVOuaOEYhm2ugrUnh2a0Z/SW4fxBAE4/7PKrjWnDeOG',
+                            'Mitar', 'Zivkovic', 'mitazita87@gmail.com', '06433332343', 'PATIENT', 4, false, false);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
+                            'Djura', 'Djuraa', 'djule@gmail.com', '06433332341', 'PATIENT', 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$2qGKnufjF6BUB8JssWuxZe5V3yhnhThDNG8ojyvzqNYnzFmzx1kzK',
+                            'Zdravko', 'Mitic', 'zlegenda78@gmail.com', '06233552343', 'SUPPLIER', 3, false, false);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$Oh4n4xXU5.2JykOL1DqK9uynsiTlFQgT2S54In0bRL4311R/zhoBq',
+                            'Slavko', 'Vasic', 'slavisa@gmail.com', '0632232343', 'SUPPLIER', 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$QUxaJq2WEdqSwPxT.BePtuD9xI1S74agszK6CR.rN20BpZhbhleAG',
+                            'Nebojsa', 'Radovanovic', 'nebojsa@gmail.com', '0637732343', 'PHARMACIST', 3, false, false);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$.9pfXfmpWsXqxlBiaxVs7e8zu2i4C.qTzDClIov4KcPaxRBEwSrt2',
+                            'Marko', 'Maric', 'marcius@gmail.com', '0634632343', 'DERMATOLOGIST', 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$tPT/EHBxszNtPA17Hu9p4OgHuZwJZMsrhT5.jYuBB6arrpaPG5gx6',
+                            'Dusko', 'Dragic', 'duskousko@gmail.com', '0628832343', 'ADMIN', 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$zMWFTm7cC3JYZkCn35bG8.pr9jHaF4Yzz5vftYC7Ggnl.qFuep0uW',
+                            'Branko', 'Krasic', 'branimirko@gmail.com', '0658852343', 'PHARMACY_ADMIN', 3, false, true);
 
 /*Pharmacy Workers*/
 insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.9, 1, 5);
@@ -243,12 +246,6 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
                     values ('FINISHED', 'CONSULTATION', 2, 1637800300, 1617801300, 'Placanje u unapred.', 1800, 3, 1, 5);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1615800300, 1615801300, 'Placanje u unapred.', 1800, 3, 1, 5);
-insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('FINISHED', 'CONSULTATION', 2, 1615890300, 1615801300, 'Placanje u unapred.', 1800, 11, 1, 5);
-insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('FINISHED', 'CONSULTATION', 2, 1629800300, 1615801300, 'Placanje u unapred.', 1800,10, 1, 5);
-insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('FINISHED', 'CONSULTATION', 2, 1619100300, 1615801300, 'Placanje u unapred.', 1800, 12, 1, 5);
 
 /*WorkCalendar - Appointments*/
 insert into work_calendar_appointments (work_calendar_id, appointments_id) values (1, 1);

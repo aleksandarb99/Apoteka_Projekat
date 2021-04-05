@@ -82,4 +82,15 @@ public class Patient extends MyUser {
    public void setAppointments(List<Appointment> appointments) {
       this.appointments = appointments;
    }
+   public boolean removeAllergy(long id) {
+      return allergies.removeIf(allergy -> allergy.getId() == id);
+   }
+
+   public boolean addAllergy(Medicine allergy) {
+      for (Medicine allergyFromList : allergies) {
+         if (allergyFromList.getId().equals(allergy.getId())) return false;
+      }
+      allergies.add(allergy);
+      return true;
+   }
 }

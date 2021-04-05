@@ -1,14 +1,21 @@
 package com.team11.PharmacyProject.users.patient;
 
+
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.patient.PatientDTO;
 import com.team11.PharmacyProject.dto.patient.PatientWorkerSearchDTO;
+
+import com.team11.PharmacyProject.dto.MedicineDTO;
+import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
+import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotBlank;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,6 +63,7 @@ public class PatientController {
         }
         return new ResponseEntity<>(patientDTOS, HttpStatus.OK);
     }
+
 
     private PatientWorkerSearchDTO convertPatientToWSDTOsorter(Patient pat){
         return new PatientWorkerSearchDTO(pat);
@@ -126,6 +141,20 @@ public class PatientController {
             dtos.add(this.convertPatientToWSDTOsorter(pat));
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
+
+    @GetMapping(value="/allergies/all/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MedicineDTO>> getAllAllergiesOfPatient(@PathVariable("id") Long id){
+
+        Patient patient = patientService.findOne(id);
+        if(patient == null) return null;
+
+        List<MedicineDTO> allergiesDTOs = new ArrayList<>();
+        for (Medicine m: patient.getAllergies()) {
+            allergiesDTOs.add(modelMapper.map(m, MedicineDTO.class));
+        }
+
+        return new ResponseEntity<>(allergiesDTOs, HttpStatus.OK);
+
     }
 
     @GetMapping(value="/search", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -149,5 +178,24 @@ public class PatientController {
             patientDTOS.add(convertToDto(p));
         }
         return new ResponseEntity<>(patientDTOS, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/allergies/{id}/{allergy_id}")
+    @Validated
+    public ResponseEntity<String> deleteAllergy(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
+        if (patientService.deleteAllergy(id, allergy_id)) {
+            return new ResponseEntity<>("Allergy deleted successfully", HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
+
+    @PostMapping(value = "/allergies/{id}/{allergy_id}")
+    public ResponseEntity<String> addAllergy(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
+        if (patientService.addAllergy(id, allergy_id)) {
+            return new ResponseEntity<>("Allergy added successfully", HttpStatus.OK);
+        } else {
+            return null;
+        }
     }
 }

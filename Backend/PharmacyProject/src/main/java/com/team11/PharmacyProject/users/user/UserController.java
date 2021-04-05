@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.UserCrudDTO;
 import com.team11.PharmacyProject.dto.UserDTO;
+import com.team11.PharmacyProject.dto.UserUpdateDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getGreeting(@PathVariable("id") Long id) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable("id") Long id) {
         MyUser user = userService.findOne(id);
 
         if (user == null) {
@@ -63,7 +64,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO user, BindingResult result) throws Exception {
+    public ResponseEntity<UserUpdateDTO> updateUser(@Valid @RequestBody UserUpdateDTO user, BindingResult result) throws Exception {
 
         if(result.hasErrors()) {
             return null;
@@ -75,7 +76,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>(mapper.map(user, UserDTO.class), HttpStatus.OK);
+        return new ResponseEntity<>(mapper.map(user, UserUpdateDTO.class), HttpStatus.OK);
     }
 
     private UserCrudDTO convertToCrudDto(MyUser user) {

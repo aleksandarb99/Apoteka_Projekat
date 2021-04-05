@@ -1,12 +1,12 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import LogIn from "./components/LogIn";
+import LoginPage from "./components/LoginPage";
 import Registration from "./components/Registration";
-import HomePage from "./components/HomePage";
+import HomePage from "./components/unregisteredAndPatient/HomePage";
 import PharmacyAdminHomePage from "./components/PharmacyAdminHomePage";
-import UserProfile from "./components/UserProfile";
+import UserProfile from "./components/profile/UserProfile";
 import Footer from "./components/Footer";
 import { Navbar, Nav } from "react-bootstrap";
 import PharmacyProfile from "./components/PharmacyProfile";
@@ -27,7 +27,7 @@ import { House } from "react-bootstrap-icons";
 function App() {
   return (
     <Router>
-      <div>
+      <div style={{ minHeight: "100vh" }}>
         <Navbar className="my__navbar" sticky="top" expand="lg">
           <Navbar.Brand
             as={Link}
@@ -42,9 +42,6 @@ function App() {
             <Nav className="mr-auto">
               <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
                 Profile
-              </Nav.Link>
-              <Nav.Link style={{ color: "white" }} href="/">
-                Another link here
               </Nav.Link>
             </Nav>
             <Nav>
@@ -62,7 +59,7 @@ function App() {
           <Route path="/" exact component={HomePage} />
           <Route path="/profile" exact component={UserProfile} />
           <Route path="/registration" component={Registration} />
-          <Route path="/login" component={LogIn} />
+          <Route path="/login" component={LoginPage} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
           <Route path="/dermatologist" component={DermHomePage} />
           <Route path="/pharmacist" component={PharmHomePage} />
@@ -74,9 +71,8 @@ function App() {
           <Route path="/admin/users" component={UserCrud} />
           <Route path="/worker/examined" component={SearchExaminedPatPage} />
         </Switch>
-
-        <Footer />
       </div>
+      <Footer />
     </Router>
   );
 }

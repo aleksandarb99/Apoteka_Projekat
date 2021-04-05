@@ -18,6 +18,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     @Query("select p from Patient p where p.firstName like %?1% and p.lastName like %?2%")
     List<Patient> searchPatientsByFirstAndLastName(String firstName, String lastName);
 
+
 //    "select p from Patient p inner join p.appointments a " +
 //            "where a.worker.id = :workerID and a.appointmentState = 'FINISHED' "+
 //            "and (:firstName is null or lower(p.firstName) like lower(concat('%', :firstName, '%'))) " +
@@ -48,4 +49,9 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     @Query(value = "select distinct p from Patient p join fetch p.appointments a " +
             "where a.worker.id = :workerID and a.appointmentState = 'FINISHED'")
     List<Patient> getAllExaminedPatients(@Param("workerID") Long workerID);
+
+
+    @Query("SELECT p FROM Patient p JOIN FETCH p.allergies WHERE p.id = (:id)")
+    Patient findByIdAndFetchAllergiesEagerly(@Param("id") Long id);
+
 }
