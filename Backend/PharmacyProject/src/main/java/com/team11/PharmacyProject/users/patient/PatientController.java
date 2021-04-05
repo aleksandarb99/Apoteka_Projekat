@@ -5,7 +5,7 @@ import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.patient.PatientDTO;
 import com.team11.PharmacyProject.dto.patient.PatientWorkerSearchDTO;
 
-import com.team11.PharmacyProject.dto.MedicineDTO;
+import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 
@@ -131,8 +131,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/getAllExaminedPatients", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PatientWorkerSearchDTO>> getAllExaminedPatients(
-            @RequestParam(value = "workerID") Long workerID)
+    public ResponseEntity<List<PatientWorkerSearchDTO>> getAllExaminedPatients( @RequestParam(value = "workerID") Long workerID)
     {
         //TODO promeniti workerID kad se doda login i jwt
         List<Patient> patients = patientService.getAllExaminedPatients(workerID);
