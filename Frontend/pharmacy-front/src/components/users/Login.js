@@ -1,12 +1,17 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../../app/slices/userSlice'
 import EmailFormGroup from '../utilComponents/formGroups/EmailFormGroup'
 import PasswordFormGroup from '../utilComponents/formGroups/PasswordFormGroup'
 
 function Login() {
     const [form, setForm] = useState({})
     const [validated, setValidated] = useState(false)
+
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.user)
 
     const setField = (field, value) => {
         setForm({
@@ -23,21 +28,8 @@ function Login() {
 
         if (f.checkValidity() === true) {
             setValidated(true)
-            sendPostRequest()
+            dispatch(login(form))
         }
-    }
-
-    const sendPostRequest = () => {
-        axios
-            .post('http://localhost:8080/authenticate/', form)
-            .then(() => {
-                setForm({})
-                alert('Login')
-            })
-            .catch(() => {
-                setValidated(false)
-                alert('Server error')
-            })
     }
 
     return (
