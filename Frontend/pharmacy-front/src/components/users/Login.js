@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import { Redirect } from 'react-router'
 import { login } from '../../app/slices/userSlice'
 import EmailFormGroup from '../utilComponents/formGroups/EmailFormGroup'
 import PasswordFormGroup from '../utilComponents/formGroups/PasswordFormGroup'
@@ -30,6 +31,10 @@ function Login() {
             setValidated(true)
             dispatch(login(form))
         }
+    }
+
+    if (user.user) {
+        return <Redirect to='/' />
     }
 
     return (

@@ -33,13 +33,14 @@ export const login = ({ email, password }) => async dispatch => {
         const res = await axios.post('http://localhost:8080/api/auth/login/', { email, password })
         dispatch(loginSuccess(res.data));
     } catch (e) {
+        alert("User not found")
         return console.error(e.message);
     }
 }
 
 export const logout = () => async dispatch => {
     try {
-        const res = await axios.post('http://localhost:8080/api/auth/logout/')
+        //const res = await axios.post('http://localhost:8080/api/auth/logout/')
         return dispatch(logoutSuccess())
     } catch (e) {
         return console.error(e.message);
