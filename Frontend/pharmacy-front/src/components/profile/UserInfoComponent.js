@@ -9,7 +9,6 @@ function UserInfo(props) {
   const [user, setUser] = useState({});
   const [showUser, setShowUser] = useState({});
   const [isEdit, setEdit] = useState(false);
-  const [isMatch, setMatch] = useState(true);
   const [isSaved, setSaved] = useState(false);
   const [isFailed, setFailed] = useState(false);
 
@@ -28,7 +27,6 @@ function UserInfo(props) {
   useEffect(() => {
     setShowUser({
       email: user?.email,
-      password: user?.password,
       firstName: user?.firstName,
       lastName: user?.lastName,
       telephone: user?.telephone,
@@ -46,11 +44,8 @@ function UserInfo(props) {
 
   const cancelData = () => {
     setEdit(!isEdit);
-    setMatch(true);
-    document.getElementsByName("password2")[0].value = "";
     setShowUser({
       email: user?.email,
-      password: user?.password,
       firstName: user?.firstName,
       lastName: user?.lastName,
       telephone: user?.telephone,
@@ -69,33 +64,25 @@ function UserInfo(props) {
   let handleSubmit = (event) => {
     event.preventDefault();
 
-    if (validate() == false) return;
-    document.getElementsByName("password2")[0].value = "";
     setEdit(!isEdit);
 
     user.firstName = showUser.firstName;
     user.lastName = showUser.lastName;
-    user.password = showUser.password;
     user.telephone = showUser.telephone;
     user.address.street = showUser.street;
     user.address.city = showUser.city;
     user.address.country = showUser.country;
 
-    axios.put("http://localhost:8080/api/users/1", user).then((res) => {
-      res.data == null ? setFailed(true) : setSaved(true);
-      setUser(res.data);
-      setShowUser(res.data);
-    });
-  };
-
-  const validate = () => {
-    let value = document.getElementsByName("password2")[0].value;
-    return value === showUser.password ? true : false;
-  };
-
-  const matchPasswords = (event) => {
-    let value = event.target.value;
-    value === showUser.password ? setMatch(true) : setMatch(false);
+    axios
+      .put("http://localhost:8080/api/users/1", user)
+      .then((res) => {
+        res.data == null ? setFailed(true) : setSaved(true);
+        setUser(res.data);
+        setShowUser(res.data);
+      })
+      .catch(() => {
+        alert("bla");
+      });
   };
 
   return (
@@ -108,47 +95,6 @@ function UserInfo(props) {
           <Form onSubmit={handleSubmit}>
             <Form.Label>Email</Form.Label>
             <Form.Control disabled type="email" value={showUser.email} />
-
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              disabled={!isEdit}
-              type="text"
-              name="password"
-              required
-              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^*_=+-]).{8,12}$"
-              title="Should have at least 1 number, 1 uppercase, 1 lowercase, 1 symbol !@#$%^*_=+-, minimum 8, maximum 12."
-              value={showUser.password}
-              onChange={handleClick}
-            />
-
-            <Form.Group
-              style={isEdit ? { display: "block" } : { display: "none" }}
-              controlId="formBasicPasswordRetype"
-            >
-              <Form.Label
-                style={isEdit ? { display: "block" } : { display: "none" }}
-              >
-                Retype Password
-              </Form.Label>
-              <Form.Control
-                name="password2"
-                type="text"
-                required
-                onChange={matchPasswords}
-              />
-            </Form.Group>
-
-            <Form.Group
-              style={!isMatch ? { display: "block" } : { display: "none" }}
-              controlId="matchPassword"
-            >
-              <Alert
-                style={!isMatch ? { display: "block" } : { display: "none" }}
-                variant="warning"
-              >
-                Passwords have to be matched!
-              </Alert>
-            </Form.Group>
 
             <Form.Label>First Name</Form.Label>
             <Form.Control
@@ -175,6 +121,7 @@ function UserInfo(props) {
               disabled={!isEdit}
               type="number"
               name="telephone"
+              pattern="[0-9]{10}"
               required
               value={showUser.telephone}
               onChange={handleClick}
@@ -212,7 +159,7 @@ function UserInfo(props) {
 
             <Form.Group
               style={isSaved ? { display: "block" } : { display: "none" }}
-              controlId="matchPassword"
+              controlId="success"
             >
               <Alert
                 style={isSaved ? { display: "block" } : { display: "none" }}
@@ -224,7 +171,7 @@ function UserInfo(props) {
 
             <Form.Group
               style={isFailed ? { display: "block" } : { display: "none" }}
-              controlId="matchPassword"
+              controlId="fail"
             >
               <Alert
                 style={isFailed ? { display: "block" } : { display: "none" }}
