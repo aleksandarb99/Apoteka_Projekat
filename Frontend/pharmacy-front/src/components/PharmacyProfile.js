@@ -33,7 +33,7 @@ function PharmacyProfile() {
   }, [id]);
 
   return (
-    <div>
+    <div style={{ height: "100vh" }}>
       <Tab.Container id="left-tabs-example" defaultActiveKey="first">
         <Row className="my-panel">
           <Col sm={3} md={3} lg={2} xs={12} className="sideBar">

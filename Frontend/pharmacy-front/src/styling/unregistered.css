@@ -1,9 +1,9 @@
 .unregistered__home__page {
+  height: 100vh;
   padding: 0px;
 }
 
 .my-panel {
-  min-height: 92vh;
   margin: 0px;
 }
 

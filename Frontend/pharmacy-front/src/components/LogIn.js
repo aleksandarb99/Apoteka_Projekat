@@ -2,7 +2,7 @@ import React from "react";
 import "../styling/unregistered.css";
 
 function LogIn() {
-  return <main>This is a Log In page.</main>;
+  return <div>This is a Log In page.</div>;
 }
 
 export default LogIn;

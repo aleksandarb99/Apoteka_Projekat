@@ -2,7 +2,7 @@ import React from "react";
 import "../styling/unregistered.css";
 
 function Registration() {
-  return <main>This is a registration page.</main>;
+  return <div>This is a registration page.</div>;
 }
 
 export default Registration;
