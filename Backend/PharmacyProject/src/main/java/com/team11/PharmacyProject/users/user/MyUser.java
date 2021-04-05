@@ -39,6 +39,9 @@ public class MyUser {
    @Column(name = "is_password_changed", nullable = false)
    private boolean isPasswordChanged;
 
+   @Column(name = "is_email_verified", nullable = false)
+   private boolean emailVerified = false;
+
    public MyUser() {
    }
 
@@ -124,5 +127,13 @@ public class MyUser {
 
    public void setPasswordChanged(boolean passwordChanged) {
       isPasswordChanged = passwordChanged;
+   }
+
+   public boolean isEmailVerified() {
+      return emailVerified;
+   }
+
+   public void setEmailVerified(boolean emailVerified) {
+      this.emailVerified = emailVerified;
    }
 }
