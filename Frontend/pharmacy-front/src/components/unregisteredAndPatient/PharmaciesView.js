@@ -17,7 +17,7 @@ import { StarFill, Search, Reply } from "react-bootstrap-icons";
 
 import axios from "axios";
 
-import "./../styling/pharmaciesAndMedicines.css";
+import "../../styling/pharmaciesAndMedicines.css";
 
 function PharmaciesView() {
   const [pharmacies, setPharmacies] = useState([]);
