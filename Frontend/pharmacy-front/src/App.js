@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import LogIn from "./components/LogIn";
+import LoginPage from "./components/LoginPage";
 import Registration from "./components/Registration";
 import HomePage from "./components/HomePage";
 import PharmacyAdminHomePage from "./components/PharmacyAdminHomePage";
@@ -61,7 +61,7 @@ function App() {
           <Route path="/" exact component={HomePage} />
           <Route path="/profile" exact component={UserProfile} />
           <Route path="/registration" component={Registration} />
-          <Route path="/login" component={LogIn} />
+          <Route path="/login" component={LoginPage} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
           <Route path="/dermatologist" component={DermHomePage} />
           <Route path="/pharmacist" component={PharmHomePage} />
