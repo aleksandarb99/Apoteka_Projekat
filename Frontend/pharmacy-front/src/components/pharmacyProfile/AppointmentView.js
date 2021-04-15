@@ -13,7 +13,7 @@ import {
 
 import axios from "axios";
 
-import "./../styling/pharmaciesAndMedicines.css";
+import "../../styling/pharmaciesAndMedicines.css";
 
 function AppointmentView({ pharmacyId }) {
   const [appointsments, setAppointsments] = useState([]);

@@ -34,16 +34,16 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
   };
 
   useEffect(() => {
-    let maxNumber = Math.floor(orders?.length / 12) - 1;
-    if (orders?.length / 12 - 1 > maxNumber) {
+    let maxNumber = Math.floor(orders?.length / 4) - 1;
+    if (orders?.length / 4 - 1 > maxNumber) {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
   }, [orders]);
 
   useEffect(() => {
-    let first = pagNumber * 12;
-    let max = orders.length < first + 12 ? orders?.length : first + 12;
+    let first = pagNumber * 4;
+    let max = orders.length < first + 4 ? orders?.length : first + 4;
     setShowedOrders(orders?.slice(first, max));
   }, [orders, pagNumber]);
 
@@ -98,7 +98,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
       <Row>
         {showedOrders != [] &&
           showedOrders?.map((order, index) => (
-            <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
+            <Col className="my__flex" key={index} lg={3} md={6} sm={4}>
               <Card
                 onClick={() => {
                   setShowedOrder(order);

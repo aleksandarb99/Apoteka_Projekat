@@ -9,10 +9,10 @@ import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import "../styling/pharmacyHomePage.css";
+import "../../styling/pharmacyHomePage.css";
 import EditBasicInfo from "./EditBasicInfo";
-import DisplayPurchaseOrders from "./pharmacyAdmin/DisplayPurchaseOrders";
-import AddAppointment from "./pharmacyAdmin/AddAppointment";
+import DisplayPurchaseOrders from "./DisplayPurchaseOrders";
+import AddAppointment from "./AddAppointment";
 
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});

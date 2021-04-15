@@ -15,7 +15,7 @@ import TileLayer from "ol/layer/Tile";
 import View from "ol/View";
 import { fromLonLat, toLonLat } from "ol/proj";
 
-import "../styling/pharmacyHomePage.css";
+import "../../styling/pharmacyHomePage.css";
 
 function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
   const [showAlert, setShowAlert] = useState(false);

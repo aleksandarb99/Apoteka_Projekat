@@ -62,6 +62,9 @@ function AddAppointment({ idOfPharmacy }) {
         if (dermatologists[i].worker.id == dermatogistPicked) {
           let j;
           for (j = 0; j < dermatologists[i].workDays.length; j++) {
+            console.log("Poredi");
+            console.log(dermatologists[i].workDays[j].weekday);
+            console.log(startDate.toString().substring(0, 3).toUpperCase());
             if (
               !dermatologists[i].workDays[j].weekday.localeCompare(
                 startDate.toString().substring(0, 3).toUpperCase()
@@ -71,12 +74,17 @@ function AddAppointment({ idOfPharmacy }) {
                 `Workshedule : ${dermatologists[i].workDays[j].startTime} - ${dermatologists[i].workDays[j].endTime}`
               );
               flag = true;
+              break;
             }
           }
         }
       }
       if (!flag) {
-        setWorkDaysLabel("");
+        if (dermatogistPicked != 0) {
+          setWorkDaysLabel("He dont work on that day");
+        } else {
+          setWorkDaysLabel("");
+        }
       }
     }
   }, [dermatogistPicked, startDate]);
@@ -95,11 +103,11 @@ function AddAppointment({ idOfPharmacy }) {
         `http://localhost:8080/api/appointment/${idOfPharmacy}/${dermatogistPicked}`,
         request
       )
-      .then((res) => {
+      .then(() => {
         alert("Appointment added successfully");
         reloadForm();
       })
-      .catch((res) => {
+      .catch(() => {
         alert("Appointment is not added successfully");
       });
   };
