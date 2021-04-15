@@ -8,6 +8,8 @@ import java.util.List;
 
 public class PharmacyCertainMedicineDTO {
 
+    private Long id;
+
     private String name;
 
     private String address;
@@ -17,9 +19,18 @@ public class PharmacyCertainMedicineDTO {
     public PharmacyCertainMedicineDTO() {}
 
     public PharmacyCertainMedicineDTO(Pharmacy pharmacy) {
+        this.id = pharmacy.getId();
         this.name = pharmacy.getName();
         this.address = pharmacy.getAddress().getStreet() + ", " + pharmacy.getAddress().getCity() + ", " + pharmacy.getAddress().getCountry();
         setPrice(pharmacy.getPriceList().getMedicineItems().get(0).getMedicinePrices());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

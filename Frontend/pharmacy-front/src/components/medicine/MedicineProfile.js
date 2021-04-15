@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Table, Button, Modal } from "react-bootstrap";
 
 // import axios from "./../../app/api";
 import axios from "axios";
 
 import "../../styling/medicineProfile.css";
 
+import { Plus } from "react-bootstrap-icons";
+
 function MedicineProfile() {
   const [medicine, setMedicine] = useState({});
+  const [pharmacies, setPharmacies] = useState([]);
+
+  const [selectedPharmacy, setSelectedPharmacy] = useState({});
+  const [showAddModal, setShowAddModal] = useState(false);
 
   let { id } = useParams();
 
@@ -20,6 +27,17 @@ function MedicineProfile() {
       return request;
     }
     fetchMedicine();
+  }, [id]);
+
+  useEffect(() => {
+    async function fetchPharmacies() {
+      const request = await axios.get(
+        `http://localhost:8080/api/pharmacy/medicine/${id}`
+      );
+      setPharmacies(request.data);
+      return request;
+    }
+    fetchPharmacies();
   }, [id]);
 
   return (
@@ -72,6 +90,36 @@ function MedicineProfile() {
           <span className="my__start_paragraph">Proizvodjac: </span>
           {medicine.manufacturer}
         </p>
+        <Table
+          striped
+          bordered
+          variant="light"
+          size="lg"
+          style={{ display: pharmacies != null ? "block" : "none" }}
+        >
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Address</th>
+              <th>Price</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody className="my__table__body">
+            {pharmacies &&
+              pharmacies.map((p) => (
+                <tr key={p.id}>
+                  <td>{p.name}</td>
+                  <td>{p.address}</td>
+                  <td>{p.price}</td>
+                </tr>
+              ))}
+          </tbody>
+        </Table>
+        <Button variant="primary" onClick={() => setShowAddModal(true)}>
+          <Plus style={{ width: "1.5em", height: "1.5em" }} />
+          Add
+        </Button>
       </div>
     </div>
   );
