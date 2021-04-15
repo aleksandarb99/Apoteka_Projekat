@@ -6,6 +6,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 import axios from "axios";
 
+import moment from "moment";
+
 function DisplayPurchaseOrders({ idOfPharmacy }) {
   const [orders, setOrders] = useState([]);
   const [filterValue, setFilterValue] = useState("All");
@@ -108,15 +110,10 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
               >
                 <Card.Body>
                   <Card.Title>Order {order.id}</Card.Title>
-                  <Card.Text>Deadline:</Card.Text>
-                  <Card.Text>
-                    {new Date(order.deadline).getDay()}.{" "}
-                    {new Date(order.deadline).getMonth()}.
-                    {new Date(order.deadline).getFullYear()}{" "}
-                    {new Date(order.deadline).getHours()} :{" "}
-                    {new Date(order.deadline).getMinutes()}
-                  </Card.Text>
                 </Card.Body>
+                <Card.Footer>
+                  {moment(order.deadline).format("DD MMM YYYY   hh:mm a")}
+                </Card.Footer>
               </Card>
             </Col>
           ))}

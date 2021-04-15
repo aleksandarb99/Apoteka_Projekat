@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import axios from "axios";
 
+import moment from "moment";
+
 import { Button, Tab, Row, Col, Table, Form } from "react-bootstrap";
 
 function AddAppointment({ idOfPharmacy }) {
@@ -215,14 +217,8 @@ function AddAppointment({ idOfPharmacy }) {
                   appointments.map((appointment, index) => (
                     <tr>
                       <td>{index + 1}</td>
-                      <td>
-                        {new Date(appointment.startTime).getHours()} :{" "}
-                        {new Date(appointment.startTime).getMinutes()}
-                      </td>
-                      <td>
-                        {new Date(appointment.endTime).getHours()} :{" "}
-                        {new Date(appointment.endTime).getMinutes()}
-                      </td>
+                      <td>{moment(appointment.startTime).format("hh:mm a")}</td>
+                      <td>{moment(appointment.endTime).format("hh:mm a")}</td>
                       <td>{appointment.appointmentState}</td>
                     </tr>
                   ))}

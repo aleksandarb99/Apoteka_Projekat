@@ -68,7 +68,7 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
 
     axios
       .put(`http://localhost:8080/api/pharmacy/${pharmacyDetails.id}`, dto)
-      .then((res) => {
+      .then(() => {
         changedPharmacy();
         setShowAlert(true);
       });
@@ -97,6 +97,23 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
       setAlertText("");
       setValid(true);
     }
+    // Try finding city and country
+    axios
+      .get(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+      )
+      .then((res) => {
+        setText({
+          ...text,
+          country: res.data.countryName,
+          latitude: latitude,
+          longitude: longitude,
+          street: res.data.locality,
+        });
+      })
+      .catch(() => {
+        alert("Failed to find country and city");
+      });
   };
 
   let validateData = (key, value) => {
