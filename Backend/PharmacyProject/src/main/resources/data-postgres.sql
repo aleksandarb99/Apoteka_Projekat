@@ -133,6 +133,18 @@ insert into my_user (password, first_name, last_name, email, telephone, user_typ
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$zMWFTm7cC3JYZkCn35bG8.pr9jHaF4Yzz5vftYC7Ggnl.qFuep0uW',
                             'Branko', 'Krasic', 'branimirko@gmail.com', '0658852343', 'PHARMACY_ADMIN', 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
+                            'Djura', 'Djuraa', 'djule22@gmail.com', '06430032341', 'PATIENT', 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
+                            'Marko', 'Markovic', 'djule00@gmail.com', '06930032341', 'PATIENT', 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
+                            'Petar', 'Peric', 'djule1@gmail.com', '02430032341', 'PATIENT', 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
+                            'Carli', 'Sin', 'djule009@gmail.com', '08430032341', 'PATIENT', 4, false, true);
 
 /*Pharmacy Workers*/
 insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.9, 1, 5);
@@ -143,6 +155,10 @@ insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 1, 7);
 insert into patient (points, penalties, id) values (50, 2, 1);
 insert into patient (points, penalties, id) values (43, 0, 2);
 insert into patient (points, penalties, id) values (13, 0, 3);
+insert into patient (points, penalties, id) values (13, 0, 10);
+insert into patient (points, penalties, id) values (13, 0, 11);
+insert into patient (points, penalties, id) values (13, 0, 12);
+insert into patient (points, penalties, id) values (13, 0, 13);
 
 /*Patients allergies*/
 insert into patient_allergies (patient_id, allergies_id) values (1, 3);
@@ -247,6 +263,14 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
                     values ('RESERVED', 'CHECKUP', 10, 1617804000000, 1617804000000, 'Placanje u unapred.', 1800, 3, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('RESERVED', 'CHECKUP', 12, 1617800300000, 1617801300000, 'Placanje u unapred 2.', 1700, 2, 1, 7);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CONSULTATION', 2, 1618209900000, 1618217100000, 'Placanje u unapred.', 1800, 10, 1, 5);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CONSULTATION', 2, 1619084700000, 1619091900000, 'Placanje u unapred.', 1800, 11, 1, 5);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CONSULTATION', 2, 1623325500000, 1623330000000, 'Placanje u unapred.', 1800, 12, 1, 5);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CONSULTATION', 2, 1623744000000, 1623751200000, 'Placanje u unapred.', 1800, 13, 1, 5);
 
 
 /*WorkCalendar - Appointments*/

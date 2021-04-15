@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.medicineFeatures.medicine;
 
 import com.team11.PharmacyProject.dto.medicine.MedicineCrudDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
+import com.team11.PharmacyProject.email.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,23 @@ public class MedicineController {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private EmailService emailService;
+
+    @PostMapping("/send/async")
+    public String sendNotif(String name){
+
+        //slanje emaila
+        try {
+            System.out.println("Thread id: " + Thread.currentThread().getId());
+            emailService.sendNotificaitionAsync(name);
+        }catch( Exception e ){
+            return null;
+        }
+
+        return "success";
+    }
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MedicineDTO>> getMedicines() {
