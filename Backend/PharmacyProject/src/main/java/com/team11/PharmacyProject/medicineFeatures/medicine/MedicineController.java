@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.medicineFeatures.medicine;
 
 import com.team11.PharmacyProject.dto.medicine.MedicineCrudDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
+import com.team11.PharmacyProject.dto.medicine.MedicineInfoDTO;
 import com.team11.PharmacyProject.email.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,18 @@ public class MedicineController {
         }
 
         return "success";
+    }
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MedicineInfoDTO> getMedicineById(@PathVariable("id") Long id) {
+        Medicine medicine = medicineService.getMedicineById(id);
+
+        if (medicine == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        MedicineInfoDTO dto = new MedicineInfoDTO(medicine);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)

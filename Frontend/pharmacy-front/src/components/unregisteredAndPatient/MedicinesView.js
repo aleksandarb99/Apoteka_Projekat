@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import {
   Tab,
   Row,
@@ -7,6 +9,7 @@ import {
   Card,
   ListGroup,
   ListGroupItem,
+  Nav,
   Pagination,
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
@@ -64,33 +67,28 @@ function MedicinesView() {
           {showedMedicines &&
             showedMedicines.map((medicine, index) => (
               <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
-                <Card className="my__card" style={{ width: "18rem" }}>
-                  <Card.Body>
-                    <Card.Title>{medicine.name}</Card.Title>
-                    <Card.Text>#{medicine.code}</Card.Text>
-                    <Card.Text>{medicine.content}</Card.Text>
-                  </Card.Body>
-                  <ListGroup className="list-group-flush">
-                    <ListGroupItem className="my__flex">
-                      {[...Array(Math.ceil(medicine.avgGrade))].map(() => (
-                        <StarFill className="my__star" />
-                      ))}
-                    </ListGroupItem>
-                  </ListGroup>
-                </Card>
+                <Nav.Link
+                  as={Link}
+                  className="my__nav__link__card"
+                  to={`/medicine/${medicine.id}`}
+                >
+                  <Card className="my__card" style={{ width: "18rem" }}>
+                    <Card.Body>
+                      <Card.Title>{medicine.name}</Card.Title>
+                      <Card.Text>#{medicine.code}</Card.Text>
+                      <Card.Text>{medicine.content}</Card.Text>
+                    </Card.Body>
+                    <ListGroup className="list-group-flush">
+                      <ListGroupItem className="my__flex">
+                        {[...Array(Math.ceil(medicine.avgGrade))].map(() => (
+                          <StarFill className="my__star" />
+                        ))}
+                      </ListGroupItem>
+                    </ListGroup>
+                  </Card>
+                </Nav.Link>
               </Col>
             ))}
-          <Col className="my__flex" lg={3} md={6} sm={12}>
-            <Card className="my__card" style={{ width: "18rem" }}>
-              <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
         </Row>
 
         <Row className="my__row__pagination">

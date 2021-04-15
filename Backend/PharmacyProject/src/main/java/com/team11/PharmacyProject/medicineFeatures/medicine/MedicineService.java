@@ -12,4 +12,6 @@ public interface MedicineService {
     boolean delete(long id);
 
     boolean update(long id, Medicine medicine);
+
+    Medicine getMedicineById(Long id);
 }

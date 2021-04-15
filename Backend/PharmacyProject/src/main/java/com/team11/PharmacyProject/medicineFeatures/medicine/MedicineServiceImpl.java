@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
+import com.team11.PharmacyProject.medicineFeatures.medicineForm.MedicineForm;
+import com.team11.PharmacyProject.medicineFeatures.medicineType.MedicineType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,5 +78,10 @@ public class MedicineServiceImpl implements MedicineService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Medicine getMedicineById(Long id) {
+        return medicineRepository.findByIdAndFetchFormTypeManufacturer(id);
     }
 }

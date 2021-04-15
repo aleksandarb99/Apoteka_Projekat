@@ -10,6 +10,7 @@ import UserProfile from "./components/profile/UserProfile";
 import Footer from "./components/Footer";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import PharmacyProfile from "./components/PharmacyProfile";
+import MedicineProfile from "./components/medicine/MedicineProfile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DermHomePage from "./components/workers/dermatologist/home_page_dermatologist";
 import PharmHomePage from "./components/workers/pharmacist/home_page_pharmacist";
@@ -29,7 +30,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "./app/slices/userSlice";
 
 function App() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   return (
     <Router>
@@ -57,7 +58,13 @@ function App() {
               <Nav.Link as={Link} style={{ color: "white" }} to="/login">
                 Log In
               </Nav.Link>
-              <Button as={Link} style={{ color: "white" }} onClick={() => { dispatch(logout()) }}>
+              <Button
+                as={Link}
+                style={{ color: "white" }}
+                onClick={() => {
+                  dispatch(logout());
+                }}
+              >
                 Log Out
               </Button>
             </Nav>
@@ -70,6 +77,7 @@ function App() {
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LoginPage} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
+          <Route path="/medicine/:id" component={MedicineProfile} />
           <Route path="/dermatologist" component={DermHomePage} />
           <Route path="/pharmacist" component={PharmHomePage} />
           <Route path="/pharmacyAdmin" component={PharmacyAdminHomePage} />
