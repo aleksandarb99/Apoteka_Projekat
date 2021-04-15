@@ -63,6 +63,7 @@ insert into medicine_item (amount, medicine_id) values (23, 2);
 insert into medicine_item (amount, medicine_id) values (14, 3);
 insert into medicine_item (amount, medicine_id) values (55, 4);
 insert into medicine_item (amount, medicine_id) values (67, 5);
+insert into medicine_item (amount, medicine_id) values (30, 1);
 
 /*Supplier items*/
 insert into supplier_item (amount, medicine_id) values (30, 1);
@@ -94,6 +95,7 @@ insert into price_list_medicine_items (price_list_id, medicine_items_id) values 
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (2, 3);
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 5);
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 4);
+insert into price_list_medicine_items (price_list_id, medicine_items_id) values (2, 6);
 
 
 /*Workplace - WorkDays*/
@@ -198,11 +200,12 @@ insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 1)
 insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 2);
 
 /*Medicine Prices*/
-insert into medicine_price (price, start_date) values (449, 1616241600000);
-insert into medicine_price (price, start_date) values (489, 1616587200000);
-insert into medicine_price (price, start_date) values (250, 1616241600000);
-insert into medicine_price (price, start_date) values (670, 1616241600000);
-insert into medicine_price (price, start_date) values (1200, 1616241600000);
+insert into medicine_price (price, start_date) values (449, 1618077600000);
+insert into medicine_price (price, start_date) values (489, 1618160400000);
+insert into medicine_price (price, start_date) values (250, 1615482000000);
+insert into medicine_price (price, start_date) values (670, 1613062800000);
+insert into medicine_price (price, start_date) values (1200, 1610384400000);
+insert into medicine_price (price, start_date) values (470, 1578769200000);
 -- insert into medicine_price (price, start_date) values (879, 1616241600000;
 
 /* MedicineItem - MedicinePrices*/
@@ -211,6 +214,7 @@ insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id)
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (2, 3);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (3, 4);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (4, 5);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (6, 6);
 -- insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (5, 6);
 
 /*Complaints*/

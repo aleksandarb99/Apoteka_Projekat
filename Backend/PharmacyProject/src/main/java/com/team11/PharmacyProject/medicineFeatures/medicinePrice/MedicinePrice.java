@@ -1,12 +1,13 @@
 package com.team11.PharmacyProject.medicineFeatures.medicinePrice;
 
 import com.team11.PharmacyProject.advertisement.Advertisement;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class MedicinePrice {
+public class MedicinePrice implements Comparable<MedicinePrice>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,5 +62,10 @@ public class MedicinePrice {
 
     public void setAdvertisemens(List<Advertisement> advertisemens) {
         this.advertisements = advertisemens;
+    }
+
+    @Override
+    public int compareTo(@NotNull MedicinePrice o) {
+        return Long.compare(this.id, o.id);
     }
 }
