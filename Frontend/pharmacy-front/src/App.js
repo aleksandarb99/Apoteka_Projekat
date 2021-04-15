@@ -5,11 +5,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import LoginPage from "./components/LoginPage";
 import Registration from "./components/Registration";
 import HomePage from "./components/unregisteredAndPatient/HomePage";
-import PharmacyAdminHomePage from "./components/PharmacyAdminHomePage";
+import PharmacyAdminHomePage from "./components/pharmacyAdmin/PharmacyAdminHomePage";
 import UserProfile from "./components/profile/UserProfile";
 import Footer from "./components/Footer";
 import { Navbar, Nav, Button } from "react-bootstrap";
-import PharmacyProfile from "./components/PharmacyProfile";
+import PharmacyProfile from "./components/pharmacyProfile/PharmacyProfile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DermHomePage from "./components/workers/dermatologist/home_page_dermatologist";
 import PharmHomePage from "./components/workers/pharmacist/home_page_pharmacist";
@@ -29,7 +29,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "./app/slices/userSlice";
 
 function App() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   return (
     <Router>
@@ -57,7 +57,13 @@ function App() {
               <Nav.Link as={Link} style={{ color: "white" }} to="/login">
                 Log In
               </Nav.Link>
-              <Button as={Link} style={{ color: "white" }} onClick={() => { dispatch(logout()) }}>
+              <Button
+                as={Link}
+                style={{ color: "white" }}
+                onClick={() => {
+                  dispatch(logout());
+                }}
+              >
                 Log Out
               </Button>
             </Nav>

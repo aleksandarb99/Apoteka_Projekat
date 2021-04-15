@@ -8,32 +8,46 @@ import {
   ListGroup,
   ListGroupItem,
   Pagination,
-  Button,
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
 import axios from "axios";
 
-import "./../styling/pharmaciesAndMedicines.css";
+import "../../styling/pharmaciesAndMedicines.css";
 
-function MedicinesView({ medicines }) {
+function WorkersView({ pharmacyId }) {
+  const [workers, setWorkers] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
-  const [showedMedicines, setShowedMedicines] = useState([]);
+  const [showedWorkers, setShowedWorkers] = useState([]);
 
   useEffect(() => {
-    let maxNumber = Math.floor(medicines?.length / 12) - 1;
-    if (medicines?.length / 12 - 1 > maxNumber) {
+    if (pharmacyId != undefined) {
+      async function fetchWorkers() {
+        const request = await axios.get(
+          `http://localhost:8080/api/workplace/bypharmacyid/${pharmacyId}`
+        );
+        setWorkers(request.data);
+
+        return request;
+      }
+      fetchWorkers();
+    }
+  }, [pharmacyId]);
+
+  useEffect(() => {
+    let maxNumber = Math.floor(workers?.length / 12) - 1;
+    if (workers?.length / 12 - 1 > maxNumber) {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
-  }, [medicines]);
+  }, [workers]);
 
   useEffect(() => {
     let first = pagNumber * 12;
-    let max = medicines?.length < first + 12 ? medicines?.length : first + 12;
-    setShowedMedicines(medicines?.slice(first, max));
-  }, [medicines, pagNumber]);
+    let max = workers.length < first + 12 ? workers?.length : first + 12;
+    setShowedWorkers(workers?.slice(first, max));
+  }, [workers, pagNumber]);
 
   let handleSlideLeft = () => {
     if (pagNumber !== 0) {
@@ -48,29 +62,28 @@ function MedicinesView({ medicines }) {
   };
 
   return (
-    <Tab.Pane eventKey="second">
+    <Tab.Pane eventKey="forth">
       <Container fluid>
         <Row>
-          {showedMedicines &&
-            showedMedicines.map((medicine, index) => (
+          {showedWorkers &&
+            showedWorkers.map((worker, index) => (
               <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
                 <Card className="my__card" style={{ width: "18rem" }}>
                   <Card.Body>
-                    <Card.Title>{medicine?.medicine?.name}</Card.Title>
-                    <Card.Text>#{medicine?.medicine?.code}</Card.Text>
-                    <Card.Text>{medicine?.medicine?.content}</Card.Text>
-                    <Card.Text>{medicine?.price}$</Card.Text>
+                    <Card.Title>
+                      {worker?.worker?.lastName} {worker?.worker?.firstName}
+                    </Card.Title>
+                    <Card.Text>{worker?.worker?.email}</Card.Text>
+                    <Card.Text>{worker?.worker?.telephone}</Card.Text>
                   </Card.Body>
                   <ListGroup className="list-group-flush">
                     <ListGroupItem className="my__flex">
-                      <Button size="lg" variant="secondary">
-                        Buy
-                      </Button>
+                      {worker?.worker?.userType}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
-                      {medicines &&
+                      {worker &&
                         [
-                          ...Array(Math.ceil(medicine?.medicine?.avgGrade)),
+                          ...Array(Math.ceil(worker?.worker?.avgGrade)),
                         ].map(() => <StarFill className="my__star" />)}
                     </ListGroupItem>
                   </ListGroup>
@@ -99,4 +112,4 @@ function MedicinesView({ medicines }) {
   );
 }
 
-export default MedicinesView;
+export default WorkersView;

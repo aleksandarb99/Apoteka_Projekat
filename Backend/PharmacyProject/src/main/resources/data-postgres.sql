@@ -77,6 +77,16 @@ insert into order_item (amount, medicine_id) values (150, 2);
 insert into order_item (amount, medicine_id) values (70, 3);
 insert into order_item (amount, medicine_id) values (60, 4);
 insert into order_item (amount, medicine_id) values (100, 4);
+insert into order_item (amount, medicine_id) values (100, 1);
+insert into order_item (amount, medicine_id) values (150, 2);
+insert into order_item (amount, medicine_id) values (50, 3);
+insert into order_item (amount, medicine_id) values (20, 4);
+insert into order_item (amount, medicine_id) values (110, 5);
+insert into order_item (amount, medicine_id) values (130, 5);
+insert into order_item (amount, medicine_id) values (110, 1);
+insert into order_item (amount, medicine_id) values (130, 4);
+insert into order_item (amount, medicine_id) values (110, 1);
+insert into order_item (amount, medicine_id) values (130, 4);
 
 /*WorkCalendars*/
 insert into work_calendar (id) values (1);
@@ -100,10 +110,14 @@ insert into price_list_medicine_items (price_list_id, medicine_items_id) values 
 
 /*WorkDays*/
 insert into work_day (weekday, start_time, end_time) values ('MON', 8, 16);
-insert into work_day (weekday, start_time, end_time) values ('TUR', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('TUE', 8, 16);
 insert into work_day (weekday, start_time, end_time) values ('WED', 8, 16);
 insert into work_day (weekday, start_time, end_time) values ('THU', 7, 15);
 insert into work_day (weekday, start_time, end_time) values ('FRI', 7, 15);
+insert into work_day (weekday, start_time, end_time) values ('MON', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('TUE', 10, 17);
+insert into work_day (weekday, start_time, end_time) values ('THU', 10, 17);
+insert into work_day (weekday, start_time, end_time) values ('FRI', 8, 16);
 
 /*MyUsers*/
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
@@ -233,6 +247,11 @@ insert into workplace_work_days (workplace_id, work_days_id) values (1, 2);
 insert into workplace_work_days (workplace_id, work_days_id) values (2, 3);
 insert into workplace_work_days (workplace_id, work_days_id) values (3, 4);
 insert into workplace_work_days (workplace_id, work_days_id) values (3, 5);
+insert into workplace_work_days (workplace_id, work_days_id) values (2, 6);
+insert into workplace_work_days (workplace_id, work_days_id) values (2, 7);
+insert into workplace_work_days (workplace_id, work_days_id) values (2, 8);
+insert into workplace_work_days (workplace_id, work_days_id) values (2, 9);
+
 
 /*Appointments*/
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
@@ -262,6 +281,11 @@ insert into request_for_holiday (absence_type, decline_text, start_date, end_dat
 /*MyOrders*/
 insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
 insert into my_order (deadline, pharmacy_id) values (1620903600000, 2);
+insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
+insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
+insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
+insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
+insert into my_order (deadline, pharmacy_id) values (1613411940000, 1);
 
 /*MyOrders - OrderItems*/
 insert into my_order_order_item (my_order_id, order_item_id) values (1, 1);
@@ -269,6 +293,16 @@ insert into my_order_order_item (my_order_id, order_item_id) values (1, 4);
 insert into my_order_order_item (my_order_id, order_item_id) values (2, 2);
 insert into my_order_order_item (my_order_id, order_item_id) values (2, 3);
 insert into my_order_order_item (my_order_id, order_item_id) values (2, 5);
+insert into my_order_order_item (my_order_id, order_item_id) values (3, 6);
+insert into my_order_order_item (my_order_id, order_item_id) values (3, 7);
+insert into my_order_order_item (my_order_id, order_item_id) values (4, 8);
+insert into my_order_order_item (my_order_id, order_item_id) values (4, 9);
+insert into my_order_order_item (my_order_id, order_item_id) values (5, 10);
+insert into my_order_order_item (my_order_id, order_item_id) values (5, 11);
+insert into my_order_order_item (my_order_id, order_item_id) values (6, 12);
+insert into my_order_order_item (my_order_id, order_item_id) values (6, 13);
+insert into my_order_order_item (my_order_id, order_item_id) values (7, 14);
+insert into my_order_order_item (my_order_id, order_item_id) values (7, 15);
 
 /*Offers*/
 insert into offer (delivery_date, offer_state, price, order_id)

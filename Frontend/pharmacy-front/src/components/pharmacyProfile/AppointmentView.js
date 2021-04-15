@@ -12,8 +12,9 @@ import {
 } from "react-bootstrap";
 
 import axios from "axios";
+import moment from "moment";
 
-import "./../styling/pharmaciesAndMedicines.css";
+import "../../styling/pharmaciesAndMedicines.css";
 
 function AppointmentView({ pharmacyId }) {
   const [appointsments, setAppointsments] = useState([]);
@@ -73,15 +74,11 @@ function AppointmentView({ pharmacyId }) {
                   <Card.Body>
                     <Card.Title>{appointsment?.appointmentType}</Card.Title>
                     <Card.Text>
-                      {new Date(appointsment?.startTime).getDay()}.{" "}
-                      {new Date(appointsment?.startTime).getMonth()}.
-                      {new Date(appointsment?.startTime).getFullYear()}
+                      {moment(appointsment.startTime).format("DD MMM YYYY")}
                     </Card.Text>
                     <Card.Text>
-                      {new Date(appointsment?.startTime).getHours()}:
-                      {new Date(appointsment?.startTime).getMinutes()} -{" "}
-                      {new Date(appointsment?.endTime).getHours()} :
-                      {new Date(appointsment?.endTime).getMinutes()}
+                      {moment(appointsment.startTime).format("hh:mm a")} -{" "}
+                      {moment(appointsment.endTime).format("hh:mm a")}
                     </Card.Text>
                   </Card.Body>
                   <ListGroup className="list-group-flush">

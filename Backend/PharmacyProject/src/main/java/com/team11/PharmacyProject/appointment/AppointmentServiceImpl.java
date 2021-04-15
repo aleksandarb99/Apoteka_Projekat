@@ -102,14 +102,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         c.setTime(startTime);
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
+        boolean doesHeWorkThatDay = false;
         for (Workplace wp : workplaceRepository.getWorkplacesByPharmacyIdAndWorkerId(pharmacyId, worker.getId())) {
             for (WorkDay wd : wp.getWorkDays()) {
-                System.out.println("NAS ENUM");
-                System.out.println(wd.getWeekday().ordinal() + 1);
-                System.out.println("ONAJ OD KALENDARA");
-                System.out.println(dayOfWeek);
                 if (wd.getWeekday().ordinal() + 1 == dayOfWeek) {
-
+                    doesHeWorkThatDay = true;
                     c.setTime(startTime);   // assigns calendar to given date
                     int hourStart = c.get(Calendar.HOUR_OF_DAY);
                     c.setTime(endTime);   // assigns calendar to given date
@@ -126,6 +123,11 @@ public class AppointmentServiceImpl implements AppointmentService {
             }
 
         }
+
+        if(!doesHeWorkThatDay){
+            return false;
+        }
+
         for (Appointment appointment : appointmentRepository.findFreeAppointmentsByPharmacyIdAndWorkerId(pharmacyId, worker.getId())) {
             Date d1 = new Date(appointment.getStartTime());
             Date d2 = new Date(appointment.getEndTime());

@@ -13,8 +13,8 @@ import Col from "react-bootstrap/Col";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
 
-import "../styling/pharmacy.css";
-import "../styling/unregistered.css";
+import "../../styling/pharmacy.css";
+import "../../styling/unregistered.css";
 
 function PharmacyProfile() {
   const [details, setPharmacyDetails] = useState({});

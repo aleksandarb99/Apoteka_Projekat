@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import axios from "axios";
 
+import moment from "moment";
+
 import { Button, Tab, Row, Col, Table, Form } from "react-bootstrap";
 
 function AddAppointment({ idOfPharmacy }) {
@@ -62,6 +64,9 @@ function AddAppointment({ idOfPharmacy }) {
         if (dermatologists[i].worker.id == dermatogistPicked) {
           let j;
           for (j = 0; j < dermatologists[i].workDays.length; j++) {
+            console.log("Poredi");
+            console.log(dermatologists[i].workDays[j].weekday);
+            console.log(startDate.toString().substring(0, 3).toUpperCase());
             if (
               !dermatologists[i].workDays[j].weekday.localeCompare(
                 startDate.toString().substring(0, 3).toUpperCase()
@@ -71,12 +76,17 @@ function AddAppointment({ idOfPharmacy }) {
                 `Workshedule : ${dermatologists[i].workDays[j].startTime} - ${dermatologists[i].workDays[j].endTime}`
               );
               flag = true;
+              break;
             }
           }
         }
       }
       if (!flag) {
-        setWorkDaysLabel("");
+        if (dermatogistPicked != 0) {
+          setWorkDaysLabel("He dont work on that day");
+        } else {
+          setWorkDaysLabel("");
+        }
       }
     }
   }, [dermatogistPicked, startDate]);
@@ -95,11 +105,11 @@ function AddAppointment({ idOfPharmacy }) {
         `http://localhost:8080/api/appointment/${idOfPharmacy}/${dermatogistPicked}`,
         request
       )
-      .then((res) => {
+      .then(() => {
         alert("Appointment added successfully");
         reloadForm();
       })
-      .catch((res) => {
+      .catch(() => {
         alert("Appointment is not added successfully");
       });
   };
@@ -207,14 +217,8 @@ function AddAppointment({ idOfPharmacy }) {
                   appointments.map((appointment, index) => (
                     <tr>
                       <td>{index + 1}</td>
-                      <td>
-                        {new Date(appointment.startTime).getHours()} :{" "}
-                        {new Date(appointment.startTime).getMinutes()}
-                      </td>
-                      <td>
-                        {new Date(appointment.endTime).getHours()} :{" "}
-                        {new Date(appointment.endTime).getMinutes()}
-                      </td>
+                      <td>{moment(appointment.startTime).format("hh:mm a")}</td>
+                      <td>{moment(appointment.endTime).format("hh:mm a")}</td>
                       <td>{appointment.appointmentState}</td>
                     </tr>
                   ))}
