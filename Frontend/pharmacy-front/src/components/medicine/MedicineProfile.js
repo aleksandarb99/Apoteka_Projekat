@@ -6,15 +6,13 @@ import { Table, Button, Modal } from "react-bootstrap";
 import axios from "axios";
 
 import "../../styling/medicineProfile.css";
-
-import { Plus } from "react-bootstrap-icons";
+import "../../styling/allergies.css";
 
 function MedicineProfile() {
   const [medicine, setMedicine] = useState({});
   const [pharmacies, setPharmacies] = useState([]);
 
   const [selectedPharmacy, setSelectedPharmacy] = useState({});
-  const [showAddModal, setShowAddModal] = useState(false);
 
   let { id } = useParams();
 
@@ -39,6 +37,11 @@ function MedicineProfile() {
     }
     fetchPharmacies();
   }, [id]);
+
+  const updateSelectedPharmacy = (selectedPharmacy) => {
+    setSelectedPharmacy(selectedPharmacy);
+    console.log(selectedPharmacy);
+  };
 
   return (
     <div className="medicine__profile__container">
@@ -94,21 +97,28 @@ function MedicineProfile() {
           striped
           bordered
           variant="light"
-          size="lg"
-          style={{ display: pharmacies != null ? "block" : "none" }}
+          style={{ display: pharmacies != null ? "table" : "none" }}
+          className="my__table__pharmacies"
         >
           <thead>
             <tr>
               <th>Name</th>
               <th>Address</th>
               <th>Price</th>
-              <th></th>
             </tr>
           </thead>
-          <tbody className="my__table__body">
+          <tbody>
             {pharmacies &&
               pharmacies.map((p) => (
-                <tr key={p.id}>
+                <tr
+                  key={p.id}
+                  onClick={() => updateSelectedPharmacy(p)}
+                  className={
+                    selectedPharmacy.id === p.id
+                      ? "my__row__selected my__table__row"
+                      : "my__table__row"
+                  }
+                >
                   <td>{p.name}</td>
                   <td>{p.address}</td>
                   <td>{p.price}</td>
@@ -116,10 +126,6 @@ function MedicineProfile() {
               ))}
           </tbody>
         </Table>
-        <Button variant="primary" onClick={() => setShowAddModal(true)}>
-          <Plus style={{ width: "1.5em", height: "1.5em" }} />
-          Add
-        </Button>
       </div>
     </div>
   );

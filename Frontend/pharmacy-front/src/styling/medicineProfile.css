@@ -1,13 +1,13 @@
 .medicine__profile__container {
-  height: 100vh;
-  background-color: #b6ee56;
+  min-height: 100vh;
+  background-color: rgba(176, 207, 212, 0.897);
 }
 
 .medicine__content {
   width: 50vw;
-  height: 100%;
+  min-height: 100vh;
   margin: auto;
-  background-color: #e4ff7f;
+  background-color: rgba(228, 245, 245, 0.897);
   box-shadow: 0px 0px 10px black;
 }
 
@@ -31,4 +31,9 @@
 .my__start_paragraph {
   font-weight: bold;
   font-size: 1.1rem;
+}
+
+.my__table__pharmacies {
+  width: 80%;
+  margin: 20px auto;
 }
