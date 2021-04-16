@@ -32,6 +32,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
 
   let filterOrders = (param) => {
     setShowedOrder(null);
+    setPugNummber(0);
     setFilterValue(param);
   };
 

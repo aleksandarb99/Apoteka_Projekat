@@ -28,6 +28,7 @@ public class PharmacyController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PharmacyDTO> getPharmacyById(@PathVariable("id") Long id) {
         Pharmacy pharmacy = pharmacyServiceImpl.getPharmacyById(id);
+        pharmacyServiceImpl.deleteDuplicates(pharmacy);
 
         if (pharmacy == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

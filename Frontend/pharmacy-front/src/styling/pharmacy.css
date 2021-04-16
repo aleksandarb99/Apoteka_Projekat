@@ -17,6 +17,11 @@ li a span {
   padding-right: 0;
 }
 
+.selectedRow {
+  background-color: burlywood;
+  border: 2px solid red;
+}
+
 .row-content {
   padding: 0 1vw;
 }

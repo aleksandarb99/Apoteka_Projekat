@@ -6,6 +6,7 @@ import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,7 +19,24 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     public Pharmacy getPharmacyById(Long id) {
         Optional<Pharmacy> pharmacy = pharmacyRepository.findById(id);
+//        Check this
         return pharmacy.orElse(null);
+    }
+
+    public void deleteDuplicates(Pharmacy pharmacy){
+        ArrayList<Integer> indexes = new ArrayList<>();
+        for(int i = 0; i < pharmacy.getPriceList().getMedicineItems().size();i++){
+            for(int j = i + 1; j < pharmacy.getPriceList().getMedicineItems().size();j++){
+                if(pharmacy.getPriceList().getMedicineItems().get(i).getId().equals(pharmacy.getPriceList().getMedicineItems().get(j).getId())){
+                  indexes.add(i);
+                }
+            }
+        }
+        for (int i:
+             indexes) {
+            pharmacy.getPriceList().getMedicineItems().remove(i);
+        }
+
     }
 
     public List<Pharmacy> searchPharmaciesByNameOrCity(String searchValue) {
