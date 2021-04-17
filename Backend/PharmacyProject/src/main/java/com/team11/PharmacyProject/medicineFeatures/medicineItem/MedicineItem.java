@@ -46,6 +46,13 @@ public class MedicineItem {
         this.amount = amount;
     }
 
+    public boolean setAmountLessOne() {
+        if( amount <= 0) return false;
+
+        amount -= 1;
+        return true;
+    }
+
     public List<MedicinePrice> getMedicinePrices() {
         return medicinePrices;
     }

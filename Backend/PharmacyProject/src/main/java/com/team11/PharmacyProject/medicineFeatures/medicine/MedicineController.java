@@ -31,12 +31,12 @@ public class MedicineController {
     public String sendNotif(String name){
 
         //slanje emaila
-        try {
-            System.out.println("Thread id: " + Thread.currentThread().getId());
-            emailService.sendNotificaitionAsync(name);
-        }catch( Exception e ){
-            return null;
-        }
+//        try {
+//            System.out.println("Thread id: " + Thread.currentThread().getId());
+//            emailService.sendNotificaitionAsync(name);
+//        }catch( Exception e ){
+//            return null;
+//        }
 
         return "success";
     }

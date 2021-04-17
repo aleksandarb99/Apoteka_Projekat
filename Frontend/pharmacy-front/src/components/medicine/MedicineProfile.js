@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Table, Button, Modal } from "react-bootstrap";
+import { Table, Button, Alert } from "react-bootstrap";
+import DatePicker from "react-datepicker";
 
-// import axios from "./../../app/api";
+import getIdFromToken from "./../../app/jwtTokenUtils";
+
 import axios from "axios";
+import axios2 from "./../../app/api";
 
 import "../../styling/medicineProfile.css";
 import "../../styling/allergies.css";
@@ -11,7 +15,9 @@ import "../../styling/allergies.css";
 function MedicineProfile() {
   const [medicine, setMedicine] = useState({});
   const [pharmacies, setPharmacies] = useState([]);
-
+  const [pickupDate, setPickupDate] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [successAlert, setSuccessAlert] = useState(false);
   const [selectedPharmacy, setSelectedPharmacy] = useState({});
 
   let { id } = useParams();
@@ -40,7 +46,39 @@ function MedicineProfile() {
 
   const updateSelectedPharmacy = (selectedPharmacy) => {
     setSelectedPharmacy(selectedPharmacy);
-    console.log(selectedPharmacy);
+  };
+
+  const createReservation = () => {
+    if (pickupDate) {
+      if (pickupDate > new Date()) {
+        setShowAlert(false);
+      } else {
+        setSuccessAlert(false);
+        setShowAlert(true);
+        return;
+      }
+    }
+
+    let forSend = {
+      pickupDate: pickupDate.getTime(),
+      medicineId: id,
+      pharmacyId: selectedPharmacy.id,
+      userId: getIdFromToken(),
+    };
+
+    axios2
+      .post("http://localhost:8080/api/medicine-reservation/", forSend)
+      .then(() => {
+        setSuccessAlert(true);
+        setShowAlert(false);
+      })
+      .catch(() => {
+        setSuccessAlert(false);
+        setShowAlert(true);
+      });
+
+    setSelectedPharmacy({});
+    setPickupDate(null);
   };
 
   return (
@@ -126,6 +164,48 @@ function MedicineProfile() {
               ))}
           </tbody>
         </Table>
+        <p className="my__medicine__paragraph">
+          <span className="my__start_paragraph">Rok preuzimanja leka: </span>
+          <DatePicker
+            closeOnScroll={true}
+            selected={pickupDate}
+            dateFormat="dd/MM/yyyy"
+            onChange={(date) => setPickupDate(date)}
+            isClearable
+          />
+        </p>
+        <Alert
+          style={{
+            display: showAlert ? "block" : "none",
+            width: "80%",
+            margin: "35px auto",
+          }}
+          variant="danger"
+        >
+          Izaberite dan iz buducnosti!
+        </Alert>
+        <Alert
+          style={{
+            display: successAlert ? "block" : "none",
+            width: "80%",
+            margin: "35px auto",
+          }}
+          variant="success"
+        >
+          Uspesno rezervisan lek!
+        </Alert>
+        <Button
+          variant="info"
+          onClick={createReservation}
+          disabled={
+            pickupDate == null || Object.keys(selectedPharmacy).length === 0
+          }
+          style={{
+            marginBottom: "25px",
+          }}
+        >
+          Reserve
+        </Button>
       </div>
     </div>
   );

@@ -32,7 +32,7 @@ public class MyUser {
    @Enumerated(EnumType.STRING)
    private UserType userType;
 
-   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) //Prebacio sam address u lazy ispraviti, ako treba negde address pacijentu
    @JoinColumn(name = "address_id")
    private Address address;
 
