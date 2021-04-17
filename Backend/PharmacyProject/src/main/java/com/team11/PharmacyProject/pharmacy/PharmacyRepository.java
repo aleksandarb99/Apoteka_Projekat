@@ -1,6 +1,5 @@
 package com.team11.PharmacyProject.pharmacy;
 
-import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +17,7 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
 
     @Query("SELECT p FROM Pharmacy p JOIN FETCH p.priceList pl JOIN FETCH pl.medicineItems mi JOIN FETCH mi.medicine m WHERE p.id = (:pharmacyId) and m.id = (:medicineId)")
     Pharmacy findPharmacyByPharmacyAndMedicineId(@Param("pharmacyId") Long pharmacyId, @Param("medicineId") Long medicineId);
+
+    @Query("SELECT p FROM Pharmacy p JOIN FETCH p.priceList pl WHERE p.id = (:id)")
+    Pharmacy getPharmacyByIdAndPriceList(@Param("id") Long id);
 }

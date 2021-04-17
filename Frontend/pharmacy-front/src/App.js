@@ -9,7 +9,7 @@ import PharmacyAdminHomePage from "./components/pharmacyAdmin/PharmacyAdminHomeP
 import UserProfile from "./components/profile/UserProfile";
 import Footer from "./components/Footer";
 import { Navbar, Nav, Button } from "react-bootstrap";
-import PharmacyProfile from "./components/PharmacyProfile";
+import PharmacyProfile from "./components/pharmacyProfile/PharmacyProfile";
 import MedicineProfile from "./components/medicine/MedicineProfile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DermHomePage from "./components/workers/dermatologist/home_page_dermatologist";

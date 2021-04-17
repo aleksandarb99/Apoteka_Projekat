@@ -22,12 +22,14 @@ public class PharmacyController {
 
     @Autowired
     PharmacyService pharmacyService;
+
     @Autowired
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PharmacyDTO> getPharmacyById(@PathVariable("id") Long id) {
-        Pharmacy pharmacy = pharmacyService.getPharmacyById(id);
+//        Pharmacy pharmacy = pharmacyService.getPharmacyById(id);
+        Pharmacy pharmacy = pharmacyService.getPharmacyByIdAndPriceList(id);
 
         if (pharmacy == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -40,7 +42,7 @@ public class PharmacyController {
 
     @GetMapping(value = "/medicine/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyCertainMedicineDTO>> getPharmaciesByMedicineId(@PathVariable("id") Long id) {
-        List<Pharmacy> pharmacies = pharmacyServiceImpl.getPharmaciesByMedicineId(id);
+        List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByMedicineId(id);
 
         if (pharmacies.size() == 0) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

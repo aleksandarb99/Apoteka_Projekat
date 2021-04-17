@@ -137,4 +137,9 @@ public class PharmacyServiceImpl implements PharmacyService {
         return pharmacyRepository.findPharmaciesByMedicineId(id);
     }
 
+    @Override
+    public Pharmacy getPharmacyByIdAndPriceList(Long id) {
+        return pharmacyRepository.getPharmacyByIdAndPriceList(id);
+    }
+
 }

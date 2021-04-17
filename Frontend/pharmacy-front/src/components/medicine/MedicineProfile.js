@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Table, Button, Alert } from "react-bootstrap";
+import { Table, Button, Alert, Spinner } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 
 import {
@@ -20,6 +20,7 @@ function MedicineProfile() {
   const [pickupDate, setPickupDate] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [successAlert, setSuccessAlert] = useState(false);
+  const [spinner, setSpinner] = useState(false);
   const [selectedPharmacy, setSelectedPharmacy] = useState({});
 
   let { id } = useParams();
@@ -51,6 +52,7 @@ function MedicineProfile() {
   };
 
   const createReservation = () => {
+    setSuccessAlert(false);
     if (pickupDate) {
       if (pickupDate > new Date()) {
         setShowAlert(false);
@@ -68,9 +70,12 @@ function MedicineProfile() {
       userId: getIdFromToken(),
     };
 
+    setSpinner(true);
+
     axios2
       .post("http://localhost:8080/api/medicine-reservation/", forSend)
       .then(() => {
+        setSpinner(false);
         setSuccessAlert(true);
         setShowAlert(false);
       })
@@ -142,7 +147,9 @@ function MedicineProfile() {
             striped
             bordered
             variant="light"
-            style={{ display: pharmacies != null ? "table" : "none" }}
+            style={{
+              display: pharmacies != null ? "table" : "none",
+            }}
             className="my__table__pharmacies"
           >
             <thead>
@@ -201,6 +208,21 @@ function MedicineProfile() {
           >
             Uspesno rezervisan lek!
           </Alert>
+          <div
+            className="my__spinner__email"
+            style={{
+              display: spinner ? "flex" : "none",
+            }}
+          >
+            <p>Email is sending...</p>
+            <Spinner
+              animation="border"
+              variant="success"
+              style={{
+                display: "inline-block",
+              }}
+            />
+          </div>
           <Button
             variant="info"
             onClick={createReservation}

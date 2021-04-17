@@ -12,4 +12,6 @@ public interface PriceListService {
     void deleteDuplicates(PriceList priceList);
 
     double getMedicineItemPrice(Long medicineItemId);
+
+    PriceList findByIdAndFetchMedicineItems(Long id);
 }
