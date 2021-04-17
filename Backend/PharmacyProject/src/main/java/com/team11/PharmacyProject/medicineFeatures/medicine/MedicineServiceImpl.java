@@ -1,5 +1,8 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.pharmacy.PharmacyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,8 @@ public class MedicineServiceImpl implements MedicineService {
     @Autowired
     private MedicineRepository medicineRepository;
 
+    @Autowired
+    private PharmacyService pharmacyService;
 
     @Override
     public Medicine findOne(long id) {
@@ -25,6 +30,32 @@ public class MedicineServiceImpl implements MedicineService {
         List<Medicine> medicines = new ArrayList<>();
         medicineRepository.findAll().forEach(medicines::add);
         return medicines;
+    }
+
+    @Override
+    public List<Medicine> getNotExistingMedicineFromPharmacy(long id) {
+        List<Medicine> allMedicine = new ArrayList<>();
+        medicineRepository.findAll().forEach(allMedicine::add);
+
+        List<Medicine> medicineList = new ArrayList<>();
+
+        Pharmacy p = pharmacyService.getPharmacyById(id);
+        if(p==null){
+            return medicineList;
+        }
+
+        for (Medicine m: allMedicine) {
+            boolean flag = false;
+            for (MedicineItem mi: p.getPriceList().getMedicineItems()) {
+                if(m.getId().equals(mi.getMedicine().getId())){
+                    flag = true;
+                }
+            }
+            if(!flag){
+                medicineList.add(m);
+            }
+        }
+        return medicineList;
     }
 
     @Override

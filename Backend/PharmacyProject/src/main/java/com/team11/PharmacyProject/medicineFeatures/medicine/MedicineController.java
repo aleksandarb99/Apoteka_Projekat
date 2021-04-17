@@ -22,6 +22,12 @@ public class MedicineController {
     @Autowired
     private ModelMapper mapper;
 
+    @GetMapping(value = "/notexistingmedicinebypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MedicineDTO>> getNotExistingMedicineFromPharmacy(@PathVariable("id") long id) {
+        List<MedicineDTO> medicineDTOs = medicineService.getNotExistingMedicineFromPharmacy(id).stream().map(m -> mapper.map(m, MedicineDTO.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(medicineDTOs, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MedicineDTO>> getMedicines() {
         List<MedicineDTO> medicineDTOs = medicineService.getAllMedicines().stream().map(m -> mapper.map(m, MedicineDTO.class)).collect(Collectors.toList());

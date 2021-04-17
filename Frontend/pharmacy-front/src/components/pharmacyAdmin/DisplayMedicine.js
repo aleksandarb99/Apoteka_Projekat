@@ -1,14 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { Tab, Row, Col, Button, Table } from "react-bootstrap";
 
 import "../../styling/pharmacy.css";
 
+import AddingMedicineModal from "./AddingMedicineModal";
+
 function DisplayMedicine({ idOfPharmacy, medicineItems }) {
   const [selectedRowId, setSelectedRowId] = useState(-1);
+  const [addModalShow, setAddModalShow] = useState(false);
 
   let handleClick = (medicineItemId) => {
     setSelectedRowId(medicineItemId);
+  };
+
+  let handleAddModalSave = () => {
+    setAddModalShow(false);
+  };
+
+  let handleAddModalClose = () => {
+    setAddModalShow(false);
   };
 
   return (
@@ -49,9 +60,24 @@ function DisplayMedicine({ idOfPharmacy, medicineItems }) {
             </tbody>
           </Table>
           <div className="center">
-            <Button variant="success">Add</Button>
-            <Button variant="danger">Remove</Button>
+            <Button
+              variant="success"
+              onClick={() => {
+                setAddModalShow(true);
+              }}
+            >
+              Add
+            </Button>
+            <Button disabled={selectedRowId == -1} variant="danger">
+              Remove
+            </Button>
           </div>
+          <AddingMedicineModal
+            idOfPharmacy={idOfPharmacy}
+            show={addModalShow}
+            onHide={handleAddModalClose}
+            handleAdd={handleAddModalSave}
+          />
         </Col>
       </Row>
     </Tab.Pane>
