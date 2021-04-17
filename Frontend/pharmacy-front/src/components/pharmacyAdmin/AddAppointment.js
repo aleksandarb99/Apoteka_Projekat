@@ -221,7 +221,7 @@ function AddAppointment({ idOfPharmacy }) {
                   time for your meeting.
                 </p>
               </Alert>
-              <Table striped bordered>
+              <Table striped bordered variant="light">
                 <thead>
                   <tr>
                     <th>#</th>

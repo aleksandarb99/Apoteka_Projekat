@@ -1,11 +1,12 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.address.Address;
-import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 
 import java.util.List;
 
 public interface PharmacyService {
+
+    boolean insertMedicine(Long pharmacyId, Long medicineId);
 
     Pharmacy getPharmacyById(Long id);
 
@@ -18,10 +19,6 @@ public interface PharmacyService {
     boolean doFilteringByDistance(Address address, String distanceValue, double longitude, double latitude);
 
     double calculateDistance(Address address, double lon2, double lat2);
-
-    double getMedicineItemPrice(Long pharmacyId, Long medicineItemId);
-
-    double calculatePrice(List<MedicinePrice> prices);
 
     boolean insertPharmacy(Pharmacy pharmacy);
 

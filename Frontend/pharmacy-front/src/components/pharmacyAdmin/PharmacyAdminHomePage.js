@@ -88,7 +88,7 @@ function PharmacyAdminHomePage() {
               <AddAppointment idOfPharmacy={pharmacyDetails?.id} />
               <DisplayMedicine
                 idOfPharmacy={pharmacyDetails?.id}
-                medicineItems={pharmacyDetails?.priceList?.medicineItems}
+                priceListId={pharmacyDetails?.priceListId}
               />
               <DisplayPurchaseOrders idOfPharmacy={pharmacyDetails?.id} />
             </Tab.Content>

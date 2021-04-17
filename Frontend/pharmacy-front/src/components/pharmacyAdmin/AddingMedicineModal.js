@@ -23,7 +23,7 @@ function AddingMedicineModal(props) {
     if (props.idOfPharmacy != undefined) {
       fetchMedicine();
     }
-  }, [props]);
+  }, [props.idOfPharmacy, props.medicineItemsLength]);
 
   return (
     <Modal
@@ -41,7 +41,7 @@ function AddingMedicineModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Table bordered>
+        <Table bordered variant="light">
           <thead>
             <tr>
               <th>#</th>
@@ -58,7 +58,9 @@ function AddingMedicineModal(props) {
                   onClick={() => {
                     handleClick(item.id);
                   }}
-                  className={`${selectedRowId == item.id && "selectedRow"}`}
+                  className={`${
+                    selectedRowId == item.id && "selectedRow"
+                  } pointer`}
                 >
                   <td>{index + 1}</td>
                   <td>{item.code}</td>
@@ -77,7 +79,9 @@ function AddingMedicineModal(props) {
         <Button
           disabled={selectedRowId == -1}
           variant="primary"
-          onClick={props.handleAdd}
+          onClick={() => {
+            props.handleAdd(selectedRowId);
+          }}
         >
           Save Changes
         </Button>

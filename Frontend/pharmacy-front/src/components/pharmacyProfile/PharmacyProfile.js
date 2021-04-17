@@ -69,8 +69,7 @@ function PharmacyProfile() {
             <Tab.Content>
               <PharmacyBasic details={details} />
               <MedicinesAdminView
-                medicines={details?.priceList?.medicineItems}
-                isAdmin={true}
+                priceListId={details?.priceListId} // isAdmin={true}
               />
               <AppointmentView pharmacyId={id} />
               <WorkersView pharmacyId={id} />

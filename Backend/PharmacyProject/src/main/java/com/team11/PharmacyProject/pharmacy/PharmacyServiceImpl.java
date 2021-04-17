@@ -1,12 +1,15 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.address.Address;
+import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
+import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,26 +20,36 @@ public class PharmacyServiceImpl implements PharmacyService {
     @Autowired
     PharmacyRepository pharmacyRepository;
 
+    @Autowired
+    MedicineService medicineService;
+
+    @Override
+    public boolean insertMedicine(Long pharmacyId, Long medicineId) {
+        Pharmacy p = getPharmacyById(pharmacyId);
+        if (p == null) {
+            return false;
+        }
+
+        Medicine medicine = medicineService.findOne(medicineId);
+        if (medicine == null) {
+            return false;
+        }
+
+        MedicinePrice medicinePrice = new MedicinePrice(0, new Date().getTime(), new ArrayList<>());
+        List<MedicinePrice> list = new ArrayList<>();
+        list.add(medicinePrice);
+
+        MedicineItem medicineItem = new MedicineItem(0, list, medicine);
+
+        p.getPriceList().getMedicineItems().add(medicineItem);
+        pharmacyRepository.save(p);
+        return true;
+    }
+
     public Pharmacy getPharmacyById(Long id) {
         Optional<Pharmacy> pharmacy = pharmacyRepository.findById(id);
 //        Check this
         return pharmacy.orElse(null);
-    }
-
-    public void deleteDuplicates(Pharmacy pharmacy){
-        ArrayList<Integer> indexes = new ArrayList<>();
-        for(int i = 0; i < pharmacy.getPriceList().getMedicineItems().size();i++){
-            for(int j = i + 1; j < pharmacy.getPriceList().getMedicineItems().size();j++){
-                if(pharmacy.getPriceList().getMedicineItems().get(i).getId().equals(pharmacy.getPriceList().getMedicineItems().get(j).getId())){
-                  indexes.add(i);
-                }
-            }
-        }
-        for (int i:
-             indexes) {
-            pharmacy.getPriceList().getMedicineItems().remove(i);
-        }
-
     }
 
     public List<Pharmacy> searchPharmaciesByNameOrCity(String searchValue) {
@@ -80,31 +93,6 @@ public class PharmacyServiceImpl implements PharmacyService {
             dist = dist * 60 * 1.1515;
             return (dist * 1.609344);
         }
-    }
-
-    public double getMedicineItemPrice(Long pharmacyId, Long medicineItemId) {
-        Optional<Pharmacy> pharmacy = pharmacyRepository.findById(pharmacyId);
-        if (pharmacy.isPresent()) {
-            Pharmacy p = pharmacy.get();
-            for (MedicineItem item : p.getPriceList().getMedicineItems()) {
-                if (item.getId().equals(medicineItemId)) {
-                    return calculatePrice(item.getMedicinePrices());
-                }
-            }
-        }
-        return 0;
-    }
-
-    public double calculatePrice(List<MedicinePrice> prices) {
-        long max = 0;
-        double priceLast = 0;
-        for (MedicinePrice price : prices) {
-            if (price.getStartDate() > max) {
-                max = price.getStartDate();
-                priceLast = price.getPrice();
-            }
-        }
-        return priceLast;
     }
 
     public boolean insertPharmacy(Pharmacy pharmacy) {

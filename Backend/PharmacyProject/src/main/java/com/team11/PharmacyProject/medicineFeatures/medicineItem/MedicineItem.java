@@ -23,6 +23,12 @@ public class MedicineItem {
     public MedicineItem() {
     }
 
+    public MedicineItem(int amount, List<MedicinePrice> medicinePrices, Medicine medicine) {
+        this.amount = amount;
+        this.medicinePrices = medicinePrices;
+        this.medicine = medicine;
+    }
+
     public MedicineItem(Long id, int amount, List<MedicinePrice> medicinePrices, Medicine medicine) {
         this.id = id;
         this.amount = amount;
@@ -60,5 +66,20 @@ public class MedicineItem {
 
     public void setMedicine(Medicine medicine) {
         this.medicine = medicine;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MedicineItem that = (MedicineItem) o;
+
+        return id != null ? id.equals(that.id) : that.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }
