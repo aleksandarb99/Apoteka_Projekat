@@ -8,16 +8,12 @@ import {
   ListGroup,
   ListGroupItem,
   Pagination,
-  Nav,
-  Button,
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
-import Moment from "react-moment";
-
 import axios from "axios";
 
-import "./../styling/pharmaciesAndMedicines.css";
+import "../../styling/pharmaciesAndMedicines.css";
 
 function WorkersView({ pharmacyId }) {
   const [workers, setWorkers] = useState([]);

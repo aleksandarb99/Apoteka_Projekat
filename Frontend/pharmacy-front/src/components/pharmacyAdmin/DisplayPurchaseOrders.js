@@ -6,6 +6,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 import axios from "axios";
 
+import moment from "moment";
+
 function DisplayPurchaseOrders({ idOfPharmacy }) {
   const [orders, setOrders] = useState([]);
   const [filterValue, setFilterValue] = useState("All");
@@ -13,6 +15,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
   const [showedOrder, setShowedOrder] = useState(null);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
+  const [dropdownLabel, setDropdownLabel] = useState("All");
 
   useEffect(() => {
     if (idOfPharmacy != undefined) {
@@ -30,20 +33,21 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
 
   let filterOrders = (param) => {
     setShowedOrder(null);
+    setPugNummber(0);
     setFilterValue(param);
   };
 
   useEffect(() => {
-    let maxNumber = Math.floor(orders?.length / 12) - 1;
-    if (orders?.length / 12 - 1 > maxNumber) {
+    let maxNumber = Math.floor(orders?.length / 4) - 1;
+    if (orders?.length / 4 - 1 > maxNumber) {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
   }, [orders]);
 
   useEffect(() => {
-    let first = pagNumber * 12;
-    let max = orders.length < first + 12 ? orders?.length : first + 12;
+    let first = pagNumber * 4;
+    let max = orders.length < first + 4 ? orders?.length : first + 4;
     setShowedOrders(orders?.slice(first, max));
   }, [orders, pagNumber]);
 
@@ -67,13 +71,14 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
         {" "}
         <Dropdown>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
-            State filter
+            Filter : {dropdownLabel}
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
             <Dropdown.Item
               onClick={() => {
                 filterOrders("All");
+                setDropdownLabel("All");
               }}
             >
               All
@@ -81,6 +86,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
             <Dropdown.Item
               onClick={() => {
                 filterOrders("InProgress");
+                setDropdownLabel("InProgress");
               }}
             >
               In progress
@@ -88,6 +94,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
             <Dropdown.Item
               onClick={() => {
                 filterOrders("Processed");
+                setDropdownLabel("Processed");
               }}
             >
               Processed
@@ -98,7 +105,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
       <Row>
         {showedOrders != [] &&
           showedOrders?.map((order, index) => (
-            <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
+            <Col className="my__flex" key={index} lg={3} md={6} sm={4}>
               <Card
                 onClick={() => {
                   setShowedOrder(order);
@@ -108,15 +115,10 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
               >
                 <Card.Body>
                   <Card.Title>Order {order.id}</Card.Title>
-                  <Card.Text>Deadline:</Card.Text>
-                  <Card.Text>
-                    {new Date(order.deadline).getDay()}.{" "}
-                    {new Date(order.deadline).getMonth()}.
-                    {new Date(order.deadline).getFullYear()}{" "}
-                    {new Date(order.deadline).getHours()} :{" "}
-                    {new Date(order.deadline).getMinutes()}
-                  </Card.Text>
                 </Card.Body>
+                <Card.Footer>
+                  {moment(order.deadline).format("DD MMM YYYY   hh:mm a")}
+                </Card.Footer>
               </Card>
             </Col>
           ))}
@@ -139,7 +141,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
       <Row>
         <Col>
           {showedOrder && (
-            <Table striped bordered>
+            <Table striped bordered variant="light">
               <thead>
                 <tr>
                   <th>#</th>

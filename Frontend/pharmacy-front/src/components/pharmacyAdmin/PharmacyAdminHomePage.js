@@ -2,17 +2,16 @@ import React, { useState, useEffect } from "react";
 
 import axios from "axios";
 
-import Tab from "react-bootstrap/Tab";
+import { Tab, Nav, Row, Col } from "react-bootstrap";
 
-import Nav from "react-bootstrap/Nav";
+import "../../styling/pharmacyHomePage.css";
+import "../../styling/pharmacy.css";
+import "../../styling/unregistered.css";
 
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
-import "../styling/pharmacyHomePage.css";
 import EditBasicInfo from "./EditBasicInfo";
-import DisplayPurchaseOrders from "./pharmacyAdmin/DisplayPurchaseOrders";
-import AddAppointment from "./pharmacyAdmin/AddAppointment";
+import DisplayPurchaseOrders from "./DisplayPurchaseOrders";
+import AddAppointment from "./AddAppointment";
+import DisplayMedicine from "./DisplayMedicine";
 
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
@@ -39,40 +38,58 @@ function PharmacyAdminHomePage() {
           <Col sm={3} md={3} lg={2} xs={12} className="sideBar">
             <Nav variant="pills" className="flex-column">
               <Nav.Item>
-                <Nav.Link eventKey="first">Basic informations</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="first">
+                  Basic informations
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="second">
+                <Nav.Link className="my__nav__link" eventKey="second">
                   Pharmacists and dermatologists
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="third">Medicine</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="third">
+                  Medicine
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="fourth">Pricelist</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="fourth">
+                  Pricelist
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="fifth">Add appointment</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="fifth">
+                  Add appointment
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="sixth">Inquiries</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="sixth">
+                  Inquiries
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="seventh">Reports</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="seventh">
+                  Reports
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="eight">Purchase orders</Nav.Link>
+                <Nav.Link className="my__nav__link" eventKey="eight">
+                  Purchase orders
+                </Nav.Link>
               </Nav.Item>
             </Nav>
           </Col>
-          <Col sm={9} md={9} lg={10} xs={12}>
+          <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
             <Tab.Content>
               <EditBasicInfo
                 pharmacyDetails={pharmacyDetails}
                 changedPharmacy={changedPharmacy}
               />
               <AddAppointment idOfPharmacy={pharmacyDetails?.id} />
+              <DisplayMedicine
+                idOfPharmacy={pharmacyDetails?.id}
+                priceListId={pharmacyDetails?.priceListId}
+              />
               <DisplayPurchaseOrders idOfPharmacy={pharmacyDetails?.id} />
             </Tab.Content>
           </Col>

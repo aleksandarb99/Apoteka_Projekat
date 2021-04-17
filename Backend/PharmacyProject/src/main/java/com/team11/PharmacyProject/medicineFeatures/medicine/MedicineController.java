@@ -3,7 +3,6 @@ package com.team11.PharmacyProject.medicineFeatures.medicine;
 import com.team11.PharmacyProject.dto.medicine.MedicineCrudDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineInfoDTO;
-import com.team11.PharmacyProject.email.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,23 +23,6 @@ public class MedicineController {
     @Autowired
     private ModelMapper mapper;
 
-    @Autowired
-    private EmailService emailService;
-
-    @PostMapping("/send/async")
-    public String sendNotif(String name){
-
-        //slanje emaila
-//        try {
-//            System.out.println("Thread id: " + Thread.currentThread().getId());
-//            emailService.sendNotificaitionAsync(name);
-//        }catch( Exception e ){
-//            return null;
-//        }
-
-        return "success";
-    }
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MedicineInfoDTO> getMedicineById(@PathVariable("id") Long id) {
         Medicine medicine = medicineService.getMedicineById(id);
@@ -51,6 +33,13 @@ public class MedicineController {
 
         MedicineInfoDTO dto = new MedicineInfoDTO(medicine);
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/notexistingmedicinebypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MedicineDTO>> getNotExistingMedicineFromPharmacy(@PathVariable("id") long id) {
+        List<MedicineDTO> medicineDTOs = medicineService.getNotExistingMedicineFromPharmacy(id).stream().map(m -> mapper.map(m, MedicineDTO.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(medicineDTOs, HttpStatus.OK);
+
     }
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)

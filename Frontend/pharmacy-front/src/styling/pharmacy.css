@@ -8,6 +8,10 @@ li a span {
   justify-content: center;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 #mapCol {
   margin-top: 1vh;
   border: 3px solid #343a40;
@@ -15,6 +19,13 @@ li a span {
   min-height: 30vh;
   padding-left: 0;
   padding-right: 0;
+}
+
+.selectedRow {
+  background-color: burlywood;
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
 }
 
 .row-content {

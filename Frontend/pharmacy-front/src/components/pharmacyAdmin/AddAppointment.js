@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 
 import axios from "axios";
 
-import { Button, Tab, Row, Col, Table, Form } from "react-bootstrap";
+import moment from "moment";
+
+import { Button, Tab, Row, Col, Table, Form, Alert } from "react-bootstrap";
 
 function AddAppointment({ idOfPharmacy }) {
   const [dermatologists, setDermatologists] = useState([]);
@@ -67,16 +69,28 @@ function AddAppointment({ idOfPharmacy }) {
                 startDate.toString().substring(0, 3).toUpperCase()
               )
             ) {
+              let d1 = new Date();
+              let d2 = new Date();
+              d1.setHours(dermatologists[i].workDays[j].startTime);
+              d2.setHours(dermatologists[i].workDays[j].endTime);
+
               setWorkDaysLabel(
-                `Workshedule : ${dermatologists[i].workDays[j].startTime} - ${dermatologists[i].workDays[j].endTime}`
+                `Workshedule : ${moment(d1.getTime()).format(
+                  "hh:00 a"
+                )} - ${moment(d2.getTime()).format("hh:00 a")}`
               );
               flag = true;
+              break;
             }
           }
         }
       }
       if (!flag) {
-        setWorkDaysLabel("");
+        if (dermatogistPicked != 0) {
+          setWorkDaysLabel("It's a non-working day");
+        } else {
+          setWorkDaysLabel("");
+        }
       }
     }
   }, [dermatogistPicked, startDate]);
@@ -95,11 +109,11 @@ function AddAppointment({ idOfPharmacy }) {
         `http://localhost:8080/api/appointment/${idOfPharmacy}/${dermatogistPicked}`,
         request
       )
-      .then((res) => {
+      .then(() => {
         alert("Appointment added successfully");
         reloadForm();
       })
-      .catch((res) => {
+      .catch(() => {
         alert("Appointment is not added successfully");
       });
   };
@@ -144,6 +158,10 @@ function AddAppointment({ idOfPharmacy }) {
             />
           </Form.Group>
 
+          {workDaysLabel == "It's a non-working day" && (
+            <Alert variant="warning">{workDaysLabel}</Alert>
+          )}
+
           <Form.Group controlId="timePicker" di>
             <Form.Label>Start time</Form.Label>
             <Form.Control
@@ -154,8 +172,12 @@ function AddAppointment({ idOfPharmacy }) {
             />
           </Form.Group>
 
+          {workDaysLabel != "" && workDaysLabel != "It's a non-working day" && (
+            <Alert variant="info">{workDaysLabel}</Alert>
+          )}
+
           <Form.Group controlId="durationPicker" di>
-            <Form.Label>Duration</Form.Label>
+            <Form.Label>Duration (in minutes)</Form.Label>
             <Form.Control
               type="number"
               value={duration}
@@ -190,36 +212,39 @@ function AddAppointment({ idOfPharmacy }) {
           </Button>
         </Col>
         <Col>
-          <h3>{workDaysLabel}</h3>
-          <h3>Appointments on that date</h3>
-          {appointments != [] && (
-            <Table striped bordered>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Start time</th>
-                  <th>End time</th>
-                  <th>State</th>
-                </tr>
-              </thead>
-              <tbody>
-                {appointments != [] &&
-                  appointments.map((appointment, index) => (
-                    <tr>
-                      <td>{index + 1}</td>
-                      <td>
-                        {new Date(appointment.startTime).getHours()} :{" "}
-                        {new Date(appointment.startTime).getMinutes()}
-                      </td>
-                      <td>
-                        {new Date(appointment.endTime).getHours()} :{" "}
-                        {new Date(appointment.endTime).getMinutes()}
-                      </td>
-                      <td>{appointment.appointmentState}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
+          {appointments.length != 0 && (
+            <div>
+              <Alert variant="primary">
+                <Alert.Heading>Appointments on that date</Alert.Heading>
+                <p>
+                  These are already created meetings that day. Try to find free
+                  time for your meeting.
+                </p>
+              </Alert>
+              <Table striped bordered variant="light">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Start time</th>
+                    <th>End time</th>
+                    <th>State</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {appointments != [] &&
+                    appointments.map((appointment, index) => (
+                      <tr>
+                        <td>{index + 1}</td>
+                        <td>
+                          {moment(appointment.startTime).format("hh:mm a")}
+                        </td>
+                        <td>{moment(appointment.endTime).format("hh:mm a")}</td>
+                        <td>{appointment.appointmentState}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+            </div>
           )}
         </Col>
       </Row>

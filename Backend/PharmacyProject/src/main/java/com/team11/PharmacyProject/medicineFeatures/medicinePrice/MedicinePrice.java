@@ -25,6 +25,12 @@ public class MedicinePrice implements Comparable<MedicinePrice>{
     public MedicinePrice() {
     }
 
+    public MedicinePrice(double price, Long startDate, List<Advertisement> advertisements) {
+        this.price = price;
+        this.startDate = startDate;
+        this.advertisements = advertisements;
+    }
+
     public MedicinePrice(Long id, double price, Long startDate, List<Advertisement> advertisements) {
         this.id = id;
         this.price = price;

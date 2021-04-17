@@ -10,30 +10,46 @@ import {
   Pagination,
   Button,
 } from "react-bootstrap";
-import { StarFill } from "react-bootstrap-icons";
 
 import axios from "axios";
+import moment from "moment";
 
-import "./../styling/pharmaciesAndMedicines.css";
+import "../../styling/pharmaciesAndMedicines.css";
 
-function MedicinesView({ medicines }) {
+function AppointmentView({ pharmacyId }) {
+  const [appointsments, setAppointsments] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
-  const [showedMedicines, setShowedMedicines] = useState([]);
+  const [showedAppointsments, setShowedAppointsments] = useState([]);
 
   useEffect(() => {
-    let maxNumber = Math.floor(medicines?.length / 12) - 1;
-    if (medicines?.length / 12 - 1 > maxNumber) {
+    if (pharmacyId != undefined) {
+      async function fetchAppointsments() {
+        const request = await axios.get(
+          `http://localhost:8080/api/appointment/bypharmacyid/${pharmacyId}`
+        );
+        setAppointsments(request.data);
+
+        return request;
+      }
+      fetchAppointsments();
+    }
+  }, [pharmacyId]);
+
+  useEffect(() => {
+    let maxNumber = Math.floor(appointsments?.length / 12) - 1;
+    if (appointsments?.length / 12 - 1 > maxNumber) {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
-  }, [medicines]);
+  }, [appointsments]);
 
   useEffect(() => {
     let first = pagNumber * 12;
-    let max = medicines?.length < first + 12 ? medicines?.length : first + 12;
-    setShowedMedicines(medicines?.slice(first, max));
-  }, [medicines, pagNumber]);
+    let max =
+      appointsments.length < first + 12 ? appointsments?.length : first + 12;
+    setShowedAppointsments(appointsments?.slice(first, max));
+  }, [appointsments, pagNumber]);
 
   let handleSlideLeft = () => {
     if (pagNumber !== 0) {
@@ -48,30 +64,30 @@ function MedicinesView({ medicines }) {
   };
 
   return (
-    <Tab.Pane eventKey="second">
+    <Tab.Pane eventKey="third">
       <Container fluid>
         <Row>
-          {showedMedicines &&
-            showedMedicines.map((medicine, index) => (
+          {showedAppointsments &&
+            showedAppointsments.map((appointsment, index) => (
               <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
                 <Card className="my__card" style={{ width: "18rem" }}>
                   <Card.Body>
-                    <Card.Title>{medicine?.medicine?.name}</Card.Title>
-                    <Card.Text>#{medicine?.medicine?.code}</Card.Text>
-                    <Card.Text>{medicine?.medicine?.content}</Card.Text>
-                    <Card.Text>{medicine?.price}$</Card.Text>
+                    <Card.Title>{appointsment?.appointmentType}</Card.Title>
+                    <Card.Text>
+                      {moment(appointsment.startTime).format("DD MMM YYYY")}
+                    </Card.Text>
+                    <Card.Text>
+                      {moment(appointsment.startTime).format("hh:mm a")} -{" "}
+                      {moment(appointsment.endTime).format("hh:mm a")}
+                    </Card.Text>
                   </Card.Body>
                   <ListGroup className="list-group-flush">
                     <ListGroupItem className="my__flex">
-                      <Button size="lg" variant="secondary">
-                        Buy
-                      </Button>
+                      {appointsment?.worker?.lastName}{" "}
+                      {appointsment?.worker?.firstName}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
-                      {medicines &&
-                        [
-                          ...Array(Math.ceil(medicine?.medicine?.avgGrade)),
-                        ].map(() => <StarFill className="my__star" />)}
+                      <Button variant="secondary">Reserve</Button>
                     </ListGroupItem>
                   </ListGroup>
                 </Card>
@@ -99,4 +115,4 @@ function MedicinesView({ medicines }) {
   );
 }
 
-export default MedicinesView;
+export default AppointmentView;

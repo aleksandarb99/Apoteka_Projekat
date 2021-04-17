@@ -1,6 +1,5 @@
 package com.team11.PharmacyProject.pharmacy;
 
-import com.team11.PharmacyProject.dto.medicine.MedicineItemDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyAllDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyCertainMedicineDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyCrudDTO;
@@ -22,22 +21,20 @@ import java.util.stream.Collectors;
 public class PharmacyController {
 
     @Autowired
-    PharmacyServiceImpl pharmacyServiceImpl;
+    PharmacyService pharmacyService;
     @Autowired
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PharmacyDTO> getPharmacyById(@PathVariable("id") Long id) {
-        Pharmacy pharmacy = pharmacyServiceImpl.getPharmacyById(id);
+        Pharmacy pharmacy = pharmacyService.getPharmacyById(id);
 
         if (pharmacy == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         PharmacyDTO dto = convertToDto(pharmacy);
-        for (MedicineItemDTO item : dto.getPriceList().getMedicineItems()) {
-            item.setPrice(pharmacyServiceImpl.getMedicineItemPrice(id, item.getId()));
-        }
+        dto.setPriceListId(pharmacy.getPriceList().getId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
@@ -59,7 +56,7 @@ public class PharmacyController {
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> insertPharmacy(@Valid @RequestBody PharmacyDTO pharmacyDTO) {
         Pharmacy pharmacy = convertToEntity(pharmacyDTO);
-        if (pharmacyServiceImpl.insertPharmacy(pharmacy)) {
+        if (pharmacyService.insertPharmacy(pharmacy)) {
             return new ResponseEntity<>("Pharmacy added successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
@@ -68,7 +65,7 @@ public class PharmacyController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deletePharmacy(@PathVariable("id") long id) {
-        if (pharmacyServiceImpl.delete(id)) {
+        if (pharmacyService.delete(id)) {
             return new ResponseEntity<>("Pharmacy deleted successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
@@ -78,7 +75,7 @@ public class PharmacyController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<String> updatePharmacy(@PathVariable("id") long id, @Valid @RequestBody PharmacyDTO pharmacyDTO) {
         Pharmacy pharmacy = convertToEntity(pharmacyDTO);
-        if (pharmacyServiceImpl.update(id, pharmacy)) {
+        if (pharmacyService.update(id, pharmacy)) {
             return new ResponseEntity<>("Pharmacy updated successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
@@ -87,14 +84,14 @@ public class PharmacyController {
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyCrudDTO>> getAllPharmaciesDTO() {
-        List<PharmacyCrudDTO> pharmacyCrudDTOs = pharmacyServiceImpl.getAll().stream().map(this::convertToCrudDTO).collect(Collectors.toList());
+        List<PharmacyCrudDTO> pharmacyCrudDTOs = pharmacyService.getAll().stream().map(this::convertToCrudDTO).collect(Collectors.toList());
         return new ResponseEntity<>(pharmacyCrudDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyDTO>> getAllPharmacies() {
         List<PharmacyDTO> list = new ArrayList<>();
-        List<Pharmacy> listFromService = pharmacyServiceImpl.getAll();
+        List<Pharmacy> listFromService = pharmacyService.getAll();
         for (Pharmacy p :
                 listFromService) {
             list.add(convertToDto(p));
@@ -108,7 +105,7 @@ public class PharmacyController {
 
         // TODO vidi kako cemo hanladati errore, da li moram rucno proverati da li je prsledjeni atribut prazan string ili predugacak, null, itd.
 
-        List<Pharmacy> pharmacyResult = pharmacyServiceImpl.searchPharmaciesByNameOrCity(searchValue);
+        List<Pharmacy> pharmacyResult = pharmacyService.searchPharmaciesByNameOrCity(searchValue);
         List<PharmacyAllDTO> pharmacyDTOS = new ArrayList<>();
         for (Pharmacy p : pharmacyResult) {
             pharmacyDTOS.add(convertToAllDto(p));
@@ -124,7 +121,7 @@ public class PharmacyController {
              @RequestParam(value = "latitude", required = false) double latitude) throws Exception {
 
         // TODO vidi kako cemo hanladati errore, da li moram rucno proverati da li je prsledjeni atribut prazan string ili predugacak, null, itd.
-        List<Pharmacy> pharmacyResult = pharmacyServiceImpl.filterPharmacies(gradeValue, distanceValue, longitude, latitude);
+        List<Pharmacy> pharmacyResult = pharmacyService.filterPharmacies(gradeValue, distanceValue, longitude, latitude);
         List<PharmacyAllDTO> pharmacyDTOS = new ArrayList<>();
         for (Pharmacy p : pharmacyResult) {
             pharmacyDTOS.add(convertToAllDto(p));

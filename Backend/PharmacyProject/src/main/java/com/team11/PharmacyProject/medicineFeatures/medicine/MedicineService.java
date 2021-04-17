@@ -7,6 +7,8 @@ public interface MedicineService {
     Medicine findOne(long id);
     List<Medicine> getAllMedicines();
 
+    List<Medicine> getNotExistingMedicineFromPharmacy(long id);
+
     boolean insertMedicine(Medicine medicine);
 
     boolean delete(long id);
