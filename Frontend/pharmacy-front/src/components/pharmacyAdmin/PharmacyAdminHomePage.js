@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import axios from "axios";
 
-import Tab from "react-bootstrap/Tab";
-
-import Nav from "react-bootstrap/Nav";
-
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Tab, Nav, Row, Col } from "react-bootstrap";
 
 import "../../styling/pharmacyHomePage.css";
 import "../../styling/pharmacy.css";
@@ -16,6 +11,7 @@ import "../../styling/unregistered.css";
 import EditBasicInfo from "./EditBasicInfo";
 import DisplayPurchaseOrders from "./DisplayPurchaseOrders";
 import AddAppointment from "./AddAppointment";
+import DisplayMedicine from "./DisplayMedicine";
 
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
@@ -83,13 +79,17 @@ function PharmacyAdminHomePage() {
               </Nav.Item>
             </Nav>
           </Col>
-          <Col sm={9} md={9} lg={10} xs={12}>
+          <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
             <Tab.Content>
               <EditBasicInfo
                 pharmacyDetails={pharmacyDetails}
                 changedPharmacy={changedPharmacy}
               />
               <AddAppointment idOfPharmacy={pharmacyDetails?.id} />
+              <DisplayMedicine
+                idOfPharmacy={pharmacyDetails?.id}
+                priceListId={pharmacyDetails?.priceListId}
+              />
               <DisplayPurchaseOrders idOfPharmacy={pharmacyDetails?.id} />
             </Tab.Content>
           </Col>

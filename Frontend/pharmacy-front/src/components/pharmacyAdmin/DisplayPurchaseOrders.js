@@ -15,6 +15,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
   const [showedOrder, setShowedOrder] = useState(null);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
+  const [dropdownLabel, setDropdownLabel] = useState("All");
 
   useEffect(() => {
     if (idOfPharmacy != undefined) {
@@ -32,6 +33,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
 
   let filterOrders = (param) => {
     setShowedOrder(null);
+    setPugNummber(0);
     setFilterValue(param);
   };
 
@@ -69,13 +71,14 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
         {" "}
         <Dropdown>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
-            State filter
+            Filter : {dropdownLabel}
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
             <Dropdown.Item
               onClick={() => {
                 filterOrders("All");
+                setDropdownLabel("All");
               }}
             >
               All
@@ -83,6 +86,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
             <Dropdown.Item
               onClick={() => {
                 filterOrders("InProgress");
+                setDropdownLabel("InProgress");
               }}
             >
               In progress
@@ -90,6 +94,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
             <Dropdown.Item
               onClick={() => {
                 filterOrders("Processed");
+                setDropdownLabel("Processed");
               }}
             >
               Processed
@@ -136,7 +141,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
       <Row>
         <Col>
           {showedOrder && (
-            <Table striped bordered>
+            <Table striped bordered variant="light">
               <thead>
                 <tr>
                   <th>#</th>

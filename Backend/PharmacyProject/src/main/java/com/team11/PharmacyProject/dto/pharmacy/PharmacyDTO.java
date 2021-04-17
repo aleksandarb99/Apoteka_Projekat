@@ -1,7 +1,6 @@
 package com.team11.PharmacyProject.dto.pharmacy;
 
 import com.team11.PharmacyProject.address.Address;
-import com.team11.PharmacyProject.dto.pricelist.PriceListDTO;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,27 +16,30 @@ public class PharmacyDTO {
     @NotNull
     private Address address;
 
-    private PriceListDTO priceList;
+    private long priceListId;
 
     public PharmacyDTO() {
     }
 
     public PharmacyDTO(long id, @NotBlank String name, @NotBlank String description,
-                       Double avgGrade, @NotNull Address address, PriceListDTO priceList) {
+                       Double avgGrade, @NotNull Address address) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.avgGrade = avgGrade;
         this.address = address;
-        this.priceList = priceList;
     }
 
-    public PriceListDTO getPriceList() {
-        return priceList;
+    public PharmacyDTO(long priceListId) {
+        this.priceListId = priceListId;
     }
 
-    public void setPriceList(PriceListDTO priceList) {
-        this.priceList = priceList;
+    public long getPriceListId() {
+        return priceListId;
+    }
+
+    public void setPriceListId(long priceListId) {
+        this.priceListId = priceListId;
     }
 
     public long getId() {
