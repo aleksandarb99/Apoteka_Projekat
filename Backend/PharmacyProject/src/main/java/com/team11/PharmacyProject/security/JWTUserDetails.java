@@ -38,6 +38,8 @@ public class JWTUserDetails implements UserDetails {
 
     public long getId() { return user.getId(); }
 
+    public UserType getUserType() { return user.getUserType(); }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Table, Button, Alert } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 
-import getIdFromToken from "./../../app/jwtTokenUtils";
+import {
+  getIdFromToken,
+  getUserTypeFromToken,
+} from "./../../app/jwtTokenUtils";
 
 import axios from "axios";
 import axios2 from "./../../app/api";
@@ -131,81 +133,87 @@ function MedicineProfile() {
           <span className="my__start_paragraph">Proizvodjac: </span>
           {medicine.manufacturer}
         </p>
-        <Table
-          striped
-          bordered
-          variant="light"
-          style={{ display: pharmacies != null ? "table" : "none" }}
-          className="my__table__pharmacies"
-        >
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Address</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pharmacies &&
-              pharmacies.map((p) => (
-                <tr
-                  key={p.id}
-                  onClick={() => updateSelectedPharmacy(p)}
-                  className={
-                    selectedPharmacy.id === p.id
-                      ? "my__row__selected my__table__row"
-                      : "my__table__row"
-                  }
-                >
-                  <td>{p.name}</td>
-                  <td>{p.address}</td>
-                  <td>{p.price}</td>
-                </tr>
-              ))}
-          </tbody>
-        </Table>
-        <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Rok preuzimanja leka: </span>
-          <DatePicker
-            closeOnScroll={true}
-            selected={pickupDate}
-            dateFormat="dd/MM/yyyy"
-            onChange={(date) => setPickupDate(date)}
-            isClearable
-          />
-        </p>
-        <Alert
+        <div
           style={{
-            display: showAlert ? "block" : "none",
-            width: "80%",
-            margin: "35px auto",
-          }}
-          variant="danger"
-        >
-          Izaberite dan iz buducnosti!
-        </Alert>
-        <Alert
-          style={{
-            display: successAlert ? "block" : "none",
-            width: "80%",
-            margin: "35px auto",
-          }}
-          variant="success"
-        >
-          Uspesno rezervisan lek!
-        </Alert>
-        <Button
-          variant="info"
-          onClick={createReservation}
-          disabled={
-            pickupDate == null || Object.keys(selectedPharmacy).length === 0
-          }
-          style={{
-            marginBottom: "25px",
+            display: getUserTypeFromToken() === "PATIENT" ? "block" : "none",
           }}
         >
-          Reserve
-        </Button>
+          <Table
+            striped
+            bordered
+            variant="light"
+            style={{ display: pharmacies != null ? "table" : "none" }}
+            className="my__table__pharmacies"
+          >
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pharmacies &&
+                pharmacies.map((p) => (
+                  <tr
+                    key={p.id}
+                    onClick={() => updateSelectedPharmacy(p)}
+                    className={
+                      selectedPharmacy.id === p.id
+                        ? "my__row__selected my__table__row"
+                        : "my__table__row"
+                    }
+                  >
+                    <td>{p.name}</td>
+                    <td>{p.address}</td>
+                    <td>{p.price}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+          <p className="my__medicine__paragraph">
+            <span className="my__start_paragraph">Rok preuzimanja leka: </span>
+            <DatePicker
+              closeOnScroll={true}
+              selected={pickupDate}
+              dateFormat="dd/MM/yyyy"
+              onChange={(date) => setPickupDate(date)}
+              isClearable
+            />
+          </p>
+          <Alert
+            style={{
+              display: showAlert ? "block" : "none",
+              width: "80%",
+              margin: "35px auto",
+            }}
+            variant="danger"
+          >
+            Izaberite dan iz buducnosti!
+          </Alert>
+          <Alert
+            style={{
+              display: successAlert ? "block" : "none",
+              width: "80%",
+              margin: "35px auto",
+            }}
+            variant="success"
+          >
+            Uspesno rezervisan lek!
+          </Alert>
+          <Button
+            variant="info"
+            onClick={createReservation}
+            disabled={
+              pickupDate == null || Object.keys(selectedPharmacy).length === 0
+            }
+            style={{
+              marginBottom: "25px",
+            }}
+          >
+            Reserve
+          </Button>
+        </div>
       </div>
     </div>
   );

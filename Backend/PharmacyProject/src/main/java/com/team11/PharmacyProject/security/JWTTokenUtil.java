@@ -41,6 +41,7 @@ public class JWTTokenUtil implements Serializable {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", ((JWTUserDetails) userDetails).getId());
+        claims.put("userType", ((JWTUserDetails) userDetails).getUserType());
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
