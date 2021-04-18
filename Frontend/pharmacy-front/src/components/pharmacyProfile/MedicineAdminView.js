@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import {
   Tab,
   Row,
   Col,
   Container,
   Card,
+  Nav,
   ListGroup,
   ListGroupItem,
   Pagination,
@@ -16,7 +19,7 @@ import { StarFill } from "react-bootstrap-icons";
 
 import "../../styling/pharmaciesAndMedicines.css";
 
-function MedicinesView({ priceListId }) {
+function MedicinesView({ priceListId, pharmacyId }) {
   const [medicines, setMedicines] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
@@ -71,24 +74,30 @@ function MedicinesView({ priceListId }) {
           {showedMedicines &&
             showedMedicines.map((medicine, index) => (
               <Col className="my__flex" key={index} lg={3} md={6} sm={12}>
-                <Card className="my__card" style={{ width: "18rem" }}>
-                  <Card.Body>
-                    <Card.Title>{medicine?.medicine?.name}</Card.Title>
-                    <Card.Text>#{medicine?.medicine?.code}</Card.Text>
-                    <Card.Text>{medicine?.medicine?.content}</Card.Text>
-                  </Card.Body>
-                  <ListGroup className="list-group-flush">
-                    <ListGroupItem className="my__flex">
-                      {medicine?.price}$
-                    </ListGroupItem>
-                    <ListGroupItem className="my__flex">
-                      {medicines &&
-                        [
-                          ...Array(Math.ceil(medicine?.medicine?.avgGrade)),
-                        ].map(() => <StarFill className="my__star" />)}
-                    </ListGroupItem>
-                  </ListGroup>
-                </Card>
+                <Nav.Link
+                  as={Link}
+                  className="my__nav__link__card"
+                  to={`/medicine/${medicine.id}/pharmacy/${pharmacyId}`}
+                >
+                  <Card className="my__card" style={{ width: "18rem" }}>
+                    <Card.Body>
+                      <Card.Title>{medicine?.medicine?.name}</Card.Title>
+                      <Card.Text>#{medicine?.medicine?.code}</Card.Text>
+                      <Card.Text>{medicine?.medicine?.content}</Card.Text>
+                    </Card.Body>
+                    <ListGroup className="list-group-flush">
+                      <ListGroupItem className="my__flex">
+                        {medicine?.price}$
+                      </ListGroupItem>
+                      <ListGroupItem className="my__flex">
+                        {medicines &&
+                          [
+                            ...Array(Math.ceil(medicine?.medicine?.avgGrade)),
+                          ].map(() => <StarFill className="my__star" />)}
+                      </ListGroupItem>
+                    </ListGroup>
+                  </Card>
+                </Nav.Link>
               </Col>
             ))}
         </Row>

@@ -1,7 +1,7 @@
 package com.team11.PharmacyProject.medicineFeatures.medicineReservation;
 
 import com.team11.PharmacyProject.enums.ReservationState;
-import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 
 import javax.persistence.*;
@@ -16,6 +16,9 @@ public class MedicineReservation {
     @Column(name = "pickup_date", nullable = false)
     private Long pickupDate;
 
+    @Column(name = "reservation_date", nullable = false)
+    private Long reservationDate;
+
     @Column(name = "reservationID", nullable = false)
     private String reservationID;
 
@@ -24,8 +27,8 @@ public class MedicineReservation {
     private ReservationState state;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "medicine_price_id")
-    private MedicinePrice medicinePrice;
+    @JoinColumn(name = "medicine_item_id")
+    private MedicineItem medicineItem;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "pharmacy_id")
@@ -66,12 +69,20 @@ public class MedicineReservation {
         this.state = state;
     }
 
-    public MedicinePrice getMedicinePrice() {
-        return medicinePrice;
+    public Long getReservationDate() {
+        return reservationDate;
     }
 
-    public void setMedicinePrice(MedicinePrice medicinePrice) {
-        this.medicinePrice = medicinePrice;
+    public void setReservationDate(Long reservationDate) {
+        this.reservationDate = reservationDate;
+    }
+
+    public MedicineItem getMedicineItem() {
+        return medicineItem;
+    }
+
+    public void setMedicineItem(MedicineItem medicineItem) {
+        this.medicineItem = medicineItem;
     }
 
     public Pharmacy getPharmacy() {

@@ -19,7 +19,7 @@ public class Patient extends MyUser {
    @Column(name = "penalties", nullable = false)
    private int penalties;
 
-   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
    private List<MedicineReservation> medicineReservation;
 
    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -91,6 +91,14 @@ public class Patient extends MyUser {
          if (allergyFromList.getId().equals(allergy.getId())) return false;
       }
       allergies.add(allergy);
+      return true;
+   }
+
+   public boolean addReservation(MedicineReservation reservation) {
+      for (MedicineReservation reservationFromList : medicineReservation) {
+         if (reservationFromList.getId().equals(reservation.getId())) return false;
+      }
+      medicineReservation.add(reservation);
       return true;
    }
 }

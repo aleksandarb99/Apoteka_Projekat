@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyAllDTO;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyCertainMedicineDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyCrudDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyDTO;
 import org.modelmapper.ModelMapper;
@@ -21,12 +22,14 @@ public class PharmacyController {
 
     @Autowired
     PharmacyService pharmacyService;
+
     @Autowired
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PharmacyDTO> getPharmacyById(@PathVariable("id") Long id) {
-        Pharmacy pharmacy = pharmacyService.getPharmacyById(id);
+//        Pharmacy pharmacy = pharmacyService.getPharmacyById(id);
+        Pharmacy pharmacy = pharmacyService.getPharmacyByIdAndPriceList(id);
 
         if (pharmacy == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -35,6 +38,21 @@ public class PharmacyController {
         PharmacyDTO dto = convertToDto(pharmacy);
         dto.setPriceListId(pharmacy.getPriceList().getId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/medicine/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PharmacyCertainMedicineDTO>> getPharmaciesByMedicineId(@PathVariable("id") Long id) {
+        List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByMedicineId(id);
+
+        if (pharmacies.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<PharmacyCertainMedicineDTO> dtos = new ArrayList<>();
+        for(Pharmacy p : pharmacies) {
+            dtos.add(new PharmacyCertainMedicineDTO(p));
+        }
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)

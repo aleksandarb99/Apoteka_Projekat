@@ -11,7 +11,7 @@ public class MedicineItem {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public List<MedicinePrice> medicinePrices;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "medicine_id")
     public Medicine medicine;
     @Id
@@ -50,6 +50,13 @@ public class MedicineItem {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public boolean setAmountLessOne() {
+        if( amount <= 0) return false;
+
+        amount -= 1;
+        return true;
     }
 
     public List<MedicinePrice> getMedicinePrices() {

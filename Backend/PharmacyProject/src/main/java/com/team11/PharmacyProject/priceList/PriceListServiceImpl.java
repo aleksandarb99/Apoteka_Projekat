@@ -48,8 +48,13 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
+    public PriceList findByIdAndFetchMedicineItems(Long id) {
+        return priceListRepository.findByIdAndFetchMedicineItems(id);
+    }
+
+    @Override
     public PriceList insertMedicine(long id, long medicineId) {
-        PriceList priceList = findById(id);
+        PriceList priceList = findByIdAndFetchMedicineItems(id);
         if (priceList == null) return null;
         deleteDuplicates(priceList);
 
@@ -69,13 +74,13 @@ public class PriceListServiceImpl implements PriceListService {
         MedicineItem medicineItem = new MedicineItem(0, list, medicine);
         priceList.getMedicineItems().add(medicineItem);
         priceListRepository.save(priceList);
-        priceList = findById(id);
+        priceList = findByIdAndFetchMedicineItems(id);
         return priceList;
     }
 
     @Override
     public PriceList removeMedicine(long id, long medicineItemId) {
-        PriceList priceList = findById(id);
+        PriceList priceList = findByIdAndFetchMedicineItems(id);
         if (priceList == null) return null;
         deleteDuplicates(priceList);
 

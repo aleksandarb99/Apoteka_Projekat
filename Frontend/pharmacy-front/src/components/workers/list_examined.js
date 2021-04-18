@@ -93,7 +93,7 @@ function SearchExaminedPatPage() {
     } 
 
     return (
-        <Container style={{height: '90vh'}}>
+        <Container >
             <Row className="justify-content-center m-3">
             <h4>Search examined patients</h4>
             </Row>

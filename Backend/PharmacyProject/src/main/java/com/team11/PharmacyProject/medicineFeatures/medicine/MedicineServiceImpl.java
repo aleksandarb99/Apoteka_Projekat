@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.medicineFeatures.medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
+import com.team11.PharmacyProject.priceList.PriceListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Autowired
     private PharmacyService pharmacyService;
+
+    @Autowired
+    private PriceListService priceListService;
 
     @Override
     public Medicine findOne(long id) {
@@ -39,14 +43,15 @@ public class MedicineServiceImpl implements MedicineService {
 
         List<Medicine> medicineList = new ArrayList<>();
 
-        Pharmacy p = pharmacyService.getPharmacyById(id);
+        Pharmacy p = pharmacyService.getPharmacyByIdAndPriceList(id);
+
         if(p==null){
             return medicineList;
         }
 
         for (Medicine m: allMedicine) {
             boolean flag = false;
-            for (MedicineItem mi: p.getPriceList().getMedicineItems()) {
+            for (MedicineItem mi: priceListService.findByIdAndFetchMedicineItems(p.getPriceList().getId()).getMedicineItems()) {
                 if(m.getId().equals(mi.getMedicine().getId())){
                     flag = true;
                 }
@@ -107,5 +112,10 @@ public class MedicineServiceImpl implements MedicineService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Medicine getMedicineById(Long id) {
+        return medicineRepository.findByIdAndFetchFormTypeManufacturer(id);
     }
 }

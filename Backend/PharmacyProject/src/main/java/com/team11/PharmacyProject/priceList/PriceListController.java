@@ -21,7 +21,8 @@ public class PriceListController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PriceListDTO> getPriceListById(@PathVariable("id") Long id) {
-        PriceList priceList = priceListService.findById(id);
+//        PriceList priceList = priceListService.findById(id);
+        PriceList priceList = priceListService.findByIdAndFetchMedicineItems(id);
 
         if (priceList == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

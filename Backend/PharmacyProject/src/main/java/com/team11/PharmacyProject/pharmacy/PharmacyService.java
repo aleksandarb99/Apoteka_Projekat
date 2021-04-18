@@ -27,4 +27,8 @@ public interface PharmacyService {
     boolean update(long id, Pharmacy pharmacy);
 
     List<Pharmacy> getAll();
+
+    List<Pharmacy> getPharmaciesByMedicineId(Long id);
+
+    Pharmacy getPharmacyByIdAndPriceList(Long id);
 }

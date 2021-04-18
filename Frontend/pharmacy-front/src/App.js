@@ -10,6 +10,7 @@ import UserProfile from "./components/profile/UserProfile";
 import Footer from "./components/Footer";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import PharmacyProfile from "./components/pharmacyProfile/PharmacyProfile";
+import MedicineProfile from "./components/medicine/MedicineProfile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DermHomePage from "./components/workers/dermatologist/home_page_dermatologist";
 import PharmHomePage from "./components/workers/pharmacist/home_page_pharmacist";
@@ -76,6 +77,10 @@ function App() {
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LoginPage} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
+          <Route
+            path="/medicine/:id/pharmacy/:pid"
+            component={MedicineProfile}
+          />
           <Route path="/dermatologist" component={DermHomePage} />
           <Route path="/pharmacist" component={PharmHomePage} />
           <Route path="/pharmacyAdmin" component={PharmacyAdminHomePage} />

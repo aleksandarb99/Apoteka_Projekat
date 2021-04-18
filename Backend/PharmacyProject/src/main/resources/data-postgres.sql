@@ -63,6 +63,7 @@ insert into medicine_item (amount, medicine_id) values (23, 2);
 insert into medicine_item (amount, medicine_id) values (14, 3);
 insert into medicine_item (amount, medicine_id) values (55, 4);
 insert into medicine_item (amount, medicine_id) values (67, 5);
+insert into medicine_item (amount, medicine_id) values (30, 1);
 
 /*Supplier items*/
 insert into supplier_item (amount, medicine_id) values (30, 1);
@@ -104,6 +105,7 @@ insert into price_list_medicine_items (price_list_id, medicine_items_id) values 
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (2, 3);
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 5);
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 4);
+insert into price_list_medicine_items (price_list_id, medicine_items_id) values (2, 6);
 
 
 /*Workplace - WorkDays*/
@@ -147,6 +149,18 @@ insert into my_user (password, first_name, last_name, email, telephone, user_typ
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$zMWFTm7cC3JYZkCn35bG8.pr9jHaF4Yzz5vftYC7Ggnl.qFuep0uW',
                             'Branko', 'Krasic', 'branimirko@gmail.com', '0658852343', 'PHARMACY_ADMIN', 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
+                            'Djura', 'Djuraa', 'djule22@gmail.com', '06430032341', 'PATIENT', 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
+                            'Marko', 'Markovic', 'djule00@gmail.com', '06930032341', 'PATIENT', 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
+                            'Petar', 'Peric', 'djule1@gmail.com', '02430032341', 'PATIENT', 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
+                            'Carli', 'Sin', 'djule009@gmail.com', '08430032341', 'PATIENT', 4, false, true);
 
 /*Pharmacy Workers*/
 insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.9, 1, 5);
@@ -157,6 +171,10 @@ insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 1, 7);
 insert into patient (points, penalties, id) values (50, 2, 1);
 insert into patient (points, penalties, id) values (43, 0, 2);
 insert into patient (points, penalties, id) values (13, 0, 3);
+insert into patient (points, penalties, id) values (13, 0, 10);
+insert into patient (points, penalties, id) values (13, 0, 11);
+insert into patient (points, penalties, id) values (13, 0, 12);
+insert into patient (points, penalties, id) values (13, 0, 13);
 
 /*Patients allergies*/
 insert into patient_allergies (patient_id, allergies_id) values (1, 3);
@@ -196,11 +214,12 @@ insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 1)
 insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 2);
 
 /*Medicine Prices*/
-insert into medicine_price (price, start_date) values (449, 1616241600000);
-insert into medicine_price (price, start_date) values (489, 1616587200000);
-insert into medicine_price (price, start_date) values (250, 1616241600000);
-insert into medicine_price (price, start_date) values (670, 1616241600000);
-insert into medicine_price (price, start_date) values (1200, 1616241600000);
+insert into medicine_price (price, start_date) values (449, 1618077600000);
+insert into medicine_price (price, start_date) values (489, 1618160400000);
+insert into medicine_price (price, start_date) values (250, 1615482000000);
+insert into medicine_price (price, start_date) values (670, 1613062800000);
+insert into medicine_price (price, start_date) values (1200, 1610384400000);
+insert into medicine_price (price, start_date) values (470, 1578769200000);
 -- insert into medicine_price (price, start_date) values (879, 1616241600000;
 
 /* MedicineItem - MedicinePrices*/
@@ -209,6 +228,7 @@ insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id)
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (2, 3);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (3, 4);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (4, 5);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (6, 6);
 -- insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (5, 6);
 
 /*Complaints*/
@@ -266,6 +286,14 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
                     values ('RESERVED', 'CHECKUP', 10, 1617804000000, 1617804000000, 'Placanje u unapred.', 1800, 3, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('RESERVED', 'CHECKUP', 12, 1617800300000, 1617801300000, 'Placanje u unapred 2.', 1700, 2, 1, 7);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CONSULTATION', 2, 1618209900000, 1618217100000, 'Placanje u unapred.', 1800, 10, 1, 5);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CONSULTATION', 2, 1619084700000, 1619091900000, 'Placanje u unapred.', 1800, 11, 1, 5);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CONSULTATION', 2, 1623325500000, 1623330000000, 'Placanje u unapred.', 1800, 12, 1, 5);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CONSULTATION', 2, 1623744000000, 1623751200000, 'Placanje u unapred.', 1800, 13, 1, 5);
 
 
 /*WorkCalendar - Appointments*/
@@ -328,11 +356,11 @@ insert into advertising (advertisement_id, medicine_price_id) values (1, 1);
 insert into advertising (advertisement_id, medicine_price_id) values (2, 3);
 
 /*MedicineReservations*/
-insert into medicine_reservation (pickup_date, reservationid, state, medicine_price_id, pharmacy_id)
-                    values (1620817200000, '1234', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+                    values (1618839601000, 1618666801000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
 
 /*Patient - MedicineReservations*/
-insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 1);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (3, 1);
 
 /*Medicine - Alternative Medicines*/
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (1, 2);
