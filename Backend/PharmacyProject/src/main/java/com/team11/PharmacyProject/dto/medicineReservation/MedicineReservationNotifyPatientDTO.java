@@ -66,7 +66,7 @@ public class MedicineReservationNotifyPatientDTO {
 
     public void setEmail(String email) {
         this.email = email;
-        this.email = "jovansimic995@gmail.com";
+        this.email = "jovansimic995@gmail.com";     // Ovo ce se izbrisati kad byude deploy
     }
 
     public String getReservationDate() {

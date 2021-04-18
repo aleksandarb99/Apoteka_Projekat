@@ -70,7 +70,7 @@ function MedicinesView() {
                 <Nav.Link
                   as={Link}
                   className="my__nav__link__card"
-                  to={`/medicine/${medicine.id}`}
+                  to={`/medicine/${medicine.id}/pharmacy/-1`}
                 >
                   <Card className="my__card" style={{ width: "18rem" }}>
                     <Card.Body>

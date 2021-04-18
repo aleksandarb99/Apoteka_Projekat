@@ -23,7 +23,7 @@ function MedicineProfile() {
   const [spinner, setSpinner] = useState(false);
   const [selectedPharmacy, setSelectedPharmacy] = useState({});
 
-  let { id } = useParams();
+  let { id, pid } = useParams();
 
   useEffect(() => {
     async function fetchMedicine() {
@@ -44,8 +44,10 @@ function MedicineProfile() {
       setPharmacies(request.data);
       return request;
     }
-    fetchPharmacies();
-  }, [id]);
+    if (pid == -1) {
+      fetchPharmacies();
+    }
+  }, [id, pid]);
 
   const updateSelectedPharmacy = (selectedPharmacy) => {
     setSelectedPharmacy(selectedPharmacy);
@@ -66,7 +68,7 @@ function MedicineProfile() {
     let forSend = {
       pickupDate: pickupDate.getTime(),
       medicineId: id,
-      pharmacyId: selectedPharmacy.id,
+      pharmacyId: pid == -1 ? selectedPharmacy.id : pid,
       userId: getIdFromToken(),
     };
 
@@ -148,7 +150,7 @@ function MedicineProfile() {
             bordered
             variant="light"
             style={{
-              display: pharmacies != null ? "table" : "none",
+              display: pharmacies.length !== 0 || pid == -1 ? "table" : "none",
             }}
             className="my__table__pharmacies"
           >
@@ -227,7 +229,8 @@ function MedicineProfile() {
             variant="info"
             onClick={createReservation}
             disabled={
-              pickupDate == null || Object.keys(selectedPharmacy).length === 0
+              pickupDate == null ||
+              (Object.keys(selectedPharmacy).length === 0 && pid == -1)
             }
             style={{
               marginBottom: "25px",
