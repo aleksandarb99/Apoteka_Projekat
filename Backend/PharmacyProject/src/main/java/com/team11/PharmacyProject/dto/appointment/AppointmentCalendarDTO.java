@@ -18,6 +18,8 @@ public class AppointmentCalendarDTO {
 
     private String patient;
 
+    private double price;
+
     public AppointmentCalendarDTO(){
 
     }
@@ -29,6 +31,15 @@ public class AppointmentCalendarDTO {
         appointmentState = appt.getAppointmentState();
         pharmacy = appt.getPharmacy().getName();
         patient = appt.getPatient().getFirstName() + " " + appt.getPatient().getLastName();
+        price = appt.getPrice();
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public Long getId() {

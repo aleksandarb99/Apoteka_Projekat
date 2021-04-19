@@ -14,4 +14,9 @@ public interface AppointmentService {
 
     boolean insertAppointment(Appointment a, Long pharmacyId, Long dId);
 
+    List<Appointment> getUpcomingAppointmentsForWorker(Long id, int page, int size);
+
+    boolean startAppointment(Long id);
+
+    boolean cancelAppointment(Long id);
 }

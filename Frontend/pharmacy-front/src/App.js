@@ -20,6 +20,7 @@ import SearchPatPage from "./components/workers/search_patients";
 import SearchExaminedPatPage from "./components/workers/list_examined";
 
 import WorkCalendar from "./components/workers/work_calendar";
+import AppointmentReport from "./components/workers/appointment_report";
 
 import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
@@ -91,6 +92,7 @@ function App() {
           <Route path="/admin/users" component={UserCrud} />
           <Route path="/worker/examined" component={SearchExaminedPatPage} />
           <Route path="/wc" component={WorkCalendar} />
+          <Route path="/worker/appointment_report" component={AppointmentReport} />
         </Switch>
       </div>
       <Footer />
