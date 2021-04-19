@@ -16,12 +16,14 @@ import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
 import MedicineCrud from "./components/medicine/MedicineCrud";
 import SearchPatPage from "./components/workers/search_patients";
 import SearchExaminedPatPage from "./components/workers/list_examined";
-import BasicHeader from "./components/utilComponents/header/BasicHeader";
+import CommonHeader from "./components/utilComponents/header/CommonHeader";
 
 import WorkCalendar from "./components/workers/work_calendar";
 
 import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
+
+import { getUserTypeFromToken } from './app/jwtTokenUtils'
 
 import "./styling/navbar.css";
 
@@ -29,7 +31,7 @@ function App() {
   return (
     <Router>
       <div style={{ minHeight: "100vh" }}>
-        <BasicHeader />
+        <CommonHeader />
         <Switch>
           <Route path="/" exact component={HomePage} />
           <Route path="/profile" exact component={UserProfile} />

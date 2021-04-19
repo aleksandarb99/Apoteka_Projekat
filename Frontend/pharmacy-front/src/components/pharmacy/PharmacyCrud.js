@@ -5,7 +5,7 @@ import PharmacySearchPanel from './PharmacySearchPanel'
 const PharmacyCrud = props => {
     return (
         <div>
-            <PharmacySearchPanel> </PharmacySearchPanel>
+            <PharmacySearchPanel></PharmacySearchPanel>
             <PharmacyTable> </PharmacyTable>
         </div>
     )

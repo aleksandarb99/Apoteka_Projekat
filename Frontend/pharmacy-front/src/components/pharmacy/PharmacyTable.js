@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Button, Container, Table } from 'react-bootstrap'
+import { Button, Container, Row, Table } from 'react-bootstrap'
 import DeleteModal from '../utilComponents/modals/DeleteModal';
 import AddPharmacyModal from './AddPharmacyModal';
 import EditPharmacyModal from './EditPharmacyModal';
@@ -50,8 +50,16 @@ function PharmacyTable(props) {
     }
 
     return (
-        <Container style={{ marginTop: '100px' }}>
-            <Button variant="secondary" style={{ float: 'right', margin: '20px' }} onClick={() => setShowAddModal(true)}>Add new pharmacy</Button>
+        <Container style={{ marginTop: '10px' }}>
+            <Row className="justify-content-md-between">
+                <Button
+                    variant="secondary"
+                    style={{ float: 'right', margin: '20px' }}
+                    onClick={() => setShowAddModal(true)}
+                >
+                    Add new pharmacy
+                </Button>
+            </Row>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -80,7 +88,7 @@ function PharmacyTable(props) {
             <DeleteModal title={"Remove " + selected.name} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deletePharmacy} />
             <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
             <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Pharmacy deleted successfully."></SuccessModal>
-        </Container>
+        </Container >
     )
 }
 
