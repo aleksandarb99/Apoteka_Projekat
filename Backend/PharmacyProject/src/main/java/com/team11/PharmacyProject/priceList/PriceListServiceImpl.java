@@ -56,7 +56,6 @@ public class PriceListServiceImpl implements PriceListService {
     public PriceList insertMedicine(long id, long medicineId) {
         PriceList priceList = findByIdAndFetchMedicineItems(id);
         if (priceList == null) return null;
-        deleteDuplicates(priceList);
 
         Medicine medicine = medicineService.findOne(medicineId);
         if (medicine == null) return null;
@@ -82,8 +81,6 @@ public class PriceListServiceImpl implements PriceListService {
     public PriceList removeMedicine(long id, long medicineItemId) {
         PriceList priceList = findByIdAndFetchMedicineItems(id);
         if (priceList == null) return null;
-        deleteDuplicates(priceList);
-
 
         MedicineItem mi = medicineItemService.findById(medicineItemId);
         if (mi == null) return null;
@@ -96,19 +93,4 @@ public class PriceListServiceImpl implements PriceListService {
         return priceList;
     }
 
-    public void deleteDuplicates(PriceList priceList) {
-        ArrayList<Integer> indexes = new ArrayList<>();
-        for (int i = 0; i < priceList.getMedicineItems().size(); i++) {
-            for (int j = i + 1; j < priceList.getMedicineItems().size(); j++) {
-                if (priceList.getMedicineItems().get(i).getId().equals(priceList.getMedicineItems().get(j).getId())) {
-                    indexes.add(i);
-                }
-            }
-        }
-        for (int i :
-                indexes) {
-            priceList.getMedicineItems().remove(i);
-        }
-
-    }
 }

@@ -21,15 +21,11 @@ public class PriceListController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PriceListDTO> getPriceListById(@PathVariable("id") Long id) {
-//        PriceList priceList = priceListService.findById(id);
         PriceList priceList = priceListService.findByIdAndFetchMedicineItems(id);
 
         if (priceList == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        priceListService.deleteDuplicates(priceList);
-
         PriceListDTO dto = convertToDto(priceList);
         for (MedicineItemDTO item : dto.getMedicineItems()) {
             item.setPrice(priceListService.getMedicineItemPrice(item.getId()));
@@ -47,9 +43,9 @@ public class PriceListController {
             for (MedicineItemDTO item : dto.getMedicineItems()) {
                 item.setPrice(priceListService.getMedicineItemPrice(item.getId()));
             }
-            return new ResponseEntity<PriceListDTO>(dto, HttpStatus.OK);
+            return new ResponseEntity<>(dto, HttpStatus.OK);
         }
-        return new ResponseEntity<PriceListDTO>((PriceListDTO) null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>((PriceListDTO) null, HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping(value = "/{id}/removemedicine/{medicineId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,9 +58,9 @@ public class PriceListController {
             for (MedicineItemDTO item : dto.getMedicineItems()) {
                 item.setPrice(priceListService.getMedicineItemPrice(item.getId()));
             }
-            return new ResponseEntity<PriceListDTO>(dto, HttpStatus.OK);
+            return new ResponseEntity<>(dto, HttpStatus.OK);
         }
-        return new ResponseEntity<PriceListDTO>((PriceListDTO) null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>((PriceListDTO) null, HttpStatus.BAD_REQUEST);
     }
 
     private PriceListDTO convertToDto(PriceList priceList) {

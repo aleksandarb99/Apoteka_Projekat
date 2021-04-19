@@ -9,8 +9,6 @@ public interface PriceListService {
 
     PriceList removeMedicine(long id, long medicineId);
 
-    void deleteDuplicates(PriceList priceList);
-
     double getMedicineItemPrice(Long medicineItemId);
 
     PriceList findByIdAndFetchMedicineItems(Long id);
