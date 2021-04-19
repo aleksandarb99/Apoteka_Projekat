@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Table } from 'react-bootstrap'
-import DeleteModal from '../utilComponents/DeleteModal';
+import DeleteModal from '../utilComponents/modals/DeleteModal';
 import AddPharmacyModal from './AddPharmacyModal';
 import EditPharmacyModal from './EditPharmacyModal';
 

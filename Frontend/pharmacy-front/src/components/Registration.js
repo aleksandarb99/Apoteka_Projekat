@@ -13,11 +13,14 @@ import StreetFormGroup from "./utilComponents/formGroups/StreetFormGroup"
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router";
+import ErrorModal from "./utilComponents/modals/ErrorModal";
 
 function Registration() {
   const [form, setForm] = useState({})
   const [validated, setValidated] = useState(false)
   const user = useSelector(state => state.user)
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   const setField = (field, value) => {
     setForm({
@@ -48,7 +51,7 @@ function Registration() {
         alert('User added successfully')
       })
       .catch(() => {
-        alert('Server error')
+        setShowErrorModal(true);
       })
   }
 
@@ -89,6 +92,7 @@ function Registration() {
         <CountryFormGroup onChange={(event) => setField('country', event.target.value)}></CountryFormGroup>
         <Button variant="primary" type="submit">Submit</Button>
       </Form>
+      <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong. User registration failed."></ErrorModal>
     </main>
   )
 

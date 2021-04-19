@@ -6,11 +6,14 @@ import MedicineCodeFormGroup from "../utilComponents/medicineFormGroups/Medicine
 import MedicineContentFormGroup from "../utilComponents/medicineFormGroups/MedicineContentFormGroup"
 import SideEffectsFormGroup from "../utilComponents/medicineFormGroups/SideEffectsFormGroup"
 import AdditionalNotesFormGroup from "../utilComponents/medicineFormGroups/AdditionalNotesFormGroup"
+import ErrorModal from '../utilComponents/modals/ErrorModal';
 
 function EditMedicineModal(props) {
 
     const [form, setForm] = useState({})
     const [validated, setValidated] = useState(false)
+
+    const [showErrorModal, setShowErrorModal] = useState(false);
 
     const setField = (field, value) => {
         setForm({
@@ -41,7 +44,7 @@ function EditMedicineModal(props) {
                 alert('Medicine updated successfully')
             })
             .catch(() => {
-                alert('Server error')
+                setShowErrorModal(true);
             })
     }
 
@@ -98,6 +101,7 @@ function EditMedicineModal(props) {
             </Modal.Body>
             <Modal.Footer>
             </Modal.Footer>
+            <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
         </Modal>
     )
 }

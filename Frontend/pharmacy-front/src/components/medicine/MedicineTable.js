@@ -4,7 +4,7 @@ import { Button, Container, Row, Table } from "react-bootstrap";
 import MedicineRow from "./MedicineRow";
 import AddMedicineModal from "./AddMedicineModal";
 import EditMedicineModal from "./EditMedicineModal";
-import DeleteModal from "../utilComponents/DeleteModal";
+import DeleteModal from "../utilComponents/modals/DeleteModal";
 
 function MedicineTable() {
   const [reload, setReload] = useState(false);

@@ -8,12 +8,15 @@ import PhoneNumberFormGroup from '../utilComponents/formGroups/PhoneNumberFormGr
 import CityFormGroup from '../utilComponents/formGroups/CityFormGroup'
 import StreetFormGroup from '../utilComponents/formGroups/StreetFormGroup'
 import CountryFormGroup from '../utilComponents/formGroups/CountryFormGroup'
+import ErrorModal from '../utilComponents/modals/ErrorModal';
 import axios from 'axios'
 
 function EditUserModal(props) {
 
     const [form, setForm] = useState({})
     const [validated, setValidated] = useState(false)
+
+    const [showErrorModal, setShowErrorModal] = useState(false);
 
     const setField = (field, value) => {
         setForm({
@@ -56,7 +59,7 @@ function EditUserModal(props) {
                 props.onHide()
             })
             .catch(() => {
-                alert('Server error')
+                setShowErrorModal(true);
             })
     }
 
@@ -117,6 +120,7 @@ function EditUserModal(props) {
             </Modal.Body>
             <Modal.Footer>
             </Modal.Footer>
+            <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
         </Modal>
     )
 }

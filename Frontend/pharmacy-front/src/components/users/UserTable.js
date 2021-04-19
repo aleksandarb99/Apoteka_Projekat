@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Container, Form, Row, Table } from 'react-bootstrap'
 import AddUserModal from './AddUserModal';
 import EditUserModal from './EditUserModal';
-import DeleteModal from '../utilComponents/DeleteModal';
+import DeleteModal from '../utilComponents/modals/DeleteModal';
 import PropTypes from 'prop-types';
 import UserRow from './UserRow';
 
