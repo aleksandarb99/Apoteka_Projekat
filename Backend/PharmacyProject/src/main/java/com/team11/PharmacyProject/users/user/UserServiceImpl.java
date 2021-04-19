@@ -4,6 +4,8 @@ import com.team11.PharmacyProject.dto.user.UserDTO;
 import com.team11.PharmacyProject.dto.UserUpdateDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +22,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public MyUser findOne(Long id) {
-        Optional<MyUser> user = userRepository.findById(id);
-        return user.orElse(null);
+        Slice<MyUser> user = userRepository.findByIdFetchAdderss(id, PageRequest.of(0, 1));
+        if (user.hasContent()) {
+            return user.getContent().get(0);
+        }
+        return null;
     }
 
     @Override
