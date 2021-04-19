@@ -113,4 +113,26 @@ public class AppointmentController {
         return new ResponseEntity<List<AppointmentCalendarDTO>>(dtos, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/start_appointment", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> startAppointment (@RequestParam(value="id") Long id)
+    {
+        boolean started = appointmentServiceImpl.startAppointment(id);
+        if(started){
+            return new ResponseEntity<String>("Started the appointment", HttpStatus.OK);
+        }else{
+            return new ResponseEntity<String>("Couldn't start the appointment",HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(value = "/cancel_appointment", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> cancelAppointment (@RequestParam(value="id") Long id)
+    {
+        boolean started = appointmentServiceImpl.cancelAppointment(id);
+        if(started){
+            return new ResponseEntity<String>("Cancelled the appointment", HttpStatus.OK);
+        }else{
+            return new ResponseEntity<String>("Couldn't cancel the appointment",HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

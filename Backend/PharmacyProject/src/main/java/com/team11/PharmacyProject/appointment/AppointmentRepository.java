@@ -26,4 +26,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT a FROM Appointment  a where a.worker.id=?1 and a.appointmentState='RESERVED' and a.startTime > ?2")
     List<Appointment> getUpcomingAppointmentsForWorker(Long id, Long startTime, Pageable pg);
+
+    @Query("SELECT a FROM Appointment a join fetch a.patient where a.id=?1")
+    Slice<Appointment> getAppointmentByIdFetchPatient(Long id, Pageable pg);
 }

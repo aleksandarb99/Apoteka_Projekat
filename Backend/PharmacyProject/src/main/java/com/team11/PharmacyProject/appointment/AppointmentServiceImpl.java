@@ -2,8 +2,10 @@ package com.team11.PharmacyProject.appointment;
 
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
+import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
@@ -12,6 +14,7 @@ import com.team11.PharmacyProject.workplace.WorkplaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -166,8 +169,54 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> getUpcomingAppointmentsForWorker(Long id, int page, int size) {
         Pageable pg = PageRequest.of(page, size, Sort.by("startTime").ascending());
-        Long startTime = Instant.now().minus(1, ChronoUnit.HOURS).getEpochSecond();
-        List<Appointment> result = appointmentRepository.getUpcomingAppointmentsForWorker(id, startTime, pg);
-        return result;
+        Long startTime = Instant.now().minus(1, ChronoUnit.HOURS).toEpochMilli();
+        return appointmentRepository.getUpcomingAppointmentsForWorker(id, startTime, pg);
     }
+
+    @Override
+    public boolean startAppointment(Long id) {
+        Optional<Appointment> a = appointmentRepository.findById(id);
+        if (a.isPresent()) {
+            Appointment appointment = a.get();
+            if (appointment.getAppointmentState() != AppointmentState.RESERVED){
+                return false;
+            }
+            Long begin = Instant.now().minus(15, ChronoUnit.MINUTES).toEpochMilli();
+            Long end = Instant.now().plus(15, ChronoUnit.MINUTES).toEpochMilli();
+            if (appointment.getStartTime() > begin && appointment.getStartTime() < end){
+                appointment.setAppointmentState(AppointmentState.IN_PROGRESS);
+                appointmentRepository.save(appointment);
+                return true;
+            }else{
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean cancelAppointment(Long id) {
+        Slice<Appointment> a = appointmentRepository.getAppointmentByIdFetchPatient(id, PageRequest.of(0, 1));
+        if (!a.hasContent()){
+            return false;
+        }
+        Appointment appointment = a.getContent().get(0);
+        if (appointment.getAppointmentState() != AppointmentState.RESERVED){
+            return false;
+        }
+        long curr_time = Instant.now().toEpochMilli();
+        if (curr_time > appointment.getStartTime()){
+            appointment.setAppointmentState(AppointmentState.CANCELLED);
+            Patient p = appointment.getPatient();
+            p.setPenalties(p.getPenalties()+1);
+            appointmentRepository.save(appointment);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
 }

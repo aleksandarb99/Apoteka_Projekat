@@ -27,13 +27,21 @@ function DermHomePage() {
 
   const initiateAppt = (appointment) => {
 
-    // if (!(moment(Date.now()).subtract(15, 'minutes') < appointment.start && moment(Date.now()).add(3, 'hours') > appointment.start)){
-    //   // 3 sata da bi mogao da se cancelluje i kasnije, ali svakako nece moci da se zapocne ranije
-    //   alert("You can't initiate this appointment yet!");
-    //   return;
-    // }
+    if (!(moment(Date.now()) > moment(appointment.start).subtract(15, 'minutes'))){
+      // nikako ga ne mozemo zapoceti vise od 15 minuta ranije
+      alert("You can't initiate this appointment yet!");
+      return;
+    }
     setStartAppt(appointment);
     setShowModal(true);
+  }
+
+  const onCancelMethod = () => {  
+    console.log('cancel culture');
+    setShowModal(false);
+    //todo i ovo ne zaboravi da ne bude hardkodovano
+    api.get("http://localhost:8080/api/appointment/workers_upcoming", {params: {'id':5, 'page':0, 'size':10}})
+        .then((resp) => setAppointments(resp.data)).catch(() => setAppointments([]));  //resetujemo prikaz
   }
 
   return (
@@ -77,7 +85,7 @@ function DermHomePage() {
               </Col>
             </Row>);
          })}
-         <AppointmentStartModal show={showModal} appointment={startAppt} onHide={() => {setShowModal(false); setStartAppt({})}}></AppointmentStartModal>
+         <AppointmentStartModal show={showModal} onCancelMethod={onCancelMethod} appointment={startAppt} onHide={() => {setShowModal(false); setStartAppt({})}}></AppointmentStartModal>
     </div>
   );
 }

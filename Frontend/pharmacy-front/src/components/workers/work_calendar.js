@@ -8,6 +8,7 @@ import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import AppointmentStartModal from "./appointment_start_modal";
 import moment from "moment";
 import axios from "axios";
+import api from "../../app/api";
 import "./calendar.css";
 import tippy from "tippy.js";
 import 'tippy.js/dist/tippy.css';
@@ -16,6 +17,7 @@ function WorkCalendar() {
     const [eventi, setEventi] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [startAppt, setStartAppt] = useState({});
+    
     // const [eventi, setEventi] = useState([{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},
     // { title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},
     // { title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'}]);
@@ -30,19 +32,31 @@ function WorkCalendar() {
         fetchAppointments();
       }, []);
 
+
     const initiateAppt = (info) => {
         if (info.event.extendedProps.appointmentState != 'RESERVED'){
             return;
         }
-        
-        // if (!(moment(Date.now()).subtract(15, 'minutes') < info.event.start && moment(Date.now()).add(3, 'hours') > info.event.start)){
-        //     // 3 sata da bi mogao da se cancelluje i kasnije, ali svakako nece moci da se zapocne ranije
-        //     alert("You can't initiate this appointment yet!");
-        //     return;
-        // }
-        console.log(info.event);
-        setStartAppt(info.event.extendedProps);
+
+        if (!(moment(Date.now()) > moment(info.event.extendedProps.start).subtract(15, 'minutes'))){
+            // nikako ga ne mozemo zapoceti vise od 15 minuta ranije
+            alert("You can't initiate this appointment yet!");
+            return;
+        }
+        let appt = {} //uga buga zbog id-a
+        for(var k in info.event.extendedProps){ 
+            appt[k]=info.event.extendedProps[k];
+        }
+        appt.id = info.event.id;
+        setStartAppt(appt);
         setShowModal(true);
+    }
+
+    const onCancelMethod = () => { 
+        setShowModal(false);
+        //todo i ovo ne zaboravi da ne bude hardkodovano
+        api.get("http://localhost:8080/api/workers/calendarAppointments/5").then((resp) => setEventi(resp.data)); 
+        //todo id je hardkodovan
     }
 
     return (
@@ -111,7 +125,7 @@ function WorkCalendar() {
                         }
                     }}
             />
-            <AppointmentStartModal show={showModal} appointment={startAppt} onHide={() => {setShowModal(false); setStartAppt({})}}></AppointmentStartModal>
+            <AppointmentStartModal show={showModal} onCancelMethod={onCancelMethod} appointment={startAppt} onHide={() => {setShowModal(false); setStartAppt({})}}></AppointmentStartModal>
         </div>
   );
 }

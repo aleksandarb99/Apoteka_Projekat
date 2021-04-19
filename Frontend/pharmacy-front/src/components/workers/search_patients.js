@@ -51,7 +51,7 @@ function SearchPatPage() {
 
   return (
     
-      <Container style={{height: '90vh'}}>
+      <Container>
         <Row className="justify-content-center m-3">
           <h4>Search patients</h4>
         </Row>
