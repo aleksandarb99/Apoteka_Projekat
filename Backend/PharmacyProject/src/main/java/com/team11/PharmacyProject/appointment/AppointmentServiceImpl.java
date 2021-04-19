@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -159,5 +161,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentRepository.save(a);
         return true;
+    }
+
+    @Override
+    public List<Appointment> getUpcomingAppointmentsForWorker(Long id, int page, int size) {
+        Pageable pg = PageRequest.of(page, size, Sort.by("startTime").ascending());
+        Long startTime = Instant.now().minus(1, ChronoUnit.HOURS).getEpochSecond();
+        List<Appointment> result = appointmentRepository.getUpcomingAppointmentsForWorker(id, startTime, pg);
+        return result;
     }
 }

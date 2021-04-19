@@ -5,6 +5,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
+import AppointmentStartModal from "./appointment_start_modal";
 import moment from "moment";
 import axios from "axios";
 import "./calendar.css";
@@ -13,6 +14,8 @@ import 'tippy.js/dist/tippy.css';
 
 function WorkCalendar() {
     const [eventi, setEventi] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [startAppt, setStartAppt] = useState({});
     // const [eventi, setEventi] = useState([{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},
     // { title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},
     // { title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'}]);
@@ -27,6 +30,21 @@ function WorkCalendar() {
         fetchAppointments();
       }, []);
 
+    const initiateAppt = (info) => {
+        if (info.event.extendedProps.appointmentState != 'RESERVED'){
+            return;
+        }
+        
+        // if (!(moment(Date.now()).subtract(15, 'minutes') < info.event.start && moment(Date.now()).add(3, 'hours') > info.event.start)){
+        //     // 3 sata da bi mogao da se cancelluje i kasnije, ali svakako nece moci da se zapocne ranije
+        //     alert("You can't initiate this appointment yet!");
+        //     return;
+        // }
+        console.log(info.event);
+        setStartAppt(info.event.extendedProps);
+        setShowModal(true);
+    }
+
     return (
         <div>
             <FullCalendar
@@ -38,6 +56,8 @@ function WorkCalendar() {
                     }}
                     allDaySlot={false}
                     events={eventi}
+                    initialView='MonthView'
+                    eventClick={initiateAppt}
                     views= {{
                         WeekView: {
                             type: 'timeGrid',
@@ -64,6 +84,7 @@ function WorkCalendar() {
                             buttonText: 'Month View',
                             duration: {months: 1},
                             slotDuration: { days: 1 },
+                            dayMaxEvents: 4,
                             eventContent: function(info){
                                 let propi = info.event.extendedProps;
                                 // return {html: moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm') 
@@ -90,6 +111,7 @@ function WorkCalendar() {
                         }
                     }}
             />
+            <AppointmentStartModal show={showModal} appointment={startAppt} onHide={() => {setShowModal(false); setStartAppt({})}}></AppointmentStartModal>
         </div>
   );
 }

@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.appointment;
 
+import com.team11.PharmacyProject.dto.appointment.AppointmentCalendarDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentDTORequest;
 import org.modelmapper.ModelMapper;
@@ -92,5 +93,24 @@ public class AppointmentController {
 ////        }
 //        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //    }
+
+    @GetMapping(value = "/workers_upcoming", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AppointmentCalendarDTO>> getUpcommingAppointments(
+            @RequestParam(value="id") Long id, @RequestParam(value="page") int page, @RequestParam(value="size") int size)
+    {
+        List<Appointment> appts = appointmentServiceImpl.getUpcomingAppointmentsForWorker(id, page, size);
+        if(appts == null){
+            return new ResponseEntity<List<AppointmentCalendarDTO>>(HttpStatus.NOT_FOUND);
+        }else if (appts.isEmpty()){
+            return new ResponseEntity<List<AppointmentCalendarDTO>>(HttpStatus.NOT_FOUND);
+        }
+
+        List<AppointmentCalendarDTO> dtos = new ArrayList<>(appts.size());
+        for (Appointment appointment : appts) {
+            dtos.add(new AppointmentCalendarDTO(appointment));
+        }
+
+        return new ResponseEntity<List<AppointmentCalendarDTO>>(dtos, HttpStatus.OK);
+    }
 
 }
