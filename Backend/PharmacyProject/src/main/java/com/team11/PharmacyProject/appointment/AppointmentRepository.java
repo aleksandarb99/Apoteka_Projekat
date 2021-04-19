@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.appointment;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT u FROM Appointment u WHERE u.worker.id=?1")
     Iterable<Appointment> findAllAppointmentsByDermatologistId(Long id);
+
+    @Query("SELECT a FROM Appointment  a where a.worker.id=?1 and a.appointmentState='RESERVED' and a.startTime > ?2")
+    List<Appointment> getUpcomingAppointmentsForWorker(Long id, Long startTime, Pageable pg);
+
+    @Query("SELECT a FROM Appointment a join fetch a.patient where a.id=?1")
+    Slice<Appointment> getAppointmentByIdFetchPatient(Long id, Pageable pg);
 }

@@ -1,30 +1,48 @@
 import React, { useState, useEffect } from "react";
 import  {Row, Col, Navbar, Nav, NavDropdown} from "react-bootstrap";
 import AppointmentDerm from "../appointment_component_derm";
+import AppointmentStartModal from "../appointment_start_modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from "axios";
+import api from "../../../app/api";
+import {Card} from "react-bootstrap";
+import moment from "moment";
+import { Link } from "react-router-dom";
 
-// const isToday = (someDate) => {
-//   const today = new Date()
-//   return someDate.getDate() == today.getDate() &&
-//     someDate.getMonth() == today.getMonth() &&
-//     someDate.getFullYear() == today.getFullYear()
-// }
 
 function DermHomePage() {
   const [appointments, setAppointments] = useState([]); 
-  // sortiramo ih - proveri tamo negde kada da ih sortiras
-  // TODO fixovati hardkodovano dermatologist id, kao i time
+  const [showModal, setShowModal] = useState(false);
+  const [startAppt, setStartAppt] = useState({});
 
   useEffect(() => {
+    //todo hardkodovano
     async function fetchAppointments() {
-      const request = await axios.get("http://localhost:8080/api/dermatologist/upcomming/1");
-      setAppointments(request.data.sort((a, b) => a.date - b.date));
-
+      const request = await api.get("http://localhost:8080/api/appointment/workers_upcoming", {params: {'id':5, 'page':0, 'size':10}})
+                                 .then((resp) => setAppointments(resp.data)).catch(() => setAppointments([]));
+      
       return request;
     }
     fetchAppointments();
   }, []);
+
+  const initiateAppt = (appointment) => {
+
+    if (!(moment(Date.now()) > moment(appointment.start).subtract(15, 'minutes'))){
+      // nikako ga ne mozemo zapoceti vise od 15 minuta ranije
+      alert("You can't initiate this appointment yet!");
+      return;
+    }
+    setStartAppt(appointment);
+    setShowModal(true);
+  }
+
+  const onCancelMethod = () => {  
+    console.log('cancel culture');
+    setShowModal(false);
+    //todo i ovo ne zaboravi da ne bude hardkodovano
+    api.get("http://localhost:8080/api/appointment/workers_upcoming", {params: {'id':5, 'page':0, 'size':10}})
+        .then((resp) => setAppointments(resp.data)).catch(() => setAppointments([]));  //resetujemo prikaz
+  }
 
   return (
     <div>
@@ -36,14 +54,11 @@ function DermHomePage() {
           
             <Nav className="m-auto" >
                 <Nav.Link href="#home">Home</Nav.Link>
-                <Nav.Link href="#home">Profile</Nav.Link>
-                <Nav.Link href="#link">Examined patients</Nav.Link>
+                <Nav.Link href="#link">Search patients</Nav.Link>
                 <Nav.Link href="#link">Work callendar</Nav.Link>
-                <NavDropdown title="Appointments" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="#action/3.1">Create an appointment</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">Initiate the appointment</NavDropdown.Item>
-                </NavDropdown>
+                <Nav.Link href="#link">Examined patients</Nav.Link>
                 <Nav.Link href="#link">Request a vacation</Nav.Link>
+                <Nav.Link href="#home">Profile</Nav.Link>
             </Nav>
         </Navbar.Collapse>
         </Navbar>
@@ -55,28 +70,22 @@ function DermHomePage() {
         }
 
         {appointments.map((value, index) => {
-          // if (isToday(value.date)){
-          //   <p>Today</p>
-          // }else{
-          //   <p>not today</p>
-          // }
-
-          // <Row className="justify-content-center m-3 align-items-center" key={index}>
-          return (<Row className="justify-content-center m-5 align-items-center" key={index}>
-            <Col md={8}>
-              <h3>{value.startTime}</h3>
-              {/* {isToday(value.date) ?  */}
-                  {/*  : <h3>{value.date.getDate() + "/" + (value.date.getMonth()+1) + 
-                  "/" + value.date.getFullYear()}</h3> } */}
-            <AppointmentDerm 
-            // time={value.date.getHours() + ":" + value.date.getMinutes()}
-            time="12:00"
-            pharmacy={value.pharmacy.name}
-            price={value.price}
-            patient={value.patient ? value.patient.firstName + " " + value.patient.lastName : 'EMPTY'}
-            id={index}></AppointmentDerm></Col>
+          return (
+            <Row className="justify-content-center m-5 align-items-center" key={index}>
+              <Col md={8}>
+                <Card>
+                  <Card.Body>
+                      <Card.Title>{moment(value.start).format("DD MMM YYYY hh:mm a")} </Card.Title>
+                      <Card.Subtitle className="mb-2">Pharmacy: {value.pharmacy}</Card.Subtitle>
+                      <Card.Subtitle className="mb-2">Patient: {value.patient}</Card.Subtitle>
+                      <Card.Subtitle className="mb-2">Price: {value.price}</Card.Subtitle>
+                      <Card.Link as={Link} to='#' onClick={() => initiateAppt(value)}>Initiate appointment</Card.Link>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>);
          })}
+         <AppointmentStartModal show={showModal} onCancelMethod={onCancelMethod} appointment={startAppt} onHide={() => {setShowModal(false); setStartAppt({})}}></AppointmentStartModal>
     </div>
   );
 }
