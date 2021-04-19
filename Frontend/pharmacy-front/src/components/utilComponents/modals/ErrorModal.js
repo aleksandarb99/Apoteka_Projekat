@@ -23,7 +23,7 @@ function ErrorModal(props) {
                 <Modal.Body className="justify-content-center">
                     <h4>Oops!</h4>
                     <p>{props.message}</p>
-                    <Button variant="outline-secondary" onClick={props.onHide} >Close</Button>
+                    <Button className="float-right" variant="outline-secondary" onClick={props.onHide} >Close</Button>
                 </Modal.Body>
             </Modal >
         </>

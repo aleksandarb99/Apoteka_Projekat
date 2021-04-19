@@ -4,6 +4,8 @@ import { Button, Container, Table } from 'react-bootstrap'
 import DeleteModal from '../utilComponents/modals/DeleteModal';
 import AddPharmacyModal from './AddPharmacyModal';
 import EditPharmacyModal from './EditPharmacyModal';
+import ErrorModal from '../utilComponents/modals/ErrorModal'
+import SuccessModal from '../utilComponents/modals/SuccessModal'
 
 function PharmacyTable(props) {
 
@@ -13,7 +15,10 @@ function PharmacyTable(props) {
     const [pharmacies, setPharmacies] = useState([]);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -32,8 +37,11 @@ function PharmacyTable(props) {
             .delete("http://localhost:8080/api/pharmacy/" + selected.id)
             .then(() => {
                 reloadTable()
-                alert("Pharmacy deleted successfully")
                 setShowDeleteModal(false)
+                setShowSuccessModal(true);
+            })
+            .catch(() => {
+                setShowErrorModal(true);
             })
     }
 
@@ -70,6 +78,8 @@ function PharmacyTable(props) {
             <AddPharmacyModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} />
             <EditPharmacyModal show={showEditModal} pharmacy={selected} onHide={() => setShowEditModal(false)} onSuccess={reloadTable} />
             <DeleteModal title={"Remove " + selected.name} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deletePharmacy} />
+            <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
+            <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Pharmacy deleted successfully."></SuccessModal>
         </Container>
     )
 }

@@ -7,6 +7,7 @@ import MedicineContentFormGroup from "../utilComponents/medicineFormGroups/Medic
 import SideEffectsFormGroup from "../utilComponents/medicineFormGroups/SideEffectsFormGroup"
 import AdditionalNotesFormGroup from "../utilComponents/medicineFormGroups/AdditionalNotesFormGroup"
 import ErrorModal from '../utilComponents/modals/ErrorModal'
+import SuccessModal from '../utilComponents/modals/SuccessModal'
 
 function AddMedicineModal(props) {
 
@@ -14,6 +15,7 @@ function AddMedicineModal(props) {
     const [validated, setValidated] = useState(false)
 
     const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const setField = (field, value) => {
         setForm({
@@ -41,7 +43,7 @@ function AddMedicineModal(props) {
                 setForm({})
                 props.onSuccess()
                 props.onHide()
-                alert('Medicine added successfully')
+                setShowSuccessModal(true);
             })
             .catch(() => {
                 setShowErrorModal(true);
@@ -88,6 +90,7 @@ function AddMedicineModal(props) {
             <Modal.Footer>
             </Modal.Footer>
             <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
+            <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Medicine added successfully."> </SuccessModal>
         </Modal>
     )
 }

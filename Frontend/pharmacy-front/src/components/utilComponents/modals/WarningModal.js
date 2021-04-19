@@ -22,7 +22,7 @@ function WarningModal(props) {
 
                 <Modal.Body className="justify-content-center">
                     <p>{props.message}</p>
-                    <Button variant="outline-secondary" onClick={props.onHide} >Close</Button>
+                    <Button className="float-right" variant="outline-secondary" onClick={props.onHide} >Close</Button>
                 </Modal.Body>
             </Modal >
         </>

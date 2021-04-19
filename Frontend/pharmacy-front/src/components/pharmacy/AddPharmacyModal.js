@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
 import ErrorModal from '../utilComponents/modals/ErrorModal';
+import SuccessModal from '../utilComponents/modals/SuccessModal';
 
 function AddPharmacyModal(props) {
 
@@ -9,6 +10,7 @@ function AddPharmacyModal(props) {
     const [errors, setErrors] = useState({})
 
     const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const setField = (field, value) => {
         setForm({
@@ -56,7 +58,7 @@ function AddPharmacyModal(props) {
                 setForm({})
                 props.onSuccess()
                 props.onHide()
-                alert('Pharmacy added successfully')
+                setShowSuccessModal(true);
             })
             .catch(() => {
                 setShowErrorModal(true);
@@ -116,6 +118,7 @@ function AddPharmacyModal(props) {
             <Modal.Footer>
             </Modal.Footer>
             <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
+            <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Pharmacy added successfully."> </SuccessModal>
         </Modal>
     )
 }
