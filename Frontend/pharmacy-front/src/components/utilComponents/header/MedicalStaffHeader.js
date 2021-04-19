@@ -28,12 +28,12 @@ const MedicalStaffHeader = () => {
 
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    <Nav.Link as={Link} style={{ color: "white" }} to="/">
+                    <Nav.Link as={Link} style={{ color: "white" }} to="/wc">
                         Work Calendar
                     </Nav.Link>
                 </Nav>
                 <Nav>
-                    <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
+                    <Nav.Link as={Link} style={{ color: "white" }} to="/wp">
                         Profile
                     </Nav.Link>
                     <Nav.Link as={Link} style={{ color: "white" }} to="/" onClick={() => handleLogout()}>
