@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import LoginPage from "./components/LoginPage";
@@ -8,7 +7,6 @@ import HomePage from "./components/unregisteredAndPatient/HomePage";
 import PharmacyAdminHomePage from "./components/pharmacyAdmin/PharmacyAdminHomePage";
 import UserProfile from "./components/profile/UserProfile";
 import Footer from "./components/Footer";
-import { Navbar, Nav, Button } from "react-bootstrap";
 import PharmacyProfile from "./components/pharmacyProfile/PharmacyProfile";
 import MedicineProfile from "./components/medicine/MedicineProfile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -18,6 +16,7 @@ import PharmacyCrud from "./components/pharmacy/PharmacyCrud";
 import MedicineCrud from "./components/medicine/MedicineCrud";
 import SearchPatPage from "./components/workers/search_patients";
 import SearchExaminedPatPage from "./components/workers/list_examined";
+import CommonHeader from "./components/utilComponents/header/CommonHeader";
 
 import WorkCalendar from "./components/workers/work_calendar";
 import AppointmentReport from "./components/workers/appointment_report";
@@ -25,53 +24,15 @@ import AppointmentReport from "./components/workers/appointment_report";
 import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
 
+import { getUserTypeFromToken } from './app/jwtTokenUtils'
+
 import "./styling/navbar.css";
-import { House } from "react-bootstrap-icons";
-import { useDispatch } from "react-redux";
-import { logout } from "./app/slices/userSlice";
 
 function App() {
-  const dispatch = useDispatch();
-
   return (
     <Router>
       <div style={{ minHeight: "100vh" }}>
-        <Navbar className="my__navbar" sticky="top" expand="lg">
-          <Navbar.Brand
-            as={Link}
-            style={{ color: "white" }}
-            className="my__navbar__house"
-            to="/"
-          >
-            <House /> Home
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-              <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
-                Profile
-              </Nav.Link>
-            </Nav>
-            <Nav>
-              <Nav.Link as={Link} style={{ color: "white" }} to="/registration">
-                Register
-              </Nav.Link>
-              <Nav.Link as={Link} style={{ color: "white" }} to="/login">
-                Log In
-              </Nav.Link>
-              <Button
-                as={Link}
-                style={{ color: "white" }}
-                onClick={() => {
-                  dispatch(logout());
-                }}
-              >
-                Log Out
-              </Button>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-
+        <CommonHeader />
         <Switch>
           <Route path="/" exact component={HomePage} />
           <Route path="/profile" exact component={UserProfile} />
@@ -96,7 +57,7 @@ function App() {
         </Switch>
       </div>
       <Footer />
-    </Router>
+    </Router >
   );
 }
 

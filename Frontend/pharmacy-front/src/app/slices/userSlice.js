@@ -40,7 +40,6 @@ export const login = ({ email, password }) => async dispatch => {
 
 export const logout = () => async dispatch => {
     try {
-        //const res = await axios.post('http://localhost:8080/api/auth/logout/')
         return dispatch(logoutSuccess())
     } catch (e) {
         return console.error(e.message);
