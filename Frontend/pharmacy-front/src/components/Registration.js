@@ -13,11 +13,16 @@ import StreetFormGroup from "./utilComponents/formGroups/StreetFormGroup"
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router";
+import ErrorModal from "./utilComponents/modals/ErrorModal";
+import SuccessModal from './utilComponents/modals/SuccessModal';
 
 function Registration() {
   const [form, setForm] = useState({})
   const [validated, setValidated] = useState(false)
   const user = useSelector(state => state.user)
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const setField = (field, value) => {
     setForm({
@@ -45,10 +50,10 @@ function Registration() {
       .post('http://localhost:8080/api/users/', newForm)
       .then(() => {
         setForm({})
-        alert('User added successfully')
+        setShowSuccessModal(true);
       })
       .catch(() => {
-        alert('Server error')
+        setShowErrorModal(true);
       })
   }
 
@@ -89,7 +94,9 @@ function Registration() {
         <CountryFormGroup onChange={(event) => setField('country', event.target.value)}></CountryFormGroup>
         <Button variant="primary" type="submit">Submit</Button>
       </Form>
-    </main>
+      <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong. User registration failed."></ErrorModal>
+      <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Successfully registred. Please confirm your email."> </SuccessModal>
+    </main >
   )
 
 }

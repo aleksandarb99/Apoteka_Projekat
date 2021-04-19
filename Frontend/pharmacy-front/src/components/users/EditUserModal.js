@@ -8,12 +8,17 @@ import PhoneNumberFormGroup from '../utilComponents/formGroups/PhoneNumberFormGr
 import CityFormGroup from '../utilComponents/formGroups/CityFormGroup'
 import StreetFormGroup from '../utilComponents/formGroups/StreetFormGroup'
 import CountryFormGroup from '../utilComponents/formGroups/CountryFormGroup'
+import ErrorModal from '../utilComponents/modals/ErrorModal';
+import SuccessModal from '../utilComponents/modals/SuccessModal'
 import axios from 'axios'
 
 function EditUserModal(props) {
 
     const [form, setForm] = useState({})
     const [validated, setValidated] = useState(false)
+
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const setField = (field, value) => {
         setForm({
@@ -51,12 +56,12 @@ function EditUserModal(props) {
             .put('http://localhost:8080/api/users/' + props.user.id, newForm)
             .then(() => {
                 setForm({})
-                alert('User updated successfully')
                 props.onSuccess()
                 props.onHide()
+                setShowSuccessModal(true);
             })
             .catch(() => {
-                alert('Server error')
+                setShowErrorModal(true);
             })
     }
 
@@ -117,6 +122,8 @@ function EditUserModal(props) {
             </Modal.Body>
             <Modal.Footer>
             </Modal.Footer>
+            <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
+            <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="User updated successfully."></SuccessModal>
         </Modal>
     )
 }

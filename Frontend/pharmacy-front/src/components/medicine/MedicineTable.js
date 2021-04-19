@@ -4,7 +4,9 @@ import { Button, Container, Row, Table } from "react-bootstrap";
 import MedicineRow from "./MedicineRow";
 import AddMedicineModal from "./AddMedicineModal";
 import EditMedicineModal from "./EditMedicineModal";
-import DeleteModal from "../utilComponents/DeleteModal";
+import DeleteModal from "../utilComponents/modals/DeleteModal";
+import ErrorModal from '../utilComponents/modals/ErrorModal'
+import SuccessModal from '../utilComponents/modals/SuccessModal'
 
 function MedicineTable() {
   const [reload, setReload] = useState(false);
@@ -15,6 +17,9 @@ function MedicineTable() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -39,9 +44,12 @@ function MedicineTable() {
       .delete("http://localhost:8080/api/medicine/" + selected.id)
       .then(() => {
         reloadTable();
-        alert("Medicine deleted successfully");
         setShowDeleteModal(false);
-      });
+        setShowSuccessModal(true);
+      })
+      .catch(() => {
+        setShowErrorModal(true);
+      })
   };
 
   return (
@@ -93,6 +101,8 @@ function MedicineTable() {
         onHide={() => setShowEditModal(false)}
         onSuccess={reloadTable}
       />
+      <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
+      <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Medicine deleted successfully."></SuccessModal>
     </Container>
   );
 }

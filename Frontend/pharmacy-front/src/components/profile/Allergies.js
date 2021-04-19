@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Button, Modal } from "react-bootstrap";
 import AllergyRow from "./AllergyRow";
-import DeleteModal from "../utilComponents/DeleteModal";
+import DeleteModal from "../utilComponents/modals/DeleteModal";
 import { Plus } from "react-bootstrap-icons";
 import "../../styling/allergies.css";
 

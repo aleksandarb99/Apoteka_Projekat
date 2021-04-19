@@ -1,11 +1,16 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
+import ErrorModal from '../utilComponents/modals/ErrorModal'
+import SuccessModal from '../utilComponents/modals/SuccessModal'
 
 function EditPharmacyModal(props) {
 
     const [form, setForm] = useState({})
     const [errors, setErrors] = useState({})
+
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const showHandler = () => {
         let defaultForm = {
@@ -62,9 +67,12 @@ function EditPharmacyModal(props) {
             .put('http://localhost:8080/api/pharmacy/' + props.pharmacy.id, form)
             .then(() => {
                 setForm({})
-                alert('Pharmacy updated successfully')
+                setShowSuccessModal(true)
                 props.onSuccess()
                 props.onHide()
+            })
+            .catch(() => {
+                setShowErrorModal(true)
             })
     }
 
@@ -120,6 +128,8 @@ function EditPharmacyModal(props) {
             </Modal.Body>
             <Modal.Footer>
             </Modal.Footer>
+            <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
+            <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Pharmacy updated successfully."> </SuccessModal>
         </Modal>
     )
 }

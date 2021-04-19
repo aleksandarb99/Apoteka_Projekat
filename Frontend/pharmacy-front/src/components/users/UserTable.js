@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { Button, Container, Form, Row, Table } from 'react-bootstrap'
 import AddUserModal from './AddUserModal';
 import EditUserModal from './EditUserModal';
-import DeleteModal from '../utilComponents/DeleteModal';
+import DeleteModal from '../utilComponents/modals/DeleteModal';
 import PropTypes from 'prop-types';
 import UserRow from './UserRow';
+import ErrorModal from '../utilComponents/modals/ErrorModal'
+import SuccessModal from '../utilComponents/modals/SuccessModal'
 
 function UserTable({ initialUserType }) {
 
@@ -17,6 +19,9 @@ function UserTable({ initialUserType }) {
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -58,8 +63,11 @@ function UserTable({ initialUserType }) {
             .delete("http://localhost:8080/api/users/" + selected.id)
             .then(() => {
                 reloadTable()
-                alert("User deleted successfully")
                 setShowDeleteModal(false)
+                setShowSuccessModal(true);
+            })
+            .catch(() => {
+                setShowErrorModal(true);
             })
     }
 
@@ -107,6 +115,8 @@ function UserTable({ initialUserType }) {
             <AddUserModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} usertype={currentUserType} />
             <DeleteModal title={"Remove " + selected.firstName + " " + selected.lastName} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deleteUser} />
             <EditUserModal show={showEditModal} user={selected} onHide={() => setShowEditModal(false)} onSuccess={reloadTable} usertype={currentUserType} />
+            <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
+            <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="User deleted successfully."></SuccessModal>
         </Container>
     )
 }
