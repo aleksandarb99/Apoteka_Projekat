@@ -79,4 +79,8 @@ public class PatientService {
     public List<Patient> getAll(){
         return (List<Patient>) patientRepository.findAll();
     }
+
+    public List<Patient> getAllAndFetchAddress(){
+        return patientRepository.getAllAndFetchAddress();
+    }
 }

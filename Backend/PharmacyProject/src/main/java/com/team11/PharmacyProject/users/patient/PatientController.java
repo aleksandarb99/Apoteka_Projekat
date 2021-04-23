@@ -55,7 +55,7 @@ public class PatientController {
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
-        List<Patient> patientsResult = patientService.getAll();
+        List<Patient> patientsResult = patientService.getAllAndFetchAddress();
         List<PatientDTO> patientDTOS = new ArrayList<>();
         for (Patient p :
                 patientsResult) {
