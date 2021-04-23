@@ -64,6 +64,17 @@ public class PatientController {
         return new ResponseEntity<>(patientDTOS, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}/points", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getPatientPoints(@PathVariable("id") Long id) {
+        Patient patient = patientService.getPatient(id);
+
+        if (patient == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(Integer.toString(patient.getPoints()), HttpStatus.OK);
+    }
+
 
     private PatientWorkerSearchDTO convertPatientToWSDTOsorter(Patient pat){
         return new PatientWorkerSearchDTO(pat);

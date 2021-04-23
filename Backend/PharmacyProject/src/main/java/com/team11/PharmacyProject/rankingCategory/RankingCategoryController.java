@@ -16,13 +16,9 @@ public class RankingCategoryController {
     @Autowired
     private RankingCategoryService rankingService;
 
-    @GetMapping(value = "/{points}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/points/{points}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RankingCategory> getCategoryByPoints(@PathVariable("points") int points) {
         RankingCategory category = rankingService.getCategoryByPoints(points);
-
-        if (category == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
 
         return new ResponseEntity<>(category, HttpStatus.OK);
     }

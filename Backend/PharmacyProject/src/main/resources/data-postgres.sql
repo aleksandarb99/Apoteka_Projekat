@@ -171,9 +171,9 @@ insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 1, 7);
 insert into patient (points, penalties, id) values (50, 2, 1);
 insert into patient (points, penalties, id) values (43, 0, 2);
 insert into patient (points, penalties, id) values (13, 0, 3);
-insert into patient (points, penalties, id) values (13, 0, 10);
-insert into patient (points, penalties, id) values (13, 0, 11);
-insert into patient (points, penalties, id) values (13, 0, 12);
+insert into patient (points, penalties, id) values (150, 0, 10);
+insert into patient (points, penalties, id) values (200, 0, 11);
+insert into patient (points, penalties, id) values (305, 0, 12);
 insert into patient (points, penalties, id) values (13, 0, 13);
 
 /*Patients allergies*/
