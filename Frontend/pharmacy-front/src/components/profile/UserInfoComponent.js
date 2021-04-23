@@ -3,9 +3,10 @@ import "../../styling/profile.css";
 import Allergies from "./Allergies";
 import { Button, Form, Alert, Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
+import { getIdFromToken } from "../../app/jwtTokenUtils";
+import PatientBenefits from "./PatientBenefits";
 
 function UserInfo(props) {
-  // States
   const [user, setUser] = useState({});
   const [showUser, setShowUser] = useState({});
   const [isEdit, setEdit] = useState(false);
@@ -14,10 +15,11 @@ function UserInfo(props) {
 
   useEffect(() => {
     async function fetchUser() {
-      //TODO primeniti logiku za dobavljanje korisnika
-
-      const request = await axios.get("http://localhost:8080/api/users/1"); // Zakucan korisnik trenutno TODO izbrisi kasnije
+      const request = await axios.get(
+        "http://localhost:8080/api/users/" + getIdFromToken()
+      );
       setUser(request.data);
+      console.log(user);
 
       return request;
     }
@@ -74,14 +76,14 @@ function UserInfo(props) {
     user.address.country = showUser.country;
 
     axios
-      .put("http://localhost:8080/api/users/1", user)
+      .put("http://localhost:8080/api/users/" + getIdFromToken(), user)
       .then((res) => {
         res.data == null ? setFailed(true) : setSaved(true);
         setUser(res.data);
         setShowUser(res.data);
       })
       .catch(() => {
-        alert("bla");
+        alert("Editing has failed!");
       });
   };
 
@@ -209,6 +211,8 @@ function UserInfo(props) {
       <Row className="justify-content-center m-3">
         <Allergies />
       </Row>
+      <hr />
+      <PatientBenefits />
     </Container>
   );
 }

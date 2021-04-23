@@ -5,6 +5,7 @@ import AllergyRow from "./AllergyRow";
 import DeleteModal from "../utilComponents/modals/DeleteModal";
 import { Plus } from "react-bootstrap-icons";
 import "../../styling/allergies.css";
+import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 function Allergies() {
   const [reload, setReload] = useState(false);
@@ -18,7 +19,7 @@ function Allergies() {
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
-        "http://localhost:8080/api/patients/allergies/all/2" //TODO primeniti logiku za dobaljanje konkretnog pacijenta
+        "http://localhost:8080/api/patients/allergies/all/" + getIdFromToken()
       );
       setAllergies(response.data);
       if (response.data == "") setAllergies(null);
@@ -46,7 +47,10 @@ function Allergies() {
   const deleteAllergy = () => {
     axios
       .delete(
-        "http://localhost:8080/api/patients/allergies/2/" + selectedAllergy.id //TODO primeniti logiku za dobaljanje konkretnog pacijenta
+        "http://localhost:8080/api/patients/allergies/" +
+          getIdFromToken() +
+          "/" +
+          selectedAllergy.id
       )
       .then((res) => {
         if (res.data === "") {
@@ -66,7 +70,10 @@ function Allergies() {
   const addAllergy = () => {
     axios
       .post(
-        "http://localhost:8080/api/patients/allergies/2/" + selectedMedicine.id //TODO primeniti logiku za dobaljanje konkretnog pacijenta
+        "http://localhost:8080/api/patients/allergies/" +
+          getIdFromToken() +
+          "/" +
+          selectedMedicine.id
       )
       .then((res) => {
         if (res.data === "") {

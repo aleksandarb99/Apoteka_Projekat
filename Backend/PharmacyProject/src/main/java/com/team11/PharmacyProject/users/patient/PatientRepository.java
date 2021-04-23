@@ -57,4 +57,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     @Query("SELECT p FROM Patient p JOIN FETCH p.medicineReservation mr WHERE p.id = (:id)")
     Patient findByIdAndFetchReservationsEagerly(@Param("id") Long id);
 
+    @Query("SELECT p FROM Patient p JOIN FETCH p.address")
+    List<Patient> getAllAndFetchAddress();
 }

@@ -79,4 +79,14 @@ public class PatientService {
     public List<Patient> getAll(){
         return (List<Patient>) patientRepository.findAll();
     }
+
+    public List<Patient> getAllAndFetchAddress(){
+        return patientRepository.getAllAndFetchAddress();
+    }
+
+    public Patient getPatient(Long id) {
+        Optional<Patient> patient = patientRepository.findById(id);
+        if(patient.isEmpty()) return null;
+        return patient.get();
+    }
 }

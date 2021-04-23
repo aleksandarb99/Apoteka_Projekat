@@ -171,9 +171,9 @@ insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 1, 7);
 insert into patient (points, penalties, id) values (50, 2, 1);
 insert into patient (points, penalties, id) values (43, 0, 2);
 insert into patient (points, penalties, id) values (13, 0, 3);
-insert into patient (points, penalties, id) values (13, 0, 10);
-insert into patient (points, penalties, id) values (13, 0, 11);
-insert into patient (points, penalties, id) values (13, 0, 12);
+insert into patient (points, penalties, id) values (150, 0, 10);
+insert into patient (points, penalties, id) values (200, 0, 11);
+insert into patient (points, penalties, id) values (305, 0, 12);
 insert into patient (points, penalties, id) values (13, 0, 13);
 
 /*Patients allergies*/
@@ -298,7 +298,12 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
                     values ('RESERVED', 'CONSULTATION', 2, 1618840200000, 1618840230000, 'Placanje u unapred.', 1800, 1, 1, 5);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('RESERVED', 'CONSULTATION', 2, 1619937522009, 1619937622009, 'Placanje u unapred.', 1800, 1, 1, 5);
-
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('RESERVED', 'CONSULTATION', 2, 1618899780000, 1618899900000, 'Placanje u unapred.', 1800, 1, 1, 5);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('RESERVED', 'CONSULTATION', 2, 1618899960000, 1618900020000, 'Placanje u unapred.', 1800, 1, 1, 5);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('RESERVED', 'CONSULTATION', 2, 1618900080000, 1618900140000, 'Placanje u unapred.', 1800, 1, 1, 5);
 
 /*WorkCalendar - Appointments*/
 insert into work_calendar_appointments (work_calendar_id, appointments_id) values (1, 1);
