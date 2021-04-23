@@ -6,6 +6,7 @@ import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
@@ -36,6 +37,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     WorkplaceRepository workplaceRepository;
+
+    @Autowired
+    PatientRepository patientRepository;
 
     public Appointment getNextAppointment(String email, Long workerId) {
         Pageable pp = PageRequest.of(0, 1, Sort.by("startTime").ascending());
@@ -218,5 +222,25 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     }
 
+    @Override
+    public boolean reserveAppointmentForPatient(Long appId, Long patientId) {
 
+        Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
+        if(patient == null) return false;
+
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(appId);
+        if(appointmentOptional.isEmpty()) return false;
+
+        Appointment appointment = appointmentOptional.get();
+        if(appointment.getAppointmentState() != AppointmentState.EMPTY) return false;
+
+        appointment.setAppointmentState(AppointmentState.RESERVED);
+        appointment.setPatient(patient);
+        patient.addAppointment(appointment);
+
+        patientRepository.save(patient);
+
+        return true;
+
+    }
 }

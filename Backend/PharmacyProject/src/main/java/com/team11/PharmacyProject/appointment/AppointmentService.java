@@ -19,4 +19,6 @@ public interface AppointmentService {
     boolean startAppointment(Long id);
 
     boolean cancelAppointment(Long id);
+
+    boolean reserveAppointmentForPatient(Long appId, Long patientId);
 }
