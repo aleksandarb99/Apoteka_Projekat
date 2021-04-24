@@ -13,10 +13,12 @@ import {
 
 import axios from "axios";
 import moment from "moment";
+import { getIdFromToken, getUserTypeFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 
 function AppointmentView({ pharmacyId }) {
+  const [reload, setReload] = useState(false);
   const [appointsments, setAppointsments] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
@@ -34,7 +36,7 @@ function AppointmentView({ pharmacyId }) {
       }
       fetchAppointsments();
     }
-  }, [pharmacyId]);
+  }, [pharmacyId, reload]);
 
   useEffect(() => {
     let maxNumber = Math.floor(appointsments?.length / 12) - 1;
@@ -42,14 +44,14 @@ function AppointmentView({ pharmacyId }) {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
-  }, [appointsments]);
+  }, [appointsments, reload]);
 
   useEffect(() => {
     let first = pagNumber * 12;
     let max =
       appointsments.length < first + 12 ? appointsments?.length : first + 12;
     setShowedAppointsments(appointsments?.slice(first, max));
-  }, [appointsments, pagNumber]);
+  }, [appointsments, pagNumber, reload]);
 
   let handleSlideLeft = () => {
     if (pagNumber !== 0) {
@@ -61,6 +63,24 @@ function AppointmentView({ pharmacyId }) {
     if (pagNumber !== maxPag) {
       setPugNummber(pagNumber + 1);
     }
+  };
+
+  const reserveAppointment = (a) => {
+    axios
+      .post(
+        "http://localhost:8080/api/appointment/reserve/" +
+          a.id +
+          "/patient/" +
+          getIdFromToken()
+      )
+      .then((res) => {
+        if (res.data === "failed") {
+          alert("Failed to reserve appointment!");
+          return;
+        }
+        setReload(!reload);
+        alert("Successfully reserved appointment!");
+      });
   };
 
   return (
@@ -83,11 +103,25 @@ function AppointmentView({ pharmacyId }) {
                   </Card.Body>
                   <ListGroup className="list-group-flush">
                     <ListGroupItem className="my__flex">
+                      {appointsment.price}
+                    </ListGroupItem>
+                    <ListGroupItem className="my__flex">
                       {appointsment?.worker?.lastName}{" "}
                       {appointsment?.worker?.firstName}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
-                      <Button variant="secondary">Reserve</Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => reserveAppointment(appointsment)}
+                        style={{
+                          display:
+                            getUserTypeFromToken() === "PATIENT"
+                              ? "block"
+                              : "none",
+                        }}
+                      >
+                        Reserve
+                      </Button>
                     </ListGroupItem>
                   </ListGroup>
                 </Card>
