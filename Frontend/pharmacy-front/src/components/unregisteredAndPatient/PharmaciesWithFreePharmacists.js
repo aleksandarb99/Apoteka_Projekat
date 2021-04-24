@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 import {
   Row,
@@ -9,7 +8,7 @@ import {
   ListGroup,
   ListGroupItem,
   Pagination,
-  Nav,
+  Table,
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
@@ -19,9 +18,12 @@ import "../../styling/pharmaciesAndMedicines.css";
 
 function PharmaciesWithFreePharmacists() {
   const [pharmacies, setPharmacies] = useState([]);
+  const [workers, setWorkers] = useState([]);
+  const [chosenPharmacy, setChosenPharmacy] = useState(null);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
   const [showedPharmacies, setShowedPharmacies] = useState([]);
+  const [selectedWorker, setSelectedWorker] = useState({});
 
   useEffect(() => {
     async function fetchPharmacies() {
@@ -37,6 +39,23 @@ function PharmaciesWithFreePharmacists() {
     }
     fetchPharmacies();
   }, []);
+
+  useEffect(() => {
+    if (chosenPharmacy == null) return;
+    async function fetchWorkers() {
+      let search_params = new URLSearchParams();
+      search_params.append("date", 1619699400000);
+      search_params.append("id", chosenPharmacy);
+      const request = await axios.get(
+        "http://localhost:8080/api/workers/all/free-pharmacists/pharmacy",
+        { params: search_params }
+      );
+      setWorkers(request.data);
+
+      return request;
+    }
+    fetchWorkers();
+  }, [chosenPharmacy]);
 
   useEffect(() => {
     let maxNumber = Math.floor(pharmacies?.length / 12) - 1;
@@ -63,6 +82,12 @@ function PharmaciesWithFreePharmacists() {
       setPugNummber(pagNumber + 1);
     }
   };
+
+  const updateSelectedWorker = (selectedWorker) => {
+    console.log(selectedWorker);
+    setSelectedWorker(selectedWorker);
+  };
+
   return (
     <Container
       fluid
@@ -81,30 +106,28 @@ function PharmaciesWithFreePharmacists() {
           showedPharmacies.map((pharmacy) => {
             return (
               <Col className="my__flex" key={pharmacy.id} lg={3} md={6} sm={12}>
-                <Nav.Link
-                  as={Link}
-                  className="my__nav__link__card"
-                  to={`/pharmacy/${pharmacy.id}`}
+                <Card
+                  className="my__card"
+                  style={{ width: "18rem" }}
+                  onClick={() => setChosenPharmacy(pharmacy.id)}
                 >
-                  <Card className="my__card" style={{ width: "18rem" }}>
-                    <Card.Body>
-                      <Card.Title>{pharmacy.name}</Card.Title>
-                    </Card.Body>
-                    <ListGroup className="list-group-flush">
-                      <ListGroupItem className="my__flex">
-                        {pharmacy.address}
-                      </ListGroupItem>
-                      <ListGroupItem className="my__flex">
-                        {[...Array(Math.ceil(pharmacy.avgGrade))].map(() => (
-                          <StarFill className="my__star" />
-                        ))}
-                      </ListGroupItem>
-                      <ListGroupItem className="my__flex">
-                        Price: {pharmacy.consultationPrice}
-                      </ListGroupItem>
-                    </ListGroup>
-                  </Card>
-                </Nav.Link>
+                  <Card.Body>
+                    <Card.Title>{pharmacy.name}</Card.Title>
+                  </Card.Body>
+                  <ListGroup className="list-group-flush">
+                    <ListGroupItem className="my__flex">
+                      {pharmacy.address}
+                    </ListGroupItem>
+                    <ListGroupItem className="my__flex">
+                      {[...Array(Math.ceil(pharmacy.avgGrade))].map(() => (
+                        <StarFill className="my__star" />
+                      ))}
+                    </ListGroupItem>
+                    <ListGroupItem className="my__flex">
+                      Price: {pharmacy.consultationPrice}
+                    </ListGroupItem>
+                  </ListGroup>
+                </Card>
               </Col>
             );
           })}
@@ -124,6 +147,53 @@ function PharmaciesWithFreePharmacists() {
             />
           </Pagination>
         </Col>
+      </Row>
+      <Row>
+        <h4
+          style={{
+            display:
+              workers.length == 0 && chosenPharmacy !== null ? "block" : "none",
+            textAlign: "center",
+            width: "100%",
+          }}
+        >
+          No available pharmacists at selected date and pharmacy!
+        </h4>
+        <Table
+          striped
+          bordered
+          variant="light"
+          style={{
+            display:
+              chosenPharmacy !== null && workers.length > 0 ? "table" : "none",
+            width: "50%",
+          }}
+          className="my__table__pharmacies"
+        >
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Average grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {workers &&
+              workers.map((w) => (
+                <tr
+                  key={w.id}
+                  onClick={() => updateSelectedWorker(w)}
+                  className={
+                    selectedWorker.id === w.id
+                      ? "my__row__selected my__table__row"
+                      : "my__table__row"
+                  }
+                >
+                  <td>{w.name}</td>
+                  <td>{w.avgGrade}</td>
+                </tr>
+              ))}
+          </tbody>
+        </Table>
       </Row>
     </Container>
   );
