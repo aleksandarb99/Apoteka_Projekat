@@ -31,4 +31,6 @@ public interface PharmacyService {
     List<Pharmacy> getPharmaciesByMedicineId(Long id);
 
     Pharmacy getPharmacyByIdAndPriceList(Long id);
+
+    List<Pharmacy> getPharmaciesByFreePharmacists(long date);
 }

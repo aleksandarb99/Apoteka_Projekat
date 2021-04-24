@@ -1,9 +1,6 @@
 package com.team11.PharmacyProject.pharmacy;
 
-import com.team11.PharmacyProject.dto.pharmacy.PharmacyAllDTO;
-import com.team11.PharmacyProject.dto.pharmacy.PharmacyCertainMedicineDTO;
-import com.team11.PharmacyProject.dto.pharmacy.PharmacyCrudDTO;
-import com.team11.PharmacyProject.dto.pharmacy.PharmacyDTO;
+import com.team11.PharmacyProject.dto.pharmacy.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +35,22 @@ public class PharmacyController {
         PharmacyDTO dto = convertToDto(pharmacy);
         dto.setPriceListId(pharmacy.getPriceList().getId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PharmacyConsultationDTO>> getPharmaciesByFreePharmacists(@RequestParam(value = "date", required = false) long date) {
+        List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByFreePharmacists(date);
+
+        if (pharmacies.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<PharmacyConsultationDTO> retVal = new ArrayList<>();
+        for(Pharmacy p : pharmacies) {
+            retVal.add(new PharmacyConsultationDTO(p));
+        }
+
+        return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 
     @GetMapping(value = "/medicine/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
