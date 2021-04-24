@@ -126,7 +126,7 @@ function AddAppointment({ idOfPharmacy }) {
   };
 
   return (
-    <Tab.Pane eventKey="fifth">
+    <Tab.Pane eventKey="fourth">
       <h1 className="content-header">Add appointment</h1>
       <hr></hr>
       <Row>
@@ -221,7 +221,7 @@ function AddAppointment({ idOfPharmacy }) {
                   time for your meeting.
                 </p>
               </Alert>
-              <Table striped bordered variant="light">
+              <Table bordered striped variant="dark">
                 <thead>
                   <tr>
                     <th>#</th>

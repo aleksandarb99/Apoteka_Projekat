@@ -1,11 +1,12 @@
 import { React, useState, useEffect } from "react";
-import { Button, Table, Modal } from "react-bootstrap";
+import { Button, Table, Modal, Form } from "react-bootstrap";
 
 import axios from "axios";
 
 function AddingMedicineModal(props) {
   const [medicineList, setMedicineList] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(-1);
+  const [price, setPrice] = useState(2000);
 
   let handleClick = (medicineId) => {
     setSelectedRowId(medicineId);
@@ -29,6 +30,7 @@ function AddingMedicineModal(props) {
     <Modal
       onExited={() => {
         setSelectedRowId(-1);
+        setPrice(2000);
       }}
       {...props}
       size="lg"
@@ -41,7 +43,7 @@ function AddingMedicineModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Table bordered variant="light">
+        <Table bordered hover striped variant="dark">
           <thead>
             <tr>
               <th>#</th>
@@ -71,6 +73,16 @@ function AddingMedicineModal(props) {
               ))}
           </tbody>
         </Table>
+        <Form.Group controlId="pricePicker" di>
+          <Form.Label>Starting price</Form.Label>
+          <Form.Control
+            type="number"
+            value={price}
+            disabled={selectedRowId == -1}
+            onChange={(event) => setPrice(Number.parseInt(event.target.value))}
+            min="0"
+          />
+        </Form.Group>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={props.onHide}>
@@ -80,7 +92,7 @@ function AddingMedicineModal(props) {
           disabled={selectedRowId == -1}
           variant="primary"
           onClick={() => {
-            props.handleAdd(selectedRowId);
+            props.handleAdd(selectedRowId, price);
           }}
         >
           Save Changes

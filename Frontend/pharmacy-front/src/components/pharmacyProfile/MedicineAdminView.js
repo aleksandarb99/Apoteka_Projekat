@@ -77,7 +77,7 @@ function MedicinesView({ priceListId, pharmacyId }) {
                 <Nav.Link
                   as={Link}
                   className="my__nav__link__card"
-                  to={`/medicine/${medicine.id}/pharmacy/${pharmacyId}`}
+                  to={`/medicine/${medicine?.medicine?.id}/pharmacy/${pharmacyId}`}
                 >
                   <Card className="my__card" style={{ width: "18rem" }}>
                     <Card.Body>

@@ -5,7 +5,9 @@ public interface PriceListService {
 
     PriceList findById(long id);
 
-    PriceList insertMedicine(long id, long medicineId);
+    PriceList insertMedicine(long id, long medicineId, int startingPrice);
+
+    PriceList changePrice(long id, long medicineId, int startingPrice);
 
     PriceList removeMedicine(long id, long medicineId);
 

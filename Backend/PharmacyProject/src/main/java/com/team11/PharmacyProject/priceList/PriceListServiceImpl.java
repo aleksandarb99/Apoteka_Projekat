@@ -53,14 +53,44 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
-    public PriceList insertMedicine(long id, long medicineId) {
+    public PriceList changePrice(long id, long medicineItemId, int newPrice) {
+        PriceList priceList = findByIdAndFetchMedicineItems(id);
+        if (priceList == null) return null;
+
+        MedicineItem medicineItem = medicineItemService.findById(medicineItemId);
+        if (medicineItem == null) return null;
+
+        if (newPrice < 0) return null;
+
+        MedicinePrice medicinePrice = new MedicinePrice(newPrice, new Date().getTime(), new ArrayList<>());
+
+        boolean isThatMedicineInPricelist = false;
+        for (MedicineItem mi:priceList.getMedicineItems()) {
+            if(mi.getId().equals(medicineItemId)){
+                mi.getMedicinePrices().add(medicinePrice);
+                isThatMedicineInPricelist = true;
+            }
+        }
+        if(!isThatMedicineInPricelist){
+            return null;
+        }
+
+        priceListRepository.save(priceList);
+        priceList = findByIdAndFetchMedicineItems(id);
+        return priceList;
+    }
+
+    @Override
+    public PriceList insertMedicine(long id, long medicineId, int startintPrice) {
         PriceList priceList = findByIdAndFetchMedicineItems(id);
         if (priceList == null) return null;
 
         Medicine medicine = medicineService.findOne(medicineId);
         if (medicine == null) return null;
 
-        MedicinePrice medicinePrice = new MedicinePrice(0, new Date().getTime(), new ArrayList<>());
+        if (startintPrice < 0) return null;
+
+        MedicinePrice medicinePrice = new MedicinePrice(startintPrice, new Date().getTime(), new ArrayList<>());
         List<MedicinePrice> list = new ArrayList<>();
         list.add(medicinePrice);
 

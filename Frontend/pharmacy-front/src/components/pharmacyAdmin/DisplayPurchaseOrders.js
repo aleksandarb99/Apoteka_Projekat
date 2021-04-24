@@ -64,7 +64,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
   };
 
   return (
-    <Tab.Pane eventKey="eight">
+    <Tab.Pane eventKey="seventh">
       <h1 className="content-header">Purchase orders</h1>
       <hr></hr>
       <Row>
