@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.appointment;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT u FROM Appointment u WHERE u.appointmentState = 'EMPTY' AND u.pharmacy.id=?1 AND u.startTime > ?2")
     Iterable<Appointment> findFreeAppointmentsByPharmacyId(Long id, Long currentTime);
+
+    @Query("SELECT u FROM Appointment u WHERE u.appointmentState = 'EMPTY' AND u.pharmacy.id=?1 AND u.startTime > ?2")
+    Iterable<Appointment> findFreeAppointmentsByPharmacyId(Long id, Long currentTime, Sort sorter);
 
     @Query("SELECT u FROM Appointment u WHERE u.pharmacy.id=?1 AND u.worker.id =?2")
     Iterable<Appointment> findFreeAppointmentsByPharmacyIdAndWorkerId(Long id, Long id2);

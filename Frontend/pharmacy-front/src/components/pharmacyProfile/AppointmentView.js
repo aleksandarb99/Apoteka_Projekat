@@ -9,6 +9,7 @@ import {
   ListGroupItem,
   Pagination,
   Button,
+  Form,
 } from "react-bootstrap";
 
 import axios from "axios";
@@ -23,6 +24,7 @@ function AppointmentView({ pharmacyId }) {
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
   const [showedAppointsments, setShowedAppointsments] = useState([]);
+  const [sorter, setSorter] = useState("none");
 
   useEffect(() => {
     if (pharmacyId != undefined) {
@@ -83,9 +85,84 @@ function AppointmentView({ pharmacyId }) {
       });
   };
 
+  const formSearch = (event) => {
+    event.preventDefault();
+
+    if (sorter === "none") return;
+
+    let search_params = new URLSearchParams();
+
+    if (sorter === "ascPrice") {
+      search_params.append("sort", "price,asc");
+    }
+    if (sorter === "descPrice") {
+      search_params.append("sort", "price,desc");
+    }
+    if (sorter === "ascGrade") {
+      search_params.append("sort", "worker.avgGrade,asc");
+    }
+    if (sorter === "descGrade") {
+      search_params.append("sort", "worker.avgGrade,desc");
+    }
+
+    axios
+      .get(
+        `http://localhost:8080/api/appointment/bypharmacyid/${pharmacyId}/sort`,
+        {
+          params: search_params,
+        }
+      )
+      .then((resp) => setAppointsments(resp.data))
+      .catch(setAppointsments([]));
+  };
+
+  const updateSorting = (event) => {
+    setSorter(event.target.value);
+  };
+
   return (
     <Tab.Pane eventKey="third">
       <Container fluid>
+        <Row className="justify-content-center m-3">
+          <Form onSubmit={formSearch}>
+            <Form.Group as={Row} className="align-items-center">
+              <Col>
+                <Form.Label>Choose sorter: </Form.Label>
+                <Form.Control
+                  as="select"
+                  value={sorter}
+                  onChange={updateSorting.bind(this)}
+                  name="sorter"
+                >
+                  <option value="none">none</option>
+                  <option value="ascPrice">Price (ascending)</option>
+                  <option value="descPrice">Price (descending)</option>
+                  <option value="ascGrade">
+                    Dermatologist grade (ascending)
+                  </option>
+                  <option value="descGrade">
+                    Dermatologist grade (descending)
+                  </option>
+                </Form.Control>
+              </Col>
+              <Col className="justify-content-center">
+                <Button type="submit" variant="primary">
+                  {" "}
+                  Sort{" "}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setReload(!reload);
+                  }}
+                >
+                  {" "}
+                  Reset{" "}
+                </Button>
+              </Col>
+            </Form.Group>
+          </Form>
+        </Row>
         <Row>
           {showedAppointsments &&
             showedAppointsments.map((appointsment, index) => (

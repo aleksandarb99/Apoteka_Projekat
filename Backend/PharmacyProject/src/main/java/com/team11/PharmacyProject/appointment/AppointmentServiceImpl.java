@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.appointment;
 
+import com.team11.PharmacyProject.dto.appointment.AppointmentCheckupReservationDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
@@ -61,6 +62,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         Date date = new Date();
         Long currentTime = date.getTime();
         appointmentRepository.findFreeAppointmentsByPharmacyId(id, currentTime).forEach(appointments::add);
+        return appointments;
+    }
+
+    public List<Appointment> getFreeAppointmentsByPharmacyId(Long id, Sort sorter) {
+        List<Appointment> appointments = new ArrayList<>();
+        Date date = new Date();
+        Long currentTime = date.getTime();
+        appointmentRepository.findFreeAppointmentsByPharmacyId(id, currentTime, sorter).forEach(appointments::add);
         return appointments;
     }
 
@@ -223,16 +232,16 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public boolean reserveAppointmentForPatient(Long appId, Long patientId) {
+    public AppointmentCheckupReservationDTO reserveAppointmentForPatient(Long appId, Long patientId) {
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
-        if(patient == null) return false;
+        if(patient == null) return null;
 
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(appId);
-        if(appointmentOptional.isEmpty()) return false;
+        if(appointmentOptional.isEmpty()) return null;
 
         Appointment appointment = appointmentOptional.get();
-        if(appointment.getAppointmentState() != AppointmentState.EMPTY) return false;
+        if(appointment.getAppointmentState() != AppointmentState.EMPTY) return null;
 
         appointment.setAppointmentState(AppointmentState.RESERVED);
         appointment.setPatient(patient);
@@ -240,7 +249,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         patientRepository.save(patient);
 
-        return true;
+        return new AppointmentCheckupReservationDTO(patient, appointment);
 
     }
 }
