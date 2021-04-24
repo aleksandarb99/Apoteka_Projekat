@@ -9,18 +9,22 @@ import {
   ListGroupItem,
   Pagination,
   Button,
+  Form,
 } from "react-bootstrap";
 
 import axios from "axios";
 import moment from "moment";
+import { getIdFromToken, getUserTypeFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 
 function AppointmentView({ pharmacyId }) {
+  const [reload, setReload] = useState(false);
   const [appointsments, setAppointsments] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
   const [showedAppointsments, setShowedAppointsments] = useState([]);
+  const [sorter, setSorter] = useState("none");
 
   useEffect(() => {
     if (pharmacyId != undefined) {
@@ -34,7 +38,7 @@ function AppointmentView({ pharmacyId }) {
       }
       fetchAppointsments();
     }
-  }, [pharmacyId]);
+  }, [pharmacyId, reload]);
 
   useEffect(() => {
     let maxNumber = Math.floor(appointsments?.length / 12) - 1;
@@ -42,14 +46,14 @@ function AppointmentView({ pharmacyId }) {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
-  }, [appointsments]);
+  }, [appointsments, reload]);
 
   useEffect(() => {
     let first = pagNumber * 12;
     let max =
       appointsments.length < first + 12 ? appointsments?.length : first + 12;
     setShowedAppointsments(appointsments?.slice(first, max));
-  }, [appointsments, pagNumber]);
+  }, [appointsments, pagNumber, reload]);
 
   let handleSlideLeft = () => {
     if (pagNumber !== 0) {
@@ -63,9 +67,102 @@ function AppointmentView({ pharmacyId }) {
     }
   };
 
+  const reserveAppointment = (a) => {
+    axios
+      .post(
+        "http://localhost:8080/api/appointment/reserve/" +
+          a.id +
+          "/patient/" +
+          getIdFromToken()
+      )
+      .then((res) => {
+        if (res.data === "failed") {
+          alert("Failed to reserve appointment!");
+          return;
+        }
+        setReload(!reload);
+        alert("Successfully reserved appointment!");
+      });
+  };
+
+  const formSearch = (event) => {
+    event.preventDefault();
+
+    if (sorter === "none") return;
+
+    let search_params = new URLSearchParams();
+
+    if (sorter === "ascPrice") {
+      search_params.append("sort", "price,asc");
+    }
+    if (sorter === "descPrice") {
+      search_params.append("sort", "price,desc");
+    }
+    if (sorter === "ascGrade") {
+      search_params.append("sort", "worker.avgGrade,asc");
+    }
+    if (sorter === "descGrade") {
+      search_params.append("sort", "worker.avgGrade,desc");
+    }
+
+    axios
+      .get(
+        `http://localhost:8080/api/appointment/bypharmacyid/${pharmacyId}/sort`,
+        {
+          params: search_params,
+        }
+      )
+      .then((resp) => setAppointsments(resp.data))
+      .catch(setAppointsments([]));
+  };
+
+  const updateSorting = (event) => {
+    setSorter(event.target.value);
+  };
+
   return (
     <Tab.Pane eventKey="third">
       <Container fluid>
+        <Row className="justify-content-center m-3">
+          <Form onSubmit={formSearch}>
+            <Form.Group as={Row} className="align-items-center">
+              <Col>
+                <Form.Label>Choose sorter: </Form.Label>
+                <Form.Control
+                  as="select"
+                  value={sorter}
+                  onChange={updateSorting.bind(this)}
+                  name="sorter"
+                >
+                  <option value="none">none</option>
+                  <option value="ascPrice">Price (ascending)</option>
+                  <option value="descPrice">Price (descending)</option>
+                  <option value="ascGrade">
+                    Dermatologist grade (ascending)
+                  </option>
+                  <option value="descGrade">
+                    Dermatologist grade (descending)
+                  </option>
+                </Form.Control>
+              </Col>
+              <Col className="justify-content-center">
+                <Button type="submit" variant="primary">
+                  {" "}
+                  Sort{" "}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setReload(!reload);
+                  }}
+                >
+                  {" "}
+                  Reset{" "}
+                </Button>
+              </Col>
+            </Form.Group>
+          </Form>
+        </Row>
         <Row>
           {showedAppointsments &&
             showedAppointsments.map((appointsment, index) => (
@@ -83,11 +180,25 @@ function AppointmentView({ pharmacyId }) {
                   </Card.Body>
                   <ListGroup className="list-group-flush">
                     <ListGroupItem className="my__flex">
+                      {appointsment.price}
+                    </ListGroupItem>
+                    <ListGroupItem className="my__flex">
                       {appointsment?.worker?.lastName}{" "}
                       {appointsment?.worker?.firstName}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
-                      <Button variant="secondary">Reserve</Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => reserveAppointment(appointsment)}
+                        style={{
+                          display:
+                            getUserTypeFromToken() === "PATIENT"
+                              ? "block"
+                              : "none",
+                        }}
+                      >
+                        Reserve
+                      </Button>
                     </ListGroupItem>
                   </ListGroup>
                 </Card>

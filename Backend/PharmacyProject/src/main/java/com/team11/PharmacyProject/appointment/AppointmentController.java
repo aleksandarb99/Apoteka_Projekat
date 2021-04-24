@@ -1,16 +1,21 @@
 package com.team11.PharmacyProject.appointment;
 
 import com.team11.PharmacyProject.dto.appointment.AppointmentCalendarDTO;
+import com.team11.PharmacyProject.dto.appointment.AppointmentCheckupReservationDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentDTORequest;
+import com.team11.PharmacyProject.email.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +27,10 @@ public class AppointmentController {
 
     @Autowired
     AppointmentServiceImpl appointmentServiceImpl;
+
+    @Autowired
+    EmailService emailService;
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -45,6 +54,13 @@ public class AppointmentController {
     @GetMapping(value = "/bypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AppointmentDTO>> getFreeAppointmentsByPharmacyId(@PathVariable("id") Long id) {
         List<AppointmentDTO> appointmentsDTO = appointmentServiceImpl.getFreeAppointmentsByPharmacyId(id).stream().map(m -> modelMapper.map(m, AppointmentDTO.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/bypharmacyid/{id}/sort", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AppointmentDTO>> getFreeAppointmentsByPharmacyIdSorting(Pageable pageable, @PathVariable("id") Long id) {
+        Sort sorter = pageable.getSort();
+        List<AppointmentDTO> appointmentsDTO = appointmentServiceImpl.getFreeAppointmentsByPharmacyId(id, sorter).stream().map(m -> modelMapper.map(m, AppointmentDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
     }
 
@@ -132,6 +148,22 @@ public class AppointmentController {
             return new ResponseEntity<String>("Cancelled the appointment", HttpStatus.OK);
         }else{
             return new ResponseEntity<String>("Couldn't cancel the appointment",HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(value = "/reserve/{idA}/patient/{idP}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> reserveAppointmentForPatient(@PathVariable("idP") Long patientId, @PathVariable("idA") Long appId) {
+
+        AppointmentCheckupReservationDTO dto = appointmentServiceImpl.reserveAppointmentForPatient(appId, patientId);
+        if (dto != null) {
+            try {
+                emailService.notifyPatientAboutReservedCheckup(dto);
+            } catch (Exception e) {
+                e.printStackTrace();        // Verovatno moze puci zbog nedostatka interneta, ili ako nije dozvoljeno za manje bezbedne aplikacije itd.
+            }
+            return new ResponseEntity<>("reserved", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("failed", HttpStatus.OK);
         }
     }
 

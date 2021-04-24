@@ -101,4 +101,12 @@ public class Patient extends MyUser {
       medicineReservation.add(reservation);
       return true;
    }
+
+   public boolean addAppointment(Appointment appointment) {
+      for (Appointment a : appointments) {
+         if (a.getId().equals(appointment.getId())) return false;
+      }
+      appointments.add(appointment);
+      return true;
+   }
 }

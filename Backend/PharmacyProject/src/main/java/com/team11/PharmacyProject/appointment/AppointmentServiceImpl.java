@@ -1,11 +1,13 @@
 package com.team11.PharmacyProject.appointment;
 
+import com.team11.PharmacyProject.dto.appointment.AppointmentCheckupReservationDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
@@ -37,6 +39,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     WorkplaceRepository workplaceRepository;
 
+    @Autowired
+    PatientRepository patientRepository;
+
     public Appointment getNextAppointment(String email, Long workerId) {
         Pageable pp = PageRequest.of(0, 1, Sort.by("startTime").ascending());
         List<Appointment> result = appointmentRepository.getUpcommingAppointment(email, workerId, pp);
@@ -57,6 +62,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         Date date = new Date();
         Long currentTime = date.getTime();
         appointmentRepository.findFreeAppointmentsByPharmacyId(id, currentTime).forEach(appointments::add);
+        return appointments;
+    }
+
+    public List<Appointment> getFreeAppointmentsByPharmacyId(Long id, Sort sorter) {
+        List<Appointment> appointments = new ArrayList<>();
+        Date date = new Date();
+        Long currentTime = date.getTime();
+        appointmentRepository.findFreeAppointmentsByPharmacyId(id, currentTime, sorter).forEach(appointments::add);
         return appointments;
     }
 
@@ -218,5 +231,25 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     }
 
+    @Override
+    public AppointmentCheckupReservationDTO reserveAppointmentForPatient(Long appId, Long patientId) {
 
+        Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
+        if(patient == null) return null;
+
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(appId);
+        if(appointmentOptional.isEmpty()) return null;
+
+        Appointment appointment = appointmentOptional.get();
+        if(appointment.getAppointmentState() != AppointmentState.EMPTY) return null;
+
+        appointment.setAppointmentState(AppointmentState.RESERVED);
+        appointment.setPatient(patient);
+        patient.addAppointment(appointment);
+
+        patientRepository.save(patient);
+
+        return new AppointmentCheckupReservationDTO(patient, appointment);
+
+    }
 }
