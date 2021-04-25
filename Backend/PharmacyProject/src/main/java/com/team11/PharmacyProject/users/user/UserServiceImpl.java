@@ -84,4 +84,19 @@ public class UserServiceImpl implements UserService {
             return true;
         }
     }
+
+    @Override
+    public boolean setPassword(Long userId, String newPassword) {
+        MyUser currentUser = userRepository.findFirstById(userId);
+        String newPasswordHash = passwordEncoder.encode(newPassword);
+        // You can set password only once (first login)
+        if (currentUser.isPasswordChanged()) {
+            return false;
+        } else {
+            currentUser.setPassword(newPasswordHash);
+            currentUser.setPasswordChanged(true);
+            userRepository.save(currentUser);
+            return true;
+        }
+    }
 }

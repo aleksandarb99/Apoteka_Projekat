@@ -1,10 +1,7 @@
 package com.team11.PharmacyProject.users.user;
 
-import com.team11.PharmacyProject.dto.user.ChangePasswordDTO;
-import com.team11.PharmacyProject.dto.user.UserCrudDTO;
-import com.team11.PharmacyProject.dto.user.UserDTO;
+import com.team11.PharmacyProject.dto.user.*;
 import com.team11.PharmacyProject.dto.UserUpdateDTO;
-import com.team11.PharmacyProject.dto.user.UserProfileInfoDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +92,16 @@ public class UserController {
         }
     }
 
-    ;
+    @PutMapping(value = "/set-password/{id}")
+    public ResponseEntity<String> setPassword(@PathVariable("id") Long userId, @RequestBody SetPasswordDTO setPassword) {
+        // TODO validation
+        String newPassword = setPassword.getNewPassword();
+        if (userService.setPassword(userId, newPassword)) {
+            return new ResponseEntity<>("Password set successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error. Password not set.", HttpStatus.FORBIDDEN);
+        }
+    }
 
     private UserCrudDTO convertToCrudDto(MyUser user) {
         return mapper.map(user, UserCrudDTO.class);

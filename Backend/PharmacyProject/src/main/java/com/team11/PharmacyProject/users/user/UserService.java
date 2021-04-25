@@ -16,4 +16,6 @@ public interface UserService {
     boolean delete(long id);
 
     boolean changePassword(Long userId, String oldPassword, String newPassword);
+
+    boolean setPassword(Long userId, String newPassword);
 }
