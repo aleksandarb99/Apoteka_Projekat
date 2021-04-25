@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import LoginPage from "./components/LoginPage";
 import Registration from "./components/Registration";
-import HomePage from "./components/unregisteredAndPatient/HomePage";
+import HomePage from "./components/utilComponents/HomePage";
 import PharmacyAdminHomePage from "./components/pharmacyAdmin/PharmacyAdminHomePage";
 import UserProfile from "./components/profile/UserProfile";
 import Footer from "./components/Footer";

@@ -1,9 +1,11 @@
-import React from 'react'
-import { Modal, Form } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Modal, Form, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import PasswordFormGroup from '../formGroups/PasswordFormGroup'
 import api from '../../../app/api'
-import getIdFromToken from '../../../app/jwtTokenUtils'
+import { getIdFromToken } from '../../../app/jwtTokenUtils'
+import ErrorModal from '../modals/ErrorModal'
+import { logout } from '../../../app/slices/userSlice'
 
 // Use when user is logging in for the first time
 const SetPasswordModal = () => {
@@ -45,7 +47,7 @@ const SetPasswordModal = () => {
     }
 
     return (
-        <Modal {...props} show={passwordSet}>
+        <Modal show={passwordSet}>
             <Modal.Header className="justify-content-center" backdrop="static" onHide={handleClose} closeButton>
                 <p>Welcome! Please set new password!</p>
             </Modal.Header>

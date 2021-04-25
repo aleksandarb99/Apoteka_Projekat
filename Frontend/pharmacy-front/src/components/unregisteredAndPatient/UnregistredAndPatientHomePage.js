@@ -4,7 +4,7 @@ import { Nav, Tab, Row, Col } from "react-bootstrap";
 import PharmaciesView from "./PharmaciesView";
 import MedicinesView from "./MedicinesView";
 
-function HomePage() {
+function UnregistredAndPatientHomePage() {
   return (
     <main className="unregistered__home__page">
       <Tab.Container id="left-tabs-example" defaultActiveKey="first">
@@ -35,4 +35,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default UnregistredAndPatientHomePage;
