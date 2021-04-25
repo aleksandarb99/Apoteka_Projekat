@@ -7,6 +7,7 @@ import com.team11.PharmacyProject.dto.pharmacy.PharmacyConsultationDTO;
 import com.team11.PharmacyProject.dto.pharmacyWorker.PharmacyWorkerFreePharmacistDTO;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,8 +42,8 @@ public class PharmacyWorkerController {
     }
 
     @GetMapping(value = "/all/free-pharmacists/pharmacy", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PharmacyWorkerFreePharmacistDTO>> getPharmaciesByFreePharmacists(@RequestParam(value = "date", required = false) long date, @RequestParam(value = "id", required = false) Long id) {
-        List<PharmacyWorker> workers = pharmacyWorkerService.getFreePharmacistsByPharmacyIdAndDate(id, date);
+    public ResponseEntity<List<PharmacyWorkerFreePharmacistDTO>> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date, @RequestParam(value = "id", required = false) Long id) {
+        List<PharmacyWorker> workers = pharmacyWorkerService.getFreePharmacistsByPharmacyIdAndDate(id, date, pageable.getSort());
 
         if(workers == null) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);

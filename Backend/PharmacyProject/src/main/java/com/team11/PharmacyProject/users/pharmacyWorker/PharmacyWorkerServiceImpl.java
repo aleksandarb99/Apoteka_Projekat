@@ -1,25 +1,17 @@
 package com.team11.PharmacyProject.users.pharmacyWorker;
 
 import com.team11.PharmacyProject.appointment.Appointment;
-import com.team11.PharmacyProject.appointment.AppointmentRepository;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
@@ -36,7 +28,7 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
     }
 
     @Override
-    public List<PharmacyWorker> getFreePharmacistsByPharmacyIdAndDate(Long id, long date) {
+    public List<PharmacyWorker> getFreePharmacistsByPharmacyIdAndDate(Long id, long date, Sort sorter) {
 
         Pharmacy pharmacy = pharmacyRepository.getPharmacyByIdAndFetchWorkplaces(id);
         if (pharmacy == null) return  null;
@@ -86,6 +78,18 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
                 }
             }
         }
+
+        if (sorter.toString().equals("UNSORTED"))
+            return chosenWorkers;
+
+        if(sorter.toString().equals("avgGrade: DESC"))
+            chosenWorkers = chosenWorkers.stream()
+                    .sorted(Comparator.comparingDouble(PharmacyWorker::getAvgGrade).reversed())
+                    .collect(Collectors.toList());
+        else
+            chosenWorkers = chosenWorkers.stream()
+                    .sorted(Comparator.comparingDouble(PharmacyWorker::getAvgGrade))
+                    .collect(Collectors.toList());
 
         return chosenWorkers;
     }

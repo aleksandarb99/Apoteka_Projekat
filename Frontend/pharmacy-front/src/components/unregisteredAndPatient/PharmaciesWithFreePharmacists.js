@@ -35,6 +35,8 @@ function PharmaciesWithFreePharmacists() {
   const [dateInPastAlert, setDateInPastAlert] = useState(false);
   const [sorter, setSorter] = useState("none");
   const [reload, setReload] = useState(false);
+  const [sorter2, setSorter2] = useState("none");
+  const [reload2, setReload2] = useState(false);
 
   useEffect(() => {
     if (requestedDate == null) return;
@@ -68,7 +70,7 @@ function PharmaciesWithFreePharmacists() {
       return request;
     }
     fetchWorkers();
-  }, [chosenPharmacy]);
+  }, [chosenPharmacy, reload2]);
 
   useEffect(() => {
     let maxNumber = Math.floor(pharmacies?.length / 12) - 1;
@@ -115,6 +117,7 @@ function PharmaciesWithFreePharmacists() {
       });
     setChosenPharmacy(null);
     setSelectedWorker({});
+    setWorkers([]);
   };
 
   const changeDate = (date) => {
@@ -177,6 +180,34 @@ function PharmaciesWithFreePharmacists() {
     setSorter(event.target.value);
   };
 
+  const formSearch2 = (event) => {
+    event.preventDefault();
+
+    if (sorter2 === "none") return;
+
+    let search_params = new URLSearchParams();
+
+    if (sorter2 === "ascGrade") {
+      search_params.append("sort", "avgGrade,asc");
+    }
+    if (sorter2 === "descGrade") {
+      search_params.append("sort", "avgGrade,desc");
+    }
+
+    search_params.append("date", requestedDate);
+    search_params.append("id", chosenPharmacy);
+    axios
+      .get("http://localhost:8080/api/workers/all/free-pharmacists/pharmacy", {
+        params: search_params,
+      })
+      .then((resp) => setWorkers(resp.data))
+      .catch(setWorkers([]));
+  };
+
+  const updateSorting2 = (event) => {
+    setSorter2(event.target.value);
+  };
+
   return (
     <Container
       fluid
@@ -184,6 +215,7 @@ function PharmaciesWithFreePharmacists() {
         backgroundColor: "rgba(162, 211, 218, 0.897)",
         minHeight: "100vh",
         paddingTop: "30px",
+        paddingBottom: "30px",
       }}
     >
       <Row>
@@ -337,6 +369,45 @@ function PharmaciesWithFreePharmacists() {
         >
           No available pharmacists at selected date and pharmacy!
         </h4>
+      </Row>
+      <Row className="justify-content-center m-5">
+        <Form
+          onSubmit={formSearch2}
+          style={{ display: workers.length === 0 ? "none" : "block" }}
+        >
+          <Form.Group as={Row} className="align-items-center">
+            <Col className="my__flex" md={6} lg={6}>
+              <Form.Label style={{ marginRight: "20px" }}>Sorter: </Form.Label>
+              <Form.Control
+                as="select"
+                value={sorter2}
+                onChange={updateSorting2.bind(this)}
+                name="sorter2"
+              >
+                <option value="none">none</option>
+                <option value="ascGrade">Pharmacist grade (ascending)</option>
+                <option value="descGrade">Pharmacist grade (descending)</option>
+              </Form.Control>
+            </Col>
+            <Col className="justify-content-center" md={6} lg={6}>
+              <Button type="submit" variant="primary">
+                {" "}
+                Sort{" "}
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setReload2(!reload2);
+                }}
+              >
+                {" "}
+                Reset{" "}
+              </Button>
+            </Col>
+          </Form.Group>
+        </Form>
+      </Row>
+      <Row>
         <Table
           striped
           bordered
