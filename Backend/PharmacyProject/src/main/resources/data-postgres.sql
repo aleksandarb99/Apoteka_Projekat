@@ -360,8 +360,8 @@ insert into workplace_work_days (workplace_id, work_days_id) values (5, 29);
 insert into workplace_work_days (workplace_id, work_days_id) values (5, 30);
 insert into workplace_work_days (workplace_id, work_days_id) values (5, 31);
 /* Farmaceut 16 - radi prvih 6 dana u nedelji*/
-insert into workplace_work_days (workplace_id, work_days_id) values (6, 32);
-insert into workplace_work_days (workplace_id, work_days_id) values (6, 33);
+insert into workplace_work_days (workplace_id, work_days_id) values (6, 12);
+insert into workplace_work_days (workplace_id, work_days_id) values (6, 13);
 insert into workplace_work_days (workplace_id, work_days_id) values (6, 34);
 insert into workplace_work_days (workplace_id, work_days_id) values (6, 35);
 insert into workplace_work_days (workplace_id, work_days_id) values (6, 36);
