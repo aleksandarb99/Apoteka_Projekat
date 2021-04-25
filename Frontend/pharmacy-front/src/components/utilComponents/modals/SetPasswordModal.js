@@ -8,11 +8,11 @@ import ErrorModal from '../modals/ErrorModal'
 import { logout } from '../../../app/slices/userSlice'
 
 // Use when user is logging in for the first time
-const SetPasswordModal = () => {
+const SetPasswordModal = ({ isPasswordSet }) => {
 
     const [validated, setValidated] = useState(false)
     const [showErrorModal, setShowErrorModal] = useState(false)
-    const [passwordSet, setPasswordSet] = useState(false)
+    const [passwordSet, setPasswordSet] = useState(isPasswordSet)
 
     const [form, setForm] = useState({})
     const setField = (field, value) => {
@@ -41,18 +41,18 @@ const SetPasswordModal = () => {
     }
 
     const handleSet = () => {
-        api.put("localhost:8080//api/users/set-password/" + getIdFromToken(), form)
-            .then(setPasswordSet(false))
+        api.put("http://localhost:8080/api/users/set-password/" + getIdFromToken(), form)
+            .then(setPasswordSet(true))
             .catch(setShowErrorModal(true))
     }
 
     return (
-        <Modal show={passwordSet}>
+        <Modal show={!passwordSet}>
             <Modal.Header className="justify-content-center" backdrop="static" onHide={handleClose} closeButton>
                 <p>Welcome! Please set new password!</p>
             </Modal.Header>
             <Modal.Body className="justify-content-center">
-                <Form onSubmit={handleSubmit} validated={validated}>
+                <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <PasswordFormGroup onChange={(event) => setField('newPassword', event.target.value)}></PasswordFormGroup>
                     <Button className="float-center" variant="outline-secondary" type="submit" >Set Password</Button>
                 </Form>
@@ -60,6 +60,10 @@ const SetPasswordModal = () => {
             <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
         </Modal >
     )
+}
+
+SetPasswordModal.defaultProps = {
+    isPasswordSet: false
 }
 
 export default SetPasswordModal
