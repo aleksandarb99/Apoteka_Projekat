@@ -76,14 +76,6 @@ public class PatientController {
     }
 
 
-    private PatientWorkerSearchDTO convertPatientToWSDTOsorter(Patient pat){
-        return new PatientWorkerSearchDTO(pat);
-    }
-
-    private PatientWorkerSearchDTO convertPatientToWSDTOdesc(Patient pat){
-        return new PatientWorkerSearchDTO(pat, false);
-    }
-
     @GetMapping(value = "/getExaminedPatients", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PatientWorkerSearchDTO>> getExaminedPatients(
             Pageable pageable,
@@ -91,52 +83,45 @@ public class PatientController {
             @RequestParam(value = "firstName", required = false) String firstName,
             @RequestParam(value = "lastName", required = false) String lastName,
             @RequestParam(value = "lowerTime", required = false) Long lowerTime,
-            @RequestParam(value = "upperTime", required = false) Long upperTime,
-            @RequestParam(value = "sortDate", required = false) String dateSorting) //dateSorting je za datum posl pregleda
+            @RequestParam(value = "upperTime", required = false) Long upperTime) //dateSorting je za datum posl pregleda
     {
         //TODO promeniti workerID kad se doda login i jwt
         //TODO probati kasnije sa specifikacijama
-        //TODO videti za sorter datuma, trenutno je a.startTime
         if (firstName == null){
             firstName = "";
         }
         if (lastName == null){
             lastName = "";
         }
+        if (lowerTime != null && upperTime != null){
+            if (lowerTime >= upperTime){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
         List<Patient> patients;
         List<PatientWorkerSearchDTO> dtos = new ArrayList<>();
-        if (dateSorting == null)
-        {
-            Sort sorter = pageable.getSort();
-            patients = patientService.getExaminedPatients(workerID, firstName, lastName, lowerTime, upperTime, sorter);
-            for (Patient pat: patients) {
-                dtos.add(this.convertPatientToWSDTOsorter(pat));
+        Sort sorter = pageable.getSort();
+        Sort checked = Sort.unsorted();
+        for (Sort.Order srt : sorter){
+            if (srt.getProperty().equals("firstName")){
+                checked = checked.and(srt.getDirection().toString().equalsIgnoreCase("asc")
+                        ? Sort.by("firstName").ascending() : Sort.by("firstName").descending());
+            }else if (srt.getProperty().equals("lastName")){
+                checked = checked.and(srt.getDirection().toString().equalsIgnoreCase("asc")
+                        ? Sort.by("lastName").ascending() : Sort.by("lastName").descending());
+            }else if (srt.getProperty().equals("startTime")){
+                checked = checked.and(srt.getDirection().toString().equalsIgnoreCase("asc")
+                        ? Sort.by("a.startTime").ascending() : Sort.by("a.startTime").descending());
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        else {
-            Sort sorter = pageable.getSort().and(Sort.by("a.startTime").descending()); //dodajemo mu sorter za desc svakako
-            patients = patientService.getExaminedPatients(workerID, firstName, lastName, lowerTime, upperTime, sorter);
-            for (Patient pat: patients) { //probaj vec ovde reverse
-                dtos.add(this.convertPatientToWSDTOdesc(pat));
-            }
-            if (dateSorting.equals("asc")){
-                Collections.reverse(dtos);
-            }
+        patients = patientService.getExaminedPatients(workerID, firstName, lastName, lowerTime, upperTime, checked);
+        for (Patient pat: patients) {
+            dtos.add(new PatientWorkerSearchDTO(pat));
         }
-//        } if (dateSorting.equalsIgnoreCase("asc"))
-//        {
-//            Pageable newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
-//                    pageable.getSort().and(Sort.by("a.startTime").ascending()));
-//
-//            patients = patientService.getExaminedPatients(workerID, firstName, lastName, lowerTime, upperTime, newPageable);
-//            dtos = patients.map(this::convertPatientToWSDTOasc);
-//        }
-//        else {
-//            Pageable newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
-//                    pageable.getSort().and(Sort.by("a.startTime").descending()));
-//            patients = patientService.getExaminedPatients(workerID, firstName, lastName, lowerTime, upperTime, newPageable);
-//            dtos = patients.map(this::convertPatientToWSDTOdesc);
-//        }
+
         //todo kod paginacije ga ispresecaj lepo
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
@@ -148,7 +133,7 @@ public class PatientController {
         List<Patient> patients = patientService.getAllExaminedPatients(workerID);
         List<PatientWorkerSearchDTO> dtos = new ArrayList<>();
         for (Patient pat: patients) {
-            dtos.add(this.convertPatientToWSDTOsorter(pat));
+            dtos.add(new PatientWorkerSearchDTO(pat));
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }

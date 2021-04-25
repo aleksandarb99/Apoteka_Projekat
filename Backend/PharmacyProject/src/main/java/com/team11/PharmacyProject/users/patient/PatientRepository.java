@@ -19,35 +19,27 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     List<Patient> searchPatientsByFirstAndLastName(String firstName, String lastName);
 
 
-//    "select p from Patient p inner join p.appointments a " +
-//            "where a.worker.id = :workerID and a.appointmentState = 'FINISHED' "+
-//            "and (:firstName is null or lower(p.firstName) like lower(concat('%', :firstName, '%'))) " +
-//            "and (:lastName is null or lower(p.lastName) like lower(concat('%', :lastName, '%'))) " +
-//            "and (:lowerTime is null or a.startTime > :lowerTime) " +
-//            "and (:upperTime is null or a.startTime < :upperTime)"
-
-//    , @Param("firstName") String firstName,
-//    @Param("lastName") String lastName,
-//    @Param("lowerTime") Long lowerTime,
-//    @Param("upperTime") Long upperTime, Pageable pageable
-
-//    countQuery = "SELECT count(p) FROM Patient p join p.appointments a " +
-//            "where a.worker.id = :workerID and a.appointmentState = 'FINISHED'")
-
     @Query(value = "select distinct p from Patient p join fetch p.appointments a " +
             "where a.worker.id = :workerID and a.appointmentState = 'FINISHED'"+
             "and (:firstName is null or lower(p.firstName) like lower(concat('%', :firstName, '%'))) " +
             "and (:lastName is null or lower(p.lastName) like lower(concat('%', :lastName, '%'))) " +
-            "and (:lowerTime is null or a.startTime > :lowerTime) " +
-            "and (:upperTime is null or a.startTime < :upperTime)")
+            "and a.startTime = " +
+                "(select max(app.startTime) from p.appointments app " +
+                "where a.worker.id = :workerID and app.appointmentState = 'FINISHED'"+
+                "and (:lowerTime is null or app.startTime >= :lowerTime) " +
+                "and (:upperTime is null or app.startTime <= :upperTime))")
     List<Patient> getExaminedPatients(@Param("workerID") Long workerID,
                                        @Param("firstName") String firstName,
                                        @Param("lastName") String lastName,
                                        @Param("lowerTime") Long lowerTime,
                                        @Param("upperTime") Long upperTime, Sort sort);
 
-    @Query(value = "select distinct p from Patient p join fetch p.appointments a " +
-            "where a.worker.id = :workerID and a.appointmentState = 'FINISHED'")
+
+    @Query(value = "select distinct p from Patient p join fetch p.appointments ap " +
+            "where ap.worker.id = :workerID and ap.appointmentState = 'FINISHED' " +
+            "and ap.startTime = " +
+                "(select max(app.startTime) from p.appointments app " +
+                "where app.worker.id = :workerID and app.appointmentState = 'FINISHED')")
     List<Patient> getAllExaminedPatients(@Param("workerID") Long workerID);
 
 

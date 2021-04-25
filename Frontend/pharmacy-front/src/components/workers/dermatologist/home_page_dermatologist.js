@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Navbar, Nav, NavDropdown } from "react-bootstrap";
-import AppointmentDerm from "../appointment_component_derm";
 import AppointmentStartModal from "../appointment_start_modal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import api from "../../../app/api";
+import { getUserTypeFromToken } from '../../../app/jwtTokenUtils'
+import { getIdFromToken } from '../../../app/jwtTokenUtils'
 
 import { Card } from "react-bootstrap";
 import moment from "moment";
@@ -17,14 +18,18 @@ function DermHomePage() {
   useEffect(() => {
     //todo hardkodovano
     async function fetchAppointments() {
-      const request = await api
+      let id = getIdFromToken();
+      if (!id){
+        alert("invalid user!")
+        setAppointments([]);
+        return;
+      }
+      await api
         .get(
-          "http://localhost:8080/api/appointment/workers_upcoming?id=5&page=0&size=10"
+          "http://localhost:8080/api/appointment/workers_upcoming?id=" + id + "&page=0&size=10"
         )
         .then((resp) => setAppointments(resp.data))
         .catch(() => setAppointments([]));
-
-      return request;
     }
     fetchAppointments();
   }, []);
@@ -42,12 +47,15 @@ function DermHomePage() {
   };
 
   const onCancelMethod = () => {
-    console.log("cancel culture");
     setShowModal(false);
-    //todo i ovo ne zaboravi da ne bude hardkodovano
+    let id_derm = getIdFromToken();
+    if (!id_derm){
+      alert("invalid user!");
+      return;
+    }
     api
       .get("http://localhost:8080/api/appointment/workers_upcoming", {
-        params: { id: 5, page: 0, size: 10 },
+        params: { id: id_derm, page: 0, size: 10 },
       })
       .then((resp) => setAppointments(resp.data))
       .catch(() => setAppointments([])); //resetujemo prikaz
@@ -55,7 +63,7 @@ function DermHomePage() {
 
   return (
     <div>
-      <Navbar bg="dark" variant="dark">
+      {/* <Navbar bg="dark" variant="dark">
         <Navbar.Brand href="#home">Dermatologist</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -68,7 +76,7 @@ function DermHomePage() {
             <Nav.Link href="#home">Profile</Nav.Link>
           </Nav>
         </Navbar.Collapse>
-      </Navbar>
+      </Navbar> */}
 
       <Row className="justify-content-center m-3 align-items-center">
         <h2>Upcomming appointments</h2>
@@ -106,7 +114,7 @@ function DermHomePage() {
                     to="#"
                     onClick={() => initiateAppt(value)}
                   >
-                    Initiate appointment
+                     Appointment
                   </Card.Link>
                 </Card.Body>
               </Card>
