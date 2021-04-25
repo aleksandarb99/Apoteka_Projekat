@@ -1,17 +1,23 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.address.Address;
+import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.enums.AppointmentState;
+import com.team11.PharmacyProject.enums.AppointmentType;
+import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
+import com.team11.PharmacyProject.workDay.WorkDay;
+import com.team11.PharmacyProject.workplace.Workplace;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +28,9 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Autowired
     MedicineService medicineService;
+
+    @Autowired
+    PharmacyWorkerRepository workerRepository;
 
     @Override
     public boolean insertMedicine(Long pharmacyId, Long medicineId) {
@@ -140,6 +149,67 @@ public class PharmacyServiceImpl implements PharmacyService {
     @Override
     public Pharmacy getPharmacyByIdAndPriceList(Long id) {
         return pharmacyRepository.getPharmacyByIdAndPriceList(id);
+    }
+
+    @Override
+    public List<Pharmacy> getPharmaciesByFreePharmacists(long date, Sort sorter) {
+
+        List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchWorkplaces(sorter);
+
+        if (pharmacies.size() == 0) return  null;
+
+        Date requestedDateAndTime = new Date(date);
+        Date requestedDateAndTimeEnd = new Date(date + 15 * 60000L);
+        Date today = new Date();
+        if (requestedDateAndTime.before(today)) return null;
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(requestedDateAndTime);
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
+        List<Pharmacy> chosenPharmacies = new ArrayList<>();
+        for(Pharmacy p : pharmacies) {
+            boolean pharmacyIsChosen = false;
+            for (Workplace wp : p.getWorkplaces()) {
+                if (pharmacyIsChosen) break;
+                if (wp.getWorker().getUserType() != UserType.PHARMACIST) continue;
+
+                for (WorkDay wd : wp.getWorkDays()) {
+                    if (wd.getWeekday().ordinal() + 1 == dayOfWeek) {
+                        int requestedTime = c.get(Calendar.HOUR_OF_DAY);
+
+                        if (requestedTime < wd.getStartTime() || requestedTime > wd.getEndTime()) continue;
+
+                        boolean isPharmacistFree = true;
+                        // Kad prebacimo u lazi, prepravi da kad gore dobavim apoteke, fetchujem i workere i njihove appointemnte
+                        for (Appointment a : workerRepository.getPharmacyWorkerForCalendar(wp.getWorker().getId()).getAppointmentList()) {
+                            Date startTime = new Date(a.getStartTime());
+                            Date endTime = new Date(a.getEndTime());
+                            if(startTime.compareTo(requestedDateAndTime) == 0) {
+                                isPharmacistFree = false;
+                                break;
+                            }
+                            if(requestedDateAndTime.after(startTime) && requestedDateAndTime.before(endTime)) {
+                                isPharmacistFree = false;
+                                break;
+                            }
+                            if(requestedDateAndTimeEnd.after(startTime) && requestedDateAndTimeEnd.before(endTime)) {
+                                isPharmacistFree = false;
+                                break;
+                            }
+                        }
+
+                        if(!isPharmacistFree) continue;
+
+                        chosenPharmacies.add(p);
+                        pharmacyIsChosen = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return chosenPharmacies;
     }
 
 }

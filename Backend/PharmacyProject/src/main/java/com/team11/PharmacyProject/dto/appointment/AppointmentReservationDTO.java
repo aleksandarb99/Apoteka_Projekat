@@ -6,7 +6,7 @@ import com.team11.PharmacyProject.users.patient.Patient;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class AppointmentCheckupReservationDTO {
+public class AppointmentReservationDTO {
 
     private String firstName;
     private String lastName;
@@ -17,17 +17,26 @@ public class AppointmentCheckupReservationDTO {
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
-    public AppointmentCheckupReservationDTO() {
+    public AppointmentReservationDTO() {
 
     }
 
-    public AppointmentCheckupReservationDTO(Patient patient, Appointment appointment) {
+    public AppointmentReservationDTO(Patient patient, Appointment appointment) {
         setFirstName(patient.getFirstName());
         setLastName(patient.getLastName());
         setEmail(patient.getEmail());
         setStartTime(appointment.getStartTime());
         setEndTime(appointment.getEndTime());
         setPrice(appointment.getPrice());
+    }
+
+    public AppointmentReservationDTO(Appointment a) {
+        setFirstName(a.getPatient().getFirstName());
+        setLastName(a.getPatient().getLastName());
+        setEmail(a.getPatient().getEmail());
+        setStartTime(a.getStartTime());
+        setEndTime(a.getEndTime());
+        setPrice(a.getPrice());
     }
 
     public String getFirstName() {

@@ -3,7 +3,11 @@ package com.team11.PharmacyProject.users.pharmacyWorker;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.appointment.AppointmentCalendarDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentDTO;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyConsultationDTO;
+import com.team11.PharmacyProject.dto.pharmacyWorker.PharmacyWorkerFreePharmacistDTO;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,5 +39,21 @@ public class PharmacyWorkerController {
         }
 
         return new ResponseEntity<List<AppointmentCalendarDTO>>(appts, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/all/free-pharmacists/pharmacy", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PharmacyWorkerFreePharmacistDTO>> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date, @RequestParam(value = "id", required = false) Long id) {
+        List<PharmacyWorker> workers = pharmacyWorkerService.getFreePharmacistsByPharmacyIdAndDate(id, date, pageable.getSort());
+
+        if(workers == null) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
+
+        List<PharmacyWorkerFreePharmacistDTO> retVal = new ArrayList<>();
+        for(PharmacyWorker pw : workers) {
+            retVal.add(new PharmacyWorkerFreePharmacistDTO(pw));
+        }
+
+        return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 }
