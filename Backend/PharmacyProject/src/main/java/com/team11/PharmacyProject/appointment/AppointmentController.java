@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -149,12 +148,12 @@ public class AppointmentController {
     }
 
     @PostMapping(value = "/reserve/{idA}/patient/{idP}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> reserveAppointmentForPatient(@PathVariable("idP") Long patientId, @PathVariable("idA") Long appId) {
+    public ResponseEntity<String> reserveCheckupForPatient(@PathVariable("idP") Long patientId, @PathVariable("idA") Long appId) {
 
-        AppointmentCheckupReservationDTO dto = appointmentServiceImpl.reserveAppointmentForPatient(appId, patientId);
+        AppointmentReservationDTO dto = appointmentServiceImpl.reserveCheckupForPatient(appId, patientId);
         if (dto != null) {
             try {
-                emailService.notifyPatientAboutReservedCheckup(dto);
+                emailService.notifyPatientAboutReservedAppointment(dto, "Pregled");
             } catch (Exception e) {
                 e.printStackTrace();        // Verovatno moze puci zbog nedostatka interneta, ili ako nije dozvoljeno za manje bezbedne aplikacije itd.
             }
@@ -167,10 +166,10 @@ public class AppointmentController {
     @PostMapping(value = "/reserve-consultation/pharmacy/{idPh}/pharmacist/{idW}/patient/{idPa}/date/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> reserveConsultationForPatient(@PathVariable("idPa") Long patientId, @PathVariable("idW") Long workerId, @PathVariable("idPh") Long pharmacyId, @PathVariable("date") Long date) {
 
-        AppointmentConsultationReservationDTO dto = appointmentServiceImpl.reserveConsultationForPatient(workerId, patientId, pharmacyId, date);
+        AppointmentReservationDTO dto = appointmentServiceImpl.reserveConsultationForPatient(workerId, patientId, pharmacyId, date);
         if (dto != null) {
             try {
-                emailService.notifyPatientAboutReservedConsultation(dto);
+                emailService.notifyPatientAboutReservedAppointment(dto, "Savetovanje");
             } catch (Exception e) {
                 e.printStackTrace();        // Verovatno moze puci zbog nedostatka interneta, ili ako nije dozvoljeno za manje bezbedne aplikacije itd.
             }
