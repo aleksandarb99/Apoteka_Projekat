@@ -114,12 +114,55 @@ insert into price_list_medicine_items (price_list_id, medicine_items_id) values 
 insert into work_day (weekday, start_time, end_time) values ('MON', 8, 16);
 insert into work_day (weekday, start_time, end_time) values ('TUE', 8, 16);
 insert into work_day (weekday, start_time, end_time) values ('WED', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('THU', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('FRI', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('MON', 7, 15);
+insert into work_day (weekday, start_time, end_time) values ('TUE', 7, 15);
 insert into work_day (weekday, start_time, end_time) values ('THU', 7, 15);
 insert into work_day (weekday, start_time, end_time) values ('FRI', 7, 15);
+insert into work_day (weekday, start_time, end_time) values ('WED', 7, 15);
+insert into work_day (weekday, start_time, end_time) values ('MON', 15, 23);
+insert into work_day (weekday, start_time, end_time) values ('TUE', 15, 23);
+insert into work_day (weekday, start_time, end_time) values ('THU', 15, 23);
+insert into work_day (weekday, start_time, end_time) values ('FRI', 15, 23);
+insert into work_day (weekday, start_time, end_time) values ('WED', 15, 23);
+insert into work_day (weekday, start_time, end_time) values ('SAT', 10, 18);
+insert into work_day (weekday, start_time, end_time) values ('SUN', 10, 18);
 insert into work_day (weekday, start_time, end_time) values ('MON', 8, 16);
-insert into work_day (weekday, start_time, end_time) values ('TUE', 10, 17);
-insert into work_day (weekday, start_time, end_time) values ('THU', 10, 17);
+insert into work_day (weekday, start_time, end_time) values ('TUE', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('WED', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('THU', 8, 16);
 insert into work_day (weekday, start_time, end_time) values ('FRI', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('SUN', 10, 18);
+insert into work_day (weekday, start_time, end_time) values ('SAT', 10, 18);
+insert into work_day (weekday, start_time, end_time) values ('SUN', 9, 17);
+insert into work_day (weekday, start_time, end_time) values ('SAT', 9, 17);
+insert into work_day (weekday, start_time, end_time) values ('MON', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('TUE', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('WED', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('THU', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('FRI', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('SAT', 9, 17);
+insert into work_day (weekday, start_time, end_time) values ('MON', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('TUE', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('WED', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('THU', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('FRI', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('SAT', 9, 17);
+insert into work_day (weekday, start_time, end_time) values ('MON', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('TUE', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('WED', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('THU', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('FRI', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('SAT', 9, 17);
+insert into work_day (weekday, start_time, end_time) values ('MON', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('TUE', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('WED', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('THU', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('FRI', 8, 16);
+insert into work_day (weekday, start_time, end_time) values ('MON', 7, 15);
+insert into work_day (weekday, start_time, end_time) values ('TUE', 7, 15);
+insert into work_day (weekday, start_time, end_time) values ('WED', 7, 15);
 
 /*MyUsers*/
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
@@ -164,12 +207,27 @@ insert into my_user (password, first_name, last_name, email, telephone, user_typ
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
                             'Carli', 'Barli', 'carli@gmail.com', '08435555341', 'DERMATOLOGIST', 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$QUxaJq2WEdqSwPxT.BePtuD9xI1S74agszK6CR.rN20BpZhbhleAG',
+                            'Pavle', 'Majstorovic', 'pavle@gmail.com', '0631111111', 'PHARMACIST', 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$QUxaJq2WEdqSwPxT.BePtuD9xI1S74agszK6CR.rN20BpZhbhleAG',
+                            'Milica', 'Golubovic', 'milicag@gmail.com', '0632222222', 'PHARMACIST', 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$QUxaJq2WEdqSwPxT.BePtuD9xI1S74agszK6CR.rN20BpZhbhleAG',
+                            'Tatjana', 'Lukic', 'tatjanal@gmail.com', '0633333333', 'PHARMACIST', 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$QUxaJq2WEdqSwPxT.BePtuD9xI1S74agszK6CR.rN20BpZhbhleAG',
+                            'Lea', 'Savic', 'leas@gmail.com', '0634444444', 'PHARMACIST', 3, false, true);
 
 /*Pharmacy Workers*/
-insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.9, 1, 5);
 insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 2, 6);
 insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 1, 7);
 insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (3.3, 1, 14);
+insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (3.7, 1, 15);
+insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.5, 1, 16);
+insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (1.2, 1, 17);
+insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (5.0, 1, 18);
 
 /*Patients*/
 insert into patient (points, penalties, id) values (50, 2, 1);
@@ -248,44 +306,96 @@ insert into complaint_response (response_text, date, complaint_id, user_id)
                     values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602000, 2, 7);
 
 /*Pharmacies*/
-insert into pharmacy (avg_grade, description, name, address_id, price_list_id)
-                    values (4.4, 'Najjaca apoteka u gradu.', 'Zelena Apoteka', 1, 1);
-insert into pharmacy (avg_grade, description, name, address_id, price_list_id)
-                    values (4.8, 'Poverenje, sigurnost i dostupnost su, već skoro 30 godina, glavna obeležja Apotekarske ustanove Jankovic.', 'Apoteka Jankovic', 1, 2);
-insert into pharmacy (avg_grade, description, name, address_id, price_list_id)
-                    values (2.9, 'Poručite sve što vam je potrebno na vašu kućnu adresu. Imas veliki izbor i sjajanu cenu samo na BENU online shop-u.', 'Benu Apoteka', 2, 3);
+insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, address_id, price_list_id)
+                    values (4.4, 500, 15, 'Najjaca apoteka u gradu.', 'Zelena Apoteka', 1, 1);
+insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, address_id, price_list_id)
+                    values (4.8, 450, 10, 'Poverenje, sigurnost i dostupnost su, već skoro 30 godina, glavna obeležja Apotekarske ustanove Jankovic.', 'Apoteka Jankovic', 1, 2);
+insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, address_id, price_list_id)
+                    values (2.9, 200, 5, 'Poručite sve što vam je potrebno na vašu kućnu adresu. Imas veliki izbor i sjajanu cenu samo na BENU online shop-u.', 'Benu Apoteka', 2, 3);
 
 /*Pharmacy - Subscribers*/
 insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (1, 1);
 insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (3, 2);
 
 /*Workplaces*/
-insert into workplace (pharmacy_id, worker_id) values (1, 5);
-insert into workplace (pharmacy_id, worker_id) values (1, 7);
-insert into workplace (pharmacy_id, worker_id) values (2, 6);
-insert into workplace (pharmacy_id, worker_id) values (3, 6);
+insert into workplace (pharmacy_id, worker_id) values (1, 6); /* Farmaceut */
+insert into workplace (pharmacy_id, worker_id) values (1, 7); /* Dermatolog */
+insert into workplace (pharmacy_id, worker_id) values (2, 7); /* Dermatolog */
+insert into workplace (pharmacy_id, worker_id) values (2, 14); /* Dermatolog */
+insert into workplace (pharmacy_id, worker_id) values (2, 15); /* Farmaceut */
+insert into workplace (pharmacy_id, worker_id) values (2, 16); /* Farmaceut */
+insert into workplace (pharmacy_id, worker_id) values (3, 17); /* Farmaceut */
+insert into workplace (pharmacy_id, worker_id) values (3, 18); /* Farmaceut */
+insert into workplace (pharmacy_id, worker_id) values (3, 14); /* Dermatolog */
 
 /*Workplace - WorkDays*/
+/* Farmaceut 6 - radi prvih 6 dana u nedelji*/
 insert into workplace_work_days (workplace_id, work_days_id) values (1, 1);
 insert into workplace_work_days (workplace_id, work_days_id) values (1, 2);
-insert into workplace_work_days (workplace_id, work_days_id) values (2, 3);
-insert into workplace_work_days (workplace_id, work_days_id) values (3, 4);
-insert into workplace_work_days (workplace_id, work_days_id) values (3, 5);
-insert into workplace_work_days (workplace_id, work_days_id) values (2, 6);
-insert into workplace_work_days (workplace_id, work_days_id) values (2, 7);
-insert into workplace_work_days (workplace_id, work_days_id) values (2, 8);
-insert into workplace_work_days (workplace_id, work_days_id) values (2, 9);
-
+insert into workplace_work_days (workplace_id, work_days_id) values (1, 3);
+insert into workplace_work_days (workplace_id, work_days_id) values (1, 4);
+insert into workplace_work_days (workplace_id, work_days_id) values (1, 5);
+insert into workplace_work_days (workplace_id, work_days_id) values (1, 16);
+/* Dermatolog 7 u apoteci 1 - radi prvih 5 dana u nedelji i nedeljom*/
+insert into workplace_work_days (workplace_id, work_days_id) values (2, 18);
+insert into workplace_work_days (workplace_id, work_days_id) values (2, 19);
+insert into workplace_work_days (workplace_id, work_days_id) values (2, 20);
+insert into workplace_work_days (workplace_id, work_days_id) values (2, 21);
+insert into workplace_work_days (workplace_id, work_days_id) values (2, 22);
+insert into workplace_work_days (workplace_id, work_days_id) values (2, 23);
+/* Dermatolog 7 u apoteci 2 - radi prvih 6 dana u nedelji*/
+insert into workplace_work_days (workplace_id, work_days_id) values (3, 6);
+insert into workplace_work_days (workplace_id, work_days_id) values (3, 7);
+insert into workplace_work_days (workplace_id, work_days_id) values (3, 8);
+insert into workplace_work_days (workplace_id, work_days_id) values (3, 9);
+insert into workplace_work_days (workplace_id, work_days_id) values (3, 10);
+insert into workplace_work_days (workplace_id, work_days_id) values (3, 24);
+/* Dermatolog 14 u apoteci 2 - radi samo vikednom */
+insert into workplace_work_days (workplace_id, work_days_id) values (4, 25);
+insert into workplace_work_days (workplace_id, work_days_id) values (4, 26);
+/* Farmaceut 15 - radi prvih 5 dana u nedelji*/
+insert into workplace_work_days (workplace_id, work_days_id) values (5, 27);
+insert into workplace_work_days (workplace_id, work_days_id) values (5, 28);
+insert into workplace_work_days (workplace_id, work_days_id) values (5, 29);
+insert into workplace_work_days (workplace_id, work_days_id) values (5, 30);
+insert into workplace_work_days (workplace_id, work_days_id) values (5, 31);
+/* Farmaceut 16 - radi prvih 6 dana u nedelji*/
+insert into workplace_work_days (workplace_id, work_days_id) values (6, 12);
+insert into workplace_work_days (workplace_id, work_days_id) values (6, 13);
+insert into workplace_work_days (workplace_id, work_days_id) values (6, 34);
+insert into workplace_work_days (workplace_id, work_days_id) values (6, 35);
+insert into workplace_work_days (workplace_id, work_days_id) values (6, 36);
+insert into workplace_work_days (workplace_id, work_days_id) values (6, 37);
+/* Farmaceut 17 - radi prvih 6 dana u nedelji*/
+insert into workplace_work_days (workplace_id, work_days_id) values (7, 38);
+insert into workplace_work_days (workplace_id, work_days_id) values (7, 39);
+insert into workplace_work_days (workplace_id, work_days_id) values (7, 40);
+insert into workplace_work_days (workplace_id, work_days_id) values (7, 41);
+insert into workplace_work_days (workplace_id, work_days_id) values (7, 42);
+insert into workplace_work_days (workplace_id, work_days_id) values (7, 43);
+/* Farmaceut 18 - radi prvih 6 dana u nedelji*/
+insert into workplace_work_days (workplace_id, work_days_id) values (8, 44);
+insert into workplace_work_days (workplace_id, work_days_id) values (8, 45);
+insert into workplace_work_days (workplace_id, work_days_id) values (8, 46);
+insert into workplace_work_days (workplace_id, work_days_id) values (8, 47);
+insert into workplace_work_days (workplace_id, work_days_id) values (8, 48);
+insert into workplace_work_days (workplace_id, work_days_id) values (8, 49);
+/* Dermatolog 14 u apoteci 3 - radi prva 3 dana u nedelji*/
+insert into workplace_work_days (workplace_id, work_days_id) values (9, 50);
+insert into workplace_work_days (workplace_id, work_days_id) values (9, 51);
+insert into workplace_work_days (workplace_id, work_days_id) values (9, 52);
 
 /*Appointments*/
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-values ('FINISHED', 'CONSULTATION', 2, 1611800300000, 1611801300000, 'Placanje u unapred.', 1800, 3, 1, 6);
+                    values ('FINISHED', 'CONSULTATION', 2, 1611800300000, 1611801300000, 'Placanje u unapred.', 1800, 3, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1637354000000, 1637354003000, 'Placanje u kesu.', 1500, 1, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CONSULTATION', 2, 1617354000000, 1617361200000, 'Placanje u unapred.', 1800, 2, 2, 6);
+                    values ('RESERVED', 'CHECKUP', 2, 1617354000000, 1617361200000, 'Placanje u unapred.', 1800, 2, 2, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('RESERVED', 'CONSULTATION', 2, 1617800000000, 1617800300000, 'Placanje u unapred.', 1800, 1, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CONSULTATION', 2, 1617800300000, 1617801300000, 'Placanje u unapred.', 1800, 3, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1617800300000, 1617801300000, 'Placanje u unapred.', 1800, 3, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
@@ -305,19 +415,19 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('RESERVED', 'CHECKUP', 2, 1619937522009, 1619937622009, 'Placanje u unapred.', 1800, 1, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-values ('RESERVED', 'CHECKUP', 2, 1618899780000, 1618899900000, 'Placanje u unapred.', 1800, 1, 1, 7);
+                    values ('RESERVED', 'CHECKUP', 2, 1618899780000, 1618899900000, 'Placanje u unapred.', 1800, 1, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-values ('RESERVED', 'CHECKUP', 2, 1618899960000, 1618900020000, 'Placanje u unapred.', 1800, 1, 1, 7);
+                    values ('RESERVED', 'CHECKUP', 2, 1618899960000, 1618900020000, 'Placanje u unapred.', 1800, 1, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-values ('RESERVED', 'CHECKUP', 2, 1618900080000, 1618900140000, 'Placanje u unapred.', 1800, 1, 1, 7);
+                    values ('RESERVED', 'CHECKUP', 2, 1618900080000, 1618900140000, 'Placanje u unapred.', 1800, 1, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-values ('EMPTY', 'CHECKUP', 2, 1619517900000, 1619518800000, 'Placanje u kesu.', 1300, null, 1, 7);
+                    values ('EMPTY', 'CHECKUP', 2, 1619517900000, 1619518800000, 'Placanje u kesu.', 1300, null, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-values ('EMPTY', 'CHECKUP', 2, 1619519400000, 1619520300000, 'Placanje u kesu.', 2000, null, 1, 7);
+                    values ('EMPTY', 'CHECKUP', 2, 1619519400000, 1619520300000, 'Placanje u kesu.', 2000, null, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-values ('EMPTY', 'CHECKUP', 2, 1619523000000, 1619526600000, 'Placanje u kesu.', 3500, null, 1, 7);
+                    values ('EMPTY', 'CHECKUP', 2, 1619523000000, 1619526600000, 'Placanje u kesu.', 3500, null, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-values ('EMPTY', 'CHECKUP', 2, 1619613000000, 1619614800000, 'Placanje u kesu.', 2500, null, 1, 14);
+                    values ('EMPTY', 'CHECKUP', 2, 1619613000000, 1619614800000, 'Placanje u kesu.', 2500, null, 1, 14);
 
 /*WorkCalendar - Appointments*/
 insert into work_calendar_appointments (work_calendar_id, appointments_id) values (1, 1);
@@ -325,9 +435,9 @@ insert into work_calendar_appointments (work_calendar_id, appointments_id) value
 
 /*RequestForHoliday*/
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-                    values ('VACATION', 'Odobreno.', 1619953200000, 1620817200000, 'ACCEPTED', 5);
+                    values ('VACATION', 'Odobreno.', 1619953200000, 1620817200000, 'ACCEPTED', 6);
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-                    values ('LEAVE', 'Nemoguce da sada dobijete.', 1619953200000, 1620817200000, 'CANCELLED', 6);
+                    values ('LEAVE', 'Nemoguce da sada dobijete.', 1619953200000, 1620817200000, 'CANCELLED', 7);
 
 /*MyOrders*/
 insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);

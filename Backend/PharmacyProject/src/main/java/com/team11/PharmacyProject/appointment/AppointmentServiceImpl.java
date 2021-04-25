@@ -1,9 +1,8 @@
 package com.team11.PharmacyProject.appointment;
 
-import com.team11.PharmacyProject.dto.appointment.AppointmentCheckupReservationDTO;
+import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
-import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
@@ -232,7 +231,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public AppointmentCheckupReservationDTO reserveAppointmentForPatient(Long appId, Long patientId) {
+    public AppointmentReservationDTO reserveCheckupForPatient(Long appId, Long patientId) {
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
         if(patient == null) return null;
@@ -249,7 +248,67 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         patientRepository.save(patient);
 
-        return new AppointmentCheckupReservationDTO(patient, appointment);
+        return new AppointmentReservationDTO(patient, appointment);
+
+    }
+
+    @Override
+    public AppointmentReservationDTO reserveConsultationForPatient(Long workerId, Long patientId, Long pharmacyId, Long requiredDate) {
+
+        PharmacyWorker worker = pharmacyWorkerRepository.getPharmacyWorkerForCalendar(workerId);
+        if (worker == null) return null;
+
+        Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
+        if (patient == null) return null;
+
+        Pharmacy pharmacy = pharmacyRepository.findPharmacyByIdFetchAppointments(pharmacyId);
+        if (pharmacy == null) return null;
+
+        Date requestedDateAndTime = new Date(requiredDate);
+        Date requestedDateAndTimeEnd = new Date(requiredDate + pharmacy.getConsultationDuration() * 60000L);    // Simulacija trajanja konsultacije
+        Date today = new Date();
+        if (requestedDateAndTime.before(today)) return null;
+
+        boolean isRequiredConsultationFree = true;
+        for (Appointment a : worker.getAppointmentList()) {
+            if(!a.getPharmacy().getId().equals(pharmacyId) || (a.getPharmacy().getId().equals(pharmacyId) && a.getAppointmentType() == AppointmentType.CHECKUP))
+                continue;
+            Date startTime = new Date(a.getStartTime());
+            Date endTime = new Date(a.getEndTime());
+            if(startTime.compareTo(requestedDateAndTime) == 0) {
+                isRequiredConsultationFree = false;
+                break;
+            }
+            if(requestedDateAndTime.after(startTime) && requestedDateAndTime.before(endTime)) {
+                isRequiredConsultationFree = false;
+                break;
+            }
+            if(requestedDateAndTimeEnd.after(startTime) && requestedDateAndTimeEnd.before(endTime)) {
+                isRequiredConsultationFree = false;
+                break;
+            }
+        }
+
+        if (!isRequiredConsultationFree) return null;
+
+        Appointment reservedConsultation = new Appointment();
+        reservedConsultation.setPatient(patient);
+        reservedConsultation.setWorker(worker);
+        reservedConsultation.setAppointmentState(AppointmentState.RESERVED);
+        reservedConsultation.setAppointmentType(AppointmentType.CONSULTATION);
+        reservedConsultation.setPharmacy(pharmacy);
+        reservedConsultation.setDuration(pharmacy.getConsultationDuration());       // Cupati iz apoteke ako cemo dodati da ima trajanje konsultacije
+        reservedConsultation.setStartTime(requiredDate);
+        reservedConsultation.setEndTime(requiredDate + pharmacy.getConsultationDuration() * 60000L);
+        reservedConsultation.setPrice(pharmacy.getConsultationPrice());
+
+        patient.addAppointment(reservedConsultation);
+        worker.addAppointment(reservedConsultation);
+        pharmacy.addAppointment(reservedConsultation);
+
+        appointmentRepository.save(reservedConsultation);
+
+        return new AppointmentReservationDTO(reservedConsultation);
 
     }
 }

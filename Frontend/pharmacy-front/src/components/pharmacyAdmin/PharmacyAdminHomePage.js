@@ -54,26 +54,21 @@ function PharmacyAdminHomePage() {
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link className="my__nav__link" eventKey="fourth">
-                  Pricelist
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link className="my__nav__link" eventKey="fifth">
                   Add appointment
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link className="my__nav__link" eventKey="sixth">
+                <Nav.Link className="my__nav__link" eventKey="fifth">
                   Inquiries
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link className="my__nav__link" eventKey="seventh">
+                <Nav.Link className="my__nav__link" eventKey="sixth">
                   Reports
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link className="my__nav__link" eventKey="eight">
+                <Nav.Link className="my__nav__link" eventKey="seventh">
                   Purchase orders
                 </Nav.Link>
               </Nav.Item>

@@ -1,6 +1,6 @@
 package com.team11.PharmacyProject.appointment;
 
-import com.team11.PharmacyProject.dto.appointment.AppointmentCheckupReservationDTO;
+import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 
 import java.util.List;
 
@@ -22,5 +22,7 @@ public interface AppointmentService {
 
     boolean cancelAppointment(Long id);
 
-    AppointmentCheckupReservationDTO reserveAppointmentForPatient(Long appId, Long patientId);
+    AppointmentReservationDTO reserveCheckupForPatient(Long appId, Long patientId);
+
+    AppointmentReservationDTO reserveConsultationForPatient(Long workerId, Long patientId, Long pharmacyId, Long requiredDate);
 }

@@ -23,8 +23,7 @@ import AppointmentReport from "./components/workers/appointment_report";
 
 import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
-
-import { getUserTypeFromToken } from './app/jwtTokenUtils'
+import PharmaciesWithFreePharmacists from "./components/unregisteredAndPatient/PharmaciesWithFreePharmacists";
 
 import "./styling/navbar.css";
 
@@ -35,7 +34,11 @@ function App() {
         <CommonHeader />
         <Switch>
           <Route path="/" exact component={HomePage} />
-          <Route path="/profile" exact component={UserProfile} />
+          <Route path="/profile" component={UserProfile} />
+          <Route
+            path="/reserve-consultation/pharmacies"
+            component={PharmaciesWithFreePharmacists}
+          />
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LoginPage} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
@@ -57,7 +60,7 @@ function App() {
         </Switch>
       </div>
       <Footer />
-    </Router >
+    </Router>
   );
 }
 
