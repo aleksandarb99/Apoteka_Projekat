@@ -30,7 +30,11 @@ public class AppointmentCalendarDTO {
         end = appt.getEndTime();
         appointmentState = appt.getAppointmentState();
         pharmacy = appt.getPharmacy().getName();
-        patient = appt.getPatient().getFirstName() + " " + appt.getPatient().getLastName();
+        if (appt.getPatient() == null) {
+            patient = "none";
+        }else {
+            patient = appt.getPatient().getFirstName() + " " + appt.getPatient().getLastName();
+        }
         price = appt.getPrice();
     }
 

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import AdminHeader from './AdminHeader'
 import UnregistredHeader from './UnregistredHeader'
-import MedicalStaffHeader from './MedicalStaffHeader'
 import PatientHeader from './PatientHeader'
 import SupplierHeader from './SupplierHeader'
 import PharmacyAdminHeader from './PharmacyAdminHeader'
+import DermatologistHeader from './DermatologistHeader'
+import PharmacistHeader from './PharmacistHeader'
 import { getUserTypeFromToken } from '../../../app/jwtTokenUtils'
 import { useSelector } from 'react-redux'
 
@@ -21,10 +22,10 @@ const CommonHeader = () => {
             header = <AdminHeader></AdminHeader>
             break;
         case 'PHARMACIST':
-            header = <MedicalStaffHeader></MedicalStaffHeader>
+            header = <PharmacistHeader></PharmacistHeader>
             break;
         case 'DERMATOLOGIST':
-            header = <MedicalStaffHeader></MedicalStaffHeader>
+            header = <DermatologistHeader></DermatologistHeader>
             break;
         case 'SUPPLIER':
             header = <SupplierHeader></SupplierHeader>

@@ -49,10 +49,10 @@ function App() {
           <Route path="/admin/pharmacies" component={PharmacyCrud} />
           <Route path="/admin/medicine" component={MedicineCrud} />
           <Route path="/worker/search-patients" component={SearchPatPage} />
-          <Route path="/wp" component={WorkerProfile} />
+          <Route path="/worker/profile" component={WorkerProfile} />
           <Route path="/admin/users" component={UserCrud} />
           <Route path="/worker/examined" component={SearchExaminedPatPage} />
-          <Route path="/wc" component={WorkCalendar} />
+          <Route path="/worker/calendar" component={WorkCalendar} />
           <Route path="/worker/appointment_report" component={AppointmentReport} />
         </Switch>
       </div>
