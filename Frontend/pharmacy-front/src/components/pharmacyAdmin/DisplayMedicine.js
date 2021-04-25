@@ -7,13 +7,18 @@ import axios from "axios";
 import "../../styling/pharmacy.css";
 
 import AddingMedicineModal from "./AddingMedicineModal";
+import ChangePriceModal from "./ChangePriceModal";
 
 function DisplayMedicine({ idOfPharmacy, priceListId }) {
   const [medicineItems, setMedicineItems] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(-1);
+  const [selectedRowPrice, setSelectedRowPrice] = useState(-1);
   const [addModalShow, setAddModalShow] = useState(false);
+  const [changePriceModalShow, setChangePriceModalShow] = useState(false);
   const [removeModalShow, setRemoveModalShow] = useState(false);
-  const [alertShow, setAlertShow] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
+  const [isAlertGood, SetIsAlertGood] = useState(false);
 
   async function fetchPriceList() {
     const request = await axios.get(
@@ -30,20 +35,28 @@ function DisplayMedicine({ idOfPharmacy, priceListId }) {
     }
   }, [priceListId]);
 
-  let handleClick = (medicineItemId) => {
+  let handleClick = (medicineItemId, price) => {
     setSelectedRowId(medicineItemId);
+    setSelectedRowPrice(price);
   };
 
-  async function addMedicine(selectedMedicineId) {
+  async function addMedicine(selectedMedicineId, price) {
     const request = await axios
       .post(
-        `http://localhost:8080/api/pricelist/${priceListId}/addmedicine/${selectedMedicineId}`
+        `http://localhost:8080/api/pricelist/${priceListId}/addmedicine/${selectedMedicineId}/${price}`
       )
       .then(() => {
         fetchPriceList();
+        displayAlert(
+          true,
+          "You have successfully added the medicine to the pharmacy."
+        );
       })
       .catch(() => {
-        alert("Failed to add");
+        displayAlert(
+          false,
+          "Error! You failed to add the medicine to the pharmacy."
+        );
       });
     return request;
   }
@@ -55,21 +68,68 @@ function DisplayMedicine({ idOfPharmacy, priceListId }) {
       )
       .then(() => {
         fetchPriceList();
+        displayAlert(
+          true,
+          "You have successfully removed the medicine from the pharmacy."
+        );
       })
       .catch(() => {
-        alert("Failed to remove");
+        displayAlert(
+          false,
+          "Error! You failed to remove the medicine from the pharmacy."
+        );
       });
     return request;
   }
 
-  let handleAddModalSave = (selectedMedicineId) => {
+  async function changePrice(price) {
+    const request = await axios
+      .post(
+        `http://localhost:8080/api/pricelist/${priceListId}/changeprice/${selectedRowId}/${price}`
+      )
+      .then(() => {
+        fetchPriceList();
+        displayAlert(
+          true,
+          "You have successfully changed price of the medicine from the pharmacy."
+        );
+      })
+      .catch(() => {
+        displayAlert(
+          false,
+          "Error! You failed to change price of the medicine from the pharmacy."
+        );
+      });
+    return request;
+  }
+
+  let displayAlert = (isGood, text) => {
+    SetIsAlertGood(isGood);
+    setShowAlert(true);
+    setAlertText(text);
+    setTimeout(function () {
+      setShowAlert(false);
+      setAlertText("");
+    }, 3000);
+  };
+
+  let handleAddModalSave = (selectedMedicineId, price) => {
     setAddModalShow(false);
-    addMedicine(selectedMedicineId);
-    setAlertShow(true);
+    addMedicine(selectedMedicineId, price);
+  };
+
+  let handleChangePriceModalSave = (price) => {
+    setChangePriceModalShow(false);
+    if (selectedRowPrice != price) changePrice(price);
+    setSelectedRowId(-1);
   };
 
   let handleAddModalClose = () => {
     setAddModalShow(false);
+  };
+
+  let handleChangePriceModalClose = () => {
+    setChangePriceModalShow(false);
   };
 
   let handleRemove = () => {
@@ -82,7 +142,7 @@ function DisplayMedicine({ idOfPharmacy, priceListId }) {
       <h1 className="content-header">Medicine</h1>
       <Row>
         <Col>
-          <Table bordered variant="light">
+          <Table bordered striped hover variant="dark">
             <thead>
               <tr>
                 <th>#</th>
@@ -99,7 +159,7 @@ function DisplayMedicine({ idOfPharmacy, priceListId }) {
                 medicineItems?.map((item, index) => (
                   <tr
                     onClick={() => {
-                      handleClick(item.id);
+                      handleClick(item.id, item.price);
                     }}
                     className={`${
                       selectedRowId == item.id && "selectedRow"
@@ -116,7 +176,17 @@ function DisplayMedicine({ idOfPharmacy, priceListId }) {
                 ))}
             </tbody>
           </Table>
+
           <div className="center">
+            <Button
+              disabled={selectedRowId == -1}
+              variant="secondary"
+              onClick={() => {
+                setChangePriceModalShow(true);
+              }}
+            >
+              Change price
+            </Button>
             <Button
               variant="success"
               onClick={() => {
@@ -136,19 +206,14 @@ function DisplayMedicine({ idOfPharmacy, priceListId }) {
               Remove
             </Button>
           </div>
-          <Alert show={alertShow} variant="success">
-            <Alert.Heading>Reminder!</Alert.Heading>
-            <p>Don't forget to set the price of the medicine.</p>
-            <hr />
-            <div className="d-flex justify-content-end">
-              <Button
-                onClick={() => setAlertShow(false)}
-                variant="outline-success"
-              >
-                Close me!
-              </Button>
-            </div>
+
+          <Alert show={showAlert} variant={isAlertGood ? "success" : "danger"}>
+            <Alert.Heading>
+              {isAlertGood ? "Congratulations!" : "You got an error!"}
+            </Alert.Heading>
+            <p>{alertText}</p>
           </Alert>
+
           <AddingMedicineModal
             medicineItemsLength={medicineItems?.length}
             idOfPharmacy={idOfPharmacy}
@@ -156,7 +221,14 @@ function DisplayMedicine({ idOfPharmacy, priceListId }) {
             onHide={handleAddModalClose}
             handleAdd={handleAddModalSave}
           />
+          <ChangePriceModal
+            oldPrice={selectedRowPrice}
+            show={changePriceModalShow}
+            onHide={handleChangePriceModalClose}
+            handleChange={handleChangePriceModalSave}
+          />
           <Modal
+            oldPrice={idOfPharmacy}
             show={removeModalShow}
             onHide={() => {
               setRemoveModalShow(false);

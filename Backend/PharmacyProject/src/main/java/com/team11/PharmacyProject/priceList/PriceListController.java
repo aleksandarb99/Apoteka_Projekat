@@ -33,9 +33,24 @@ public class PriceListController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/{id}/addmedicine/{medicineId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PriceListDTO> insertMedicine(@PathVariable("id") Long id, @PathVariable("medicineId") Long medicineId) {
-        PriceList priceList = priceListService.insertMedicine(id, medicineId);
+    @PostMapping(value = "/{id}/addmedicine/{medicineId}/{price}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PriceListDTO> insertMedicine(@PathVariable("id") Long id, @PathVariable("medicineId") Long medicineId, @PathVariable("price") int price) {
+        PriceList priceList = priceListService.insertMedicine(id, medicineId, price);
+
+        if (priceList != null) {
+            PriceListDTO dto = convertToDto(priceList);
+
+            for (MedicineItemDTO item : dto.getMedicineItems()) {
+                item.setPrice(priceListService.getMedicineItemPrice(item.getId()));
+            }
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>((PriceListDTO) null, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/{id}/changeprice/{medicineId}/{price}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PriceListDTO> changePrice(@PathVariable("id") Long id, @PathVariable("medicineId") Long medicineId, @PathVariable("price") int price) {
+        PriceList priceList = priceListService.changePrice(id, medicineId, price);
 
         if (priceList != null) {
             PriceListDTO dto = convertToDto(priceList);
