@@ -9,10 +9,12 @@ import {
   ListGroupItem,
   Pagination,
   Table,
+  Button,
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
 import axios from "../../app/api";
+import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 
@@ -24,11 +26,12 @@ function PharmaciesWithFreePharmacists() {
   const [maxPag, setMaxPag] = useState(0);
   const [showedPharmacies, setShowedPharmacies] = useState([]);
   const [selectedWorker, setSelectedWorker] = useState({});
+  const [reloadPharmacies, setReloadPharmacies] = useState(false);
 
   useEffect(() => {
     async function fetchPharmacies() {
       let search_params = new URLSearchParams();
-      search_params.append("date", 1619699400000);
+      search_params.append("date", 1619700300000);
       const request = await axios.get(
         "http://localhost:8080/api/pharmacy/all/free-pharmacists/",
         { params: search_params }
@@ -38,13 +41,13 @@ function PharmaciesWithFreePharmacists() {
       return request;
     }
     fetchPharmacies();
-  }, []);
+  }, [reloadPharmacies]);
 
   useEffect(() => {
     if (chosenPharmacy == null) return;
     async function fetchWorkers() {
       let search_params = new URLSearchParams();
-      search_params.append("date", 1619699400000);
+      search_params.append("date", 1619700300000);
       search_params.append("id", chosenPharmacy);
       const request = await axios.get(
         "http://localhost:8080/api/workers/all/free-pharmacists/pharmacy",
@@ -86,6 +89,34 @@ function PharmaciesWithFreePharmacists() {
   const updateSelectedWorker = (selectedWorker) => {
     console.log(selectedWorker);
     setSelectedWorker(selectedWorker);
+  };
+
+  const createReservation = () => {
+    //setSuccessAlert(false);
+    // if (pickupDate) {
+    //   if (pickupDate > new Date()) {
+    //     setShowAlert(false);
+    //   } else {
+    //     setSuccessAlert(false);
+    //     setShowAlert(true);
+    //     return;
+    //   }
+    // }
+    axios
+      .post(
+        `http://localhost:8080/api/appointment/reserve-consultation/pharmacy/${chosenPharmacy}/pharmacist/${
+          selectedWorker.id
+        }/patient/${getIdFromToken()}/date/${1619700300000}/`
+      )
+      .then((res) => {
+        if (res.data === "reserved") alert("success");
+        else alert("fail");
+        setReloadPharmacies(!reloadPharmacies);
+      });
+
+    setChosenPharmacy(null);
+    setSelectedWorker({});
+    //setPickupDate(null);
   };
 
   return (
@@ -194,6 +225,21 @@ function PharmaciesWithFreePharmacists() {
               ))}
           </tbody>
         </Table>
+      </Row>
+      <Row>
+        <Button
+          variant="info"
+          onClick={createReservation}
+          style={{
+            display:
+              Object.keys(selectedWorker).length === 0 || chosenPharmacy == null
+                ? "none"
+                : "inline-block",
+            margin: "auto",
+          }}
+        >
+          Reserve
+        </Button>
       </Row>
     </Container>
   );

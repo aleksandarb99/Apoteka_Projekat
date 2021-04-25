@@ -41,10 +41,6 @@ public class PharmacyController {
     public ResponseEntity<List<PharmacyConsultationDTO>> getPharmaciesByFreePharmacists(@RequestParam(value = "date", required = false) long date) {
         List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByFreePharmacists(date);
 
-        if (pharmacies.size() == 0) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
         List<PharmacyConsultationDTO> retVal = new ArrayList<>();
         for(Pharmacy p : pharmacies) {
             retVal.add(new PharmacyConsultationDTO(p));

@@ -157,6 +157,7 @@ public class PharmacyServiceImpl implements PharmacyService {
         if (pharmacies.size() == 0) return  null;
 
         Date requestedDateAndTime = new Date(date);
+        Date requestedDateAndTimeEnd = new Date(date + 15 * 60000L);
         Date today = new Date();
         if (requestedDateAndTime.before(today)) return null;
 
@@ -182,7 +183,15 @@ public class PharmacyServiceImpl implements PharmacyService {
                         for (Appointment a : workerRepository.getPharmacyWorkerForCalendar(wp.getWorker().getId()).getAppointmentList()) {
                             Date startTime = new Date(a.getStartTime());
                             Date endTime = new Date(a.getEndTime());
+                            if(startTime.compareTo(requestedDateAndTime) == 0) {
+                                isPharmacistFree = false;
+                                break;
+                            }
                             if(requestedDateAndTime.after(startTime) && requestedDateAndTime.before(endTime)) {
+                                isPharmacistFree = false;
+                                break;
+                            }
+                            if(requestedDateAndTimeEnd.after(startTime) && requestedDateAndTimeEnd.before(endTime)) {
                                 isPharmacistFree = false;
                                 break;
                             }

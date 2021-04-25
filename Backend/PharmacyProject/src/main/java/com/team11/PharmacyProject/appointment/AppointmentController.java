@@ -1,9 +1,6 @@
 package com.team11.PharmacyProject.appointment;
 
-import com.team11.PharmacyProject.dto.appointment.AppointmentCalendarDTO;
-import com.team11.PharmacyProject.dto.appointment.AppointmentCheckupReservationDTO;
-import com.team11.PharmacyProject.dto.appointment.AppointmentDTO;
-import com.team11.PharmacyProject.dto.appointment.AppointmentDTORequest;
+import com.team11.PharmacyProject.dto.appointment.*;
 import com.team11.PharmacyProject.email.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,6 +155,22 @@ public class AppointmentController {
         if (dto != null) {
             try {
                 emailService.notifyPatientAboutReservedCheckup(dto);
+            } catch (Exception e) {
+                e.printStackTrace();        // Verovatno moze puci zbog nedostatka interneta, ili ako nije dozvoljeno za manje bezbedne aplikacije itd.
+            }
+            return new ResponseEntity<>("reserved", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("failed", HttpStatus.OK);
+        }
+    }
+
+    @PostMapping(value = "/reserve-consultation/pharmacy/{idPh}/pharmacist/{idW}/patient/{idPa}/date/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> reserveConsultationForPatient(@PathVariable("idPa") Long patientId, @PathVariable("idW") Long workerId, @PathVariable("idPh") Long pharmacyId, @PathVariable("date") Long date) {
+
+        AppointmentConsultationReservationDTO dto = appointmentServiceImpl.reserveConsultationForPatient(workerId, patientId, pharmacyId, date);
+        if (dto != null) {
+            try {
+                emailService.notifyPatientAboutReservedConsultation(dto);
             } catch (Exception e) {
                 e.printStackTrace();        // Verovatno moze puci zbog nedostatka interneta, ili ako nije dozvoljeno za manje bezbedne aplikacije itd.
             }

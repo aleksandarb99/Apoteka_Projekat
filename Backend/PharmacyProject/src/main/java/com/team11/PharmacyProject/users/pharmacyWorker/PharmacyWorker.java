@@ -68,4 +68,12 @@ public class PharmacyWorker extends MyUser {
     public void setWorkplaces(List<Workplace> workplaces) {
         this.workplaces = workplaces;
     }
+
+    public boolean addAppointment(Appointment appointment) {
+        for (Appointment a : appointmentList) {
+            if (a.getId().equals(appointment.getId())) return false;
+        }
+        appointmentList.add(appointment);
+        return true;
+    }
 }
