@@ -3,6 +3,8 @@ package com.team11.PharmacyProject.pharmacy;
 import com.team11.PharmacyProject.dto.pharmacy.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +40,9 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PharmacyConsultationDTO>> getPharmaciesByFreePharmacists(@RequestParam(value = "date", required = false) long date) {
-        List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByFreePharmacists(date);
+    public ResponseEntity<List<PharmacyConsultationDTO>> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date) {
+
+        List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByFreePharmacists(date,  pageable.getSort());
 
         if(pharmacies == null) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);

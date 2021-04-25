@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,6 +27,9 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
 
     @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.workplaces")
     List<Pharmacy> findPharmaciesFetchWorkplaces();
+
+    @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.workplaces")
+    List<Pharmacy> findPharmaciesFetchWorkplaces(Sort sorter);
 
     @Query("SELECT p FROM Pharmacy p LEFT JOIN FETCH p.appointments WHERE p.id = (:id)")
     Pharmacy findPharmacyByIdFetchAppointments(@Param("id") Long id);

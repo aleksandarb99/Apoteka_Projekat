@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.address.Address;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -32,5 +33,5 @@ public interface PharmacyService {
 
     Pharmacy getPharmacyByIdAndPriceList(Long id);
 
-    List<Pharmacy> getPharmaciesByFreePharmacists(long date);
+    List<Pharmacy> getPharmaciesByFreePharmacists(long date, Sort sorter);
 }

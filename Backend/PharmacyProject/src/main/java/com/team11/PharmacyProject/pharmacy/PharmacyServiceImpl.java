@@ -14,6 +14,7 @@ import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -151,9 +152,10 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
-    public List<Pharmacy> getPharmaciesByFreePharmacists(long date) {
+    public List<Pharmacy> getPharmaciesByFreePharmacists(long date, Sort sorter) {
 
-        List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchWorkplaces();
+        List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchWorkplaces(sorter);
+
         if (pharmacies.size() == 0) return  null;
 
         Date requestedDateAndTime = new Date(date);

@@ -33,6 +33,8 @@ function PharmaciesWithFreePharmacists() {
   const [selectedWorker, setSelectedWorker] = useState({});
   const [reloadPharmacies, setReloadPharmacies] = useState(false);
   const [dateInPastAlert, setDateInPastAlert] = useState(false);
+  const [sorter, setSorter] = useState("none");
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     if (requestedDate == null) return;
@@ -49,7 +51,7 @@ function PharmaciesWithFreePharmacists() {
       return request;
     }
     fetchPharmacies();
-  }, [reloadPharmacies, requestedDate]);
+  }, [reloadPharmacies, requestedDate, reload]);
 
   useEffect(() => {
     if (chosenPharmacy == null) return;
@@ -141,6 +143,40 @@ function PharmaciesWithFreePharmacists() {
     }
   };
 
+  const formSearch = (event) => {
+    event.preventDefault();
+
+    if (sorter === "none") return;
+
+    let search_params = new URLSearchParams();
+
+    if (sorter === "ascPrice") {
+      search_params.append("sort", "consultationPrice,asc");
+    }
+    if (sorter === "descPrice") {
+      search_params.append("sort", "consultationPrice,desc");
+    }
+    if (sorter === "ascGrade") {
+      search_params.append("sort", "avgGrade,asc");
+    }
+    if (sorter === "descGrade") {
+      search_params.append("sort", "avgGrade,desc");
+    }
+
+    search_params.append("date", requestedDate);
+
+    axios
+      .get("http://localhost:8080/api/pharmacy/all/free-pharmacists/", {
+        params: search_params,
+      })
+      .then((resp) => setPharmacies(resp.data))
+      .catch(setPharmacies([]));
+  };
+
+  const updateSorting = (event) => {
+    setSorter(event.target.value);
+  };
+
   return (
     <Container
       fluid
@@ -187,6 +223,45 @@ function PharmaciesWithFreePharmacists() {
             <Alert variant="danger">Choose a day from the future</Alert>
           )}
         </Col>
+      </Row>
+      <Row className="justify-content-center m-5">
+        <Form
+          onSubmit={formSearch}
+          style={{ display: pharmacies.length === 0 ? "none" : "block" }}
+        >
+          <Form.Group as={Row} className="align-items-center">
+            <Col className="my__flex" md={6} lg={6}>
+              <Form.Label style={{ marginRight: "20px" }}>Sorter: </Form.Label>
+              <Form.Control
+                as="select"
+                value={sorter}
+                onChange={updateSorting.bind(this)}
+                name="sorter"
+              >
+                <option value="none">none</option>
+                <option value="ascPrice">Price (ascending)</option>
+                <option value="descPrice">Price (descending)</option>
+                <option value="ascGrade">Pharmacy grade (ascending)</option>
+                <option value="descGrade">Pharmacy grade (descending)</option>
+              </Form.Control>
+            </Col>
+            <Col className="justify-content-center" md={6} lg={6}>
+              <Button type="submit" variant="primary">
+                {" "}
+                Sort{" "}
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setReload(!reload);
+                }}
+              >
+                {" "}
+                Reset{" "}
+              </Button>
+            </Col>
+          </Form.Group>
+        </Form>
       </Row>
       <Row>
         <Col md={12} lg={12} className="my__flex">
