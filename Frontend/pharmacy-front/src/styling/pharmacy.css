@@ -28,6 +28,10 @@ li a span {
   border-bottom: 2px solid black;
 }
 
+.disabledRow {
+  background-color: gray !important;
+}
+
 .row-content {
   padding: 0 1vw;
 }

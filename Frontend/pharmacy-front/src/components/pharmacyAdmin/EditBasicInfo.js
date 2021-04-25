@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import axios from "axios";
+import axios from "../../app/api";
 
 import Tab from "react-bootstrap/Tab";
 import Row from "react-bootstrap/Row";

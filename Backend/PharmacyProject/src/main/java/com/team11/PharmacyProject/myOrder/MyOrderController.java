@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.myOrder;
 
 import com.team11.PharmacyProject.appointment.AppointmentService;
 import com.team11.PharmacyProject.dto.appointment.AppointmentDTO;
+import com.team11.PharmacyProject.dto.order.MyOrderAddingDTO;
 import com.team11.PharmacyProject.dto.order.MyOrderDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,15 @@ public class MyOrderController {
     public ResponseEntity<List<MyOrderDTO>> getOrdersByPharmacyId(@PathVariable("id") Long id, @RequestParam(value = "filter", required = false) String filterValue) {
         List<MyOrderDTO> myOrderDTOS = orderService.getOrdersByPharmacyId(id, filterValue).stream().map(m -> modelMapper.map(m, MyOrderDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/addorder", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> addOrder(@RequestBody MyOrderAddingDTO data) {
+        boolean flag = orderService.addOrder(data);
+        if(flag)
+          return new ResponseEntity<>("Succesfully added", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
     }
 
 }

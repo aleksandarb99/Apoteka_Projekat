@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
-import axios from "axios";
+import axios from "../../app/api";
 
 import "../../styling/pharmaciesAndMedicines.css";
 

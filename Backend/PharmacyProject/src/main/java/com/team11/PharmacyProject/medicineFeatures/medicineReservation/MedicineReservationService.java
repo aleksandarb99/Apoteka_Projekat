@@ -6,4 +6,6 @@ import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNot
 public interface MedicineReservationService {
 
     MedicineReservationNotifyPatientDTO insertMedicineReservation(MedicineReservationInsertDTO dto);
+
+    boolean isMedicineItemReserved(Long id);
 }
