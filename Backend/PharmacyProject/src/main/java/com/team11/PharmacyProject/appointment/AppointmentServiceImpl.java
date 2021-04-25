@@ -261,7 +261,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
         if (patient == null) return null;
 
-        Pharmacy pharmacy = pharmacyRepository.findPharmaciesFetchAppointments(pharmacyId);
+        Pharmacy pharmacy = pharmacyRepository.findPharmacyByIdFetchAppointments(pharmacyId);
         if (pharmacy == null) return null;
 
         Date requestedDateAndTime = new Date(requiredDate);

@@ -178,5 +178,4 @@ public class AppointmentController {
             return new ResponseEntity<>("failed", HttpStatus.OK);
         }
     }
-
 }
