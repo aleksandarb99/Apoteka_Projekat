@@ -29,6 +29,9 @@ public class Pharmacy {
     @Column(name = "consultation_price")
     private Double consultationPrice;
 
+    @Column(name = "consultation_duration")
+    private int consultationDuration;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Patient> subscribers;
 
@@ -51,7 +54,7 @@ public class Pharmacy {
 
     public Pharmacy(Long id, String name, String description, Double avgGrade,
                     List<Patient> subscribers, PriceList priceList, ArrayList<Appointment> appointments,
-                    Address address, List<Workplace> workplaces, Double consultationPrice) {
+                    Address address, List<Workplace> workplaces, Double consultationPrice, int consultationDuration) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -62,6 +65,7 @@ public class Pharmacy {
         this.address = address;
         this.workplaces = workplaces;
         this.consultationPrice = consultationPrice;
+        this.consultationDuration = consultationDuration;
     }
 
     public Long getId() {
@@ -154,6 +158,14 @@ public class Pharmacy {
 
     public void setConsultationPrice(Double consultationPrice) {
         this.consultationPrice = consultationPrice;
+    }
+
+    public int getConsultationDuration() {
+        return consultationDuration;
+    }
+
+    public void setConsultationDuration(int consultationDuration) {
+        this.consultationDuration = consultationDuration;
     }
 
     @Override

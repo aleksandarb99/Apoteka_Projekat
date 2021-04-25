@@ -44,6 +44,10 @@ public class PharmacyWorkerController {
     public ResponseEntity<List<PharmacyWorkerFreePharmacistDTO>> getPharmaciesByFreePharmacists(@RequestParam(value = "date", required = false) long date, @RequestParam(value = "id", required = false) Long id) {
         List<PharmacyWorker> workers = pharmacyWorkerService.getFreePharmacistsByPharmacyIdAndDate(id, date);
 
+        if(workers == null) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
+
         List<PharmacyWorkerFreePharmacistDTO> retVal = new ArrayList<>();
         for(PharmacyWorker pw : workers) {
             retVal.add(new PharmacyWorkerFreePharmacistDTO(pw));

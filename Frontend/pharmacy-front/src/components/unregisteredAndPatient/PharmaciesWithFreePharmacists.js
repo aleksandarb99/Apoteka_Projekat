@@ -10,6 +10,8 @@ import {
   Pagination,
   Table,
   Button,
+  Form,
+  Alert,
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
@@ -19,6 +21,9 @@ import { getIdFromToken } from "../../app/jwtTokenUtils";
 import "../../styling/pharmaciesAndMedicines.css";
 
 function PharmaciesWithFreePharmacists() {
+  const [startDate, setStartDate] = useState(new Date());
+  const [startHour, setStartHour] = useState(null);
+  const [requestedDate, setRequestedDate] = useState(null);
   const [pharmacies, setPharmacies] = useState([]);
   const [workers, setWorkers] = useState([]);
   const [chosenPharmacy, setChosenPharmacy] = useState(null);
@@ -27,11 +32,14 @@ function PharmaciesWithFreePharmacists() {
   const [showedPharmacies, setShowedPharmacies] = useState([]);
   const [selectedWorker, setSelectedWorker] = useState({});
   const [reloadPharmacies, setReloadPharmacies] = useState(false);
+  const [dateInPastAlert, setDateInPastAlert] = useState(false);
 
   useEffect(() => {
+    if (requestedDate == null) return;
+
     async function fetchPharmacies() {
       let search_params = new URLSearchParams();
-      search_params.append("date", 1619700300000);
+      search_params.append("date", requestedDate);
       const request = await axios.get(
         "http://localhost:8080/api/pharmacy/all/free-pharmacists/",
         { params: search_params }
@@ -41,13 +49,13 @@ function PharmaciesWithFreePharmacists() {
       return request;
     }
     fetchPharmacies();
-  }, [reloadPharmacies]);
+  }, [reloadPharmacies, requestedDate]);
 
   useEffect(() => {
     if (chosenPharmacy == null) return;
     async function fetchWorkers() {
       let search_params = new URLSearchParams();
-      search_params.append("date", 1619700300000);
+      search_params.append("date", requestedDate);
       search_params.append("id", chosenPharmacy);
       const request = await axios.get(
         "http://localhost:8080/api/workers/all/free-pharmacists/pharmacy",
@@ -87,36 +95,50 @@ function PharmaciesWithFreePharmacists() {
   };
 
   const updateSelectedWorker = (selectedWorker) => {
-    console.log(selectedWorker);
     setSelectedWorker(selectedWorker);
   };
 
   const createReservation = () => {
-    //setSuccessAlert(false);
-    // if (pickupDate) {
-    //   if (pickupDate > new Date()) {
-    //     setShowAlert(false);
-    //   } else {
-    //     setSuccessAlert(false);
-    //     setShowAlert(true);
-    //     return;
-    //   }
-    // }
+    // setSuccessAlert(false);
     axios
       .post(
         `http://localhost:8080/api/appointment/reserve-consultation/pharmacy/${chosenPharmacy}/pharmacist/${
           selectedWorker.id
-        }/patient/${getIdFromToken()}/date/${1619700300000}/`
+        }/patient/${getIdFromToken()}/date/${requestedDate}/`
       )
       .then((res) => {
         if (res.data === "reserved") alert("success");
         else alert("fail");
         setReloadPharmacies(!reloadPharmacies);
       });
-
     setChosenPharmacy(null);
     setSelectedWorker({});
-    //setPickupDate(null);
+  };
+
+  const changeDate = (date) => {
+    let array = date.split("-");
+    let d = new Date(
+      Number.parseInt(array[0]),
+      Number.parseInt(array[1]) - 1,
+      Number.parseInt(array[2])
+    );
+    setStartDate(d);
+  };
+
+  const createRequestedDate = () => {
+    let date = startDate;
+    let hour = startHour;
+    let array = hour.split(":");
+    date.setHours(Number.parseInt(array[0]), Number.parseInt(array[1]), 0);
+    setRequestedDate(date.getTime());
+    if (date.getTime()) {
+      if (date.getTime() > new Date()) {
+        setDateInPastAlert(false);
+      } else {
+        setDateInPastAlert(true);
+        return;
+      }
+    }
   };
 
   return (
@@ -125,14 +147,58 @@ function PharmaciesWithFreePharmacists() {
       style={{
         backgroundColor: "rgba(162, 211, 218, 0.897)",
         minHeight: "100vh",
+        paddingTop: "30px",
       }}
     >
       <Row>
-        {showedPharmacies.length === 0 && (
-          <Row className="justify-content-center m-3 align-items-center">
-            <h3>No result!</h3>
-          </Row>
-        )}
+        <Col className="my__flex">
+          <h3>Choose a date and time of consultation</h3>
+        </Col>
+      </Row>
+      <Row>
+        <Col className="my__flex">
+          <Form.Group controlId="datePicker" di>
+            <Form.Label>Date</Form.Label>
+            <Form.Control
+              type="date"
+              onChange={(event) => changeDate(event.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="timePicker" di>
+            <Form.Label>Start time</Form.Label>
+            <Form.Control
+              type="time"
+              value={startHour}
+              onChange={(event) => setStartHour(event.target.value)}
+            />
+          </Form.Group>
+          <Button
+            variant="info"
+            onClick={createRequestedDate}
+            disabled={startDate == null || startHour == null}
+          >
+            Search
+          </Button>
+        </Col>
+      </Row>
+      <Row className="my__flex">
+        <Col md={4} lg={4}>
+          {dateInPastAlert && (
+            <Alert variant="danger">Choose a day from the future</Alert>
+          )}
+        </Col>
+      </Row>
+      <Row>
+        <Col md={12} lg={12} className="my__flex">
+          {requestedDate != null &&
+            showedPharmacies.length === 0 &&
+            dateInPastAlert == false && (
+              <Alert variant="danger">
+                There's no available pharmacies/pharmacists at required date and
+                time!
+              </Alert>
+            )}
+        </Col>
         {showedPharmacies &&
           showedPharmacies.map((pharmacy) => {
             return (
@@ -140,7 +206,10 @@ function PharmaciesWithFreePharmacists() {
                 <Card
                   className="my__card"
                   style={{ width: "18rem" }}
-                  onClick={() => setChosenPharmacy(pharmacy.id)}
+                  onClick={() => {
+                    setChosenPharmacy(pharmacy.id);
+                    setSelectedWorker({});
+                  }}
                 >
                   <Card.Body>
                     <Card.Title>{pharmacy.name}</Card.Title>
@@ -164,21 +233,24 @@ function PharmaciesWithFreePharmacists() {
           })}
       </Row>
 
-      <Row className="my__row__pagination">
-        <Col className="my__flex">
-          <Pagination size="lg">
-            <Pagination.Prev
-              disabled={pagNumber === 0}
-              onClick={handleSlideLeft}
-            />
-            <Pagination.Item disabled>{pagNumber}</Pagination.Item>
-            <Pagination.Next
-              disabled={pagNumber === maxPag}
-              onClick={handleSlideRight}
-            />
-          </Pagination>
-        </Col>
-      </Row>
+      {showedPharmacies.length > 0 && dateInPastAlert == false && (
+        <Row className="my__row__pagination">
+          <Col className="my__flex">
+            <Pagination size="lg">
+              <Pagination.Prev
+                disabled={pagNumber === 0}
+                onClick={handleSlideLeft}
+              />
+              <Pagination.Item disabled>{pagNumber}</Pagination.Item>
+              <Pagination.Next
+                disabled={pagNumber === maxPag}
+                onClick={handleSlideRight}
+              />
+            </Pagination>
+          </Col>
+        </Row>
+      )}
+
       <Row>
         <h4
           style={{

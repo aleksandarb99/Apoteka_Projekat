@@ -306,12 +306,12 @@ insert into complaint_response (response_text, date, complaint_id, user_id)
                     values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602000, 2, 7);
 
 /*Pharmacies*/
-insert into pharmacy (avg_grade, consultation_price, description, name, address_id, price_list_id)
-                    values (4.4, 500, 'Najjaca apoteka u gradu.', 'Zelena Apoteka', 1, 1);
-insert into pharmacy (avg_grade, consultation_price, description, name, address_id, price_list_id)
-                    values (4.8, 450, 'Poverenje, sigurnost i dostupnost su, već skoro 30 godina, glavna obeležja Apotekarske ustanove Jankovic.', 'Apoteka Jankovic', 1, 2);
-insert into pharmacy (avg_grade, consultation_price, description, name, address_id, price_list_id)
-                    values (2.9, 200, 'Poručite sve što vam je potrebno na vašu kućnu adresu. Imas veliki izbor i sjajanu cenu samo na BENU online shop-u.', 'Benu Apoteka', 2, 3);
+insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, address_id, price_list_id)
+                    values (4.4, 500, 15, 'Najjaca apoteka u gradu.', 'Zelena Apoteka', 1, 1);
+insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, address_id, price_list_id)
+                    values (4.8, 450, 10, 'Poverenje, sigurnost i dostupnost su, već skoro 30 godina, glavna obeležja Apotekarske ustanove Jankovic.', 'Apoteka Jankovic', 1, 2);
+insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, address_id, price_list_id)
+                    values (2.9, 200, 5, 'Poručite sve što vam je potrebno na vašu kućnu adresu. Imas veliki izbor i sjajanu cenu samo na BENU online shop-u.', 'Benu Apoteka', 2, 3);
 
 /*Pharmacy - Subscribers*/
 insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (1, 1);

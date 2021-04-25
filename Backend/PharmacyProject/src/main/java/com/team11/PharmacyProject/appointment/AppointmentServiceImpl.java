@@ -265,7 +265,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (pharmacy == null) return null;
 
         Date requestedDateAndTime = new Date(requiredDate);
-        Date requestedDateAndTimeEnd = new Date(requiredDate + 15 * 60000L);    // Simulacija trajanja konsultacije
+        Date requestedDateAndTimeEnd = new Date(requiredDate + pharmacy.getConsultationDuration() * 60000L);    // Simulacija trajanja konsultacije
         Date today = new Date();
         if (requestedDateAndTime.before(today)) return null;
 
@@ -297,9 +297,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         reservedConsultation.setAppointmentState(AppointmentState.RESERVED);
         reservedConsultation.setAppointmentType(AppointmentType.CONSULTATION);
         reservedConsultation.setPharmacy(pharmacy);
-        reservedConsultation.setDuration(15);       // Cupati iz apoteke ako cemo dodati da ima trajanje konsultacije
+        reservedConsultation.setDuration(pharmacy.getConsultationDuration());       // Cupati iz apoteke ako cemo dodati da ima trajanje konsultacije
         reservedConsultation.setStartTime(requiredDate);
-        reservedConsultation.setEndTime(requiredDate + 15 * 60000L);
+        reservedConsultation.setEndTime(requiredDate + pharmacy.getConsultationDuration() * 60000L);
         reservedConsultation.setPrice(pharmacy.getConsultationPrice());
 
         patient.addAppointment(reservedConsultation);
