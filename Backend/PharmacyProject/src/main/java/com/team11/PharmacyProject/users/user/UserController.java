@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.users.user;
 import com.team11.PharmacyProject.dto.user.UserCrudDTO;
 import com.team11.PharmacyProject.dto.user.UserDTO;
 import com.team11.PharmacyProject.dto.UserUpdateDTO;
+import com.team11.PharmacyProject.dto.user.UserProfileInfoDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,14 +54,15 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getUser(@PathVariable("id") Long id) {
+    public ResponseEntity<UserProfileInfoDTO> getUser(@PathVariable("id") Long id) {
+        // TODO add verification
         MyUser user = userService.findOne(id);
 
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(mapper.map(user, UserDTO.class), HttpStatus.OK);
+        return new ResponseEntity<>(mapper.map(user, UserProfileInfoDTO.class), HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
