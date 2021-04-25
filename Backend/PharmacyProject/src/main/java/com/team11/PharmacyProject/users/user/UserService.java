@@ -14,4 +14,6 @@ public interface UserService {
     List<MyUser> getUsersByUserType(UserType type);
 
     boolean delete(long id);
+
+    boolean changePassword(Long userId, String oldPassword, String newPassword);
 }

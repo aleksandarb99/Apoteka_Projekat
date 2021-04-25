@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.users.user;
 
+import com.team11.PharmacyProject.dto.user.ChangePasswordDTO;
 import com.team11.PharmacyProject.dto.user.UserCrudDTO;
 import com.team11.PharmacyProject.dto.user.UserDTO;
 import com.team11.PharmacyProject.dto.UserUpdateDTO;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -55,7 +57,7 @@ public class UserController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserProfileInfoDTO> getUser(@PathVariable("id") Long id) {
-        // TODO add verification
+        // TODO add validation
         MyUser user = userService.findOne(id);
 
         if (user == null) {
@@ -80,6 +82,20 @@ public class UserController {
 
         return new ResponseEntity<>(mapper.map(user, UserUpdateDTO.class), HttpStatus.OK);
     }
+
+    @PutMapping(value = "/change-password/{id}")
+    public ResponseEntity<String> changePassword(@PathVariable("id") Long userId, @RequestBody ChangePasswordDTO changePassword) {
+        // TODO validation
+        String oldPassword = changePassword.getOldPassword();
+        String newPassword = changePassword.getNewPassword();
+        if (userService.changePassword(userId, oldPassword, newPassword)) {
+            return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error. Password not changed.", HttpStatus.FORBIDDEN);
+        }
+    }
+
+    ;
 
     private UserCrudDTO convertToCrudDto(MyUser user) {
         return mapper.map(user, UserCrudDTO.class);
