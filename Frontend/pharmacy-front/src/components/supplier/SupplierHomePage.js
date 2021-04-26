@@ -5,6 +5,8 @@ import api from '../../app/api';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
 import SetPasswordModal from '../utilComponents/modals/SetPasswordModal'
 import SupplierStock from '../supplier/stock/SupplierStock'
+import NewOrders from '../supplier/orders/NewOrders'
+import SupplierOffers from './offers/SupplierOffers';
 
 const SupplierHomePage = () => {
     const [isPasswordSet, setIsPasswordSet] = useState(false);
@@ -43,10 +45,10 @@ const SupplierHomePage = () => {
                         <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
                             <Tab.Content>
                                 <TabPane eventKey="first">
-                                    <div></div>
+                                    <NewOrders></NewOrders>
                                 </TabPane>
-                                <TabPane eventKey="sencond">
-                                    <div></div>
+                                <TabPane eventKey="second">
+                                    <SupplierOffers></SupplierOffers>
                                 </TabPane>
                                 <TabPane eventKey="third">
                                     <SupplierStock></SupplierStock>
