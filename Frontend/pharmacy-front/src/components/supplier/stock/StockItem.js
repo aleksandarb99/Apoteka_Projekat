@@ -1,9 +1,9 @@
 import React from 'react'
 
-const StockItem = () => {
+const StockItem = ({ stockItem }) => {
     return (
         <div>
-            Medicine/Amount
+            <p>{`${stockItem.medicineName}  --  ${stockItem.amount}`}</p>
         </div>
     )
 }

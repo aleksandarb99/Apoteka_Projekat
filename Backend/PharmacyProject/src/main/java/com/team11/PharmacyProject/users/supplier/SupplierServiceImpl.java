@@ -45,8 +45,17 @@ public class SupplierServiceImpl implements SupplierService {
             // Ako lek postoji i nije vec dodat
             if (medicine.isPresent()) {
                 boolean contains = supp.getSupplierItems().stream().anyMatch(si -> si.getMedicine().getId().equals(medicine.get().getId()));
-                if (contains)
-                    return false;
+                if (contains) {
+                    Optional<SupplierItem> oldSupplierItem = supp.getSupplierItems().stream()
+                            .filter(si -> si.getMedicine().getId().equals(medicine.get().getId()))
+                            .collect(Collectors.toList()).stream().findFirst();
+                    int oldAmount = 0;
+                    if (oldSupplierItem.isPresent()) {
+                        oldAmount += oldSupplierItem.get().getAmount();
+                    }
+                    stockItemDTO.setAmount(stockItemDTO.getAmount() + oldAmount);
+                    return updateStockItem(supplierId, stockItemDTO);
+                }
                 supplierItem.setAmount(stockItemDTO.getAmount());
                 supplierItem.setMedicine(medicine.get());
                 supp.getSupplierItems().add(supplierItem);
