@@ -40,12 +40,12 @@ const PharmacistHeader = () => {
                     <Nav.Link as={Link} style={{ color: "white" }} to="/worker/examined">
                         Examined patients
                     </Nav.Link>
-                    <Nav.Link as={Link} style={{ color: "white" }} to="/worker/calendar">
-                        Request a vacation
+                    <Nav.Link as={Link} style={{ color: "white" }} to="/worker/vacation">
+                        Vacation
                     </Nav.Link>
                 </Nav>
                 <Nav>
-                    <Nav.Link as={Link} style={{ color: "white" }} to="/worker/profile">
+                    <Nav.Link as={Link} style={{ color: "white" }} to="/worker/pharmacist_profile">
                         Profile
                     </Nav.Link>
                     <Nav.Link as={Link} style={{ color: "white" }} to="/" onClick={() => handleLogout()}>

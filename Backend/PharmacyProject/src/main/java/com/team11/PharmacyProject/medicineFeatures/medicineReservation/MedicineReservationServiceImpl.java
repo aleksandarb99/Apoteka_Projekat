@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,6 +27,15 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
     @Autowired
     PatientRepository patientRepository;
+
+    @Override
+    public boolean isMedicineItemReserved(Long id) {
+        MedicineReservation reservation =  reservationRepository.findReservationByMedicineItemId(id);
+        
+        if(reservation != null)
+            return true;
+        return false;
+    }
 
     @Override
     public MedicineReservationNotifyPatientDTO insertMedicineReservation(MedicineReservationInsertDTO dto) {

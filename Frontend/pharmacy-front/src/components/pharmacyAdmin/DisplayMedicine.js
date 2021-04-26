@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Tab, Row, Col, Button, Table, Modal, Alert } from "react-bootstrap";
 
-import axios from "axios";
+import axios from "../../app/api";
 
 import "../../styling/pharmacy.css";
 

@@ -20,6 +20,8 @@ public class AppointmentCalendarDTO {
 
     private double price;
 
+    private String calendarType = "appointment";
+
     public AppointmentCalendarDTO(){
 
     }
@@ -36,6 +38,14 @@ public class AppointmentCalendarDTO {
             patient = appt.getPatient().getFirstName() + " " + appt.getPatient().getLastName();
         }
         price = appt.getPrice();
+    }
+
+    public String getCalendarType() {
+        return calendarType;
+    }
+
+    public void setCalendarType(String calendarType) {
+        this.calendarType = calendarType;
     }
 
     public double getPrice() {

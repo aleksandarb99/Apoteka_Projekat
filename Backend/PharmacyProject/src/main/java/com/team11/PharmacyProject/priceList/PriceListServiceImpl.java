@@ -5,6 +5,7 @@ import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemService;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,9 @@ public class PriceListServiceImpl implements PriceListService {
 
     @Autowired
     private MedicineItemService medicineItemService;
+
+    @Autowired
+    private MedicineReservationService medicineReservationService;
 
     @Override
     public PriceList findById(long id) {
@@ -115,8 +119,8 @@ public class PriceListServiceImpl implements PriceListService {
         MedicineItem mi = medicineItemService.findById(medicineItemId);
         if (mi == null) return null;
 
-//        TODO proveri da li je rezervisan
-//        TODO razmisli sta se sve brise
+        boolean reserved = medicineReservationService.isMedicineItemReserved(medicineItemId);
+        if (reserved) return null;
 
         priceList.getMedicineItems().remove(mi);
         priceListRepository.save(priceList);

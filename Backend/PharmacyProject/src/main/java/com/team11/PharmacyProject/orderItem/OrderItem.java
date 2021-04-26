@@ -14,11 +14,16 @@ public class OrderItem {
     @Column(name = "amount", nullable = false)
     private int amount;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "medicine_id")
     private Medicine medicine;
 
     public OrderItem() {
+    }
+
+    public OrderItem(int amount, Medicine medicine) {
+        this.amount = amount;
+        this.medicine = medicine;
     }
 
     public OrderItem(Long id, int amount, Medicine medicine) {

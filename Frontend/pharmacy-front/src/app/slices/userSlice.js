@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 import { Redirect } from "react-router";
-import api from "../api";
+import axios from "../api";
 
 const initialUser = localStorage.getItem("user")
   ? JSON.parse(localStorage.getItem("user"))

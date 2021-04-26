@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Modal, Form, Button } from 'react-bootstrap'
+import { Modal, Form, Button, Row } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import PasswordFormGroup from '../formGroups/PasswordFormGroup'
 import api from '../../../app/api'
@@ -10,8 +10,8 @@ import { logout } from '../../../app/slices/userSlice'
 // Use when user is logging in for the first time
 const SetPasswordModal = (props) => {
 
-    const [validated, setValidated] = useState(false)
-    const [showErrorModal, setShowErrorModal] = useState(false)
+    const [validated, setValidated] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
 
@@ -38,7 +38,8 @@ const SetPasswordModal = (props) => {
         const f = event.currentTarget;
 
         if (f.checkValidity() === true) {
-            setValidated(true)
+            setErrorMessage('');
+            setValidated(true);
             handleSet();
         }
     }
@@ -46,7 +47,7 @@ const SetPasswordModal = (props) => {
     const handleSet = () => {
         api.put("http://localhost:8080/api/users/set-password/" + getIdFromToken(), form)
             .then(props.onPasswordSet())
-            .catch(setShowErrorModal(true))
+            .catch(setErrorMessage('Oops! Something went wrong, try again!'));
     }
 
     return (
@@ -59,8 +60,12 @@ const SetPasswordModal = (props) => {
                     <PasswordFormGroup onChange={(event) => setField('newPassword', event.target.value)}></PasswordFormGroup>
                     <Button className="float-center" variant="outline-secondary" type="submit" >Set Password</Button>
                 </Form>
+                {errorMessage.length > 0 &&
+                        <Row className="justify-content-center m-3">
+                            <p className="text-danger">{errorMessage}</p>
+                        </Row>
+                    }
             </Modal.Body>
-            <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
         </Modal >
     )
 }

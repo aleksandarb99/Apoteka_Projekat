@@ -27,10 +27,10 @@ public class RequestForHoliday {
     @Enumerated(EnumType.STRING)
     private AbsenceType absenceType;
 
-    @Column(name = "decline_text", nullable = false)
+    @Column(name = "decline_text")
     private String declineText;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pharmacy_worker_id")
     private PharmacyWorker pharmacyWorker;
 
@@ -45,6 +45,14 @@ public class RequestForHoliday {
         this.absenceType = absenceType;
         this.declineText = declineText;
         this.pharmacyWorker = pharmacyWorker;
+    }
+
+    public RequestForHoliday(Long startDate, Long endDate, AbsenceType absenceType, PharmacyWorker pharmacyWorker) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.absenceType = absenceType;
+        this.pharmacyWorker = pharmacyWorker;
+        this.requestState = AbsenceRequestState.PENDING;
     }
 
     public Long getId() {

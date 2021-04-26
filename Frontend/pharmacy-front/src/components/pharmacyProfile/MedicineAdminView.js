@@ -13,7 +13,7 @@ import {
   Pagination,
 } from "react-bootstrap";
 
-import axios from "axios";
+import axios from "../../app/api";
 
 import { StarFill } from "react-bootstrap-icons";
 
