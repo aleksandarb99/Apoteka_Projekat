@@ -42,7 +42,7 @@ const DermatologistHeader = () => {
                     </Nav.Link>
                 </Nav>
                 <Nav>
-                    <Nav.Link as={Link} style={{ color: "white" }} to="/worker/profile">
+                    <Nav.Link as={Link} style={{ color: "white" }} to="/worker/dermatologist_profile">
                         Profile
                     </Nav.Link>
                     <Nav.Link as={Link} style={{ color: "white" }} to="/" onClick={() => handleLogout()}>
