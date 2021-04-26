@@ -1,5 +1,5 @@
 import React from "react";
-import "../styling/unregistered.css";
+import "../styling/home_page.css";
 import Login from "./users/Login";
 
 function LoginPage() {

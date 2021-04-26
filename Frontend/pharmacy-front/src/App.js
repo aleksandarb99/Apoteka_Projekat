@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import LoginPage from "./components/LoginPage";
 import Registration from "./components/Registration";
-import HomePage from "./components/unregisteredAndPatient/HomePage";
+import HomePage from "./components/utilComponents/HomePage";
 import PharmacyAdminHomePage from "./components/pharmacyAdmin/PharmacyAdminHomePage";
 import UserProfile from "./components/profile/UserProfile";
 import Footer from "./components/Footer";
@@ -17,6 +17,7 @@ import MedicineCrud from "./components/medicine/MedicineCrud";
 import SearchPatPage from "./components/workers/search_patients";
 import SearchExaminedPatPage from "./components/workers/list_examined";
 import CommonHeader from "./components/utilComponents/header/CommonHeader";
+import BasicProfileInfo from "./components/profile/BasicProfileInfo";
 
 import WorkCalendar from "./components/workers/work_calendar";
 import AppointmentReport from "./components/workers/appointment_report";
@@ -34,7 +35,8 @@ function App() {
         <CommonHeader />
         <Switch>
           <Route path="/" exact component={HomePage} />
-          <Route path="/profile" component={UserProfile} />
+          <Route path="/profile" exact component={UserProfile} />
+          <Route path="/infoProfile" exact component={BasicProfileInfo} />
           <Route
             path="/reserve-consultation/pharmacies"
             component={PharmaciesWithFreePharmacists}

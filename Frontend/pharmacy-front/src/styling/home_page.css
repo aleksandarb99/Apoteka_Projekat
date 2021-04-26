@@ -1,4 +1,4 @@
-.unregistered__home__page {
+.home__page {
   height: 100vh;
   padding: 0px;
 }
@@ -7,7 +7,7 @@
   margin: 0px;
 }
 
-.sideBar {
+.side__bar {
   background-color: rgba(173, 173, 173, 0.452) !important;
   border-right: 1px solid black;
 }

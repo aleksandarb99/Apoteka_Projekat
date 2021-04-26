@@ -19,4 +19,5 @@ public interface UserRepository extends JpaRepository<MyUser, Long> {
     Slice<MyUser> findByIdFetchAdderss(long id, Pageable pg);
 
     MyUser findByEmail(String username);
+    MyUser findFirstById(Long id);
 }

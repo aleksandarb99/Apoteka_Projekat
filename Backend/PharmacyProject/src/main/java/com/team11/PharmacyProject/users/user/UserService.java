@@ -1,6 +1,6 @@
 package com.team11.PharmacyProject.users.user;
 
-import com.team11.PharmacyProject.dto.UserUpdateDTO;
+import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
 import com.team11.PharmacyProject.enums.UserType;
 
 import java.util.List;
@@ -14,4 +14,8 @@ public interface UserService {
     List<MyUser> getUsersByUserType(UserType type);
 
     boolean delete(long id);
+
+    boolean changePassword(Long userId, String oldPassword, String newPassword);
+
+    boolean setPassword(Long userId, String newPassword);
 }

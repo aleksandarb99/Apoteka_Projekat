@@ -1,8 +1,7 @@
 package com.team11.PharmacyProject.users.user;
 
-import com.team11.PharmacyProject.dto.user.UserCrudDTO;
-import com.team11.PharmacyProject.dto.user.UserDTO;
-import com.team11.PharmacyProject.dto.UserUpdateDTO;
+import com.team11.PharmacyProject.dto.user.*;
+import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,21 +52,22 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getUser(@PathVariable("id") Long id) {
+    public ResponseEntity<UserProfileInfoDTO> getUser(@PathVariable("id") Long id) {
+        // TODO add validation
         MyUser user = userService.findOne(id);
 
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(mapper.map(user, UserDTO.class), HttpStatus.OK);
+        return new ResponseEntity<>(mapper.map(user, UserProfileInfoDTO.class), HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserUpdateDTO> updateUser(@Valid @RequestBody UserUpdateDTO user, BindingResult result) throws Exception {
 
         if (result.hasErrors()) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         MyUser updatedUser = userService.updateUser(user);
@@ -77,6 +77,29 @@ public class UserController {
         }
 
         return new ResponseEntity<>(mapper.map(user, UserUpdateDTO.class), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/change-password/{id}")
+    public ResponseEntity<String> changePassword(@PathVariable("id") Long userId, @RequestBody ChangePasswordDTO changePassword) {
+        // TODO validation
+        String oldPassword = changePassword.getOldPassword();
+        String newPassword = changePassword.getNewPassword();
+        if (userService.changePassword(userId, oldPassword, newPassword)) {
+            return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error. Password not changed.", HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @PutMapping(value = "/set-password/{id}")
+    public ResponseEntity<String> setPassword(@PathVariable("id") Long userId, @RequestBody SetPasswordDTO setPassword) {
+        // TODO validation
+        String newPassword = setPassword.getNewPassword();
+        if (userService.setPassword(userId, newPassword)) {
+            return new ResponseEntity<>("Password set successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error. Password not set.", HttpStatus.FORBIDDEN);
+        }
     }
 
     private UserCrudDTO convertToCrudDto(MyUser user) {
