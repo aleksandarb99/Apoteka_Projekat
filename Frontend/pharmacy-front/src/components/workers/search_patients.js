@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import  {Row, Form, Button, Container, Col, Card, Modal} from "react-bootstrap";
+import  {Row, Form, Button, Container, Col, Card, Modal, ButtonGroup} from "react-bootstrap";
 import AppointmentsModal from "./appointments_modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from "axios";
+import api from "../../app/api";
+import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
+import { getIdFromToken } from '../../app/jwtTokenUtils';
 
 function SearchPatPage() {
   const [patients, setPatients] = useState([]);
@@ -13,7 +15,7 @@ function SearchPatPage() {
 
   useEffect(() => {
     async function fetchPatients() {
-      const request = await axios.get("http://localhost:8080/api/patients/all");
+      const request = await api.get("http://localhost:8080/api/patients/all");
       setPatients(request.data);
 
       return request;
@@ -26,23 +28,29 @@ function SearchPatPage() {
     console.log("fn" + fName);
     console.log("fn" + lName);
     if (fName.length === 0 &&  lName.length === 0 ){
-      axios.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data));
+      api.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data));
     }else{
-      axios.get("http://localhost:8080/api/patients/search", 
+      api.get("http://localhost:8080/api/patients/search", 
             { params: {firstName:fName, lastName:lName}}).then((resp)=>setPatients(resp.data));
     } 
   }
 
   const resetSearch = function() {
-    axios.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data)).catch((resp) => setPatients([]));
+    api.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data)).catch((resp) => setPatients([]));
     setFName("");
     setLName("");
   }
 
   const onShowAppointmentsButton = function(pat_to_show){
+    let id = getIdFromToken();
+    if (!id){
+        alert("invalid user!")
+        setPatients([]);
+        return;
+    }
     setPatient({
       "patient": pat_to_show?.email,
-      "worker": 5, //TODO promeniti, hardkodovano
+      "worker": id, 
       "patientName": pat_to_show?.firstName + " " + pat_to_show?.lastName
     });
     console.log(pat_to_show);
@@ -71,11 +79,11 @@ function SearchPatPage() {
                           placeholder="Enter last name..." />
                   </Col>
 
-                  <Col className="justify-content-center">
-                  
-                  <Button type="submit" variant="primary" > Search </Button>
-                  <Button variant="primary" onClick={resetSearch}> Reset search </Button>
-                  
+                  <Col>
+                  <ButtonGroup size="sm">
+                    <Button type="submit" variant="primary" > Search </Button>
+                    <Button variant="primary" onClick={resetSearch}> Reset search </Button>
+                  </ButtonGroup>
                   </Col>
               </Form.Group>
               
@@ -94,7 +102,7 @@ function SearchPatPage() {
                 <Card fluid>
                   <Card.Body>
                     <Card.Title>{value.firstName + " " + value.lastName} </Card.Title>
-                    <Button variant="secondary" onClick={() => onShowAppointmentsButton(value)}> Upcomming appointments </Button>
+                    <Button variant="secondary" onClick={() => onShowAppointmentsButton(value)}> Your upcomming appointments with this patient</Button>
                   </Card.Body>
                 </Card>
                 </Col>

@@ -7,16 +7,18 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import AppointmentStartModal from "./appointment_start_modal";
 import moment from "moment";
-import axios from "axios";
 import api from "../../app/api";
-import "./calendar.css";
+import "../../styling/calendar.css";
 import tippy from "tippy.js";
 import 'tippy.js/dist/tippy.css';
+import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
+import { getIdFromToken } from '../../app/jwtTokenUtils';
 
 function WorkCalendar() {
     const [eventi, setEventi] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [startAppt, setStartAppt] = useState({});
+    const [currUser, setCurrUser] = useState({});
     
     // const [eventi, setEventi] = useState([{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},
     // { title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},
@@ -24,7 +26,20 @@ function WorkCalendar() {
 
     useEffect(() => {
         async function fetchAppointments() {
-            const request = await axios.get("http://localhost:8080/api/workers/calendarAppointments/5"); //todo id je hardkodovan
+            let user_id = getIdFromToken();
+            let user_type= getUserTypeFromToken().trim();
+            console.log(user_type);
+            if (!user_id){
+                alert("invalid user!")
+                setEventi([]);
+                return;
+            }else if (user_type !== 'DERMATOLOGIST' && user_type !== 'PHARMACIST'){
+                alert("invalid user_type!")
+                setEventi([]);
+                return;
+            }
+            setCurrUser({id: user_id, type: user_type})
+            const request = await api.get("http://localhost:8080/api/workers/calendarAppointments/" + user_id); //todo id je hardkodovan
             setEventi(request.data);
         
             return request;
@@ -34,7 +49,7 @@ function WorkCalendar() {
 
 
     const initiateAppt = (info) => {
-        if (info.event.extendedProps.appointmentState != 'RESERVED'){
+        if (info.event.extendedProps.appointmentState !== 'RESERVED'){
             return;
         }
 
@@ -54,9 +69,13 @@ function WorkCalendar() {
 
     const onCancelMethod = () => { 
         setShowModal(false);
-        //todo i ovo ne zaboravi da ne bude hardkodovano
-        api.get("http://localhost:8080/api/workers/calendarAppointments/5").then((resp) => setEventi(resp.data)); 
-        //todo id je hardkodovan
+        let id = getIdFromToken();
+        if (!id){
+            alert("invalid user!")
+            setEventi([]);
+            return;
+        }
+        api.get("http://localhost:8080/api/workers/calendarAppointments/" + id).then((resp) => setEventi(resp.data)); 
     }
 
     return (
@@ -89,7 +108,7 @@ function WorkCalendar() {
                                 tippy(info.el, {
                                     allowHTML: true,
                                     content: '<div><p>'+  moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm')   + '</p>'+
-                                    '<p>' + propi.patient + '<br/><i>' +  propi.appointmentState + '</i></p></div'
+                                    '<p>' + propi.patient + '<br/>' + (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>') + propi.appointmentState + '</i></p></div'
                                   });
                             }
                         },
@@ -105,7 +124,7 @@ function WorkCalendar() {
                                 //     +  "<p>" + propi.patient + "</p><p><i> " + propi.appointmentState + "</i></p>"};
                                 return {html:
                                     '<div><p>'+  moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm')   + '</p>'+
-                                    '<p>' + propi.patient + '<br/><i>' +  propi.appointmentState + '</i></p></div'};
+                                    '<p>' + propi.patient  + '<br/>' + (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>') +  propi.appointmentState + '</i></p></div'};
                             }
                         },
                         YearView: {
@@ -120,7 +139,7 @@ function WorkCalendar() {
                             eventContent: function(info){
                                 let propi = info.event.extendedProps;
                                 return {html: moment(info.event.start).format('DD/MM | HH:mm') + "-" + moment(info.event.end).format('HH:mm') 
-                                    +  "<br/>" + propi.patient + "<br/><i>" + propi.appointmentState + "</i>"};
+                                    +  "<br/>" + propi.patient + "<br/>"+ (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>')  + propi.appointmentState + "</i>"};
                             }
                         }
                     }}

@@ -24,8 +24,7 @@ import AppointmentReport from "./components/workers/appointment_report";
 
 import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
-
-import { getUserTypeFromToken } from './app/jwtTokenUtils'
+import PharmaciesWithFreePharmacists from "./components/unregisteredAndPatient/PharmaciesWithFreePharmacists";
 
 import "./styling/navbar.css";
 
@@ -38,6 +37,10 @@ function App() {
           <Route path="/" exact component={HomePage} />
           <Route path="/profile" exact component={UserProfile} />
           <Route path="/infoProfile" exact component={BasicProfileInfo} />
+          <Route
+            path="/reserve-consultation/pharmacies"
+            component={PharmaciesWithFreePharmacists}
+          />
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LoginPage} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
@@ -51,15 +54,15 @@ function App() {
           <Route path="/admin/pharmacies" component={PharmacyCrud} />
           <Route path="/admin/medicine" component={MedicineCrud} />
           <Route path="/worker/search-patients" component={SearchPatPage} />
-          <Route path="/wp" component={WorkerProfile} />
+          <Route path="/worker/profile" component={WorkerProfile} />
           <Route path="/admin/users" component={UserCrud} />
           <Route path="/worker/examined" component={SearchExaminedPatPage} />
-          <Route path="/wc" component={WorkCalendar} />
+          <Route path="/worker/calendar" component={WorkCalendar} />
           <Route path="/worker/appointment_report" component={AppointmentReport} />
         </Switch>
       </div>
       <Footer />
-    </Router >
+    </Router>
   );
 }
 

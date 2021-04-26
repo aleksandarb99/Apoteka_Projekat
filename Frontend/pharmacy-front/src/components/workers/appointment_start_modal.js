@@ -58,7 +58,7 @@ function AppointmentStartModal(props) { // prosledis appointment
             <Modal.Body>
                 <Container>
                     <Button onClick={onStart}>Start appointment</Button>
-                    <Button onClick={onCancel}>Cancel appointment</Button>
+                    <Button onClick={onCancel}>Patient didn't show up</Button>
                 </Container>
             </Modal.Body>
             <Modal.Footer>

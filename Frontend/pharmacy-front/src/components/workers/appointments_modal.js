@@ -102,7 +102,7 @@ function AppointmentsModal(props) { // id usera, id workera, bool farmaceut, nam
                                 <Card.Footer>
                                     <ButtonGroup>
                                         <Button onClick={()=>onStart(value)}>Start appointment</Button>
-                                        <Button onClick={()=>onCancel(value)}>Cancel appointment</Button>
+                                        <Button onClick={()=>onCancel(value)}>Patient didn't show up</Button>
                                     </ButtonGroup>
                                 </Card.Footer>
                             </Card>
