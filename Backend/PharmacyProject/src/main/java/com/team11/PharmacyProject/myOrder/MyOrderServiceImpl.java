@@ -54,7 +54,8 @@ public class MyOrderServiceImpl implements MyOrderService {
         return orders.stream()
                 .map(myOrder -> modelMapper.map(myOrder, MyOrderDTO.class))
                 .collect(Collectors.toList());
-      
+    }
+
     public boolean addOrder(MyOrderAddingDTO dto) {
         Pharmacy pharmacy = pharmacyService.getPharmacyById(dto.getPharmacyId());
         if(pharmacy==null){

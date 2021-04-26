@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.users.supplier;
 
 import com.team11.PharmacyProject.dto.offer.OfferListDTO;
 import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
+import com.team11.PharmacyProject.enums.OfferState;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
 import com.team11.PharmacyProject.myOrder.MyOrder;
@@ -112,7 +113,7 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public boolean insertOrder(long suppId, OfferListDTO offerDTO) {
+    public boolean insertOffer(long suppId, OfferListDTO offerDTO) {
         // TODO validation
         Optional<Supplier> s = supplierRepository.findSupplierWithOffersUsingId(suppId);
         if (s.isEmpty()) {
@@ -149,6 +150,49 @@ public class SupplierServiceImpl implements SupplierService {
             supplierRepository.save(supp);
             return true;
             }
+        return false;
+    }
+
+    @Override
+    public boolean updateOffer(long suppId, OfferListDTO offerDTO) {
+        // TODO validation
+        Optional<Supplier> s = supplierRepository.findSupplierWithOffersUsingId(suppId);
+        if (s.isEmpty()) {
+            return false;
+        }
+        Supplier supp = s.get();
+
+        if (offerDTO != null) {
+            // Ako je cena negativna, onda nije okej
+            if (offerDTO.getPrice() < 0) {
+                return false;
+            }
+            // Dobavi order za offer
+            Optional<MyOrder> order = myOrderRepository.getMyOrderById(offerDTO.getOrderId());
+            if (order.isEmpty())
+                return false;
+            // Mora da bude ista porudzbina
+            if (order.get().getId() != offerDTO.getOrderId())
+                return false;
+            // Ako je prosao, onda ne moze da se menja (150s ogranicenja)
+            if (order.get().getDeadline() < (System.currentTimeMillis()))
+                return false;
+            // Da li je na stanju sve
+            if (!onStock(suppId, order.get())) {
+                return false;
+            }
+            Optional<Offer> offerToUpdate = supp.getOffers().stream()
+                    .filter(o -> o.getOrder().getId().equals(offerDTO.getOrderId()))
+                    .collect(Collectors.toList()).stream().findFirst();
+
+            if (offerToUpdate.isEmpty())
+                return false;
+            offerToUpdate.get().setPrice(offerDTO.getPrice());
+            offerToUpdate.get().setDeliveryDate(offerDTO.getDeliveryDate());
+            offerToUpdate.get().setOfferState(offerDTO.getOfferState());
+            supplierRepository.save(supp);
+            return true;
+        }
         return false;
     }
 

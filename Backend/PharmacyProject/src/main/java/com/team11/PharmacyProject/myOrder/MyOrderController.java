@@ -33,6 +33,7 @@ public class MyOrderController {
     public ResponseEntity<List<MyOrderDTO>> getAvailableOrders() {
         List<MyOrderDTO> myOrderDTOS = orderService.getAvailableOrders();
         return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
+    }
 
     @PostMapping(value = "/addorder", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addOrder(@RequestBody MyOrderAddingDTO data) {
