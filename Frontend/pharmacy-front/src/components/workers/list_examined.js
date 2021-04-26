@@ -27,6 +27,8 @@ function SearchExaminedPatPage() {
     const [sortWay2, setSortWay2] = useState('none');
     const [sortWay3, setSortWay3] = useState('none');
 
+    const [currUserType, setCurrUserType] = useState('PHARMACIST');
+
     useEffect(() => {
         async function fetchPatients() {
             let id = getIdFromToken();
@@ -35,6 +37,12 @@ function SearchExaminedPatPage() {
                 setPatients([]);
                 return;
             }
+            let user_type= getUserTypeFromToken().trim();
+            if (user_type !== 'DERMATOLOGIST' && user_type !== 'PHARMACIST'){
+                alert("invalid user_type!")
+                return;
+            }
+            setCurrUserType(user_type);
             const request = await api.get("http://localhost:8080/api/patients/getAllExaminedPatients?workerID=" + id)
                 .then((resp)=>setPatients(resp.data)).catch(setPatients([]));
             return request;
@@ -324,6 +332,9 @@ function SearchExaminedPatPage() {
                     <Card.Body>
                         <Card.Title>{value.firstName + " " + value.lastName} </Card.Title>
                         <Card.Text>{"Last appointment: " + moment(value.appointmentStart).format("DD MMM YYYY hh:mm a")} </Card.Text>
+                        {currUserType === 'DERMATOLOGIST' &&
+                            <Card.Text>{value.pharmacy} </Card.Text>
+                        }
                         {/*izmeni ovaj deo da kasnije bude da se prikazu svi sastanci*/}
                         {/* <Button variant="secondary" onClick={() => onShowAppointmentsButton(value)}> Upcomming appointments </Button> */}
                     </Card.Body>
