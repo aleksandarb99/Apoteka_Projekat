@@ -12,6 +12,7 @@ const OrderItem = (props) => {
                     <p>{`${oi.medicine.code} -- ${oi.medicine.name} -- Amount: ${oi.amount}`}</p>
                 </div>
             })}
+            <p>{`Due: ${new Date(props.order.deadline).toLocaleDateString("sr-sp")}`}</p>
             <Button onClick={() => { setShowAddOfferModal(true) }}>Create Offer</Button>
             <AddEditOfferModal show={showAddOfferModal} order={props.order} onHide={() => setShowAddOfferModal(false)}></AddEditOfferModal>
         </div>

@@ -1,29 +1,45 @@
 import React, { useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
+import api from '../../../app/api';
+import { getIdFromToken } from '../../../app/jwtTokenUtils';
 
 const AddEditOfferModal = (props) => {
-    const [validated, setValidated] = useState(false);
-    const [totalPrice, setTotalPrice] = useState(false);
-    const [date, setDate] = useState(false);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [selectedDate, setSelectedDate] = useState(Date.now());
+
+    const setDateTimestamp = (dateString) => {
+        setSelectedDate(new Date(dateString).getTime())
+    }
 
     const handleClose = () => {
 
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
 
+        let data = {}
+        data.price = totalPrice;
+        data.deliveryDate = selectedDate;
+        data.offerState = "PENDING";
+        data.orderId = props.order.id;
+        api.post(`http://localhost:8080/api/suppliers/offers/${getIdFromToken()}`, data)
+            .then(props.onHide())
+            .catch(() => {
+                alert("Nije proslo validaciju")
+            })
     }
 
     const convertDate = (timestamp) => {
         let date = new Date(timestamp);
-        let year = date.getUTCFullYear();
-        let month = date.getUTCMonth() + 1;
-        let day = date.getUTCDate();
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
         month = month < 10 ? '0' + month : month
         day = day < 10 ? '0' + day : day
         return `${year}-${month}-${day}`
     }
-
 
     return (
         <Modal {...props}>
@@ -36,7 +52,7 @@ const AddEditOfferModal = (props) => {
                         <p>{`${oi.medicine.code} -- ${oi.medicine.name} -- Amount: ${oi.amount}`}</p>
                     </div>
                 })}
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit}>
                     <Form.Group>
                         <Form.Label>Total price</Form.Label>
                         <Form.Control
@@ -53,7 +69,7 @@ const AddEditOfferModal = (props) => {
 
                         <Form.Control
                             type="date"
-                            onChange={(event) => setDate(event.target.value)}
+                            onChange={(event) => setDateTimestamp(event.target.value)}
                             defaultValue={!props.offer ? convertDate(Date.now()) : convertDate(props.offer.deliveryDate)}
                             min={convertDate(Date.now())}
                             max={convertDate(props.order.deadline)}
