@@ -4,7 +4,8 @@ import AppointmentStartModal from "../appointment_start_modal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import api from "../../../app/api";
 import { getUserTypeFromToken } from '../../../app/jwtTokenUtils'
-import { getIdFromToken } from '../../../app/jwtTokenUtils'
+import { getIdFromToken } from '../../../app/jwtTokenUtils';
+import SetPasswordModal from "../../utilComponents/modals/SetPasswordModal";
 
 import { Card } from "react-bootstrap";
 import moment from "moment";
@@ -14,9 +15,9 @@ function PharmHomePage() {
   const [appointments, setAppointments] = useState([]); 
   const [showModal, setShowModal] = useState(false);
   const [startAppt, setStartAppt] = useState({});
+  const [isPasswordSet, setIsPasswordSet] = useState(false);
 
   useEffect(() => {
-    //todo hardkodovano
     async function fetchAppointments() {
       let id = getIdFromToken();
       if (!id){
@@ -31,6 +32,11 @@ function PharmHomePage() {
         .then((resp) => setAppointments(resp.data))
         .catch(() => setAppointments([]));
     }
+    let id = getIdFromToken();
+    api.get("http://localhost:8080/api/users/" + id)
+        .then((res) => {
+          setIsPasswordSet(res.data.passwordChanged);
+        });
     fetchAppointments();
   }, []);
 
@@ -63,21 +69,6 @@ function PharmHomePage() {
 
   return (
     <div>
-      {/* <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="#home">Dermatologist</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="m-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Search patients</Nav.Link>
-            <Nav.Link href="#link">Work callendar</Nav.Link>
-            <Nav.Link href="#link">Examined patients</Nav.Link>
-            <Nav.Link href="#link">Request a vacation</Nav.Link>
-            <Nav.Link href="#home">Profile</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar> */}
-
       <Row className="justify-content-center m-3 align-items-center">
         <h2>Upcomming appointments</h2>
       </Row>
@@ -128,6 +119,8 @@ function PharmHomePage() {
           setStartAppt({});
         }}
       ></AppointmentStartModal>
+
+      <SetPasswordModal show={!isPasswordSet} onPasswordSet={() => setIsPasswordSet(true)}></SetPasswordModal>
     </div>
   );
 }

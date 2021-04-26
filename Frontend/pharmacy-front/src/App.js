@@ -22,8 +22,9 @@ import BasicProfileInfo from "./components/profile/BasicProfileInfo";
 import WorkCalendar from "./components/workers/work_calendar";
 import AppointmentReport from "./components/workers/appointment_report";
 import VacationRequest from "./components/workers/vacation_request";
+import DermatologistProfile from "./components/workers/dermatologist_profile";
+import PharmacistProfile from "./components/workers/pharmacist_profile";
 
-import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
 import PharmaciesWithFreePharmacists from "./components/unregisteredAndPatient/PharmaciesWithFreePharmacists";
 
@@ -55,7 +56,8 @@ function App() {
           <Route path="/admin/pharmacies" component={PharmacyCrud} />
           <Route path="/admin/medicine" component={MedicineCrud} />
           <Route path="/worker/search-patients" component={SearchPatPage} />
-          <Route path="/worker/profile" component={WorkerProfile} />
+          <Route path="/worker/dermatologist_profile" component={DermatologistProfile} />
+          <Route path="/worker/pharmacist_profile" component={PharmacistProfile} />
           <Route path="/admin/users" component={UserCrud} />
           <Route path="/worker/examined" component={SearchExaminedPatPage} />
           <Route path="/worker/calendar" component={WorkCalendar} />
