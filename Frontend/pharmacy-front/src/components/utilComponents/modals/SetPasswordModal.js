@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, Form, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import PasswordFormGroup from '../formGroups/PasswordFormGroup'
@@ -8,11 +8,14 @@ import ErrorModal from '../modals/ErrorModal'
 import { logout } from '../../../app/slices/userSlice'
 
 // Use when user is logging in for the first time
-const SetPasswordModal = ({ isPasswordSet }) => {
+const SetPasswordModal = (props) => {
 
     const [validated, setValidated] = useState(false)
     const [showErrorModal, setShowErrorModal] = useState(false)
-    const [passwordSet, setPasswordSet] = useState(isPasswordSet)
+
+    useEffect(() => {
+
+    })
 
     const [form, setForm] = useState({})
     const setField = (field, value) => {
@@ -42,12 +45,12 @@ const SetPasswordModal = ({ isPasswordSet }) => {
 
     const handleSet = () => {
         api.put("http://localhost:8080/api/users/set-password/" + getIdFromToken(), form)
-            .then(setPasswordSet(true))
+            .then(props.onPasswordSet())
             .catch(setShowErrorModal(true))
     }
 
     return (
-        <Modal show={!passwordSet}>
+        <Modal {...props}>
             <Modal.Header className="justify-content-center" backdrop="static" onHide={handleClose} closeButton>
                 <p>Welcome! Please set new password!</p>
             </Modal.Header>

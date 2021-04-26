@@ -27,6 +27,8 @@ public class UserProfileInfoDTO {
 
     private UserType userType;
 
+    private boolean isPasswordChanged;
+
     public Long getId() {
         return id;
     }
@@ -81,5 +83,13 @@ public class UserProfileInfoDTO {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public boolean isPasswordChanged() {
+        return isPasswordChanged;
+    }
+
+    public void setPasswordChanged(boolean passwordChanged) {
+        isPasswordChanged = passwordChanged;
     }
 }
