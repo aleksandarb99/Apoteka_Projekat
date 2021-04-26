@@ -31,7 +31,7 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
     @Override
     public boolean isMedicineItemReserved(Long id) {
         MedicineReservation reservation =  reservationRepository.findReservationByMedicineItemId(id);
-        System.out.println(reservation);
+        
         if(reservation != null)
             return true;
         return false;
