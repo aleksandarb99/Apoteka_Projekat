@@ -435,9 +435,9 @@ insert into work_calendar_appointments (work_calendar_id, appointments_id) value
 
 /*RequestForHoliday*/
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-                    values ('VACATION', 'Odobreno.', 1619953200000, 1620817200000, 'ACCEPTED', 6);
+                    values ('VACATION', '', 1619953200000, 1620817200000, 'ACCEPTED', 6);
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-                    values ('LEAVE', 'Nemoguce da sada dobijete.', 1619953200000, 1620817200000, 'CANCELLED', 7);
+                    values ('LEAVE', '', 1619953200000, 1620817200000, 'ACCEPTED', 7);
 
 /*MyOrders*/
 insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);

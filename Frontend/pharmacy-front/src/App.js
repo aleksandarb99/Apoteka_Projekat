@@ -20,6 +20,7 @@ import CommonHeader from "./components/utilComponents/header/CommonHeader";
 
 import WorkCalendar from "./components/workers/work_calendar";
 import AppointmentReport from "./components/workers/appointment_report";
+import VacationRequest from "./components/workers/vacation_request";
 
 import WorkerProfile from "./components/workers/profile_page";
 import UserCrud from "./components/users/UserCrud";
@@ -57,6 +58,7 @@ function App() {
           <Route path="/worker/examined" component={SearchExaminedPatPage} />
           <Route path="/worker/calendar" component={WorkCalendar} />
           <Route path="/worker/appointment_report" component={AppointmentReport} />
+          <Route path="/worker/vacation" component={VacationRequest} />
         </Switch>
       </div>
       <Footer />
