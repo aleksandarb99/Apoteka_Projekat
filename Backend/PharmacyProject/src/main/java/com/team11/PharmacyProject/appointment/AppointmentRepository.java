@@ -33,4 +33,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT a FROM Appointment a join fetch a.patient where a.id=?1")
     Slice<Appointment> getAppointmentByIdFetchPatient(Long id, Pageable pg);
+
+    @Query("select case when count(a)> 0 then true else false end from Appointment a where " +
+            "a.worker.id = ?1 and ((a.startTime >= ?2 and a.startTime <= ?3) or (a.endTime >= ?2 and a.endTime <= ?3))")
+    boolean hasAppointmentsInThatDateRange(Long workerID, Long vacationStartTime, Long vacationEndTime);
 }

@@ -1,0 +1,66 @@
+package com.team11.PharmacyProject.requestForHoliday;
+
+import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.dto.appointment.AppointmentCalendarDTO;
+import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayDTO;
+import com.team11.PharmacyProject.enums.AbsenceType;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("api/vacation")
+public class RequestForHolidayController {
+    @Autowired
+    RequestForHolidayServiceImpl requestForHolidayService;
+
+    @GetMapping(value = "/getVacationsFromWorker", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RequestForHolidayDTO>> getVacationsFromWorker(@RequestParam("id") Long id){
+        List<RequestForHoliday> requestForHolidays = requestForHolidayService.getWorkerHolidays(id);
+        List<RequestForHolidayDTO> dtos = new ArrayList<>(requestForHolidays.size());
+        for (int i = requestForHolidays.size()-1; i >= 0; i--){ //da bi se poslednji zahtev pokazao prvi na listi na fronu
+            dtos.add(new RequestForHolidayDTO(requestForHolidays.get(i)));
+        }
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getAcceptedVacationsFromWorker", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RequestForHolidayDTO>> getAcceptedVacationsFromWorker(@RequestParam("id") Long id){
+        List<RequestForHoliday> requestForHolidays = requestForHolidayService.getAcceptedWorkerHolidays(id);
+        List<RequestForHolidayDTO> dtos = new ArrayList<>(requestForHolidays.size());
+        for (RequestForHoliday req : requestForHolidays){
+            dtos.add(new RequestForHolidayDTO(req));
+        }
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/request_vacation", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> requestVacation(@RequestParam("id") Long id, @RequestParam("start") Long start,
+                                                    @RequestParam("end") Long end, @RequestParam("type") String type){
+        //todo provera za datum da ne bude u proslosti, i za ono vece manje
+        if (Instant.now().toEpochMilli() > start){
+            return new ResponseEntity<>("Error! Start date has to be in future!", HttpStatus.BAD_REQUEST);
+        }else if (start >= end){
+            return new ResponseEntity<>("Error! Start invalid start/end date!", HttpStatus.BAD_REQUEST);
+        }
+        AbsenceType absenceType;
+        if (type.equalsIgnoreCase("vacation"))
+            absenceType = AbsenceType.VACATION;
+        else
+            absenceType = AbsenceType.LEAVE;
+
+        String resp = requestForHolidayService.createHolidayRequest(id, start, end, absenceType);
+        if (resp.startsWith("Error")){
+            return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        }
+    }
+}

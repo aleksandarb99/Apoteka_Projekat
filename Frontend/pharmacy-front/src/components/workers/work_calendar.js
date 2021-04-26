@@ -19,10 +19,6 @@ function WorkCalendar() {
     const [showModal, setShowModal] = useState(false);
     const [startAppt, setStartAppt] = useState({});
     const [currUser, setCurrUser] = useState({});
-    
-    // const [eventi, setEventi] = useState([{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},
-    // { title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},
-    // { title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'},{ title: "today's event 2", start: moment().valueOf(), end: moment().valueOf() + 5000, display: 'auto', patient: 'djura djuric'}]);
 
     useEffect(() => {
         async function fetchAppointments() {
@@ -39,16 +35,25 @@ function WorkCalendar() {
                 return;
             }
             setCurrUser({id: user_id, type: user_type})
-            const request = await api.get("http://localhost:8080/api/workers/calendarAppointments/" + user_id); //todo id je hardkodovan
-            setEventi(request.data);
-        
-            return request;
+            const request = await api.get("http://localhost:8080/api/workers/calendarAppointments/" + user_id)
+                                        .then((resp) => {
+                                            let appts = resp.data;
+                                            api.get("http://localhost:8080/api/vacation/getAcceptedVacationsFromWorker?id=" + user_id)
+                                                .then((resp) => {
+                                                    let reqVac = resp.data
+                                                    setEventi(appts.concat(reqVac));
+                                                }).catch(()=> setEventi(appts));
+                                        }).catch(()=> setEventi([]));
+            console.log(eventi)
         }
         fetchAppointments();
       }, []);
 
 
     const initiateAppt = (info) => {
+        if (info.event.extendedProps.calendarType !== 'appointment'){
+            return;
+        }
         if (info.event.extendedProps.appointmentState !== 'RESERVED'){
             return;
         }
@@ -75,7 +80,16 @@ function WorkCalendar() {
             setEventi([]);
             return;
         }
-        api.get("http://localhost:8080/api/workers/calendarAppointments/" + id).then((resp) => setEventi(resp.data)); 
+        //api.get("http://localhost:8080/api/workers/calendarAppointments/" + id).then((resp) => setEventi(resp.data)); 
+        api.get("http://localhost:8080/api/workers/calendarAppointments/" + id)
+            .then((resp) => {
+                let appts = resp.data;
+                api.get("http://localhost:8080/api/vacation/getAcceptedVacationsFromWorker?id=" + id)
+                    .then((resp) => {
+                        let reqVac = resp.data
+                        setEventi(appts.concat(reqVac));
+                    }).catch(()=> setEventi(appts));
+            }).catch(()=> setEventi([]));
     }
 
     return (
@@ -100,16 +114,30 @@ function WorkCalendar() {
                                 let propi = info.event.extendedProps;
                                 // return {html: moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm') 
                                 //     +  "<p>" + propi.patient + "</p><p><i> " + propi.appointmentState + "</i></p>"};
-                                return {html:
-                                    '<div>' + propi.patient + '</div>'};
+                                if (propi.calendarType === 'appointment'){
+                                    return {html:
+                                        '<div>' + propi.patient + '</div>'};
+                                }else{
+                                    return {html:
+                                        '<div>' + propi.absenceType + '</div>'};
+                                }
                             },
                             eventDidMount: function(info){
                                 let propi = info.event.extendedProps;
-                                tippy(info.el, {
-                                    allowHTML: true,
-                                    content: '<div><p>'+  moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm')   + '</p>'+
-                                    '<p>' + propi.patient + '<br/>' + (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>') + propi.appointmentState + '</i></p></div'
-                                  });
+                                if (propi.calendarType === 'appointment'){
+                                    tippy(info.el, {
+                                        allowHTML: true,
+                                        content: '<div><p>'+  moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm')   + '</p>'+
+                                        '<p>' + propi.patient + '<br/>' + (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>') + propi.appointmentState + '</i></p></div>'
+                                    });
+                                }else{
+                                    info.event.setProp('backgroundColor', '#83CEC2');
+                                    tippy(info.el, {
+                                        allowHTML: true,
+                                        content: '<div><p>'+  moment(info.event.start).format('DD MMM') + "-" + moment(info.event.end).format('DD MMM')   + '</p>'+
+                                                    '<p>' + propi.absenceType + '</p></div>'
+                                    });
+                                }
                             }
                         },
                         MonthView: {
@@ -122,9 +150,20 @@ function WorkCalendar() {
                                 let propi = info.event.extendedProps;
                                 // return {html: moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm') 
                                 //     +  "<p>" + propi.patient + "</p><p><i> " + propi.appointmentState + "</i></p>"};
-                                return {html:
-                                    '<div><p>'+  moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm')   + '</p>'+
-                                    '<p>' + propi.patient  + '<br/>' + (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>') +  propi.appointmentState + '</i></p></div'};
+                                if (propi.calendarType === 'appointment'){
+                                    return {html:
+                                        '<div><p>'+  moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm')   + '</p>'+
+                                        '<p>' + propi.patient  + '<br/>' + (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>') +  propi.appointmentState + '</i></p></div>'};
+                                }else{
+                                    return {html:
+                                        '<div><p>'+  moment(info.event.start).format('DD MMM') + "-" + moment(info.event.end).format('DD MMM')   + '</p>'+
+                                                    '<p>' + propi.absenceType + '</p></div>'};
+                                }
+                            },
+                            eventDidMount: function(info){
+                                if (info.event.extendedProps.calendarType !== 'appointment'){
+                                    info.event.setProp('backgroundColor', '#83CEC2');
+                                }
                             }
                         },
                         YearView: {
@@ -138,8 +177,19 @@ function WorkCalendar() {
                             },
                             eventContent: function(info){
                                 let propi = info.event.extendedProps;
-                                return {html: moment(info.event.start).format('DD/MM | HH:mm') + "-" + moment(info.event.end).format('HH:mm') 
-                                    +  "<br/>" + propi.patient + "<br/>"+ (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>')  + propi.appointmentState + "</i>"};
+                                if (propi.calendarType === 'appointment'){
+                                    return {html: moment(info.event.start).format('DD/MM | HH:mm') + "-" + moment(info.event.end).format('HH:mm') 
+                                        +  "<br/>" + propi.patient + "<br/>"+ (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>')  + propi.appointmentState + "</i>"};
+                                }else{
+                                    return {html:
+                                        '<div><p>'+  moment(info.event.start).format('DD MMM') + "-" + moment(info.event.end).format('DD MMM')   + '</p>'+
+                                                    '<p>' + propi.absenceType + '</p></div>'};
+                                }
+                            },
+                            eventDidMount: function(info){
+                                if (info.event.extendedProps.calendarType !== 'appointment'){
+                                    info.event.setProp('backgroundColor', '#83CEC2');
+                                }
                             }
                         }
                     }}
