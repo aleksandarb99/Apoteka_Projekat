@@ -245,12 +245,12 @@ insert into patient_allergies (patient_id, allergies_id) values (2, 5);
 insert into patient_allergies (patient_id, allergies_id) values (2, 4);
 
 /*Suppliers*/
-insert into supplier (id) values (3);
+insert into supplier (id) values (5);
 insert into supplier (id) values (4);
 
 /*Supplier - supplier items*/
-insert into supplier_supplier_items (supplier_id, supplier_items_id) values (3, 1);
-insert into supplier_supplier_items (supplier_id, supplier_items_id) values (3, 4);
+insert into supplier_supplier_items (supplier_id, supplier_items_id) values (5, 1);
+insert into supplier_supplier_items (supplier_id, supplier_items_id) values (5, 4);
 insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 2);
 insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 3);
 insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 5);
@@ -474,9 +474,9 @@ insert into offer (delivery_date, offer_state, price, order_id)
                     values (1620730800000, 'ACCEPTED', 3560, 2);
 
 /*Supplier - Offers*/
-insert into supplier_offers (supplier_id, offers_id) values (3, 1);
+insert into supplier_offers (supplier_id, offers_id) values (5, 1);
 insert into supplier_offers (supplier_id, offers_id) values (4, 2);
-insert into supplier_offers (supplier_id, offers_id) values (3, 3);
+insert into supplier_offers (supplier_id, offers_id) values (5, 3);
 
 /*Advertisements*/
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id)
