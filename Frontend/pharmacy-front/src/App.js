@@ -17,6 +17,7 @@ import MedicineCrud from "./components/medicine/MedicineCrud";
 import SearchPatPage from "./components/workers/search_patients";
 import SearchExaminedPatPage from "./components/workers/list_examined";
 import CommonHeader from "./components/utilComponents/header/CommonHeader";
+import BasicProfileInfo from "./components/profile/BasicProfileInfo";
 
 import WorkCalendar from "./components/workers/work_calendar";
 import AppointmentReport from "./components/workers/appointment_report";
@@ -36,6 +37,7 @@ function App() {
         <Switch>
           <Route path="/" exact component={HomePage} />
           <Route path="/profile" exact component={UserProfile} />
+          <Route path="/infoProfile" exact component={BasicProfileInfo} />
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LoginPage} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />

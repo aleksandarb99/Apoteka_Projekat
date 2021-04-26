@@ -24,7 +24,7 @@ const SupplierHeader = () => {
                 <House />Home
             </Navbar.Brand>
             <Nav>
-                <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
+                <Nav.Link as={Link} style={{ color: "white" }} to="/infoProfile">
                     Profile
                     </Nav.Link>
                 <Nav.Link as={Link} style={{ color: "white" }} to="/" onClick={() => handleLogout()}>

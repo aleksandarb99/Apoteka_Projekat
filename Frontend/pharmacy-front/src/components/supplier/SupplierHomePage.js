@@ -24,7 +24,7 @@ const SupplierHomePage = () => {
                             <Nav variant="pills" className="flex-column">
                                 <Nav.Item>
                                     <Nav.Link className="my__nav__link" eventKey="first">
-                                        New requests
+                                        New orders
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>

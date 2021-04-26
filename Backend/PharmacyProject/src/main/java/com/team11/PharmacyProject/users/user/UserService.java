@@ -1,6 +1,6 @@
 package com.team11.PharmacyProject.users.user;
 
-import com.team11.PharmacyProject.dto.UserUpdateDTO;
+import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
 import com.team11.PharmacyProject.enums.UserType;
 
 import java.util.List;

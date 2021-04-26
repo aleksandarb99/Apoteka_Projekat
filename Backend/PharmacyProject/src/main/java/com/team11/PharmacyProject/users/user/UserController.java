@@ -1,7 +1,7 @@
 package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.user.*;
-import com.team11.PharmacyProject.dto.UserUpdateDTO;
+import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -68,7 +67,7 @@ public class UserController {
     public ResponseEntity<UserUpdateDTO> updateUser(@Valid @RequestBody UserUpdateDTO user, BindingResult result) throws Exception {
 
         if (result.hasErrors()) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         MyUser updatedUser = userService.updateUser(user);
