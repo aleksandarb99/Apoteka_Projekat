@@ -1,15 +1,15 @@
 import React from "react";
-import "../../styling/unregistered.css";
+import "../../styling/home_page.css";
 import { Nav, Tab, Row, Col } from "react-bootstrap";
 import PharmaciesView from "./PharmaciesView";
 import MedicinesView from "./MedicinesView";
 
 function UnregistredAndPatientHomePage() {
   return (
-    <main className="unregistered__home__page">
+    <main className="home__page">
       <Tab.Container id="left-tabs-example" defaultActiveKey="first">
         <Row className="my-panel">
-          <Col sm={3} md={3} lg={2} xs={12} className="sideBar">
+          <Col sm={3} md={3} lg={2} xs={12} className="side__bar">
             <Nav variant="pills" className="flex-column">
               <Nav.Item>
                 <Nav.Link className="my__nav__link" eventKey="first">
