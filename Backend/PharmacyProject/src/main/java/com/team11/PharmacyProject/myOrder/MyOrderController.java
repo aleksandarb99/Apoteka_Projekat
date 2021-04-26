@@ -29,6 +29,11 @@ public class MyOrderController {
         return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MyOrderDTO>> getAvailableOrders() {
+        List<MyOrderDTO> myOrderDTOS = orderService.getAvailableOrders();
+        return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
+
     @PostMapping(value = "/addorder", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addOrder(@RequestBody MyOrderAddingDTO data) {
         boolean flag = orderService.addOrder(data);
@@ -36,6 +41,7 @@ public class MyOrderController {
           return new ResponseEntity<>("Succesfully added", HttpStatus.OK);
         else
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+
     }
 
 }

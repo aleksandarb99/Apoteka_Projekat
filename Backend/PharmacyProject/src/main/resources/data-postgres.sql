@@ -179,7 +179,7 @@ insert into my_user (password, first_name, last_name, email, telephone, user_typ
                             'Zdravko', 'Mitic', 'zlegenda78@gmail.com', '06233552343', 'SUPPLIER', 3, false, false);
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$Oh4n4xXU5.2JykOL1DqK9uynsiTlFQgT2S54In0bRL4311R/zhoBq',
-                            'Slavko', 'Vasic', 'slavisa@gmail.com', '0632232343', 'SUPPLIER', 3, false, true);
+                            'Slavko', 'Vasic', 'slavisa@gmail.com', '0632232343', 'SUPPLIER', 3, true, true);
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2a$10$wBkTScEG1SWqwMp2..OmeOquvud4bQo0/MawPyXgWoUu6cHmpyc1i',
                             'Nebojsa', 'Radovanovic', 'nebojsa@gmail.com', '0637732343', 'PHARMACIST', 3, false, true);
@@ -245,12 +245,12 @@ insert into patient_allergies (patient_id, allergies_id) values (2, 5);
 insert into patient_allergies (patient_id, allergies_id) values (2, 4);
 
 /*Suppliers*/
-insert into supplier (id) values (3);
+insert into supplier (id) values (5);
 insert into supplier (id) values (4);
 
 /*Supplier - supplier items*/
-insert into supplier_supplier_items (supplier_id, supplier_items_id) values (3, 1);
-insert into supplier_supplier_items (supplier_id, supplier_items_id) values (3, 4);
+insert into supplier_supplier_items (supplier_id, supplier_items_id) values (5, 1);
+insert into supplier_supplier_items (supplier_id, supplier_items_id) values (5, 4);
 insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 2);
 insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 3);
 insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 5);
@@ -469,14 +469,14 @@ insert into my_order_order_item (my_order_id, order_item_id) values (7, 15);
 insert into offer (delivery_date, offer_state, price, order_id)
                     values (1620730800000, 'ACCEPTED', 2300, 1);
 insert into offer (delivery_date, offer_state, price, order_id)
-                    values (1620730800000, 'PENDING', 2100, 1);
+                    values (1620730800000, 'PENDING', 2100, 3);
 insert into offer (delivery_date, offer_state, price, order_id)
                     values (1620730800000, 'ACCEPTED', 3560, 2);
 
 /*Supplier - Offers*/
-insert into supplier_offers (supplier_id, offers_id) values (3, 1);
+insert into supplier_offers (supplier_id, offers_id) values (5, 1);
 insert into supplier_offers (supplier_id, offers_id) values (4, 2);
-insert into supplier_offers (supplier_id, offers_id) values (3, 3);
+insert into supplier_offers (supplier_id, offers_id) values (5, 3);
 
 /*Advertisements*/
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id)

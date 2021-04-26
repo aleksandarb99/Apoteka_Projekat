@@ -1,6 +1,8 @@
 package com.team11.PharmacyProject.myOrder;
 
 
+import com.team11.PharmacyProject.dto.order.MyOrderDTO;
+import org.modelmapper.ModelMapper;
 import com.team11.PharmacyProject.dto.order.MyOrderAddingDTO;
 import com.team11.PharmacyProject.dto.order.OrderItemAddingDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
@@ -14,12 +16,15 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MyOrderServiceImpl implements MyOrderService {
 
     @Autowired
     private MyOrderRepository myOrderRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private PharmacyService pharmacyService;
@@ -44,7 +49,12 @@ public class MyOrderServiceImpl implements MyOrderService {
         return myOrderList;
     }
 
-    @Override
+    public List<MyOrderDTO> getAvailableOrders() {
+        List<MyOrder> orders = myOrderRepository.getAllByDeadlineAfter(System.currentTimeMillis());
+        return orders.stream()
+                .map(myOrder -> modelMapper.map(myOrder, MyOrderDTO.class))
+                .collect(Collectors.toList());
+      
     public boolean addOrder(MyOrderAddingDTO dto) {
         Pharmacy pharmacy = pharmacyService.getPharmacyById(dto.getPharmacyId());
         if(pharmacy==null){

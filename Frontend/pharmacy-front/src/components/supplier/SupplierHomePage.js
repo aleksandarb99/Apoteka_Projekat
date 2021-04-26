@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Col, Nav, Row, Tab } from 'react-bootstrap';
+import { Col, Nav, Row, Tab, TabPane } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import api from '../../app/api';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
 import SetPasswordModal from '../utilComponents/modals/SetPasswordModal'
+import SupplierStock from '../supplier/stock/SupplierStock'
 
 const SupplierHomePage = () => {
     const [isPasswordSet, setIsPasswordSet] = useState(false);
@@ -41,14 +42,22 @@ const SupplierHomePage = () => {
                         </Col>
                         <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
                             <Tab.Content>
-
+                                <TabPane eventKey="first">
+                                    <div></div>
+                                </TabPane>
+                                <TabPane eventKey="sencond">
+                                    <div></div>
+                                </TabPane>
+                                <TabPane eventKey="third">
+                                    <SupplierStock></SupplierStock>
+                                </TabPane>
                             </Tab.Content>
                         </Col>
                     </Row>
                 </Tab.Container>
             </main>
             <SetPasswordModal show={!isPasswordSet} onPasswordSet={() => setIsPasswordSet(true)}></SetPasswordModal>
-        </div>
+        </div >
     )
 }
 
