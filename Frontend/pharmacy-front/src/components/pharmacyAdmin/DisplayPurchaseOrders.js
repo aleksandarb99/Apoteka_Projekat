@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from "react";
 
-import { Pagination, Table, Tab, Row, Col, Card } from "react-bootstrap";
+import {
+  Pagination,
+  Table,
+  Tab,
+  Row,
+  Col,
+  Card,
+  Button,
+} from "react-bootstrap";
 
 import Dropdown from "react-bootstrap/Dropdown";
 
-import axios from "axios";
+import axios from "../../app/api";
 
 import moment from "moment";
 
-function DisplayPurchaseOrders({ idOfPharmacy }) {
+import AddPurchaseOrderModal from "./AddPurchaseOrderModal";
+
+function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
   const [orders, setOrders] = useState([]);
   const [filterValue, setFilterValue] = useState("All");
   const [showedOrders, setShowedOrders] = useState([]);
@@ -17,16 +27,35 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
   const [maxPag, setMaxPag] = useState(0);
   const [dropdownLabel, setDropdownLabel] = useState("All");
 
+  const [addModalShow, setAddModalShow] = useState(false);
+  const [medicineItems, setMedicineItems] = useState([]);
+
+  async function fetchPriceList() {
+    const request = await axios.get(
+      `http://localhost:8080/api/pricelist/${priceListId}`
+    );
+    setMedicineItems(request.data.medicineItems);
+
+    return request;
+  }
+
+  useEffect(() => {
+    if (priceListId != undefined) {
+      fetchPriceList();
+    }
+  }, [priceListId]);
+
+  async function fetchOrders() {
+    const request = await axios.get(
+      `http://localhost:8080/api/orders/bypharmacyid/${idOfPharmacy}`,
+      { params: { filter: filterValue } }
+    );
+    setOrders(request.data);
+    return request;
+  }
+
   useEffect(() => {
     if (idOfPharmacy != undefined) {
-      async function fetchOrders() {
-        const request = await axios.get(
-          `http://localhost:8080/api/orders/bypharmacyid/${idOfPharmacy}`,
-          { params: { filter: filterValue } }
-        );
-        setOrders(request.data);
-        return request;
-      }
       fetchOrders();
     }
   }, [idOfPharmacy, filterValue]);
@@ -51,6 +80,24 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
     setShowedOrders(orders?.slice(first, max));
   }, [orders, pagNumber]);
 
+  async function addPurchaseOrder(data) {
+    let dto = {
+      pharmacyId: idOfPharmacy,
+      deadline: data.startDate.getTime(),
+      items: [...data.orders],
+    };
+    
+    const request = await axios
+      .post(`http://localhost:8080/api/orders/addorder`, dto)
+      .then(() => {
+        fetchOrders();
+      })
+      .catch(() => {
+        alert("Failed");
+      });
+    return request;
+  }
+
   let handleSlideLeft = () => {
     if (pagNumber !== 0) {
       setPugNummber(pagNumber - 1);
@@ -63,6 +110,15 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
     }
   };
 
+  let handleAddModalSave = (selectedMedicineId, orders) => {
+    setAddModalShow(false);
+    addPurchaseOrder(orders);
+  };
+
+  let handleAddModalClose = () => {
+    setAddModalShow(false);
+  };
+
   return (
     <Tab.Pane eventKey="seventh">
       <h1 className="content-header">Purchase orders</h1>
@@ -70,7 +126,7 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
       <Row>
         {" "}
         <Dropdown>
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
+          <Dropdown.Toggle variant="primary" id="dropdown-basic">
             Filter : {dropdownLabel}
           </Dropdown.Toggle>
 
@@ -101,6 +157,22 @@ function DisplayPurchaseOrders({ idOfPharmacy }) {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+        <Button
+          variant="success"
+          size="md"
+          onClick={() => {
+            setAddModalShow(true);
+          }}
+        >
+          Add purchase order
+        </Button>
+        <AddPurchaseOrderModal
+          medicineList={medicineItems}
+          idOfPharmacy={idOfPharmacy}
+          show={addModalShow}
+          onHide={handleAddModalClose}
+          handleAdd={handleAddModalSave}
+        />
       </Row>
       <Row>
         {showedOrders != [] &&

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import axios from "axios";
+import axios from "../../app/api";
 
 import { Tab, Nav, Row, Col } from "react-bootstrap";
 
@@ -85,7 +85,10 @@ function PharmacyAdminHomePage() {
                 idOfPharmacy={pharmacyDetails?.id}
                 priceListId={pharmacyDetails?.priceListId}
               />
-              <DisplayPurchaseOrders idOfPharmacy={pharmacyDetails?.id} />
+              <DisplayPurchaseOrders
+                idOfPharmacy={pharmacyDetails?.id}
+                priceListId={pharmacyDetails?.priceListId}
+              />
             </Tab.Content>
           </Col>
         </Row>

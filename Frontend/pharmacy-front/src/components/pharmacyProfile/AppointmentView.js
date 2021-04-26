@@ -12,7 +12,7 @@ import {
   Form,
 } from "react-bootstrap";
 
-import axios from "axios";
+import axios from "../../app/api";
 import moment from "moment";
 import { getIdFromToken, getUserTypeFromToken } from "../../app/jwtTokenUtils";
 

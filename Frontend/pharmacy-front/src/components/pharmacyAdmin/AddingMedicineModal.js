@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { Button, Table, Modal, Form } from "react-bootstrap";
 
-import axios from "axios";
+import axios from "../../app/api";
 
 function AddingMedicineModal(props) {
   const [medicineList, setMedicineList] = useState([]);

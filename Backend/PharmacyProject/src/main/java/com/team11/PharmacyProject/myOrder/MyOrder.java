@@ -16,7 +16,7 @@ public class MyOrder {
     @Column(name = "deadline", nullable = false)
     private Long deadline;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "pharmacy_id")
     private Pharmacy pharmacy;
 
@@ -24,6 +24,12 @@ public class MyOrder {
     private List<OrderItem> orderItem;
 
     public MyOrder() {
+    }
+
+    public MyOrder(Long deadline, Pharmacy pharmacy, List<OrderItem> orderItem) {
+        this.deadline = deadline;
+        this.pharmacy = pharmacy;
+        this.orderItem = orderItem;
     }
 
     public MyOrder(Long id, Long deadline, Pharmacy pharmacy, List<OrderItem> orderItem) {
