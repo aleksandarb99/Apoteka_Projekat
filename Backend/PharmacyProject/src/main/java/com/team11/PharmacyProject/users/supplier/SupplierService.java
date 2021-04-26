@@ -17,5 +17,7 @@ public interface SupplierService {
 
     List<OfferListDTO> getOffersForId(long supplierId);
 
-    boolean insertOrder(long id, OfferListDTO offerDTO);
+    boolean insertOffer(long id, OfferListDTO offerDTO);
+
+    boolean updateOffer(long id, OfferListDTO offerDTO);
 }
