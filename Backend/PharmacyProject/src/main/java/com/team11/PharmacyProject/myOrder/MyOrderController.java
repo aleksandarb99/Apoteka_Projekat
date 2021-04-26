@@ -28,4 +28,10 @@ public class MyOrderController {
         return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MyOrderDTO>> getAvailableOrders() {
+        List<MyOrderDTO> myOrderDTOS = orderService.getAvailableOrders();
+        return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
+    }
+
 }

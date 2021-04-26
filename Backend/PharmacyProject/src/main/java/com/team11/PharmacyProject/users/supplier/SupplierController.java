@@ -1,12 +1,13 @@
 package com.team11.PharmacyProject.users.supplier;
 
 import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
+import com.team11.PharmacyProject.dto.offer.OfferListDTO;
+import com.team11.PharmacyProject.enums.OfferState;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
-import com.team11.PharmacyProject.users.user.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +44,23 @@ public class SupplierController {
             return new ResponseEntity<>("Stock updated successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Error. Stock item not updated", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value="/offers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<OfferListDTO>> getOffers(@PathVariable("id") long supplierId) {
+        List<OfferListDTO> supplierOffers = supplierService.getOffersForId(supplierId);
+        return new ResponseEntity<>(supplierOffers, HttpStatus.OK);
+    }
+
+    @PostMapping(value="/offers/{id}")
+    public ResponseEntity<String> addOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
+        // Uvek ce biti pending kada treba da se doda
+        offerDTO.setOfferState(OfferState.PENDING);
+        if (supplierService.insertOrder(id, offerDTO)) {
+            return new ResponseEntity<>("Offer added successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error. Offer not added", HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -12,5 +12,7 @@ import java.util.Set;
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Query("select supp from Supplier supp join fetch supp.supplierItems si join fetch si.medicine where supp.id = ?1")
-    Optional<Supplier> findSupplierWithSupplierItemsId(Long id);
+    Optional<Supplier> findSupplierWithSupplierItemsUsingId(Long id);
+    @Query("select supp from Supplier supp join fetch supp.offers so join fetch so.order where supp.id = ?1")
+    Optional<Supplier> findSupplierWithOffersUsingId(long supplierId);
 }

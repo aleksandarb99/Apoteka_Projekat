@@ -22,7 +22,7 @@ public class Offer {
     @Enumerated(EnumType.STRING)
     private OfferState offerState;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "order_id")
     private MyOrder order;
 

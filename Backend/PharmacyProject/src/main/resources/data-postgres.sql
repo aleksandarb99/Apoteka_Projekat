@@ -469,7 +469,7 @@ insert into my_order_order_item (my_order_id, order_item_id) values (7, 15);
 insert into offer (delivery_date, offer_state, price, order_id)
                     values (1620730800000, 'ACCEPTED', 2300, 1);
 insert into offer (delivery_date, offer_state, price, order_id)
-                    values (1620730800000, 'PENDING', 2100, 1);
+                    values (1620730800000, 'PENDING', 2100, 3);
 insert into offer (delivery_date, offer_state, price, order_id)
                     values (1620730800000, 'ACCEPTED', 3560, 2);
 
