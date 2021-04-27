@@ -4,7 +4,7 @@ import Login from "./users/Login";
 
 function LoginPage() {
   return (
-    <main>
+    <main className="home__page my__login__container">
       <Login></Login>
     </main>
   );
