@@ -11,7 +11,6 @@ export default function UserRow({ user, onClick, editClick, detailsClick, delete
 			<td>{user.address.city + ' ' + user.address.street}</td>
 			<td>
 				<Button onClick={editClick}>Edit</Button>
-				<Button variant="info">Details</Button>
 				<Button variant="danger" onClick={deleteClick}>
 					Delete
         </Button>
