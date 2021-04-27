@@ -25,7 +25,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
             "and (:lastName is null or lower(p.lastName) like lower(concat('%', :lastName, '%'))) " +
             "and a.startTime = " +
                 "(select max(app.startTime) from p.appointments app " +
-                "where a.worker.id = :workerID and app.appointmentState = 'FINISHED'"+
+                "where app.worker.id = :workerID and app.appointmentState = 'FINISHED'"+
                 "and (:lowerTime is null or app.startTime >= :lowerTime) " +
                 "and (:upperTime is null or app.startTime <= :upperTime))")
     List<Patient> getExaminedPatients(@Param("workerID") Long workerID,
