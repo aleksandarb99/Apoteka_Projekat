@@ -3,11 +3,13 @@ import React, { useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
 import ErrorModal from '../utilComponents/modals/ErrorModal'
 import SuccessModal from '../utilComponents/modals/SuccessModal'
+import Location from '../utilComponents/Location'
 
 function EditPharmacyModal(props) {
 
     const [form, setForm] = useState({})
     const [errors, setErrors] = useState({})
+    const [address, setAddress] = useState({});
 
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -16,8 +18,8 @@ function EditPharmacyModal(props) {
         let defaultForm = {
             'name': props.pharmacy.name,
             'description': props.pharmacy.description,
-            'location': props.pharmacy.location
         }
+        setAddress(props.pharmacy.address)
         setForm(defaultForm)
         findFormErrors();
     }
@@ -36,6 +38,7 @@ function EditPharmacyModal(props) {
 
     const findFormErrors = () => {
         const { name, description, location } = form
+        const { city, street, country } = address
         const newErrors = {}
         // name errors
         if (!name || name === '') newErrors.name = 'Name cannot be blank!'
@@ -43,9 +46,15 @@ function EditPharmacyModal(props) {
         // Description errors
         if (!description || description === '') newErrors.description = 'Description cannot be blank!'
         else if (description.length > 60) newErrors.description = 'Description is too long!'
-        // Location errors
-        if (!location || location === '') newErrors.location = 'Location cannot be blank!'
-        else if (location.length > 40) newErrors.location = 'Location is too long!'
+        // City errors
+        if (!city || city === '') newErrors.city = 'City cannot be blank!'
+        else if (city.length > 40) newErrors.city = 'City name is too long!'
+        // Street errors
+        if (!street || street === '') newErrors.street = 'Street cannot be blank!'
+        else if (street.length > 60) newErrors.street = 'Street name is too long!'
+        // Country errors
+        if (!country || country === '') newErrors.country = 'Country cannot be blank!'
+        else if (country.length > 40) newErrors.country = 'Country name is too long!'
 
         return newErrors
     }
@@ -62,9 +71,10 @@ function EditPharmacyModal(props) {
     }
 
     const sendPostRequest = () => {
-        console.log(form)
+        let data = convertForm();
+        console.log(data)
         axios
-            .put('http://localhost:8080/api/pharmacy/' + props.pharmacy.id, form)
+            .put('http://localhost:8080/api/pharmacy/' + props.pharmacy.id, data)
             .then(() => {
                 setForm({})
                 setShowSuccessModal(true)
@@ -76,11 +86,20 @@ function EditPharmacyModal(props) {
             })
     }
 
+    const convertForm = () => {
+        let data = {}
+        data.id = props.pharmacy.id
+        data.name = form.name;
+        data.description = form.description;
+        data.address = address
+        return data;
+    }
+
     return (
         <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered onShow={showHandler}>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Add new pharmacy
+                    Edit pharmacy
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -111,18 +130,8 @@ function EditPharmacyModal(props) {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group controlId="pharmacyLocation">
-                        <Form.Label>Location</Form.Label>
-                        <Form.Control
-                            type="text"
-                            defaultValue={props.pharmacy.location}
-                            isInvalid={!!errors.location}
-                            onChange={e => setField('location', e.target.value)}
-                        />
-                        <Form.Control.Feedback type='invalid'>
-                            {errors.location}
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                    <Location onChange={(address) => setAddress(address)} defAddress={props.pharmacy.address}></Location>
+
                     <Button variant="primary" onClick={handleSubmit}>Submit</Button>
                 </Form>
             </Modal.Body>

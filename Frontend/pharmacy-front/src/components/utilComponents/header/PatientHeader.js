@@ -28,9 +28,6 @@ const PatientHeader = () => {
 
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <Nav.Link as={Link} style={{ color: "white" }} to="/">
-            My Examinations
-          </Nav.Link>
           <Nav.Link
             as={Link}
             style={{ color: "white" }}

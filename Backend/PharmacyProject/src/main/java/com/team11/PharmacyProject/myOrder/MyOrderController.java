@@ -35,6 +35,13 @@ public class MyOrderController {
         return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
     }
 
+    // Dobavlja sve one za datog supplier-a, koje supplier nije licitirao
+    @GetMapping(value = "/without-offers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MyOrderDTO>> getAvailableOrdersForSupplier(@PathVariable("id") long supplierId) {
+        List<MyOrderDTO> myOrderDTOS = orderService.getAvailableOrdersForSupplier(supplierId);
+        return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MyOrderDTO> getOrder(@PathVariable("id") long id) {
         MyOrderDTO myOrderDTO = orderService.getOrder(id);
