@@ -26,7 +26,10 @@ const AddEditStockItemModal = (props) => {
         data.medicineName = singleSelection[0].name;
         data.amount = amount;
         api.post(`http://localhost:8080/api/suppliers/stock/${getIdFromToken()}`, data)
-            .then(props.onSuccess());
+            .then(() => {
+                props.onSuccess()
+                props.onHide()
+            });
     }
 
     return (

@@ -11,7 +11,7 @@ const NewOrders = () => {
 
     useEffect(() => {
         async function fetchOrders() {
-            const response = await api.get(`http://localhost:8080/api/orders/`);
+            const response = await api.get(`http://localhost:8080/api/orders/without-offers/${getIdFromToken()}`);
             setOrders(response.data);
         }
         fetchOrders()
@@ -24,7 +24,7 @@ const NewOrders = () => {
     return (
         <div>
             {orders && orders.map((o) => {
-                return <OrderItem key={o.id} order={o}></OrderItem>
+                return <OrderItem key={o.id} order={o} onChange={reloadTable}></OrderItem>
             })}
         </div>
     )

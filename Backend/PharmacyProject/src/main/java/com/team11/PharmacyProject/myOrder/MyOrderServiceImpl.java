@@ -2,6 +2,10 @@ package com.team11.PharmacyProject.myOrder;
 
 
 import com.team11.PharmacyProject.dto.order.MyOrderDTO;
+import com.team11.PharmacyProject.offer.Offer;
+import com.team11.PharmacyProject.supplierItem.SupplierItem;
+import com.team11.PharmacyProject.users.supplier.Supplier;
+import com.team11.PharmacyProject.users.supplier.SupplierRepository;
 import org.modelmapper.ModelMapper;
 import com.team11.PharmacyProject.dto.order.MyOrderAddingDTO;
 import com.team11.PharmacyProject.dto.order.OrderItemAddingDTO;
@@ -32,6 +36,9 @@ public class MyOrderServiceImpl implements MyOrderService {
 
     @Autowired
     private MedicineService medicineService;
+
+    @Autowired
+    private SupplierRepository supplierRepository;
 
     @Override
     public List<MyOrder> getOrdersByPharmacyId(Long id, String filterValue) {
@@ -88,5 +95,24 @@ public class MyOrderServiceImpl implements MyOrderService {
         Optional<MyOrder> myOrder = myOrderRepository.getMyOrderById(id);
         if (myOrder.isEmpty()) return null;
         return modelMapper.map(myOrder.get(), MyOrderDTO.class);
+    }
+
+    @Override
+    public List<MyOrderDTO> getAvailableOrdersForSupplier(long supplierId) {
+        Optional<Supplier> s = supplierRepository.findSupplierWithOffersUsingId(supplierId);
+        if (s.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Supplier supp = s.get();
+
+        List<MyOrder> orders = myOrderRepository.getAllByDeadlineAfter(System.currentTimeMillis());
+        List<MyOrder> ordersForSupplier = orders.stream().filter(myOrder -> !isInOffer(myOrder, supp.getOffers())).collect(Collectors.toList());
+        return ordersForSupplier.stream()
+                .map(myOrder -> modelMapper.map(myOrder, MyOrderDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isInOffer(MyOrder order, List<Offer> offers) {
+        return offers.stream().anyMatch(offer -> offer.getOrder().getId().equals(order.getId()));
     }
 }

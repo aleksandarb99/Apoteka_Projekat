@@ -21,7 +21,7 @@ const SupplierHomePage = () => {
     return (
         <div>
             <main className="home__page">
-                <Tab.Container defaultActiveKey="first">
+                <Tab.Container unmountOnExit>
                     <Row className="my-panel">
                         <Col sm={3} md={3} lg={2} xs={12} className="side__bar">
                             <Nav variant="pills" className="flex-column">

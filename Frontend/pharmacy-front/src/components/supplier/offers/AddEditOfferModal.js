@@ -32,6 +32,7 @@ const AddEditOfferModal = (props) => {
         api.post(`http://localhost:8080/api/suppliers/offers/${getIdFromToken()}`, data)
             .then(() => {
                 alert("Uspesno dodato")
+                props.onSuccess()
                 props.onHide()
             })
             .catch(() => {

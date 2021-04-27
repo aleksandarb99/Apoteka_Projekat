@@ -13,4 +13,6 @@ public interface MyOrderService {
     boolean addOrder(MyOrderAddingDTO dto);
 
     MyOrderDTO getOrder(long id);
+
+    List<MyOrderDTO> getAvailableOrdersForSupplier(long supplierId);
 }
