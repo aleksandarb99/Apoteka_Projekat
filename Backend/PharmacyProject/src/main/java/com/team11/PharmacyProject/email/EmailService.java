@@ -1,6 +1,6 @@
 package com.team11.PharmacyProject.email;
 
-import com.team11.PharmacyProject.dto.appointment.AppointmentCheckupReservationDTO;
+import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -39,12 +39,12 @@ public class EmailService {
     }
 
     @Async
-    public void notifyPatientAboutReservedCheckup(AppointmentCheckupReservationDTO reservationDTO) throws MailException {
+    public void notifyPatientAboutReservedAppointment(AppointmentReservationDTO reservationDTO, String type) throws MailException {
 
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(reservationDTO.getEmail());
         mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
-        mail.setSubject("Potvrda rezervacije leka");
+        mail.setSubject(type + " - Potvrda rezervacije");
 
         mail.setText("Pozdrav " + reservationDTO.getFirstName() + " " + reservationDTO.getLastName() + ",\n\n"
                 + "Samo da Vas obavestimo da smo primili rezervaciju.\n"

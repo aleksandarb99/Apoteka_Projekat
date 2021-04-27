@@ -20,6 +20,8 @@ public class AppointmentCalendarDTO {
 
     private double price;
 
+    private String calendarType = "appointment";
+
     public AppointmentCalendarDTO(){
 
     }
@@ -30,8 +32,20 @@ public class AppointmentCalendarDTO {
         end = appt.getEndTime();
         appointmentState = appt.getAppointmentState();
         pharmacy = appt.getPharmacy().getName();
-        patient = appt.getPatient().getFirstName() + " " + appt.getPatient().getLastName();
+        if (appt.getPatient() == null) {
+            patient = "none";
+        }else {
+            patient = appt.getPatient().getFirstName() + " " + appt.getPatient().getLastName();
+        }
         price = appt.getPrice();
+    }
+
+    public String getCalendarType() {
+        return calendarType;
+    }
+
+    public void setCalendarType(String calendarType) {
+        this.calendarType = calendarType;
     }
 
     public double getPrice() {

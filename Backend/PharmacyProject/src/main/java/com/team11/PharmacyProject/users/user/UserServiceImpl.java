@@ -1,7 +1,6 @@
 package com.team11.PharmacyProject.users.user;
 
-import com.team11.PharmacyProject.dto.user.UserDTO;
-import com.team11.PharmacyProject.dto.UserUpdateDTO;
+import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
 import com.team11.PharmacyProject.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -69,6 +68,34 @@ public class UserServiceImpl implements UserService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public boolean changePassword(Long userId, String oldPassword, String newPassword) {
+        MyUser currentUser = userRepository.findFirstById(userId);
+        String newPasswordHash = passwordEncoder.encode(newPassword);
+        if (!passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
+            return false;
+        } else {
+            currentUser.setPassword(newPasswordHash);
+            userRepository.save(currentUser);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean setPassword(Long userId, String newPassword) {
+        MyUser currentUser = userRepository.findFirstById(userId);
+        String newPasswordHash = passwordEncoder.encode(newPassword);
+        // You can set password only once (first login)
+        if (currentUser.isPasswordChanged()) {
+            return false;
+        } else {
+            currentUser.setPassword(newPasswordHash);
+            currentUser.setPasswordChanged(true);
+            userRepository.save(currentUser);
+            return true;
         }
     }
 }

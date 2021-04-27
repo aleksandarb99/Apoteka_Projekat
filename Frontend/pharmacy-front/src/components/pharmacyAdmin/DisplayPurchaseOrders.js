@@ -86,7 +86,7 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
       deadline: data.startDate.getTime(),
       items: [...data.orders],
     };
-   
+
     const request = await axios
       .post(`http://localhost:8080/api/orders/addorder`, dto)
       .then(() => {

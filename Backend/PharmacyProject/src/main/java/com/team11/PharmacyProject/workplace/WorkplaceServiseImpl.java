@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.workplace;
 
 import com.team11.PharmacyProject.enums.UserType;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,19 @@ public class WorkplaceServiseImpl implements WorkplaceService {
         }
 
         return workplaces;
+    }
+
+    @Override
+    public List<Workplace> getWorkplacesOfDermatologist(Long workerID) {
+        return workplaceRepository.getWorkplacesOfWorker(workerID);
+    }
+
+    @Override
+    public Workplace getWorkplaceOfPharmacist(Long workerID) {
+        List<Workplace> workplaces = workplaceRepository.getWorkplacesOfWorker(workerID);
+        if (workplaces.isEmpty()){
+            return null;
+        }
+        return workplaces.get(0);
     }
 }

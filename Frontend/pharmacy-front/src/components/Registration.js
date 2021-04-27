@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import "../styling/unregistered.css";
+import "../styling/home_page.css";
 import FirstNameFormGroup from "./utilComponents/formGroups/FirstNameFormGroup"
 import LastNameFormGroup from "./utilComponents/formGroups/LastNameFormGroup"
 import EmailFormGroup from "./utilComponents/formGroups/EmailFormGroup"
