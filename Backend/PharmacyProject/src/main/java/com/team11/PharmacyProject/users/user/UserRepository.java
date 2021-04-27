@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<MyUser, Long> {
-    @Query("select user from MyUser user join fetch user.address")
+    @Query("select user from MyUser user join fetch user.address where user.userType = ?1")
     List<MyUser> findAllByUserType(UserType userType);
 
     @Query("select user from MyUser user join fetch user.address where user.id = ?1")
