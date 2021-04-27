@@ -82,8 +82,8 @@ function Registration() {
   }
 
   return (
-    <main>
-      <Form noValidate validated={validated} onSubmit={handleSubmit}>
+    <main className="home__page my__login__container">
+      <Form noValidate validated={validated} onSubmit={handleSubmit} className="my__login__form">
         <FirstNameFormGroup onChange={(event) => setField('firstName', event.target.value)} />
         <LastNameFormGroup onChange={(event) => setField('lastName', event.target.value)} />
         <EmailFormGroup onChange={(event) => setField('email', event.target.value)}></EmailFormGroup>

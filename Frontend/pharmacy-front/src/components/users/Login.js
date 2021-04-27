@@ -38,7 +38,7 @@ function Login() {
     }
 
     return (
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form noValidate validated={validated} onSubmit={handleSubmit} className="my__login__form">
             <EmailFormGroup onChange={(event) => setField('email', event.target.value)}></EmailFormGroup>
             <PasswordFormGroup onChange={(event) => setField('password', event.target.value)}></PasswordFormGroup>
             <Button variant="primary" type="submit">Submit</Button>

@@ -28,3 +28,9 @@
   color: #0b1616;
   transform: translateX(10px);
 }
+
+.my__login__form {
+  margin: auto;
+  width: 30vw;
+  padding-top: 100px;
+}
