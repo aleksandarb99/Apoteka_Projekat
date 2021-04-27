@@ -19,6 +19,7 @@ import axios from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
+import "../../styling/consultation.css";
 
 function PharmaciesWithFreePharmacists() {
   const [startDate, setStartDate] = useState(new Date());
@@ -49,6 +50,9 @@ function PharmaciesWithFreePharmacists() {
         { params: search_params }
       );
       setPharmacies(request.data);
+      setChosenPharmacy(null);
+      setSelectedWorker({});
+      setWorkers([]);
 
       return request;
     }
@@ -211,254 +215,289 @@ function PharmaciesWithFreePharmacists() {
   return (
     <Container
       fluid
-      style={{
-        backgroundColor: "rgba(162, 211, 218, 0.897)",
-        minHeight: "100vh",
-        paddingTop: "30px",
-        paddingBottom: "30px",
-      }}
+      // style={{
+      //   backgroundColor: "rgba(162, 211, 218, 0.897)",
+      //   minHeight: "100vh",
+      //   paddingTop: "30px",
+      //   paddingBottom: "30px",
+      // }}
+      className="reserve__consultation__container"
     >
-      <Row>
-        <Col className="my__flex">
-          <h3>Choose a date and time of consultation</h3>
-        </Col>
-      </Row>
-      <Row>
-        <Col className="my__flex">
-          <Form.Group controlId="datePicker" di>
-            <Form.Label>Date</Form.Label>
-            <Form.Control
-              type="date"
-              onChange={(event) => changeDate(event.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="timePicker" di>
-            <Form.Label>Start time</Form.Label>
-            <Form.Control
-              type="time"
-              value={startHour}
-              onChange={(event) => setStartHour(event.target.value)}
-            />
-          </Form.Group>
-          <Button
-            variant="info"
-            onClick={createRequestedDate}
-            disabled={startDate == null || startHour == null}
-          >
-            Search
-          </Button>
-        </Col>
-      </Row>
-      <Row className="my__flex">
-        <Col md={4} lg={4}>
-          {dateInPastAlert && (
-            <Alert variant="danger">Choose a day from the future</Alert>
-          )}
-        </Col>
-      </Row>
-      <Row className="justify-content-center m-5">
-        <Form
-          onSubmit={formSearch}
-          style={{ display: pharmacies.length === 0 ? "none" : "block" }}
-        >
-          <Form.Group as={Row} className="align-items-center">
-            <Col className="my__flex" md={6} lg={6}>
-              <Form.Label style={{ marginRight: "20px" }}>Sorter: </Form.Label>
-              <Form.Control
-                as="select"
-                value={sorter}
-                onChange={updateSorting.bind(this)}
-                name="sorter"
-              >
-                <option value="none">none</option>
-                <option value="ascPrice">Price (ascending)</option>
-                <option value="descPrice">Price (descending)</option>
-                <option value="ascGrade">Pharmacy grade (ascending)</option>
-                <option value="descGrade">Pharmacy grade (descending)</option>
-              </Form.Control>
-            </Col>
-            <Col className="justify-content-center" md={6} lg={6}>
-              <Button type="submit" variant="primary">
-                {" "}
-                Sort{" "}
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setReload(!reload);
-                }}
-              >
-                {" "}
-                Reset{" "}
-              </Button>
-            </Col>
-          </Form.Group>
-        </Form>
-      </Row>
-      <Row>
-        <Col md={12} lg={12} className="my__flex">
-          {requestedDate != null &&
-            showedPharmacies.length === 0 &&
-            dateInPastAlert == false && (
-              <Alert variant="danger">
-                There's no available pharmacies/pharmacists at required date and
-                time!
-              </Alert>
-            )}
-        </Col>
-        {showedPharmacies &&
-          showedPharmacies.map((pharmacy) => {
-            return (
-              <Col className="my__flex" key={pharmacy.id} lg={3} md={6} sm={12}>
-                <Card
-                  className="my__card"
-                  style={{ width: "18rem" }}
-                  onClick={() => {
-                    setChosenPharmacy(pharmacy.id);
-                    setSelectedWorker({});
-                  }}
-                >
-                  <Card.Body>
-                    <Card.Title>{pharmacy.name}</Card.Title>
-                  </Card.Body>
-                  <ListGroup className="list-group-flush">
-                    <ListGroupItem className="my__flex">
-                      {pharmacy.address}
-                    </ListGroupItem>
-                    <ListGroupItem className="my__flex">
-                      {[...Array(Math.ceil(pharmacy.avgGrade))].map(() => (
-                        <StarFill className="my__star" />
-                      ))}
-                    </ListGroupItem>
-                    <ListGroupItem className="my__flex">
-                      Price: {pharmacy.consultationPrice}
-                    </ListGroupItem>
-                  </ListGroup>
-                </Card>
-              </Col>
-            );
-          })}
-      </Row>
-
-      {showedPharmacies.length > 0 && dateInPastAlert == false && (
-        <Row className="my__row__pagination">
+      <div className="reserve__consultation__content">
+        <Row>
           <Col className="my__flex">
-            <Pagination size="lg">
-              <Pagination.Prev
-                disabled={pagNumber === 0}
-                onClick={handleSlideLeft}
-              />
-              <Pagination.Item disabled>{pagNumber}</Pagination.Item>
-              <Pagination.Next
-                disabled={pagNumber === maxPag}
-                onClick={handleSlideRight}
-              />
-            </Pagination>
+            <h3>Choose a date and time of consultation</h3>
           </Col>
         </Row>
-      )}
-
-      <Row>
-        <h4
-          style={{
-            display:
-              workers.length == 0 && chosenPharmacy !== null ? "block" : "none",
-            textAlign: "center",
-            width: "100%",
-          }}
-        >
-          No available pharmacists at selected date and pharmacy!
-        </h4>
-      </Row>
-      <Row className="justify-content-center m-5">
-        <Form
-          onSubmit={formSearch2}
-          style={{ display: workers.length === 0 ? "none" : "block" }}
-        >
-          <Form.Group as={Row} className="align-items-center">
-            <Col className="my__flex" md={6} lg={6}>
-              <Form.Label style={{ marginRight: "20px" }}>Sorter: </Form.Label>
+        <Row>
+          <Col className="my__flex">
+            <Form.Group controlId="datePicker" di>
+              <Form.Label>Date</Form.Label>
               <Form.Control
-                as="select"
-                value={sorter2}
-                onChange={updateSorting2.bind(this)}
-                name="sorter2"
-              >
-                <option value="none">none</option>
-                <option value="ascGrade">Pharmacist grade (ascending)</option>
-                <option value="descGrade">Pharmacist grade (descending)</option>
-              </Form.Control>
-            </Col>
-            <Col className="justify-content-center" md={6} lg={6}>
-              <Button type="submit" variant="primary">
-                {" "}
-                Sort{" "}
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setReload2(!reload2);
-                }}
-              >
-                {" "}
-                Reset{" "}
-              </Button>
-            </Col>
-          </Form.Group>
-        </Form>
-      </Row>
-      <Row>
-        <Table
-          striped
-          bordered
-          variant="light"
-          style={{
-            display:
-              chosenPharmacy !== null && workers.length > 0 ? "table" : "none",
-            width: "50%",
-          }}
-          className="my__table__pharmacies"
+                type="date"
+                onChange={(event) => changeDate(event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="timePicker" di>
+              <Form.Label>Start time</Form.Label>
+              <Form.Control
+                type="time"
+                value={startHour}
+                onChange={(event) => setStartHour(event.target.value)}
+              />
+            </Form.Group>
+            <Button
+              variant="info"
+              onClick={createRequestedDate}
+              disabled={startDate == null || startHour == null}
+            >
+              Search
+            </Button>
+          </Col>
+        </Row>
+        <Row className="my__flex">
+          <Col md={4} lg={4}>
+            {dateInPastAlert && (
+              <Alert variant="danger">Choose a day from the future</Alert>
+            )}
+          </Col>
+        </Row>
+        <Row
+          className="justify-content-center mt-5"
+          style={{ display: pharmacies.length === 0 ? "none" : "flex" }}
         >
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Average grade</th>
-            </tr>
-          </thead>
-          <tbody>
-            {workers &&
-              workers.map((w) => (
-                <tr
-                  key={w.id}
-                  onClick={() => updateSelectedWorker(w)}
-                  className={
-                    selectedWorker.id === w.id
-                      ? "my__row__selected my__table__row"
-                      : "my__table__row"
-                  }
+          <Form onSubmit={formSearch}>
+            <Form.Group as={Row} className="align-items-center">
+              <Col className="my__flex" md={6} lg={6}>
+                <Form.Label style={{ marginRight: "20px" }}>
+                  Sorter:{" "}
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  value={sorter}
+                  onChange={updateSorting.bind(this)}
+                  name="sorter"
                 >
-                  <td>{w.name}</td>
-                  <td>{w.avgGrade}</td>
-                </tr>
-              ))}
-          </tbody>
-        </Table>
-      </Row>
-      <Row>
-        <Button
-          variant="info"
-          onClick={createReservation}
+                  <option value="none">none</option>
+                  <option value="ascPrice">Price (ascending)</option>
+                  <option value="descPrice">Price (descending)</option>
+                  <option value="ascGrade">Pharmacy grade (ascending)</option>
+                  <option value="descGrade">Pharmacy grade (descending)</option>
+                </Form.Control>
+              </Col>
+              <Col className="justify-content-center" md={6} lg={6}>
+                <Button type="submit" variant="primary">
+                  {" "}
+                  Sort{" "}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setReload(!reload);
+                  }}
+                >
+                  {" "}
+                  Reset{" "}
+                </Button>
+              </Col>
+            </Form.Group>
+          </Form>
+        </Row>
+        <Row>
+          <Col md={12} lg={12} className="my__flex">
+            {requestedDate != null &&
+              showedPharmacies.length === 0 &&
+              dateInPastAlert == false && (
+                <Alert variant="danger">
+                  There's no available pharmacies/pharmacists at required date
+                  and time!
+                </Alert>
+              )}
+          </Col>
+          {showedPharmacies &&
+            showedPharmacies.map((pharmacy) => {
+              return (
+                <Col
+                  className="my__flex"
+                  key={pharmacy.id}
+                  lg={3}
+                  md={6}
+                  sm={12}
+                >
+                  <Card
+                    className="my__card"
+                    style={{ width: "18rem" }}
+                    onClick={() => {
+                      setChosenPharmacy(pharmacy.id);
+                      setSelectedWorker({});
+                    }}
+                  >
+                    <Card.Body>
+                      <Card.Title>{pharmacy.name}</Card.Title>
+                    </Card.Body>
+                    <ListGroup className="list-group-flush">
+                      <ListGroupItem className="my__flex">
+                        {pharmacy.address}
+                      </ListGroupItem>
+                      <ListGroupItem className="my__flex">
+                        {[...Array(Math.ceil(pharmacy.avgGrade))].map(() => (
+                          <StarFill className="my__star" />
+                        ))}
+                      </ListGroupItem>
+                      <ListGroupItem className="my__flex">
+                        Price: {pharmacy.consultationPrice}
+                      </ListGroupItem>
+                    </ListGroup>
+                  </Card>
+                </Col>
+              );
+            })}
+        </Row>
+
+        {showedPharmacies.length > 0 && dateInPastAlert == false && (
+          <Row className="my__row__pagination">
+            <Col className="my__flex">
+              <Pagination size="lg">
+                <Pagination.Prev
+                  disabled={pagNumber === 0}
+                  onClick={handleSlideLeft}
+                />
+                <Pagination.Item disabled>{pagNumber}</Pagination.Item>
+                <Pagination.Next
+                  disabled={pagNumber === maxPag}
+                  onClick={handleSlideRight}
+                />
+              </Pagination>
+            </Col>
+          </Row>
+        )}
+
+        <Row>
+          <h4
+            style={{
+              display:
+                workers.length == 0 &&
+                chosenPharmacy !== null &&
+                !dateInPastAlert
+                  ? "block"
+                  : "none",
+              textAlign: "center",
+              width: "100%",
+            }}
+          >
+            No available pharmacists at selected date and pharmacy!
+          </h4>
+        </Row>
+        <Row
+          className="justify-content-center mt-5"
           style={{
             display:
-              Object.keys(selectedWorker).length === 0 || chosenPharmacy == null
+              requestedDate != null &&
+              showedPharmacies.length === 0 &&
+              dateInPastAlert == false
                 ? "none"
-                : "inline-block",
-            margin: "auto",
+                : "flex",
           }}
         >
-          Reserve
-        </Button>
-      </Row>
+          <Form
+            onSubmit={formSearch2}
+            style={{ display: workers.length === 0 ? "none" : "block" }}
+          >
+            <Form.Group as={Row} className="align-items-center">
+              <Col className="my__flex" md={6} lg={6}>
+                <Form.Label style={{ marginRight: "20px" }}>
+                  Sorter:{" "}
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  value={sorter2}
+                  onChange={updateSorting2.bind(this)}
+                  name="sorter2"
+                >
+                  <option value="none">none</option>
+                  <option value="ascGrade">Pharmacist grade (ascending)</option>
+                  <option value="descGrade">
+                    Pharmacist grade (descending)
+                  </option>
+                </Form.Control>
+              </Col>
+              <Col className="justify-content-center" md={6} lg={6}>
+                <Button type="submit" variant="primary">
+                  {" "}
+                  Sort{" "}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setReload2(!reload2);
+                  }}
+                >
+                  {" "}
+                  Reset{" "}
+                </Button>
+              </Col>
+            </Form.Group>
+          </Form>
+        </Row>
+        <Row>
+          <Table
+            striped
+            bordered
+            variant="light"
+            style={{
+              display:
+                chosenPharmacy !== null &&
+                workers.length > 0 &&
+                !dateInPastAlert
+                  ? "table"
+                  : "none",
+              width: "50%",
+            }}
+            className="my__table__pharmacies"
+          >
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Average grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              {workers &&
+                workers.map((w) => (
+                  <tr
+                    key={w.id}
+                    onClick={() => updateSelectedWorker(w)}
+                    className={
+                      selectedWorker.id === w.id
+                        ? "my__row__selected my__table__row"
+                        : "my__table__row"
+                    }
+                  >
+                    <td>{w.name}</td>
+                    <td>{w.avgGrade}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </Row>
+        <Row>
+          <Button
+            variant="info"
+            onClick={createReservation}
+            style={{
+              display:
+                Object.keys(selectedWorker).length === 0 ||
+                chosenPharmacy == null ||
+                dateInPastAlert
+                  ? "none"
+                  : "inline-block",
+              margin: "auto",
+            }}
+          >
+            Reserve
+          </Button>
+        </Row>
+      </div>
     </Container>
   );
 }

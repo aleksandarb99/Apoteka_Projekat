@@ -1,0 +1,13 @@
+.reserve__consultation__container {
+  min-height: 100vh;
+  background-color: rgba(176, 207, 212, 0.897);
+}
+
+.reserve__consultation__content {
+  width: 70vw;
+  min-height: 100vh;
+  margin: auto;
+  background-color: rgba(228, 245, 245, 0.897);
+  box-shadow: 0px 0px 10px black;
+  padding: 50px 30px;
+}
