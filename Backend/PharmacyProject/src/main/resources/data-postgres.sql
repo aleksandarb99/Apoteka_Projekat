@@ -173,7 +173,7 @@ insert into my_user (password, first_name, last_name, email, telephone, user_typ
                             'Mitar', 'Zivkovic', 'mitazita87@gmail.com', '06433332343', 'PATIENT', 4, false, false);
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
-                            'Djura', 'Djuraa', 'djule@gmail.com', '06433332341', 'PATIENT', 4, false, true);
+                            'Djura', 'Djuric', 'djule@gmail.com', '06433332341', 'PATIENT', 4, false, true);
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$2qGKnufjF6BUB8JssWuxZe5V3yhnhThDNG8ojyvzqNYnzFmzx1kzK',
                             'Zdravko', 'Mitic', 'zlegenda78@gmail.com', '06233552343', 'SUPPLIER', 3, false, true);
@@ -185,7 +185,7 @@ insert into my_user (password, first_name, last_name, email, telephone, user_typ
                             'Nebojsa', 'Radovanovic', 'nebojsa@gmail.com', '0637732343', 'PHARMACIST', 3, false, true);
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$.9pfXfmpWsXqxlBiaxVs7e8zu2i4C.qTzDClIov4KcPaxRBEwSrt2',
-                            'Marko', 'Maric', 'marcius@gmail.com', '0634632343', 'DERMATOLOGIST', 3, false, true);
+                            'Marko', 'Maric', 'marcius@gmail.com', '0634632343', 'DERMATOLOGIST', 3, true, true);
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$tPT/EHBxszNtPA17Hu9p4OgHuZwJZMsrhT5.jYuBB6arrpaPG5gx6',
                             'Dusko', 'Dragic', 'duskousko@gmail.com', '0628832343', 'ADMIN', 3, false, true);
@@ -194,7 +194,7 @@ insert into my_user (password, first_name, last_name, email, telephone, user_typ
                             'Branko', 'Krasic', 'branimirko@gmail.com', '0658852343', 'PHARMACY_ADMIN', 3, false, true);
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
-                            'Djura', 'Djuraa', 'djule22@gmail.com', '06430032341', 'PATIENT', 4, false, true);
+                            'Djura', 'Markovic', 'djule22@gmail.com', '06430032341', 'PATIENT', 4, false, true);
 insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
                             'Marko', 'Markovic', 'djule00@gmail.com', '06930032341', 'PATIENT', 4, false, true);
@@ -339,14 +339,8 @@ insert into workplace_work_days (workplace_id, work_days_id) values (1, 16);
 /* Dermatolog 7 u apoteci 1 - radi prvih 5 dana u nedelji i nedeljom*/
 insert into workplace_work_days (workplace_id, work_days_id) values (2, 18);
 insert into workplace_work_days (workplace_id, work_days_id) values (2, 19);
-insert into workplace_work_days (workplace_id, work_days_id) values (2, 20);
-insert into workplace_work_days (workplace_id, work_days_id) values (2, 21);
-insert into workplace_work_days (workplace_id, work_days_id) values (2, 22);
 insert into workplace_work_days (workplace_id, work_days_id) values (2, 23);
 /* Dermatolog 7 u apoteci 2 - radi prvih 6 dana u nedelji*/
-insert into workplace_work_days (workplace_id, work_days_id) values (3, 6);
-insert into workplace_work_days (workplace_id, work_days_id) values (3, 7);
-insert into workplace_work_days (workplace_id, work_days_id) values (3, 8);
 insert into workplace_work_days (workplace_id, work_days_id) values (3, 9);
 insert into workplace_work_days (workplace_id, work_days_id) values (3, 10);
 insert into workplace_work_days (workplace_id, work_days_id) values (3, 24);
@@ -389,31 +383,31 @@ insert into workplace_work_days (workplace_id, work_days_id) values (9, 52);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1611800300000, 1611801300000, 'Placanje u unapred.', 1800, 3, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('FINISHED', 'CONSULTATION', 2, 1637354000000, 1637354003000, 'Placanje u kesu.', 1500, 1, 1, 6);
+                    values ('RESERVED', 'CONSULTATION', 2, 1637354000000, 1637354030000, 'Placanje u kesu.', 1500, 1, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CHECKUP', 2, 1617354000000, 1617361200000, 'Placanje u unapred.', 1800, 2, 2, 7);
+                    values ('FINISHED', 'CHECKUP', 2, 1617354000000, 1617361200000, 'Placanje u unapred.', 1800, 2, 2, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CONSULTATION', 2, 1617800000000, 1617800300000, 'Placanje u unapred.', 1800, 1, 1, 6);
-insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('FINISHED', 'CONSULTATION', 2, 1617800300000, 1617801300000, 'Placanje u unapred.', 1800, 3, 1, 6);
+                    values ('FINISHED', 'CONSULTATION', 2, 1617800000000, 1617800300000, 'Placanje u unapred.', 1800, 1, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1617800300000, 1617801300000, 'Placanje u unapred.', 1800, 3, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CHECKUP', 10, 1617804000000, 1617805000000, 'Placanje u unapred.', 1800, 3, 1, 7);
+                    values ('FINISHED', 'CONSULTATION', 2, 1617800300000, 1617801300000, 'Placanje u unapred.', 1800, 3, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CHECKUP', 12, 1617800300000, 1617801300000, 'Placanje u unapred 2.', 1700, 2, 1, 7);
+                    values ('RESERVED', 'CHECKUP', 10, 1619900000000, 1619900400000, 'Placanje u unapred.', 1800, 3, 1, 7);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CHECKUP', 12, 1617800300000, 1617801300000, 'Placanje u unapred 2.', 1700, 2, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1618209900000, 1618217100000, 'Placanje u unapred.', 1800, 10, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('FINISHED', 'CONSULTATION', 2, 1619084700000, 1619091900000, 'Placanje u unapred.', 1800, 11, 1, 6);
+                    values ('RESERVED', 'CONSULTATION', 2, 1619684700000, 1619691900000, 'Placanje u unapred.', 1800, 11, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('FINISHED', 'CONSULTATION', 2, 1623325500000, 1623330000000, 'Placanje u unapred.', 1800, 12, 1, 6);
+                    values ('RESERVED', 'CONSULTATION', 2, 1623325500000, 1623330000000, 'Placanje u unapred.', 1800, 12, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('FINISHED', 'CONSULTATION', 2, 1623744000000, 1623751200000, 'Placanje u unapred.', 1800, 13, 1, 6);
+                    values ('RESERVED', 'CONSULTATION', 2, 1623744000000, 1623751200000, 'Placanje u unapred.', 1800, 13, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)                    
                     values ('FINISHED', 'CHECKUP', 2, 1618840200000, 1618840230000, 'Placanje u unapred.', 1800, 1, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('FINISHED', 'CHECKUP', 2, 1619937522009, 1619937622009, 'Placanje u unapred.', 1800, 1, 1, 7);
+                    values ('RESERVED', 'CHECKUP', 2, 1619937522009, 1619937622009, 'Placanje u unapred.', 1800, 1, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CHECKUP', 2, 1618899780000, 1618899900000, 'Placanje u unapred.', 1800, 1, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
@@ -421,13 +415,21 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CHECKUP', 2, 1618900080000, 1618900140000, 'Placanje u unapred.', 1800, 1, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('EMPTY', 'CHECKUP', 2, 1619517900000, 1619518800000, 'Placanje u kesu.', 1300, null, 1, 7);
+                    values ('EMPTY', 'CHECKUP', 2, 1619617900000, 1619618800000, 'Placanje u kesu.', 1300, null, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('EMPTY', 'CHECKUP', 2, 1619519400000, 1619520300000, 'Placanje u kesu.', 2000, null, 1, 7);
+                    values ('EMPTY', 'CHECKUP', 2, 1619619400000, 1619620300000, 'Placanje u kesu.', 2000, null, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('EMPTY', 'CHECKUP', 2, 1619523000000, 1619526600000, 'Placanje u kesu.', 3500, null, 1, 7);
+                    values ('EMPTY', 'CHECKUP', 2, 1619623000000, 1619626600000, 'Placanje u kesu.', 3500, null, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('EMPTY', 'CHECKUP', 2, 1619613000000, 1619614800000, 'Placanje u kesu.', 2500, null, 1, 14);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('FINISHED', 'CONSULTATION', 2, 1614800300000, 1614801300000, 'Placanje u unapred.', 1800, 10, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                    values ('RESERVED', 'CONSULTATION', 2, 1620800300000, 1620801300000, 'Placanje u unapred.', 1800, 10, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                values ('FINISHED', 'CONSULTATION', 2, 1617354000000, 1617354500000, 'Placanje u unapred.', 1800, 2, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+                values ('FINISHED', 'CONSULTATION', 2, 1617654000000, 1617654500000, 'Placanje u unapred.', 1800, 11, 1, 6);
 
 /*WorkCalendar - Appointments*/
 insert into work_calendar_appointments (work_calendar_id, appointments_id) values (1, 1);
