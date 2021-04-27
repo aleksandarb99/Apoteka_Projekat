@@ -14,8 +14,8 @@ const OrderItem = (props) => {
             })}
             <p>{`Due: ${new Date(props.order.deadline).toLocaleDateString("sr-sp")}`}</p>
             <Button onClick={() => { setShowAddOfferModal(true) }}>Create Offer</Button>
-            <AddEditOfferModal show={showAddOfferModal} order={props.order} onHide={() => setShowAddOfferModal(false)}></AddEditOfferModal>
-        </div>
+            <AddEditOfferModal show={showAddOfferModal} order={props.order} onHide={() => setShowAddOfferModal(false)} onSuccess={() => { props.onChange() }}></AddEditOfferModal>
+        </div >
     )
 }
 

@@ -32,6 +32,7 @@ const AddEditOfferModal = (props) => {
         api.post(`http://localhost:8080/api/suppliers/offers/${getIdFromToken()}`, data)
             .then(() => {
                 alert("Uspesno dodato")
+                props.onSuccess()
                 props.onHide()
             })
             .catch(() => {
@@ -87,7 +88,7 @@ const AddEditOfferModal = (props) => {
                             onChange={(event) => setTotalPrice(event.target.value)}
                             defaultValue={!props.offer ? 0 : props.offer.price}
                             min={0}
-                            step={100}
+                            step={1}
                             required
                         />
                     </Form.Group>
