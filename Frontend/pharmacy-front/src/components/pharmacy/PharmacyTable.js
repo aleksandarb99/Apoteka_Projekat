@@ -75,7 +75,6 @@ function PharmacyTable(props) {
                             <td>{pharmacy.description}</td>
                             <td>
                                 <Button onClick={() => setShowEditModal(true)}>Edit</Button>
-                                <Button variant="info">Details</Button>
                                 <Button variant="danger" onClick={() => setShowDeleteModal(true)}>Delete</Button>
                             </td>
                         </tr>
