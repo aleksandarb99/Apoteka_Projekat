@@ -3,16 +3,19 @@ import React, { useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
 import ErrorModal from '../utilComponents/modals/ErrorModal';
 import SuccessModal from '../utilComponents/modals/SuccessModal';
+import Location from '../utilComponents/Location'
 
 function AddPharmacyModal(props) {
 
     const [form, setForm] = useState({})
     const [errors, setErrors] = useState({})
+    const [address, setAddress] = useState({});
 
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const setField = (field, value) => {
+
         setForm({
             ...form,
             [field]: value
@@ -25,7 +28,8 @@ function AddPharmacyModal(props) {
     }
 
     const findFormErrors = () => {
-        const { name, description, location } = form
+        const { name, description } = form
+        const { city, street, country } = address
         const newErrors = {}
         // name errors
         if (!name || name === '') newErrors.name = 'Name cannot be blank!'
@@ -33,9 +37,15 @@ function AddPharmacyModal(props) {
         // Description errors
         if (!description || description === '') newErrors.description = 'Description cannot be blank!'
         else if (description.length > 60) newErrors.description = 'Description is too long!'
-        // Location errors
-        if (!location || location === '') newErrors.location = 'Location cannot be blank!'
-        else if (location.length > 40) newErrors.location = 'Location is too long!'
+        // City errors
+        if (!city || city === '') newErrors.city = 'City cannot be blank!'
+        else if (city.length > 40) newErrors.city = 'City name is too long!'
+        // Street errors
+        if (!street || street === '') newErrors.street = 'Street cannot be blank!'
+        else if (street.length > 60) newErrors.street = 'Street name is too long!'
+        // Country errors
+        if (!country || country === '') newErrors.country = 'Country cannot be blank!'
+        else if (country.length > 40) newErrors.country = 'Country name is too long!'
 
         return newErrors
     }
@@ -52,8 +62,9 @@ function AddPharmacyModal(props) {
     }
 
     const sendPostRequest = () => {
+        let data = convertForm();
         axios
-            .post('http://localhost:8080/api/pharmacy/', form)
+            .post('http://localhost:8080/api/pharmacy/', data)
             .then(() => {
                 setForm({})
                 props.onSuccess()
@@ -63,6 +74,14 @@ function AddPharmacyModal(props) {
             .catch(() => {
                 setShowErrorModal(true);
             })
+    }
+
+    const convertForm = () => {
+        let data = {}
+        data.name = form.name;
+        data.description = form.description;
+        data.address = address
+        return data;
     }
 
     return (
@@ -100,18 +119,8 @@ function AddPharmacyModal(props) {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group controlId="pharmacyLocation">
-                        <Form.Label>Location</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Location"
-                            isInvalid={!!errors.location}
-                            onChange={e => setField('location', e.target.value)}
-                        />
-                        <Form.Control.Feedback type='invalid'>
-                            {errors.location}
-                        </Form.Control.Feedback>
-                    </Form.Group>
+                    <Location onChange={(address) => setAddress(address)}></Location>
+
                     <Button variant="primary" onClick={handleSubmit}>Submit</Button>
                 </Form>
             </Modal.Body>

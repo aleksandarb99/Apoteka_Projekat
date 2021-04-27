@@ -72,8 +72,8 @@ public class PharmacyController {
     }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> insertPharmacy(@Valid @RequestBody PharmacyDTO pharmacyDTO) {
-        Pharmacy pharmacy = convertToEntity(pharmacyDTO);
+    public ResponseEntity<String> insertPharmacy(@Valid @RequestBody PharmacyCrudDTO pharmacyCrudDTO) {
+        Pharmacy pharmacy = convertCrudDTOToEntity(pharmacyCrudDTO);
         if (pharmacyService.insertPharmacy(pharmacy)) {
             return new ResponseEntity<>("Pharmacy added successfully", HttpStatus.OK);
         } else {
@@ -100,7 +100,7 @@ public class PharmacyController {
         }
     }
 
-    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/crud", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyCrudDTO>> getAllPharmaciesDTO() {
         List<PharmacyCrudDTO> pharmacyCrudDTOs = pharmacyService.getAll().stream().map(this::convertToCrudDTO).collect(Collectors.toList());
         return new ResponseEntity<>(pharmacyCrudDTOs, HttpStatus.OK);

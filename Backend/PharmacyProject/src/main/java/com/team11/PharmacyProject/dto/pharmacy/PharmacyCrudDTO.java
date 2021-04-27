@@ -1,6 +1,9 @@
 package com.team11.PharmacyProject.dto.pharmacy;
 
+import com.team11.PharmacyProject.address.Address;
+
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class PharmacyCrudDTO {
     private long id;
@@ -8,8 +11,10 @@ public class PharmacyCrudDTO {
     private String name;
     @NotBlank
     private String description;
-    @NotBlank
-    private String location;
+
+    private Double avgGrade = 0.0;
+    @NotNull
+    private Address address;
 
     public PharmacyCrudDTO() {
     }
@@ -38,11 +43,19 @@ public class PharmacyCrudDTO {
         this.description = description;
     }
 
-    public String getLocation() {
-        return location;
+    public Double getAvgGrade() {
+        return avgGrade;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setAvgGrade(Double avgGrade) {
+        this.avgGrade = avgGrade;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

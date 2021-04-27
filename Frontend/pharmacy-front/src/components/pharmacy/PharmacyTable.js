@@ -22,7 +22,7 @@ function PharmacyTable(props) {
 
     useEffect(() => {
         async function fetchData() {
-            const response = await axios.get("http://localhost:8080/api/pharmacy/all");
+            const response = await axios.get("http://localhost:8080/api/pharmacy/crud");
             setPharmacies(response.data);
         }
         fetchData();
