@@ -88,7 +88,7 @@ const AddEditOfferModal = (props) => {
                             onChange={(event) => setTotalPrice(event.target.value)}
                             defaultValue={!props.offer ? 0 : props.offer.price}
                             min={0}
-                            step={100}
+                            step={1}
                             required
                         />
                     </Form.Group>

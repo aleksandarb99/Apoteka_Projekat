@@ -59,7 +59,7 @@ const AddEditStockItemModal = (props) => {
                             onChange={(event) => setAmount(event.target.value)}
                             defaultValue={1}
                             min={1}
-                            max={100}
+                            max={1000}
                             step={1}
                             required
                         />
