@@ -1,0 +1,20 @@
+main {
+  /* min-height: 90vh; */
+  background: linear-gradient(#a0a89e, #ccd6ca);
+  padding: 5vh;
+}
+
+.my__profile__container {
+  width: 50vw;
+  margin: auto;
+}
+
+.form__buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form__buttons > button {
+  margin: auto 5px;
+}

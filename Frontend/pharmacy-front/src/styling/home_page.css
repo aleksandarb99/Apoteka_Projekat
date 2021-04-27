@@ -1,0 +1,36 @@
+.home__page {
+  height: 100vh;
+  padding: 0px;
+}
+
+.my-panel {
+  margin: 0px;
+}
+
+.side__bar {
+  background-color: rgba(173, 173, 173, 0.452) !important;
+  border-right: 1px solid black;
+}
+
+.my__container {
+  background-color: rgba(162, 211, 218, 0.897);
+}
+
+.my__nav__link {
+  background-color: rgba(138, 195, 199, 0.897);
+  border: 1px solid rgba(117, 165, 168, 0.897);
+  color: #0b1616;
+  margin: 0;
+  transition: transform 450ms;
+}
+
+.my__nav__link:hover {
+  color: #0b1616;
+  transform: translateX(10px);
+}
+
+.my__login__form {
+  margin: auto;
+  width: 30vw;
+  padding-top: 100px;
+}

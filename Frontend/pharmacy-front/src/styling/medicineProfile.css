@@ -1,0 +1,52 @@
+.medicine__profile__container {
+  min-height: 100vh;
+  background-color: rgba(176, 207, 212, 0.897);
+}
+
+.medicine__content {
+  width: 50vw;
+  min-height: 100vh;
+  margin: auto;
+  background-color: rgba(228, 245, 245, 0.897);
+  box-shadow: 0px 0px 10px black;
+}
+
+.my__medicine__header {
+  text-align: center;
+  padding-top: 50px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.my__medicine__paragraph {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.my__medicine__grade {
+  margin: 30px auto;
+  text-align: center;
+}
+
+.my__start_paragraph {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.my__table__pharmacies {
+  width: 80%;
+  margin: 20px auto;
+}
+
+.my__spinner__email {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.my__spinner__email > p {
+  width: 30%;
+  font-size: 1.2rem;
+  font-weight: 500;
+}

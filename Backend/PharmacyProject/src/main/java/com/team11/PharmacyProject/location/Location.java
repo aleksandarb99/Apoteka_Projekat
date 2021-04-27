@@ -1,8 +1,47 @@
 package com.team11.PharmacyProject.location;
 
-import com.team11.PharmacyProject.address.Address;
+import javax.persistence.*;
 
-public class Location extends Address {
-   private double longitude;
-   private double latitude;
+@Entity
+public class Location {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "longitude", nullable = false)
+    private double longitude;
+
+    @Column(name = "latitude", nullable = false)
+    private double latitude;
+
+    public Location() {
+
+    }
+
+    public Location(Long id, double longitude, double latitude) {
+        this.id = id;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 }
