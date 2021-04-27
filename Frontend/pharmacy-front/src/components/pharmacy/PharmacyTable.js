@@ -22,7 +22,7 @@ function PharmacyTable(props) {
 
     useEffect(() => {
         async function fetchData() {
-            const response = await axios.get("http://localhost:8080/api/pharmacy/all");
+            const response = await axios.get("http://localhost:8080/api/pharmacy/crud");
             setPharmacies(response.data);
         }
         fetchData();
@@ -75,7 +75,6 @@ function PharmacyTable(props) {
                             <td>{pharmacy.description}</td>
                             <td>
                                 <Button onClick={() => setShowEditModal(true)}>Edit</Button>
-                                <Button variant="info">Details</Button>
                                 <Button variant="danger" onClick={() => setShowDeleteModal(true)}>Delete</Button>
                             </td>
                         </tr>

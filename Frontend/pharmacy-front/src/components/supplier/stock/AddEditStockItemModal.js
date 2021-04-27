@@ -26,7 +26,10 @@ const AddEditStockItemModal = (props) => {
         data.medicineName = singleSelection[0].name;
         data.amount = amount;
         api.post(`http://localhost:8080/api/suppliers/stock/${getIdFromToken()}`, data)
-            .then(props.onSuccess());
+            .then(() => {
+                props.onSuccess()
+                props.onHide()
+            });
     }
 
     return (
@@ -56,7 +59,7 @@ const AddEditStockItemModal = (props) => {
                             onChange={(event) => setAmount(event.target.value)}
                             defaultValue={1}
                             min={1}
-                            max={100}
+                            max={1000}
                             step={1}
                             required
                         />

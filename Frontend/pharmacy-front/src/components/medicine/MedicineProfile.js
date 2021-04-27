@@ -95,49 +95,47 @@ function MedicineProfile() {
       <div className="medicine__content">
         <p className="my__medicine__header">{medicine.name}</p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Kod: </span>
+          <span className="my__start_paragraph">Code: </span>
           {medicine.code}
         </p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Sadrzaj:</span>{" "}
+          <span className="my__start_paragraph">Content:</span>{" "}
           {medicine.content}
         </p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Nezeljeni efekti:</span>{" "}
+          <span className="my__start_paragraph">Side effects:</span>{" "}
           {medicine.sideEffects}
         </p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Dnevni unos: </span>
+          <span className="my__start_paragraph">Daily intake: </span>
           {medicine.dailyIntake}
         </p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Recept:</span>{" "}
-          {medicine.recipeRequired === "REQUIRED" ? "Treba" : "Ne treba"}
+          <span className="my__start_paragraph">Recipe:</span>{" "}
+          {medicine.recipeRequired === "REQUIRED" ? "Required" : "Not required"}
         </p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Dodatne informacije: </span>
+          <span className="my__start_paragraph">Additional notes: </span>
           {medicine.additionalNotes}
         </p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Ocena: </span>{" "}
+          <span className="my__start_paragraph">Average grade: </span>{" "}
           {medicine.avgGrade}
         </p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">
-            Poeni osvojeni pri kupovini:{" "}
-          </span>
+          <span className="my__start_paragraph">Points: </span>
           {medicine.points}
         </p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Tip: </span>
+          <span className="my__start_paragraph">Type: </span>
           {medicine.medicineType}
         </p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Oblik: </span>
+          <span className="my__start_paragraph">Form: </span>
           {medicine.medicineForm}
         </p>
         <p className="my__medicine__paragraph">
-          <span className="my__start_paragraph">Proizvodjac: </span>
+          <span className="my__start_paragraph">Manufacturer: </span>
           {medicine.manufacturer}
         </p>
         <div
@@ -181,7 +179,7 @@ function MedicineProfile() {
             </tbody>
           </Table>
           <p className="my__medicine__paragraph">
-            <span className="my__start_paragraph">Rok preuzimanja leka: </span>
+            <span className="my__start_paragraph">Pickup deadline: </span>
             <DatePicker
               closeOnScroll={true}
               selected={pickupDate}
@@ -198,7 +196,7 @@ function MedicineProfile() {
             }}
             variant="danger"
           >
-            Izaberite dan iz buducnosti!
+            Choose a day from the future!
           </Alert>
           <Alert
             style={{
@@ -208,7 +206,7 @@ function MedicineProfile() {
             }}
             variant="success"
           >
-            Uspesno rezervisan lek!
+            Successfully reserved the medicine!
           </Alert>
           <div
             className="my__spinner__email"
