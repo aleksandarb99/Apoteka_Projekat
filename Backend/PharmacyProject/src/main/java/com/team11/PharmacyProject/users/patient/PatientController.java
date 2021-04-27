@@ -154,7 +154,7 @@ public class PatientController {
     }
 
     @GetMapping(value="/search", produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PatientDTO>> searchPatientsByFirstAndLastName
+    public ResponseEntity<List<PatientWorkerSearchDTO>> searchPatientsByFirstAndLastName
             (@RequestParam(value = "firstName", required = false) String firstName,
              @RequestParam(value = "lastName", required = false) String lastName) {
         List<Patient> patientsResult;
@@ -168,10 +168,10 @@ public class PatientController {
             lastName = "";
         }
         patientsResult = patientService.searchPatientsByFirstAndLastName(firstName, lastName);
-        List<PatientDTO> patientDTOS = new ArrayList<>();
+        List<PatientWorkerSearchDTO> patientDTOS = new ArrayList<>();
         for (Patient p :
                 patientsResult) {
-            patientDTOS.add(convertToDto(p));
+            patientDTOS.add(new PatientWorkerSearchDTO(p, true));
         }
         return new ResponseEntity<>(patientDTOS, HttpStatus.OK);
     }

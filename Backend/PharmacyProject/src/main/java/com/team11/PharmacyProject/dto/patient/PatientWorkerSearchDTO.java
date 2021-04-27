@@ -21,6 +21,13 @@ public class PatientWorkerSearchDTO {
     public PatientWorkerSearchDTO(){
 
     }
+    public PatientWorkerSearchDTO(@NotNull Patient patient, boolean flag) { //konstruktor za dobavljanje pacijenta
+        this.id = patient.getId();
+        this.firstName = patient.getFirstName();
+        this.lastName = patient.getLastName();
+        this.email = patient.getEmail();
+        this.telephone = patient.getTelephone();
+    }
 
     public PatientWorkerSearchDTO(@NotNull Patient patient) { //konstruktor za dobavljanje pacijenta
         this.id = patient.getId();

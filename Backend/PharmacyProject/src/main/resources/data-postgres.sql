@@ -399,7 +399,7 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1618209900000, 1618217100000, 'Placanje u unapred.', 1800, 10, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CONSULTATION', 2, 1619684700000, 1619691900000, 'Placanje u unapred.', 1800, 11, 1, 6);
+                    values ('RESERVED', 'CONSULTATION', 2, 1619547300000, 1619547500000, 'Placanje u unapred.', 1800, 11, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('RESERVED', 'CONSULTATION', 2, 1623325500000, 1623330000000, 'Placanje u unapred.', 1800, 12, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
@@ -415,13 +415,13 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CHECKUP', 2, 1618900080000, 1618900140000, 'Placanje u unapred.', 1800, 1, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('EMPTY', 'CHECKUP', 2, 1619617900000, 1619618800000, 'Placanje u kesu.', 1300, null, 1, 7);
+                    values ('EMPTY', 'CHECKUP', 2, 1623754800000, 1623756600000, 'Placanje u kesu.', 1300, null, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('EMPTY', 'CHECKUP', 2, 1619619400000, 1619620300000, 'Placanje u kesu.', 2000, null, 1, 7);
+                    values ('EMPTY', 'CHECKUP', 2, 1623756900000, 1623758400000, 'Placanje u kesu.', 2000, null, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('EMPTY', 'CHECKUP', 2, 1619623000000, 1619626600000, 'Placanje u kesu.', 3500, null, 1, 7);
+                    values ('EMPTY', 'CHECKUP', 2, 1623758700000, 1623762300000, 'Placanje u kesu.', 3500, null, 1, 7);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('EMPTY', 'CHECKUP', 2, 1619613000000, 1619614800000, 'Placanje u kesu.', 2500, null, 1, 14);
+                    values ('EMPTY', 'CHECKUP', 2, 1623844800000, 1623846600000, 'Placanje u kesu.', 2500, null, 1, 14);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1614800300000, 1614801300000, 'Placanje u unapred.', 1800, 10, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
