@@ -35,6 +35,15 @@ public class MyOrderController {
         return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MyOrderDTO> getOrder(@PathVariable("id") long id) {
+        MyOrderDTO myOrderDTO = orderService.getOrder(id);
+        if (myOrderDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(myOrderDTO, HttpStatus.OK);
+    }
+
     @PostMapping(value = "/addorder", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addOrder(@RequestBody MyOrderAddingDTO data) {
         boolean flag = orderService.addOrder(data);

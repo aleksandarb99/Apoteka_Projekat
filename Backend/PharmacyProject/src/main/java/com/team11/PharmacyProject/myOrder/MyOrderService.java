@@ -11,4 +11,6 @@ public interface MyOrderService {
     List<MyOrder> getOrdersByPharmacyId(Long id, String filterValue);
     List<MyOrderDTO> getAvailableOrders();
     boolean addOrder(MyOrderAddingDTO dto);
+
+    MyOrderDTO getOrder(long id);
 }
