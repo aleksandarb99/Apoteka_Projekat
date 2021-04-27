@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,5 +81,12 @@ public class MyOrderServiceImpl implements MyOrderService {
         MyOrder order = new MyOrder(dto.getDeadline(), pharmacy, items);
         myOrderRepository.save(order);
         return true;
+    }
+
+    @Override
+    public MyOrderDTO getOrder(long id) {
+        Optional<MyOrder> myOrder = myOrderRepository.getMyOrderById(id);
+        if (myOrder.isEmpty()) return null;
+        return modelMapper.map(myOrder.get(), MyOrderDTO.class);
     }
 }
