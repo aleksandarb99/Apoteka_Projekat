@@ -4,7 +4,6 @@ import com.team11.PharmacyProject.dto.appointment.AppointmentPatientInsightDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import org.springframework.data.domain.Sort;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface AppointmentService {
@@ -32,4 +31,6 @@ public interface AppointmentService {
     List<AppointmentPatientInsightDTO> getFinishedConsultationsByPatientId(Long id, Sort sorter);
 
     boolean cancelConsultation(Long id);
+
+    List<AppointmentPatientInsightDTO> getUpcomingConsultationsByPatientId(Long id, Sort sort);
 }
