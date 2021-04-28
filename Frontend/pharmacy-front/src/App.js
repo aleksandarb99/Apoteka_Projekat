@@ -27,6 +27,7 @@ import PharmacistProfile from "./components/workers/pharmacist_profile";
 
 import UserCrud from "./components/users/UserCrud";
 import PharmaciesWithFreePharmacists from "./components/unregisteredAndPatient/PharmaciesWithFreePharmacists";
+import ConsultationsInsight from "./components/unregisteredAndPatient/ConsultationsInsight";
 
 import "./styling/navbar.css";
 
@@ -43,6 +44,10 @@ function App() {
             path="/reserve-consultation/pharmacies"
             component={PharmaciesWithFreePharmacists}
           />
+          <Route
+            path="/consultations-insight"
+            component={ConsultationsInsight}
+          />
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LoginPage} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
@@ -56,12 +61,21 @@ function App() {
           <Route path="/admin/pharmacies" component={PharmacyCrud} />
           <Route path="/admin/medicine" component={MedicineCrud} />
           <Route path="/worker/search-patients" component={SearchPatPage} />
-          <Route path="/worker/dermatologist_profile" component={DermatologistProfile} />
-          <Route path="/worker/pharmacist_profile" component={PharmacistProfile} />
+          <Route
+            path="/worker/dermatologist_profile"
+            component={DermatologistProfile}
+          />
+          <Route
+            path="/worker/pharmacist_profile"
+            component={PharmacistProfile}
+          />
           <Route path="/admin/users" component={UserCrud} />
           <Route path="/worker/examined" component={SearchExaminedPatPage} />
           <Route path="/worker/calendar" component={WorkCalendar} />
-          <Route path="/worker/appointment_report" component={AppointmentReport} />
+          <Route
+            path="/worker/appointment_report"
+            component={AppointmentReport}
+          />
           <Route path="/worker/vacation" component={VacationRequest} />
         </Switch>
       </div>

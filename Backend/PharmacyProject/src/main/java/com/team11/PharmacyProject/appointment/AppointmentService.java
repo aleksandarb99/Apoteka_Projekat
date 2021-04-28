@@ -1,7 +1,10 @@
 package com.team11.PharmacyProject.appointment;
 
+import com.team11.PharmacyProject.dto.appointment.AppointmentPatientInsightDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
+import org.springframework.data.domain.Sort;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface AppointmentService {
@@ -25,4 +28,6 @@ public interface AppointmentService {
     AppointmentReservationDTO reserveCheckupForPatient(Long appId, Long patientId);
 
     AppointmentReservationDTO reserveConsultationForPatient(Long workerId, Long patientId, Long pharmacyId, Long requiredDate);
+
+    List<AppointmentPatientInsightDTO> getFinishedConsultationsByPatientId(Long id, Sort sorter);
 }

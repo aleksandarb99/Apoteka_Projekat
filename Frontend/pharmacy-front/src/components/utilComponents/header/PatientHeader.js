@@ -35,6 +35,13 @@ const PatientHeader = () => {
           >
             Reserve consultation
           </Nav.Link>
+          <Nav.Link
+            as={Link}
+            style={{ color: "white" }}
+            to="/consultations-insight"
+          >
+            Consultations
+          </Nav.Link>
         </Nav>
         <Nav>
           <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
