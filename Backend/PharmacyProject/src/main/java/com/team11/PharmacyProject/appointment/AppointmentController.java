@@ -153,6 +153,16 @@ public class AppointmentController {
         }
     }
 
+    @PutMapping(value = "/cancel-consultation/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> cancelConsultation (@PathVariable(value="id") Long id)
+    {
+        if(appointmentServiceImpl.cancelConsultation(id)){
+            return new ResponseEntity<>("canceled", HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("not canceled",HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping(value = "/reserve/{idA}/patient/{idP}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> reserveCheckupForPatient(@PathVariable("idP") Long patientId, @PathVariable("idA") Long appId) {
 

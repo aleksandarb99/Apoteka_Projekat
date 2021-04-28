@@ -358,4 +358,24 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         return retVal;
     }
+
+    @Override
+    public boolean cancelConsultation(Long id) {
+
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+        if (appointmentOptional.isEmpty()) return false;
+
+        Appointment appointment =appointmentOptional.get();
+
+        if (appointment.getAppointmentState() != AppointmentState.RESERVED) return false;
+
+        Date today = new Date();
+        Date startDate = new Date(appointment.getStartTime()); // Provera da ipak nije konsultacija iz proslosti
+        if (startDate.before(today)) return false;
+
+        appointment.setAppointmentState(AppointmentState.CANCELLED);
+
+        appointmentRepository.save(appointment);
+        return true;
+    }
 }

@@ -30,4 +30,6 @@ public interface AppointmentService {
     AppointmentReservationDTO reserveConsultationForPatient(Long workerId, Long patientId, Long pharmacyId, Long requiredDate);
 
     List<AppointmentPatientInsightDTO> getFinishedConsultationsByPatientId(Long id, Sort sorter);
+
+    boolean cancelConsultation(Long id);
 }
