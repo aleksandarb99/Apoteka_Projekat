@@ -6,6 +6,7 @@ import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.rankingCategory.RankingCategory;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
@@ -315,7 +316,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentPatientInsightDTO> getFinishedConsultationsByPatientId(Long id) {
+    public List<AppointmentPatientInsightDTO> getFinishedConsultationsByPatientId(Long id, Sort sorter) {
 
         List<AppointmentPatientInsightDTO> retVal = new ArrayList<>();
         Patient patient = patientRepository.findByIdAndFetchAppointments(id);
@@ -335,6 +336,24 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             AppointmentPatientInsightDTO dto = new AppointmentPatientInsightDTO(a);
             retVal.add(dto);
+        }
+
+        if (sorter.toString().equals("priceasc: ASC")) {
+            retVal = retVal.stream().sorted(Comparator.comparingDouble(AppointmentPatientInsightDTO::getPrice)).collect(Collectors.toList());
+        }else if (sorter.toString().equals("pricedesc: ASC")) {
+            retVal = retVal.stream().sorted(Comparator.comparingDouble(AppointmentPatientInsightDTO::getPrice).reversed()).collect(Collectors.toList());
+        }else if (sorter.toString().equals("durationasc: ASC")) {
+            retVal = retVal.stream().sorted(Comparator.comparingInt(AppointmentPatientInsightDTO::getDuration)).collect(Collectors.toList());
+        }else if (sorter.toString().equals("durationdesc: ASC")) {
+            retVal = retVal.stream().sorted(Comparator.comparingInt(AppointmentPatientInsightDTO::getDuration).reversed()).collect(Collectors.toList());
+        }else if (sorter.toString().equals("start timeasc: ASC")) {
+            retVal = retVal.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getStartTime).reversed()).collect(Collectors.toList());
+        }else if (sorter.toString().equals("start timedesc: ASC")) {
+            retVal = retVal.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getStartTime)).collect(Collectors.toList());
+        }else if (sorter.toString().equals("end timeasc: ASC")) {
+            retVal = retVal.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getEndTime).reversed()).collect(Collectors.toList());
+        }else if (sorter.toString().equals("end timedesc: ASC")) {
+            retVal = retVal.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getEndTime)).collect(Collectors.toList());
         }
 
         return retVal;

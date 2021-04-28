@@ -61,8 +61,8 @@ public class AppointmentController {
     }
 
     @GetMapping(value = "/history/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AppointmentPatientInsightDTO>> getFinishedConsultationsByPatientId(@PathVariable("id") Long id) {
-        List<AppointmentPatientInsightDTO> appointmentsDTO = appointmentServiceImpl.getFinishedConsultationsByPatientId(id);
+    public ResponseEntity<List<AppointmentPatientInsightDTO>> getFinishedConsultationsByPatientId(Pageable pageable, @PathVariable("id") Long id) {
+        List<AppointmentPatientInsightDTO> appointmentsDTO = appointmentServiceImpl.getFinishedConsultationsByPatientId(id, pageable.getSort());
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
     }
 
