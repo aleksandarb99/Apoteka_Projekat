@@ -276,6 +276,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         for (Appointment a : worker.getAppointmentList()) {
             if(!a.getPharmacy().getId().equals(pharmacyId) || (a.getPharmacy().getId().equals(pharmacyId) && a.getAppointmentType() == AppointmentType.CHECKUP))
                 continue;
+            if(a.getPharmacy().getId().equals(pharmacyId) && a.getAppointmentState() == AppointmentState.CANCELLED)
+                continue;
             Date startTime = new Date(a.getStartTime());
             Date endTime = new Date(a.getEndTime());
             if(startTime.compareTo(requestedDateAndTime) == 0) {

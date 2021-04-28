@@ -183,6 +183,7 @@ public class PharmacyServiceImpl implements PharmacyService {
                         boolean isPharmacistFree = true;
                         // Kad prebacimo u lazi, prepravi da kad gore dobavim apoteke, fetchujem i workere i njihove appointemnte
                         for (Appointment a : workerRepository.getPharmacyWorkerForCalendar(wp.getWorker().getId()).getAppointmentList()) {
+                            if(p.getId().equals(a.getPharmacy().getId()) && a.getAppointmentState() == AppointmentState.CANCELLED) continue;
                             Date startTime = new Date(a.getStartTime());
                             Date endTime = new Date(a.getEndTime());
                             if(startTime.compareTo(requestedDateAndTime) == 0) {
