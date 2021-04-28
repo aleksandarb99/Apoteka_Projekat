@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.appointment;
 
+import com.team11.PharmacyProject.dto.appointment.AppointmentPatientInsightDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
@@ -23,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -310,5 +312,31 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         return new AppointmentReservationDTO(reservedConsultation);
 
+    }
+
+    @Override
+    public List<AppointmentPatientInsightDTO> getFinishedConsultationsByPatientId(Long id) {
+
+        List<AppointmentPatientInsightDTO> retVal = new ArrayList<>();
+        Patient patient = patientRepository.findByIdAndFetchAppointments(id);
+
+        if (patient == null) return retVal;
+
+        for (Appointment a : patient.getAppointments()) {
+            if (a.getAppointmentType() == AppointmentType.CHECKUP) continue;
+            if (a.getAppointmentState() != AppointmentState.FINISHED) continue;
+
+            Date today = new Date();
+            Date startDate = new Date(a.getStartTime()); // Ove 2 naredne provere, ne bi trebale da se dese
+            if (startDate.after(today)) continue;
+
+            Date endDate = new Date(a.getEndTime());
+            if (endDate.after(today)) continue;
+
+            AppointmentPatientInsightDTO dto = new AppointmentPatientInsightDTO(a);
+            retVal.add(dto);
+        }
+
+        return retVal;
     }
 }
