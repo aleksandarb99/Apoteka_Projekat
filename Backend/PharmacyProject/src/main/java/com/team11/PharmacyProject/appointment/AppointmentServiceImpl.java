@@ -460,16 +460,16 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointments = appointments.stream().sorted(Comparator.comparingInt(AppointmentPatientInsightDTO::getDuration).reversed()).collect(Collectors.toList());
                 break;
             case "start timeasc: ASC":
-                appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getStartTime).reversed()).collect(Collectors.toList());
-                break;
-            case "start timedesc: ASC":
                 appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getStartTime)).collect(Collectors.toList());
                 break;
+            case "start timedesc: ASC":
+                appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getStartTime).reversed()).collect(Collectors.toList());
+                break;
             case "end timeasc: ASC":
-                appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getEndTime).reversed()).collect(Collectors.toList());
+                appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getEndTime)).collect(Collectors.toList());
                 break;
             case "end timedesc: ASC":
-                appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getEndTime)).collect(Collectors.toList());
+                appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getEndTime).reversed()).collect(Collectors.toList());
                 break;
         }
 
