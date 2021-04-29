@@ -35,4 +35,10 @@ public interface AppointmentService {
     boolean cancelConsultation(Long id);
 
     List<AppointmentPatientInsightDTO> getUpcomingConsultationsByPatientId(Long id, Sort sort);
+
+    List<AppointmentPatientInsightDTO> getFinishedCheckupsByPatientId(Long id, Sort sort);
+
+    boolean cancelCheckup(Long id);
+
+    List<AppointmentPatientInsightDTO> getUpcomingCheckupsByPatientId(Long id, Sort sort);
 }
