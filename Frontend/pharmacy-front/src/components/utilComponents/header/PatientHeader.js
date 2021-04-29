@@ -42,6 +42,9 @@ const PatientHeader = () => {
           >
             Consultations
           </Nav.Link>
+          <Nav.Link as={Link} style={{ color: "white" }} to="/checkups-insight">
+            Checkups
+          </Nav.Link>
         </Nav>
         <Nav>
           <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
