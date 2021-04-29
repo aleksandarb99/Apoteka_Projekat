@@ -109,4 +109,8 @@ public class Patient extends MyUser {
       appointments.add(appointment);
       return true;
    }
+
+    public boolean removeAppointment(Long id) {
+       return appointments.removeIf(a -> a.getId().equals(id));
+    }
 }

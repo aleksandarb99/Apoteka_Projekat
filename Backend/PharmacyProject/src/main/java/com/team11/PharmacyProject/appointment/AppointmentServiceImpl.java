@@ -347,13 +347,38 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment =appointmentOptional.get();
 
         if (appointment.getAppointmentState() != AppointmentState.RESERVED) return false;
-
+        if (appointment.getAppointmentType() == AppointmentType.CHECKUP) return false;
         if (appointment.getStartTime() < System.currentTimeMillis()) return false; // Provera da ipak nije konsultacija iz proslosti
 
         long differenceInMinutes = ((appointment.getStartTime() - System.currentTimeMillis()) / (1000 * 60));
         if(differenceInMinutes < 1440) return false;
 
         appointment.setAppointmentState(AppointmentState.CANCELLED);
+
+        appointmentRepository.save(appointment);
+        return true;
+    }
+
+    @Override
+    public boolean cancelCheckup(Long id) {
+
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+        if (appointmentOptional.isEmpty()) return false;
+
+        Appointment appointment = appointmentOptional.get();
+
+        if (appointment.getAppointmentState() != AppointmentState.RESERVED) return false;
+        if (appointment.getAppointmentType() == AppointmentType.CONSULTATION) return false;
+
+        if (appointment.getStartTime() < System.currentTimeMillis()) return false; // Provera da ipak nije pregled iz proslosti
+
+        long differenceInMinutes = ((appointment.getStartTime() - System.currentTimeMillis()) / (1000 * 60));
+        if(differenceInMinutes < 1440) return false;
+
+        appointment.setAppointmentState(AppointmentState.EMPTY);
+        Patient patient = patientRepository.findByIdAndFetchAppointments(appointment.getPatient().getId());
+        if(!patient.removeAppointment(appointment.getId())) return false;
+        appointment.setPatient(null);
 
         appointmentRepository.save(appointment);
         return true;
