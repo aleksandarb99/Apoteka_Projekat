@@ -20,22 +20,20 @@ import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
 
 function ConsultationsInsight() {
-  const [finishedConsultations, setFinishedConsultations] = useState([]);
+  const [consultations, setConsultations] = useState([]);
   const [dropdownLabel, setDropdownLabel] = useState("History");
   const [sorter, setSorter] = useState("none");
   const [ascDesc, setAscDesc] = useState("none");
+  const [reload, setReload] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showBadAlert, setShowBadAlert] = useState(false);
 
   useEffect(() => {
-    async function fetchFinishedConsultations() {
-      if (
-        finishedConsultations.length !== 0 &&
-        (sorter === "none" || ascDesc === "none")
-      )
-        return;
-
+    async function fetchConsultations() {
       if (dropdownLabel === "History") {
         let search_params = new URLSearchParams();
-        search_params.append("sort", sorter + ascDesc);
+        if (sorter != "none" && ascDesc != "none")
+          search_params.append("sort", sorter + ascDesc);
         const request = await axios.get(
           "http://localhost:8080/api/appointment/history/patient/" +
             getIdFromToken(),
@@ -43,15 +41,52 @@ function ConsultationsInsight() {
             params: search_params,
           }
         );
-        setFinishedConsultations(request.data);
+        setConsultations(request.data);
 
         return request;
       } else {
-        setFinishedConsultations([]);
+        let search_params = new URLSearchParams();
+        if (sorter != "none" && ascDesc != "none")
+          search_params.append("sort", sorter + ascDesc);
+        const request = await axios.get(
+          "http://localhost:8080/api/appointment/upcoming/patient/" +
+            getIdFromToken(),
+          {
+            params: search_params,
+          }
+        );
+        setConsultations(request.data);
+
+        return request;
       }
     }
-    fetchFinishedConsultations();
-  }, [dropdownLabel, sorter, ascDesc]);
+    fetchConsultations();
+  }, [dropdownLabel, sorter, ascDesc, reload]);
+
+  const cancelConsultation = (id) => {
+    axios
+      .put("http://localhost:8080/api/appointment/cancel-consultation/" + id)
+      .then((res) => {
+        if (res.data == "canceled") {
+          setShowAlert(true);
+          setTimeout(function () {
+            setShowAlert(false);
+          }, 5000);
+        } else {
+          setShowBadAlert(true);
+          setTimeout(function () {
+            setShowBadAlert(false);
+          }, 5000);
+        }
+        setReload(!reload);
+      });
+  };
+
+  function differenceInMinutes(startTime) {
+    let today = new Date().getTime();
+    if ((startTime - today) / 60000 < 1440) return false;
+    return true;
+  }
 
   return (
     <Container fluid className="consultation__insight__container">
@@ -174,11 +209,12 @@ function ConsultationsInsight() {
                 <th>Price</th>
                 <th>Pharmacist</th>
                 <th>Pharmacy</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              {finishedConsultations &&
-                finishedConsultations.map((fc) => (
+              {consultations &&
+                consultations.map((fc) => (
                   <tr key={fc.id}>
                     <td>{moment(fc.startTime).format("DD-MM-YYYY HH:mm")}</td>
                     <td>{moment(fc.endTime).format("DD-MM-YYYY HH:mm")}</td>
@@ -186,10 +222,39 @@ function ConsultationsInsight() {
                     <td>{fc.price}</td>
                     <td>{fc.workerName}</td>
                     <td>{fc.pharmacyName}</td>
+                    <td>
+                      <Button
+                        variant="danger"
+                        onClick={() => cancelConsultation(fc.id)}
+                        style={{
+                          display:
+                            dropdownLabel === "Upcoming" &&
+                            differenceInMinutes(fc.startTime)
+                              ? "inline-block"
+                              : "none",
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </td>
                   </tr>
                 ))}
             </tbody>
           </Table>
+        </Row>
+        <Row style={{ justifyContent: "center" }}>
+          {showAlert && (
+            <Alert transition={true} variant="success">
+              Successfully canceled consultation!
+            </Alert>
+          )}
+        </Row>
+        <Row style={{ justifyContent: "center" }}>
+          {showBadAlert && (
+            <Alert transition={true} variant="danger">
+              24 hours to consultation! You can not cancel it!
+            </Alert>
+          )}
         </Row>
       </div>
     </Container>

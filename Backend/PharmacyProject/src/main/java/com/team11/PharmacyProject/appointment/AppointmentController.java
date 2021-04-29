@@ -22,7 +22,7 @@ public class AppointmentController {
 
 
     @Autowired
-    AppointmentServiceImpl appointmentServiceImpl;
+    AppointmentService appointmentServiceImpl;
 
     @Autowired
     EmailService emailService;
@@ -63,6 +63,12 @@ public class AppointmentController {
     @GetMapping(value = "/history/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AppointmentPatientInsightDTO>> getFinishedConsultationsByPatientId(Pageable pageable, @PathVariable("id") Long id) {
         List<AppointmentPatientInsightDTO> appointmentsDTO = appointmentServiceImpl.getFinishedConsultationsByPatientId(id, pageable.getSort());
+        return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/upcoming/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AppointmentPatientInsightDTO>> getUpcomingConsultationsByPatientId(Pageable pageable, @PathVariable("id") Long id) {
+        List<AppointmentPatientInsightDTO> appointmentsDTO = appointmentServiceImpl.getUpcomingConsultationsByPatientId(id, pageable.getSort());
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
     }
 
@@ -150,6 +156,16 @@ public class AppointmentController {
             return new ResponseEntity<String>("Cancelled the appointment", HttpStatus.OK);
         }else{
             return new ResponseEntity<String>("Couldn't cancel the appointment",HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping(value = "/cancel-consultation/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> cancelConsultation (@PathVariable(value="id") Long id)
+    {
+        if(appointmentServiceImpl.cancelConsultation(id)){
+            return new ResponseEntity<>("canceled", HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("not canceled",HttpStatus.OK);
         }
     }
 

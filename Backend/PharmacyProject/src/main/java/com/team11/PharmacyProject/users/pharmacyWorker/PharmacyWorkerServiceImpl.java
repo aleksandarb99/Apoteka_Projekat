@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.users.pharmacyWorker;
 
 import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
@@ -55,6 +56,7 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
                     boolean isPharmacistFree = true;
                     // Kad prebacimo u lazi, prepravi da kad gore dobavim apoteke, fetchujem i workere i njihove appointemnte
                     for (Appointment a : pharmacyWorkerRepository.getPharmacyWorkerForCalendar(wp.getWorker().getId()).getAppointmentList()) {
+                        if(id.equals(a.getPharmacy().getId()) && a.getAppointmentState() == AppointmentState.CANCELLED) continue;
                         Date startTime = new Date(a.getStartTime());
                         Date endTime = new Date(a.getEndTime());
                         if(startTime.compareTo(requestedDateAndTime) == 0) {
