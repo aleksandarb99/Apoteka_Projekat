@@ -162,8 +162,8 @@ function DisplayMedicine({ idOfPharmacy, priceListId }) {
                       handleClick(item.id, item.price);
                     }}
                     className={`${
-                      selectedRowId == item.id && "selectedRow"
-                    } pointer`}
+                      selectedRowId == item.id ? "selectedRow" : "pointer"
+                    } `}
                   >
                     <td>{index + 1}</td>
                     <td>{item.medicine.code}</td>

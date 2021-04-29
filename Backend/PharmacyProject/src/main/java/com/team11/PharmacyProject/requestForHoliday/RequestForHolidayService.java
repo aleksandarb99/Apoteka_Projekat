@@ -10,4 +10,10 @@ public interface RequestForHolidayService {
     List<RequestForHoliday> getWorkerHolidays(Long workerID);
 
     List<RequestForHoliday> getAcceptedWorkerHolidays(Long workerID);
+
+    List<RequestForHoliday> getUnresolvedRequestsByPharmacy(Long pharmacyId);
+
+    boolean acceptRequest(String requestId);
+
+    boolean rejectRequest(String requestId, String reason);
 }
