@@ -24,6 +24,9 @@ function CheckupsInsight() {
   const [dropdownLabel, setDropdownLabel] = useState("History");
   const [sorter, setSorter] = useState("none");
   const [ascDesc, setAscDesc] = useState("none");
+  const [reload, setReload] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showBadAlert, setShowBadAlert] = useState(false);
 
   useEffect(() => {
     async function fetchCheckups() {
@@ -41,10 +44,49 @@ function CheckupsInsight() {
         setCheckups(request.data);
 
         return request;
+      } else {
+        let search_params = new URLSearchParams();
+        if (sorter != "none" && ascDesc != "none")
+          search_params.append("sort", sorter + ascDesc);
+        const request = await axios.get(
+          "http://localhost:8080/api/appointment/checkups/upcoming/patient/" +
+            getIdFromToken(),
+          {
+            params: search_params,
+          }
+        );
+        setCheckups(request.data);
+
+        return request;
       }
     }
     fetchCheckups();
-  }, [dropdownLabel, sorter, ascDesc]);
+  }, [dropdownLabel, sorter, ascDesc, reload]);
+
+  const cancelCheckup = (id) => {
+    axios
+      .put("http://localhost:8080/api/appointment/cancel-checkup/" + id)
+      .then((res) => {
+        if (res.data == "canceled") {
+          setShowAlert(true);
+          setTimeout(function () {
+            setShowAlert(false);
+          }, 5000);
+        } else {
+          setShowBadAlert(true);
+          setTimeout(function () {
+            setShowBadAlert(false);
+          }, 5000);
+        }
+        setReload(!reload);
+      });
+  };
+
+  function differenceInMinutes(startTime) {
+    let today = new Date().getTime();
+    if ((startTime - today) / 60000 < 1440) return false;
+    return true;
+  }
 
   return (
     <Container fluid className="consultation__insight__container">
@@ -165,6 +207,7 @@ function CheckupsInsight() {
                 <th>Price</th>
                 <th>Pharmacist</th>
                 <th>Pharmacy</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -177,10 +220,39 @@ function CheckupsInsight() {
                     <td>{c.price}</td>
                     <td>{c.workerName}</td>
                     <td>{c.pharmacyName}</td>
+                    <td>
+                      <Button
+                        variant="danger"
+                        onClick={() => cancelCheckup(c.id)}
+                        style={{
+                          display:
+                            dropdownLabel === "Upcoming" &&
+                            differenceInMinutes(c.startTime)
+                              ? "inline-block"
+                              : "none",
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </td>
                   </tr>
                 ))}
             </tbody>
           </Table>
+        </Row>
+        <Row style={{ justifyContent: "center" }}>
+          {showAlert && (
+            <Alert transition={true} variant="success">
+              Successfully canceled checkup!
+            </Alert>
+          )}
+        </Row>
+        <Row style={{ justifyContent: "center" }}>
+          {showBadAlert && (
+            <Alert transition={true} variant="danger">
+              24 hours to checkup! You can not cancel it!
+            </Alert>
+          )}
         </Row>
       </div>
     </Container>
