@@ -22,11 +22,15 @@ import "../../styling/consultation.css";
 function CheckupsInsight() {
   const [checkups, setCheckups] = useState([]);
   const [dropdownLabel, setDropdownLabel] = useState("History");
+  const [sorter, setSorter] = useState("none");
+  const [ascDesc, setAscDesc] = useState("none");
 
   useEffect(() => {
     async function fetchCheckups() {
       if (dropdownLabel === "History") {
         let search_params = new URLSearchParams();
+        if (sorter != "none" && ascDesc != "none")
+          search_params.append("sort", sorter + ascDesc);
         const request = await axios.get(
           "http://localhost:8080/api/appointment/checkups/history/patient/" +
             getIdFromToken(),
@@ -40,7 +44,7 @@ function CheckupsInsight() {
       }
     }
     fetchCheckups();
-  }, [dropdownLabel]);
+  }, [dropdownLabel, sorter, ascDesc]);
 
   return (
     <Container fluid className="consultation__insight__container">
@@ -66,6 +70,81 @@ function CheckupsInsight() {
                   }}
                 >
                   Upcoming
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+          <Col className="my__flex" md={6} lg={6}>
+            <Form.Label style={{ marginRight: "20px" }}>Sorter: </Form.Label>
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                {sorter}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    setSorter("none");
+                  }}
+                >
+                  none
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setSorter("start time");
+                  }}
+                >
+                  start time
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setSorter("end time");
+                  }}
+                >
+                  end time
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setSorter("duration");
+                  }}
+                >
+                  duration
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setSorter("price");
+                  }}
+                >
+                  price
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                {ascDesc}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    setAscDesc("none");
+                  }}
+                >
+                  none
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setAscDesc("asc");
+                  }}
+                >
+                  ascending
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setAscDesc("desc");
+                  }}
+                >
+                  descending
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
