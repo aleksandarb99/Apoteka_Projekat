@@ -335,7 +335,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             retVal.add(dto);
         }
 
-        return sortConsultations(retVal, sorter.toString());
+        return sortAppointments(retVal, sorter.toString());
     }
 
     @Override
@@ -401,7 +401,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             retVal.add(dto);
         }
 
-        return sortConsultations(retVal, sorter.toString());
+        return sortAppointments(retVal, sorter.toString());
     }
 
     @Override
@@ -421,38 +421,58 @@ public class AppointmentServiceImpl implements AppointmentService {
             retVal.add(dto);
         }
 
-        return sortConsultations(retVal, sorter.toString());
+        return sortAppointments(retVal, sorter.toString());
     }
 
-    private List<AppointmentPatientInsightDTO> sortConsultations(List<AppointmentPatientInsightDTO> consultations, String sorter) {
+    @Override
+    public List<AppointmentPatientInsightDTO> getUpcomingCheckupsByPatientId(Long id, Sort sorter) {
+        List<AppointmentPatientInsightDTO> retVal = new ArrayList<>();
+        Patient patient = patientRepository.findByIdAndFetchAppointments(id);
+
+        if (patient == null) return retVal;
+
+        for (Appointment a : patient.getAppointments()) {
+            if (a.getAppointmentType() == AppointmentType.CONSULTATION) continue;
+            if (a.getAppointmentState() != AppointmentState.RESERVED) continue;
+            if (a.getStartTime() < System.currentTimeMillis()) continue; // Ove 2 naredne provere, ne bi trebale da se dese
+            if (a.getEndTime() < System.currentTimeMillis()) continue;
+
+            AppointmentPatientInsightDTO dto = new AppointmentPatientInsightDTO(a);
+            retVal.add(dto);
+        }
+
+        return sortAppointments(retVal, sorter.toString());
+    }
+
+    private List<AppointmentPatientInsightDTO> sortAppointments(List<AppointmentPatientInsightDTO> appointments, String sorter) {
 
         switch (sorter) {
             case "priceasc: ASC":
-                consultations = consultations.stream().sorted(Comparator.comparingDouble(AppointmentPatientInsightDTO::getPrice)).collect(Collectors.toList());
+                appointments = appointments.stream().sorted(Comparator.comparingDouble(AppointmentPatientInsightDTO::getPrice)).collect(Collectors.toList());
                 break;
             case "pricedesc: ASC":
-                consultations = consultations.stream().sorted(Comparator.comparingDouble(AppointmentPatientInsightDTO::getPrice).reversed()).collect(Collectors.toList());
+                appointments = appointments.stream().sorted(Comparator.comparingDouble(AppointmentPatientInsightDTO::getPrice).reversed()).collect(Collectors.toList());
                 break;
             case "durationasc: ASC":
-                consultations = consultations.stream().sorted(Comparator.comparingInt(AppointmentPatientInsightDTO::getDuration)).collect(Collectors.toList());
+                appointments = appointments.stream().sorted(Comparator.comparingInt(AppointmentPatientInsightDTO::getDuration)).collect(Collectors.toList());
                 break;
             case "durationdesc: ASC":
-                consultations = consultations.stream().sorted(Comparator.comparingInt(AppointmentPatientInsightDTO::getDuration).reversed()).collect(Collectors.toList());
+                appointments = appointments.stream().sorted(Comparator.comparingInt(AppointmentPatientInsightDTO::getDuration).reversed()).collect(Collectors.toList());
                 break;
             case "start timeasc: ASC":
-                consultations = consultations.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getStartTime).reversed()).collect(Collectors.toList());
+                appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getStartTime).reversed()).collect(Collectors.toList());
                 break;
             case "start timedesc: ASC":
-                consultations = consultations.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getStartTime)).collect(Collectors.toList());
+                appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getStartTime)).collect(Collectors.toList());
                 break;
             case "end timeasc: ASC":
-                consultations = consultations.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getEndTime).reversed()).collect(Collectors.toList());
+                appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getEndTime).reversed()).collect(Collectors.toList());
                 break;
             case "end timedesc: ASC":
-                consultations = consultations.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getEndTime)).collect(Collectors.toList());
+                appointments = appointments.stream().sorted(Comparator.comparingLong(AppointmentPatientInsightDTO::getEndTime)).collect(Collectors.toList());
                 break;
         }
 
-        return consultations;
+        return appointments;
     }
 }

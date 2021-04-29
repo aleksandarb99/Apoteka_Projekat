@@ -39,4 +39,6 @@ public interface AppointmentService {
     List<AppointmentPatientInsightDTO> getFinishedCheckupsByPatientId(Long id, Sort sort);
 
     boolean cancelCheckup(Long id);
+
+    List<AppointmentPatientInsightDTO> getUpcomingCheckupsByPatientId(Long id, Sort sort);
 }
