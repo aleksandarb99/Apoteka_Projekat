@@ -72,6 +72,12 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/checkups/history/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AppointmentPatientInsightDTO>> getFinishedCheckupsByPatientId(Pageable pageable, @PathVariable("id") Long id) {
+        List<AppointmentPatientInsightDTO> appointmentsDTO = appointmentServiceImpl.getFinishedCheckupsByPatientId(id, pageable.getSort());
+        return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
+    }
+
     @PostMapping(value = "/byPatWorkerFirst", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AppointmentDTO> getNextAppointment(
             @RequestParam(name = "patient") String email, @RequestParam(name = "worker") Long workerId) {

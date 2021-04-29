@@ -379,6 +379,26 @@ public class AppointmentServiceImpl implements AppointmentService {
         return sortConsultations(retVal, sorter.toString());
     }
 
+    @Override
+    public List<AppointmentPatientInsightDTO> getFinishedCheckupsByPatientId(Long id, Sort sorter) {
+        List<AppointmentPatientInsightDTO> retVal = new ArrayList<>();
+        Patient patient = patientRepository.findByIdAndFetchAppointments(id);
+
+        if (patient == null) return retVal;
+
+        for (Appointment a : patient.getAppointments()) {
+            if (a.getAppointmentType() == AppointmentType.CONSULTATION) continue;
+            if (a.getAppointmentState() != AppointmentState.FINISHED) continue;
+            if (a.getStartTime() > System.currentTimeMillis()) continue; // Ove 2 naredne provere, ne bi trebale da se dese
+            if (a.getEndTime() > System.currentTimeMillis()) continue;
+
+            AppointmentPatientInsightDTO dto = new AppointmentPatientInsightDTO(a);
+            retVal.add(dto);
+        }
+
+        return sortConsultations(retVal, sorter.toString());
+    }
+
     private List<AppointmentPatientInsightDTO> sortConsultations(List<AppointmentPatientInsightDTO> consultations, String sorter) {
 
         switch (sorter) {
