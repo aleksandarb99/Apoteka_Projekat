@@ -1,10 +1,8 @@
 package com.team11.PharmacyProject.requestForHoliday;
 
-import com.team11.PharmacyProject.appointment.Appointment;
-import com.team11.PharmacyProject.dto.appointment.AppointmentCalendarDTO;
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayDTO;
+import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayWithWorkerDetailsDTO;
 import com.team11.PharmacyProject.enums.AbsenceType;
-import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +27,34 @@ public class RequestForHolidayController {
             dtos.add(new RequestForHolidayDTO(requestForHolidays.get(i)));
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getunresolvedrequestsbypharmacyid/{pharmacyId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RequestForHolidayWithWorkerDetailsDTO>> getUnresolvedRequestsByPharmacy(@PathVariable("pharmacyId") Long pharmacyId){
+        List<RequestForHoliday> requestForHolidays = requestForHolidayService.getUnresolvedRequestsByPharmacy(pharmacyId);
+        List<RequestForHolidayWithWorkerDetailsDTO> dtos = new ArrayList<>(requestForHolidays.size());
+        for (RequestForHoliday req : requestForHolidays){
+            dtos.add(new RequestForHolidayWithWorkerDetailsDTO(req));
+        }
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/acceptrequest/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> acceptRequest(@PathVariable("requestId") String requestId){
+        boolean flag = requestForHolidayService.acceptRequest(requestId);
+        if(!flag){
+            return new ResponseEntity<>("Failed to accept", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Successfully accepted", HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/rejectrequest/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> rejectRequest(@PathVariable("requestId") String requestId, @RequestBody String reason){
+        boolean flag = requestForHolidayService.rejectRequest(requestId, reason);
+        if(!flag){
+            return new ResponseEntity<>("Failed to reject", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Successfully rejected", HttpStatus.OK);
     }
 
     @GetMapping(value = "/getAcceptedVacationsFromWorker", produces = MediaType.APPLICATION_JSON_VALUE)

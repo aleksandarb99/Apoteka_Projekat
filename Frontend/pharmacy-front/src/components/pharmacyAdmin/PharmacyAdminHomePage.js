@@ -12,6 +12,7 @@ import EditBasicInfo from "./EditBasicInfo";
 import DisplayPurchaseOrders from "./DisplayPurchaseOrders";
 import AddAppointment from "./AddAppointment";
 import DisplayMedicine from "./DisplayMedicine";
+import DisplayWorkers from "./DisplayWorkers";
 
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
@@ -80,6 +81,7 @@ function PharmacyAdminHomePage() {
                 pharmacyDetails={pharmacyDetails}
                 changedPharmacy={changedPharmacy}
               />
+              <DisplayWorkers idOfPharmacy={pharmacyDetails?.id} />
               <AddAppointment idOfPharmacy={pharmacyDetails?.id} />
               <DisplayMedicine
                 idOfPharmacy={pharmacyDetails?.id}

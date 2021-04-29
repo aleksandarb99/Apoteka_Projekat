@@ -61,8 +61,8 @@ function AddingMedicineModal(props) {
                     handleClick(item.id);
                   }}
                   className={`${
-                    selectedRowId == item.id && "selectedRow"
-                  } pointer`}
+                    selectedRowId == item.id ? "selectedRow" : "pointer"
+                  }`}
                 >
                   <td>{index + 1}</td>
                   <td>{item.code}</td>

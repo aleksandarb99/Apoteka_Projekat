@@ -20,4 +20,10 @@ public interface RequestForHolidayRepository  extends JpaRepository<RequestForHo
 
     @Query("select r from RequestForHoliday r where r.pharmacyWorker.id = ?1 and r.requestState='ACCEPTED'")
     List<RequestForHoliday> getAcceptedRequestsFromUser(Long workerID);
+
+    @Query("select r from RequestForHoliday r join fetch r.pharmacyWorker pw where r.pharmacyWorker.id = ?1 and r.requestState='PENDING' and r.startDate > ?2")
+    List<RequestForHoliday> getUnresolvedRequestsByWorker(Long workerID, Long currentTime);
+
+    @Query("select r from RequestForHoliday r join fetch r.pharmacyWorker pw where r.id = ?1")
+    RequestForHoliday findOneWithWorker(Long id);
 }
