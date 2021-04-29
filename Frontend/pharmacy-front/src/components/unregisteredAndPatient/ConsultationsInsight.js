@@ -25,6 +25,8 @@ function ConsultationsInsight() {
   const [sorter, setSorter] = useState("none");
   const [ascDesc, setAscDesc] = useState("none");
   const [reload, setReload] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showBadAlert, setShowBadAlert] = useState(false);
 
   useEffect(() => {
     async function fetchConsultations() {
@@ -65,8 +67,17 @@ function ConsultationsInsight() {
     axios
       .put("http://localhost:8080/api/appointment/cancel-consultation/" + id)
       .then((res) => {
-        if (res.data == "canceled") alert("success");
-        else alert("fail");
+        if (res.data == "canceled") {
+          setShowAlert(true);
+          setTimeout(function () {
+            setShowAlert(false);
+          }, 5000);
+        } else {
+          setShowBadAlert(true);
+          setTimeout(function () {
+            setShowBadAlert(false);
+          }, 5000);
+        }
         setReload(!reload);
       });
   };
@@ -230,6 +241,20 @@ function ConsultationsInsight() {
                 ))}
             </tbody>
           </Table>
+        </Row>
+        <Row style={{ justifyContent: "center" }}>
+          {showAlert && (
+            <Alert transition={true} variant="success">
+              Successfully canceled consultation!
+            </Alert>
+          )}
+        </Row>
+        <Row style={{ justifyContent: "center" }}>
+          {showBadAlert && (
+            <Alert transition={true} variant="danger">
+              24 hours to consultation! You can not cancel it!
+            </Alert>
+          )}
         </Row>
       </div>
     </Container>

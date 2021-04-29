@@ -22,7 +22,7 @@ public class AppointmentController {
 
 
     @Autowired
-    AppointmentServiceImpl appointmentServiceImpl;
+    AppointmentService appointmentServiceImpl;
 
     @Autowired
     EmailService emailService;
@@ -165,7 +165,7 @@ public class AppointmentController {
         if(appointmentServiceImpl.cancelConsultation(id)){
             return new ResponseEntity<>("canceled", HttpStatus.OK);
         }else{
-            return new ResponseEntity<>("not canceled",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("not canceled",HttpStatus.OK);
         }
     }
 

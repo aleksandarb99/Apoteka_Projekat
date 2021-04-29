@@ -328,13 +328,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         for (Appointment a : patient.getAppointments()) {
             if (a.getAppointmentType() == AppointmentType.CHECKUP) continue;
             if (a.getAppointmentState() != AppointmentState.FINISHED) continue;
-
-            Date today = new Date();
-            Date startDate = new Date(a.getStartTime()); // Ove 2 naredne provere, ne bi trebale da se dese
-            if (startDate.after(today)) continue;
-
-            Date endDate = new Date(a.getEndTime());
-            if (endDate.after(today)) continue;
+            if (a.getStartTime() > System.currentTimeMillis()) continue; // Ove 2 naredne provere, ne bi trebale da se dese
+            if (a.getEndTime() > System.currentTimeMillis()) continue;
 
             AppointmentPatientInsightDTO dto = new AppointmentPatientInsightDTO(a);
             retVal.add(dto);
@@ -353,11 +348,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         if (appointment.getAppointmentState() != AppointmentState.RESERVED) return false;
 
-        Date today = new Date();
-        Date startDate = new Date(appointment.getStartTime()); // Provera da ipak nije konsultacija iz proslosti
-        if (startDate.before(today)) return false;
+        if (appointment.getStartTime() < System.currentTimeMillis()) return false; // Provera da ipak nije konsultacija iz proslosti
 
-        long differenceInMinutes = ((appointment.getStartTime() - today.getTime()) / (1000 * 60));
+        long differenceInMinutes = ((appointment.getStartTime() - System.currentTimeMillis()) / (1000 * 60));
         if(differenceInMinutes < 1440) return false;
 
         appointment.setAppointmentState(AppointmentState.CANCELLED);
@@ -376,13 +369,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         for (Appointment a : patient.getAppointments()) {
             if (a.getAppointmentType() == AppointmentType.CHECKUP) continue;
             if (a.getAppointmentState() != AppointmentState.RESERVED) continue;
-
-            Date today = new Date();
-            Date startDate = new Date(a.getStartTime()); // Ove 2 naredne provere, ne bi trebale da se dese
-            if (startDate.before(today)) continue;
-
-            Date endDate = new Date(a.getEndTime());
-            if (endDate.before(today)) continue;
+            if (a.getStartTime() < System.currentTimeMillis()) continue; // Ove 2 naredne provere, ne bi trebale da se dese
+            if (a.getEndTime() < System.currentTimeMillis()) continue;
 
             AppointmentPatientInsightDTO dto = new AppointmentPatientInsightDTO(a);
             retVal.add(dto);

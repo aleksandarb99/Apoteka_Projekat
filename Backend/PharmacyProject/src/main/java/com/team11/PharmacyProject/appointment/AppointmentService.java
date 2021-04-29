@@ -14,6 +14,8 @@ public interface AppointmentService {
 
     List<Appointment> getFreeAppointmentsByPharmacyId(Long id);
 
+    List<Appointment> getFreeAppointmentsByPharmacyId(Long id, Sort sorter);
+
     List<Appointment> getAllAppointmentsByPharmacyId(Long id, Long timestamp);
 
     boolean insertAppointment(Appointment a, Long pharmacyId, Long dId);
