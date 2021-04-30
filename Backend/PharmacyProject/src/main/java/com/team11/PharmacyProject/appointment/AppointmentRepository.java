@@ -37,4 +37,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("select case when count(a)> 0 then true else false end from Appointment a where " +
             "a.worker.id = ?1 and ((a.startTime >= ?2 and a.startTime <= ?3) or (a.endTime >= ?2 and a.endTime <= ?3))")
     boolean hasAppointmentsInThatDateRange(Long workerID, Long vacationStartTime, Long vacationEndTime);
+
+    @Query("SELECT a FROM Appointment  a where a.worker.id=?1 and a.appointmentState='RESERVED' and a.startTime > ?2 and a.pharmacy.id = ?3")
+    List<Appointment> getUpcomingAppointmentsForWorkerByWorkerIdAndPharmacyId(Long id, Long startTime, Long pharmacyId);
 }

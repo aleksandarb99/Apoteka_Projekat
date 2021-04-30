@@ -2,57 +2,48 @@ import React, { useState, useEffect } from "react";
 
 import { Tab, Row, Col, Button, Table, Modal, Alert } from "react-bootstrap";
 
-import moment from "moment";
-
 import axios from "../../app/api";
 
 import "../../styling/pharmacy.css";
-import RejectRequestModal from "./RejectRequestModal";
+import AddingWorkerModal from "./AddingWorkerModal";
 
 function DisplayWorkers({ idOfPharmacy }) {
-  const [requests, setRequests] = useState([]);
+  const [workers, setWorkers] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(-1);
-  const [showAlert, setShowAlert] = useState(false);
+  const [addModalShow, setAddModalShow] = useState(false);
 
-  async function fetchRequests() {
+  async function fetchWorkers() {
     const request = await axios.get(
-      `http://localhost:8080/api/vacation/getunresolvedrequestsbypharmacyid/${idOfPharmacy}`
+      `http://localhost:8080/api/workplace/bypharmacyid/${idOfPharmacy}`
     );
-    setRequests(request.data);
-
+    setWorkers(request.data);
     return request;
   }
 
-  async function rejectRequest(reason) {
+  async function addWorker(id, dto) {
+    const request = await axios.post(
+      `http://localhost:8080/api/workplace/addworker/bypharmacyid/${idOfPharmacy}/${id}`,
+      dto
+    );
+    fetchWorkers();
+    return request;
+  }
+
+  async function removeWorker() {
     const request = await axios
-      .post(
-        `http://localhost:8080/api/vacation/rejectrequest/${selectedRowId}`,
-        reason
+      .delete(
+        `http://localhost:8080/api/workplace/removeworker/bypharmacyid/${idOfPharmacy}/${selectedRowId}`
       )
-      .then(() => {
-        fetchRequests();
-      })
       .catch(() => {
-        alert("Failed");
+        alert("Cannot delete it");
       });
-    return request;
-  }
-
-  async function acceptRequest() {
-    const request = await axios
-      .post(`http://localhost:8080/api/vacation/acceptrequest/${selectedRowId}`)
-      .then(() => {
-        fetchRequests();
-      })
-      .catch(() => {
-        alert("Failed");
-      });
+    fetchWorkers();
     return request;
   }
 
   useEffect(() => {
     if (idOfPharmacy != undefined) {
-      fetchRequests();
+      fetchWorkers();
     }
   }, [idOfPharmacy]);
 
@@ -60,20 +51,19 @@ function DisplayWorkers({ idOfPharmacy }) {
     setSelectedRowId(requestId);
   };
 
-  let handleReject = (reason) => {
-    setShowAlert(false);
-    rejectRequest(reason);
+  let handleRemove = () => {
+    removeWorker();
     setSelectedRowId(-1);
   };
 
-  let handleAccept = () => {
-    acceptRequest();
-    setSelectedRowId(-1);
+  let handleAddModalSave = (selectedMedicineId, dto) => {
+    setAddModalShow(false);
+    addWorker(selectedMedicineId, dto);
   };
 
   return (
     <Tab.Pane eventKey="second">
-      <h1 className="content-header">Requests for vacations and absences</h1>
+      <h1 className="content-header">Pharmacists and dermatologists</h1>
       <Row>
         <Col>
           <Table bordered striped hover variant="dark">
@@ -81,16 +71,17 @@ function DisplayWorkers({ idOfPharmacy }) {
               <tr>
                 <th>#</th>
                 <th>Type</th>
-                <th>State</th>
-                <th>Start time</th>
-                <th>End time</th>
-                <th>Worker details</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Avg. grade</th>
               </tr>
             </thead>
             <tbody>
               {" "}
-              {requests?.length != 0 &&
-                requests?.map((item, index) => (
+              {workers?.length != 0 &&
+                workers?.map((item, index) => (
                   <tr
                     onClick={() => {
                       handleClick(item.id);
@@ -100,37 +91,44 @@ function DisplayWorkers({ idOfPharmacy }) {
                     } `}
                   >
                     <td>{index + 1}</td>
-                    <td>{item.absenceType}</td>
-                    <td>{item.requestState}</td>
-                    <td>{moment(item.start).format("hh:mm a")}</td>
-                    <td>{moment(item.end).format("hh:mm a")}</td>
-                    <td>{item.workerDetails}</td>
+                    <td>{item.worker.userType}</td>
+                    <td>{item.worker.firstName}</td>
+                    <td>{item.worker.lastName}</td>
+                    <td>{item.worker.email}</td>
+                    <td>{item.worker.telephone}</td>
+                    <td>{item.worker.avgGrade}</td>
                   </tr>
                 ))}
             </tbody>
           </Table>
 
-          <RejectRequestModal
-            show={showAlert}
-            onHide={() => setShowAlert(false)}
-            rejectRequest={handleReject}
-          />
-
           <div className="center">
             <Button
-              disabled={selectedRowId == -1}
-              onClick={handleAccept}
-              variant="primary"
+              onClick={() => {
+                setAddModalShow(true);
+                setSelectedRowId(-1);
+              }}
+              variant="success"
             >
-              Accept request
+              Add worker
             </Button>
             <Button
               disabled={selectedRowId == -1}
-              onClick={() => setShowAlert(true)}
-              variant="secondary"
+              onClick={handleRemove}
+              variant="danger"
             >
-              Reject request
+              Remove worker
             </Button>
+
+            <AddingWorkerModal
+              workersLength={workers?.length}
+              idOfPharmacy={idOfPharmacy}
+              show={addModalShow}
+              onHide={() => {
+                setAddModalShow(false);
+              }}
+              handleAdd={handleAddModalSave}
+            />
           </div>
         </Col>
       </Row>

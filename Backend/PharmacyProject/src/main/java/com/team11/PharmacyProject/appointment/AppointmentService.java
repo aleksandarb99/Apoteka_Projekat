@@ -16,7 +16,7 @@ public interface AppointmentService {
 
     List<Appointment> getFreeAppointmentsByPharmacyId(Long id, Sort sorter);
 
-    List<Appointment> getAllAppointmentsByPharmacyId(Long id, Long timestamp);
+    List<Appointment> getAllAppointmentsByPharmacyId(Long id, Long timestamp) throws Exception;
 
     boolean insertAppointment(Appointment a, Long pharmacyId, Long dId);
 
@@ -35,4 +35,6 @@ public interface AppointmentService {
     boolean cancelConsultation(Long id);
 
     List<AppointmentPatientInsightDTO> getUpcomingConsultationsByPatientId(Long id, Sort sort);
+
+    List<Appointment> getUpcomingAppointmentsForWorkerByWorkerIdAndPharmacyId(Long id, Long pharmacyId);
 }

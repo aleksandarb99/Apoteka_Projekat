@@ -7,6 +7,8 @@ import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.rankingCategory.RankingCategory;
+import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
+import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayService;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
@@ -44,6 +46,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     PatientRepository patientRepository;
 
+    @Autowired
+    RequestForHolidayService requestForHolidayService;
+
     public Appointment getNextAppointment(String email, Long workerId) {
         Pageable pp = PageRequest.of(0, 1, Sort.by("startTime").ascending());
         List<Appointment> result = appointmentRepository.getUpcommingAppointment(email, workerId, pp);
@@ -75,12 +80,15 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointments;
     }
 
-    public List<Appointment> getAllAppointmentsByPharmacyId(Long id, Long timestamp) {
+    public List<Appointment> getAllAppointmentsByPharmacyId(Long id, Long timestamp) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         List<Appointment> appointments = new ArrayList<>();
 
 
         Date dateFromRequest = new Date(timestamp);
+        boolean isHeOnHoliday = requestForHolidayService.isWorkerOnHoliday(id, dateFromRequest);
+        if(isHeOnHoliday) throw new Exception("he is on holiday");
+
 
         for (Appointment a : appointmentRepository.findAllAppointmentsByDermatologistId(id)) {
             Date d = new Date(a.getStartTime());
@@ -177,6 +185,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             }
         }
 
+        if(requestForHolidayService.isWorkerOnHoliday(dId, startTime))
+            return false;
+
         appointmentRepository.save(a);
         return true;
     }
@@ -186,6 +197,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         Pageable pg = PageRequest.of(page, size, Sort.by("startTime").ascending());
         Long startTime = Instant.now().minus(1, ChronoUnit.HOURS).toEpochMilli();
         return appointmentRepository.getUpcomingAppointmentsForWorker(id, startTime, pg);
+    }
+
+    @Override
+    public List<Appointment> getUpcomingAppointmentsForWorkerByWorkerIdAndPharmacyId(Long id, Long pharmacyId) {
+        Long startTime = Instant.now().minus(1, ChronoUnit.HOURS).toEpochMilli();
+        return appointmentRepository.getUpcomingAppointmentsForWorkerByWorkerIdAndPharmacyId(id, startTime, pharmacyId);
     }
 
     @Override

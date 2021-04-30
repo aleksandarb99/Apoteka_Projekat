@@ -32,6 +32,17 @@ public class PharmacyServiceImpl implements PharmacyService {
     @Autowired
     PharmacyWorkerRepository workerRepository;
 
+
+    @Override
+    public void save(Pharmacy p) {
+        pharmacyRepository.save(p);
+    }
+
+    @Override
+    public Pharmacy getPharmacyByIdWithWorkplaces(Long id) {
+        return pharmacyRepository.getPharmacyByIdAndFetchWorkplaces(id);
+    }
+
     @Override
     public boolean insertMedicine(Long pharmacyId, Long medicineId) {
         Pharmacy p = getPharmacyById(pharmacyId);
