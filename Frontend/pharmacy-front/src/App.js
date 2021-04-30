@@ -28,6 +28,7 @@ import PharmacistProfile from "./components/workers/pharmacist_profile";
 import UserCrud from "./components/users/UserCrud";
 import PharmaciesWithFreePharmacists from "./components/unregisteredAndPatient/PharmaciesWithFreePharmacists";
 import ConsultationsInsight from "./components/unregisteredAndPatient/ConsultationsInsight";
+import CheckupsInsight from "./components/unregisteredAndPatient/CheckupsInsight";
 
 import "./styling/navbar.css";
 
@@ -48,6 +49,7 @@ function App() {
             path="/consultations-insight"
             component={ConsultationsInsight}
           />
+          <Route path="/checkups-insight" component={CheckupsInsight} />
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LoginPage} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
