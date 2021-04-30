@@ -16,6 +16,7 @@ import {
   Button,
 } from "react-bootstrap";
 import { StarFill, Search, Reply } from "react-bootstrap-icons";
+import Dropdown from "react-bootstrap/Dropdown";
 
 import axios from "axios";
 
@@ -29,6 +30,9 @@ function PharmaciesView() {
   const [fsearch, setFSearch] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
   const [filterDistance, setFilterDistance] = useState("");
+  const [sorter, setSorter] = useState("none");
+  const [ascDesc, setAscDesc] = useState("none");
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     async function fetchPharmacies() {
@@ -96,13 +100,13 @@ function PharmaciesView() {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
-  }, [pharmacies]);
+  }, [pharmacies, reload]);
 
   useEffect(() => {
     let first = pagNumber * 12;
     let max = pharmacies.length < first + 12 ? pharmacies?.length : first + 12;
     setShowedPharmacies(pharmacies?.slice(first, max));
-  }, [pharmacies, pagNumber]);
+  }, [pharmacies, pagNumber, reload]);
 
   let handleSlideLeft = () => {
     if (pagNumber !== 0) {
@@ -114,6 +118,39 @@ function PharmaciesView() {
     if (pagNumber !== maxPag) {
       setPugNummber(pagNumber + 1);
     }
+  };
+
+  const doSorting = (type, value) => {
+    if (type === "sorter") setSorter(value);
+    else setAscDesc(value);
+
+    if (value === "none") return;
+    if (type === "sorter" && ascDesc === "none") return;
+    if (type === "ascDesc" && sorter === "none") return;
+
+    pharmacies.sort(function (ph1, ph2) {
+      if (
+        (type === "sorter" && value === "grade") ||
+        (type === "ascDesc" && sorter === "grade")
+      )
+        return ph1?.avgGrade - ph2?.avgGrade;
+      if (
+        (type === "sorter" && value === "pharmacy name") ||
+        (type === "ascDesc" && sorter === "pharmacy name")
+      )
+        return ph1?.name.localeCompare(ph2?.name);
+      if (
+        (type === "sorter" && value === "city name") ||
+        (type === "ascDesc" && sorter === "city name")
+      )
+        return ph1?.address?.city.localeCompare(ph2?.address?.city);
+    });
+    if (
+      (type === "ascDesc" && value === "descending") ||
+      (type === "sorter" && ascDesc === "descending")
+    )
+      pharmacies.reverse();
+    setReload(!reload);
   };
 
   return (
@@ -145,6 +182,74 @@ function PharmaciesView() {
               </Col>
             </Form.Group>
           </Form>
+        </Row>
+        <Row>
+          <Form.Label style={{ marginRight: "20px" }}>Sorter: </Form.Label>
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              {sorter}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("sorter", "none");
+                }}
+              >
+                none
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("sorter", "pharmacy name");
+                }}
+              >
+                pharmacy name
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("sorter", "city name");
+                }}
+              >
+                city name
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("sorter", "grade");
+                }}
+              >
+                grade
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              {ascDesc}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("ascDesc", "none");
+                }}
+              >
+                none
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("ascDesc", "ascending");
+                }}
+              >
+                ascending
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("ascDesc", "descending");
+                }}
+              >
+                descending
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Row>
         <Row>
           <Accordion style={{ width: "100%" }}>
@@ -221,7 +326,9 @@ function PharmaciesView() {
                           ))}
                         </ListGroupItem>
                         <ListGroupItem className="my__flex">
-                          {pharmacy.address.street}
+                          {pharmacy.address.street +
+                            ", " +
+                            pharmacy.address.city}
                         </ListGroupItem>
                       </ListGroup>
                     </Card>
