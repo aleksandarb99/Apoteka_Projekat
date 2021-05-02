@@ -127,15 +127,29 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     public ByteArrayInputStream getMedicinePdf(long medicineId) {
         Medicine medicine = medicineRepository.findByIdAndFetchFormTypeManufacturer(medicineId);
+        if (medicine == null)
+            return null;
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
-            Font font = FontFactory.getFont(FontFactory.COURIER, 14, BaseColor.BLACK);
-            Chunk chunk = new Chunk("NASLOV", font);
+            Font titleFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 18, BaseColor.BLACK);
+
+            Paragraph nameParagraph = new Paragraph(medicine.getName(), titleFont);
+            nameParagraph.setAlignment(Element.ALIGN_CENTER);
 
             PdfWriter.getInstance(document, out);
             document.open();
-            document.add(chunk);
+            document.add(nameParagraph);
+            document.add(Chunk.NEWLINE);
+            document.add(generateParagraph("1. Kod", medicine.getCode()));
+            document.add(generateParagraph("2. Naziv", medicine.getName()));
+            document.add(generateParagraph("3. Sastojci", medicine.getContent()));
+            document.add(generateParagraph("4. Neželjena dejstva", medicine.getSideEffects()));
+            document.add(generateParagraph("5. Tip leka", medicine.getMedicineType().getName()));
+            document.add(generateParagraph("6. Oblik leka", medicine.getMedicineForm().getName()));
+            document.add(generateParagraph("7. Prosečna ocena", String.valueOf(medicine.getAvgGrade())));
+            document.add(generateParagraph("8. Dodatne napomene", medicine.getAdditionalNotes()));
+            document.add(generateParagraph("9. Zamenski lekovi", "TODO"));
             document.close();
 
         } catch (DocumentException ex) {
@@ -143,5 +157,22 @@ public class MedicineServiceImpl implements MedicineService {
         }
 
         return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    private Paragraph generateParagraph(String title, String text) {
+        Font headerFont = FontFactory.getFont(FontFactory.COURIER, "Cp1250", true);
+        headerFont.setSize(12);
+        headerFont.setStyle(Font.BOLD);
+        Font textFont = FontFactory.getFont(FontFactory.COURIER, "Cp1250", true);
+        textFont.setSize(12);
+
+        Phrase headerPhrase = new Phrase(String.format("%s\n", title), headerFont);
+        Paragraph textParagraph = new Paragraph(text, textFont);
+        textParagraph.setIndentationLeft(12f);
+        Paragraph p = new Paragraph();
+        p.add(headerPhrase);
+        p.add(textParagraph);
+        p.setSpacingAfter(14f);
+        return p;
     }
 }

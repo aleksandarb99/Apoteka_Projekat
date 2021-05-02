@@ -89,6 +89,8 @@ public class MedicineController {
     @GetMapping(value = "/{id}/get-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<InputStreamResource> generateMedicinePdf(@PathVariable("id") long medicineId) {
         ByteArrayInputStream medicineBis = medicineService.getMedicinePdf(medicineId);
+        if (medicineBis == null)
+            return null;
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=details.pdf");
