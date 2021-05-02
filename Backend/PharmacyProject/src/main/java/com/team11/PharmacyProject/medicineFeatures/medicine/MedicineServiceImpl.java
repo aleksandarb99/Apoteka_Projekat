@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
@@ -7,6 +9,9 @@ import com.team11.PharmacyProject.priceList.PriceListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.lang.annotation.Documented;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -117,5 +122,26 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     public Medicine getMedicineById(Long id) {
         return medicineRepository.findByIdAndFetchFormTypeManufacturer(id);
+    }
+
+    @Override
+    public ByteArrayInputStream getMedicinePdf(long medicineId) {
+        Medicine medicine = medicineRepository.findByIdAndFetchFormTypeManufacturer(medicineId);
+        Document document = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            Font font = FontFactory.getFont(FontFactory.COURIER, 14, BaseColor.BLACK);
+            Chunk chunk = new Chunk("NASLOV", font);
+
+            PdfWriter.getInstance(document, out);
+            document.open();
+            document.add(chunk);
+            document.close();
+
+        } catch (DocumentException ex) {
+            System.err.println("ERROR. PDF file not generated");
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
     }
 }

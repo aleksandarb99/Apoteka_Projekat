@@ -5,11 +5,14 @@ import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineInfoDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,6 +84,20 @@ public class MedicineController {
         } else {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "/{id}/get-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> generateMedicinePdf(@PathVariable("id") long medicineId) {
+        ByteArrayInputStream medicineBis = medicineService.getMedicinePdf(medicineId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=details.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(medicineBis));
     }
 
     private Medicine convertToEntity(MedicineCrudDTO medicineCrudDto) {
