@@ -90,7 +90,7 @@ public class MedicineController {
     public ResponseEntity<InputStreamResource> generateMedicinePdf(@PathVariable("id") long medicineId) {
         ByteArrayInputStream medicineBis = medicineService.getMedicinePdf(medicineId);
         if (medicineBis == null)
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=details.pdf");

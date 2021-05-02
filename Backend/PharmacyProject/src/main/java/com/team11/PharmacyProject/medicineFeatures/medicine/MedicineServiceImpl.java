@@ -126,11 +126,12 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Override
     public ByteArrayInputStream getMedicinePdf(long medicineId) {
-        Medicine medicine = medicineRepository.findByIdAndFetchFormTypeManufacturer(medicineId);
+        Medicine medicine = medicineRepository.findByIdAndFetchFormTypeManufacturerAlternative(medicineId);
         if (medicine == null)
             return null;
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         try {
             Font titleFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 18, BaseColor.BLACK);
 
@@ -149,7 +150,7 @@ public class MedicineServiceImpl implements MedicineService {
             document.add(generateParagraph("6. Oblik leka", medicine.getMedicineForm().getName()));
             document.add(generateParagraph("7. Prosečna ocena", String.valueOf(medicine.getAvgGrade())));
             document.add(generateParagraph("8. Dodatne napomene", medicine.getAdditionalNotes()));
-            document.add(generateParagraph("9. Zamenski lekovi", "TODO"));
+            document.add(generateAlternativesParagraph("9. Zamenski lekovi", medicine));
             document.close();
 
         } catch (DocumentException ex) {
@@ -172,6 +173,37 @@ public class MedicineServiceImpl implements MedicineService {
         Paragraph p = new Paragraph();
         p.add(headerPhrase);
         p.add(textParagraph);
+        p.setSpacingAfter(14f);
+        return p;
+    }
+
+    private Paragraph generateAlternativesParagraph(String title, Medicine m) {
+        Font headerFont = FontFactory.getFont(FontFactory.COURIER, "Cp1250", true);
+        headerFont.setSize(12);
+        headerFont.setStyle(Font.BOLD);
+        Font textFont = FontFactory.getFont(FontFactory.COURIER, "Cp1250", true);
+        textFont.setSize(12);
+
+        Phrase headerPhrase = new Phrase(String.format("%s\n", title), headerFont);
+        Paragraph p = new Paragraph();
+        p.add(headerPhrase);
+
+        Paragraph bodyParagraph = new Paragraph();
+        for (Medicine alt: m.getAlternativeMedicine()) {
+            Chunk c = new Chunk(String.format("%s - %s\n", alt.getName(), alt.getCode()), textFont);
+            // TODO change base URL if needed
+            String baseURL = "http://localhost:8080/api/medicine/{id}/get-pdf";
+            String altUrl = baseURL.replace("{id}", alt.getId().toString());
+            c.setAnchor(altUrl);
+            bodyParagraph.add(c);
+        }
+        if (m.getAlternativeMedicine().isEmpty()) {
+            bodyParagraph.add(new Chunk("Nema zamenskih lekova", textFont));
+        }
+
+        bodyParagraph.setIndentationLeft(12f);
+
+        p.add(bodyParagraph);
         p.setSpacingAfter(14f);
         return p;
     }
