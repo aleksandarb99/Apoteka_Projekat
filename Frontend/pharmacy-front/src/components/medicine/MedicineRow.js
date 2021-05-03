@@ -9,7 +9,7 @@ const MedicineRow = ({ medicine, onClick, editClick, detailsClick, deleteClick }
             <td>{medicine.content}</td>
             <td>
                 <Button onClick={editClick}>Edit</Button>
-                <Button variant="info">Details</Button>
+                <Button variant="info" onClick={() => window.open(`http://localhost:8080/api/medicine/${medicine.id}/get-pdf`, "_blank")} > Details</Button>
                 <Button variant="danger" onClick={deleteClick}>Delete</Button>
             </td>
         </tr>
