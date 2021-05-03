@@ -1,7 +1,13 @@
 package com.team11.PharmacyProject.users.patient;
 
+import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.enums.AppointmentState;
+import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
+import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.user.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
@@ -88,5 +95,54 @@ public class PatientService {
         Optional<Patient> patient = patientRepository.findById(id);
         if(patient.isEmpty()) return null;
         return patient.get();
+    }
+
+    public List<PharmacyWorker> getMyPharmacists(long patientId) {
+        return getMyPharmacyWorkers(patientId, UserType.PHARMACIST);
+    }
+
+    public List<PharmacyWorker> getMyDermatologists(long patientId) {
+        return getMyPharmacyWorkers(patientId, UserType.DERMATOLOGIST);
+    }
+
+    private List<PharmacyWorker> getMyPharmacyWorkers(long patientId, UserType pharmacyWorkerType) {
+        Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
+        List<Appointment> apps = patient.getAppointments();
+        return apps
+                .stream()
+                .filter(appointment -> appointment.getEndTime() < System.currentTimeMillis()
+                        && appointment.getAppointmentState() == AppointmentState.FINISHED)
+                .map(Appointment::getWorker)
+                .filter(pharmacyWorker -> pharmacyWorker.getUserType() == pharmacyWorkerType)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public List<Pharmacy> getMyPharmacies(long patientId) {
+        Patient patientAppointments = patientRepository.findByIdAndFetchAppointments(patientId);
+
+        // Dobavi one apoteke u kojima je imao pregled
+        List<Appointment> apps = patientAppointments.getAppointments();
+        List<Pharmacy> pharmaciesWithAppointments = apps
+                .stream()
+                .filter(appointment -> appointment.getEndTime() < System.currentTimeMillis()
+                        && appointment.getAppointmentState() == AppointmentState.FINISHED)
+                .map(Appointment::getPharmacy)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // Dobavi apoteke iz kojih je preuzimao recept
+        Patient patientReservations = patientRepository.findByIdAndFetchReservations(patientId);
+
+        List<MedicineReservation> medicineReservations = patientReservations.getMedicineReservation();
+        List<Pharmacy> pharmaciesWithReservations = medicineReservations
+                .stream()
+                .map(MedicineReservation::getPharmacy)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // Spoji ove dve liste
+        pharmaciesWithAppointments.addAll(pharmaciesWithReservations);
+        return pharmaciesWithAppointments.stream().distinct().collect(Collectors.toList());
     }
 }

@@ -1,14 +1,17 @@
 package com.team11.PharmacyProject.users.patient;
 
 
-import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyInfoDTO;
 import com.team11.PharmacyProject.dto.patient.PatientDTO;
 import com.team11.PharmacyProject.dto.patient.PatientWorkerSearchDTO;
 
 import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
+import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
-import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -22,17 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-
-import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -193,5 +189,42 @@ public class PatientController {
         } else {
             return null;
         }
+    }
+
+    @GetMapping(value = "/{id}/my-pharmacists")
+    public ResponseEntity<List<PharmacyWorkerInfoDTO>> getMyPharmacists(@PathVariable("id") long patientId) {
+        List<PharmacyWorker> pharmacists = patientService.getMyPharmacists(patientId);
+        return getListResponseEntity(pharmacists);
+    }
+
+    @GetMapping(value = "/{id}/my-dermatologists")
+    public ResponseEntity<List<PharmacyWorkerInfoDTO>> getMyDermatologists(@PathVariable("id") long patientId) {
+        List<PharmacyWorker> dermatologists = patientService.getMyDermatologists(patientId);
+        return getListResponseEntity(dermatologists);
+    }
+
+    @NotNull
+    private ResponseEntity<List<PharmacyWorkerInfoDTO>> getListResponseEntity(List<PharmacyWorker> pharmacyWorkers) {
+        if (pharmacyWorkers == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        List<PharmacyWorkerInfoDTO> pDTOs = pharmacyWorkers
+                .stream()
+                .map(PharmacyWorkerInfoDTO::new)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(pDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}/my-pharmacies")
+    ResponseEntity<List<PharmacyInfoDTO>> getMyPharmacies(@PathVariable("id") long patientId) {
+        List<Pharmacy> pharmacies = patientService.getMyPharmacies(patientId);
+        if (pharmacies == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        List<PharmacyInfoDTO> pDTOs = pharmacies
+                .stream()
+                .map(PharmacyInfoDTO::new)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(pDTOs, HttpStatus.OK);
     }
 }
