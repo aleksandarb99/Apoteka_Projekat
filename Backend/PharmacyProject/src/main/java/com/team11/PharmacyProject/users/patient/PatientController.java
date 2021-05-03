@@ -1,14 +1,14 @@
 package com.team11.PharmacyProject.users.patient;
 
 
-import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.patient.PatientDTO;
 import com.team11.PharmacyProject.dto.patient.PatientWorkerSearchDTO;
 
 import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
+import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
-import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -22,17 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-
-import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -193,5 +186,18 @@ public class PatientController {
         } else {
             return null;
         }
+    }
+
+    @GetMapping(value = "/{id}/my-pharmacists")
+    public ResponseEntity<List<PharmacyWorkerInfoDTO>> getMyPharmacists(@PathVariable("id") long patientId) {
+        List<PharmacyWorker> pharmacists = patientService.getMyPharmacists(patientId);
+        if (pharmacists == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        List<PharmacyWorkerInfoDTO> pDTOs = pharmacists
+                .stream()
+                .map(PharmacyWorkerInfoDTO::new)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(pDTOs, HttpStatus.OK);
     }
 }

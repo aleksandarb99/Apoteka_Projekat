@@ -1,7 +1,11 @@
 package com.team11.PharmacyProject.users.patient;
 
+import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.enums.AppointmentState;
+import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.user.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
@@ -88,5 +93,18 @@ public class PatientService {
         Optional<Patient> patient = patientRepository.findById(id);
         if(patient.isEmpty()) return null;
         return patient.get();
+    }
+
+    public List<PharmacyWorker> getMyPharmacists(long patientId) {
+        Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
+        List<Appointment> apps = patient.getAppointments();
+        return apps
+                .stream()
+                .distinct()
+                .filter(appointment -> appointment.getEndTime() < System.currentTimeMillis()
+                        && appointment.getAppointmentState() == AppointmentState.FINISHED)
+                .map(Appointment::getWorker)
+                .filter(pharmacyWorker -> pharmacyWorker.getUserType() == UserType.PHARMACIST)
+                .collect(Collectors.toList());
     }
 }
