@@ -140,21 +140,25 @@ public class MedicineServiceImpl implements MedicineService {
 
             PdfWriter.getInstance(document, out);
             document.open();
+            document.addTitle(medicine.getName());
             document.add(nameParagraph);
             document.add(Chunk.NEWLINE);
             document.add(generateParagraph("1. Kod", medicine.getCode()));
             document.add(generateParagraph("2. Naziv", medicine.getName()));
-            document.add(generateParagraph("3. Sastojci", medicine.getContent()));
-            document.add(generateParagraph("4. Neželjena dejstva", medicine.getSideEffects()));
-            document.add(generateParagraph("5. Tip leka", medicine.getMedicineType().getName()));
-            document.add(generateParagraph("6. Oblik leka", medicine.getMedicineForm().getName()));
-            document.add(generateParagraph("7. Prosečna ocena", String.valueOf(medicine.getAvgGrade())));
-            document.add(generateParagraph("8. Dodatne napomene", medicine.getAdditionalNotes()));
-            document.add(generateAlternativesParagraph("9. Zamenski lekovi", medicine));
+            document.add(generateParagraph("3. Proizvođač", medicine.getManufacturer().getName()));
+            document.add(generateParagraph("4. Sastojci", medicine.getContent()));
+            document.add(generateParagraph("5. Neželjena dejstva", medicine.getSideEffects()));
+            document.add(generateParagraph("6. Dodatne napomene", medicine.getAdditionalNotes()));
+            document.add(generateParagraph("7. Tip leka", medicine.getMedicineType().getName()));
+            document.add(generateParagraph("8. Oblik leka", medicine.getMedicineForm().getName()));
+            document.add(generateParagraph("9. Preporučeni dnevni unos", String.valueOf(medicine.getDailyIntake())));
+            document.add(generateParagraph("10. Prosečna ocena", String.valueOf(medicine.getAvgGrade())));
+            document.add(generateAlternativesParagraph("11. Zamenski lekovi", medicine));
             document.close();
 
         } catch (DocumentException ex) {
             System.err.println("ERROR. PDF file not generated");
+            return null;
         }
 
         return new ByteArrayInputStream(out.toByteArray());
