@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.users.patient;
 
 
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyInfoDTO;
 import com.team11.PharmacyProject.dto.patient.PatientDTO;
 import com.team11.PharmacyProject.dto.patient.PatientWorkerSearchDTO;
 
@@ -8,6 +9,7 @@ import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
@@ -209,6 +211,19 @@ public class PatientController {
         List<PharmacyWorkerInfoDTO> pDTOs = pharmacyWorkers
                 .stream()
                 .map(PharmacyWorkerInfoDTO::new)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(pDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}/my-pharmacies")
+    ResponseEntity<List<PharmacyInfoDTO>> getMyPharmacies(@PathVariable("id") long patientId) {
+        List<Pharmacy> pharmacies = patientService.getMyPharmacies(patientId);
+        if (pharmacies == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        List<PharmacyInfoDTO> pDTOs = pharmacies
+                .stream()
+                .map(PharmacyInfoDTO::new)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(pDTOs, HttpStatus.OK);
     }

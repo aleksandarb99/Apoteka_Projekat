@@ -5,6 +5,8 @@ import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
+import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.user.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,5 +116,33 @@ public class PatientService {
                 .filter(pharmacyWorker -> pharmacyWorker.getUserType() == pharmacyWorkerType)
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+    public List<Pharmacy> getMyPharmacies(long patientId) {
+        Patient patientAppointments = patientRepository.findByIdAndFetchAppointments(patientId);
+
+        // Dobavi one apoteke u kojima je imao pregled
+        List<Appointment> apps = patientAppointments.getAppointments();
+        List<Pharmacy> pharmaciesWithAppointments = apps
+                .stream()
+                .filter(appointment -> appointment.getEndTime() < System.currentTimeMillis()
+                        && appointment.getAppointmentState() == AppointmentState.FINISHED)
+                .map(Appointment::getPharmacy)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // Dobavi apoteke iz kojih je preuzimao recept
+        Patient patientReservations = patientRepository.findByIdAndFetchReservations(patientId);
+
+        List<MedicineReservation> medicineReservations = patientReservations.getMedicineReservation();
+        List<Pharmacy> pharmaciesWithReservations = medicineReservations
+                .stream()
+                .map(MedicineReservation::getPharmacy)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // Spoji ove dve liste
+        pharmaciesWithAppointments.addAll(pharmaciesWithReservations);
+        return pharmaciesWithAppointments.stream().distinct().collect(Collectors.toList());
     }
 }
