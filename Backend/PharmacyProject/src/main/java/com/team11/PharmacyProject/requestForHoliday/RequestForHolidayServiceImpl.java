@@ -57,6 +57,12 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
     }
 
     @Override
+    public boolean isWorkerOnHoliday(Long workerId, Date date) {
+        List<RequestForHoliday> requestForHoliday = requestForHolidayRepository.findOneWithWorkerAndCheckIsHeOnHoliday(workerId, date.getTime());
+        return !requestForHoliday.isEmpty();
+    }
+
+    @Override
     public boolean rejectRequest(String requestId, String reason) {
         long id;
         try {
@@ -77,7 +83,6 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
             r.setRequestState(AbsenceRequestState.CANCELLED);
             requestForHolidayRepository.save(r);
 
-//          TODO VIDI ZA MEJLOVE
 //          String email = r.getPharmacyWorker().getEmail()
             String email = "abuljevic8@gmail.com";
             RequestForHolidayWithWorkerDetailsDTO dto = new RequestForHolidayWithWorkerDetailsDTO(r);
@@ -107,12 +112,9 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
         RequestForHoliday r = requestForHolidayRepository.findOneWithWorker(id);
         if(r != null){
 
-            //TODO napravi dto za ovo i imeni mejl na moj
-
             r.setRequestState(AbsenceRequestState.ACCEPTED);
             requestForHolidayRepository.save(r);
 
-//          TODO VIDI ZA MEJLOVE
 //          String email = r.getPharmacyWorker().getEmail()
             String email = "abuljevic8@gmail.com";
             RequestForHolidayWithWorkerDetailsDTO dto = new RequestForHolidayWithWorkerDetailsDTO(r);

@@ -18,7 +18,7 @@ import moment from "moment";
 
 import AddPurchaseOrderModal from "./AddPurchaseOrderModal";
 
-function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
+function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
   const [orders, setOrders] = useState([]);
   const [filterValue, setFilterValue] = useState("All");
   const [showedOrders, setShowedOrders] = useState([]);
@@ -43,7 +43,7 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
     if (priceListId != undefined) {
       fetchPriceList();
     }
-  }, [priceListId]);
+  }, [priceListId, refresh]);
 
   async function fetchOrders() {
     const request = await axios.get(

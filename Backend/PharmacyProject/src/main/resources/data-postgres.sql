@@ -305,9 +305,9 @@ insert into complaint (content, complaint_on, complaint_on_id, type, date, patie
 
 /*Complaint Response*/
 insert into complaint_response (response_text, date, complaint_id, user_id)
-                    values ('Bice sakcionisan!', 1616673600000, 1, 7);
+                    values ('Bice sakcionisan!', 1616673600000, 1, 8);
 insert into complaint_response (response_text, date, complaint_id, user_id)
-                    values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602000, 2, 7);
+                    values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602000, 2, 8);
 
 /*Pharmacies*/
 insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, address_id, price_list_id)
@@ -445,11 +445,11 @@ insert into request_for_holiday (absence_type, decline_text, start_date, end_dat
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
                     values ('LEAVE', '', 1619953200000, 1620817200000, 'ACCEPTED', 7);
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-values ('LEAVE', '', 1623754800000, 1623756600000, 'PENDING', 6);
+values ('LEAVE', '', 1623754800000, 1624190195000, 'PENDING', 6);
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-values ('VACATION', '', 1623754800000, 1623756600000, 'PENDING', 7);
+values ('VACATION', '', 1623754800000, 1624190195000, 'PENDING', 7);
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-values ('VACATION', '', 1623754800000, 1623756600000, 'PENDING', 6);
+values ('VACATION', '', 1623754800000, 1624190195000, 'PENDING', 6);
 
 
 /*MyOrders*/

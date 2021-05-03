@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
@@ -7,6 +9,9 @@ import com.team11.PharmacyProject.priceList.PriceListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.lang.annotation.Documented;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -117,5 +122,93 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     public Medicine getMedicineById(Long id) {
         return medicineRepository.findByIdAndFetchFormTypeManufacturer(id);
+    }
+
+    @Override
+    public ByteArrayInputStream getMedicinePdf(long medicineId) {
+        Medicine medicine = medicineRepository.findByIdAndFetchFormTypeManufacturerAlternative(medicineId);
+        if (medicine == null)
+            return null;
+        Document document = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            Font titleFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 18, BaseColor.BLACK);
+
+            Paragraph nameParagraph = new Paragraph(medicine.getName(), titleFont);
+            nameParagraph.setAlignment(Element.ALIGN_CENTER);
+
+            PdfWriter.getInstance(document, out);
+            document.open();
+            document.addTitle(medicine.getName());
+            document.add(nameParagraph);
+            document.add(Chunk.NEWLINE);
+            document.add(generateParagraph("1. Medicine code", medicine.getCode()));
+            document.add(generateParagraph("2. Medicine name", medicine.getName()));
+            document.add(generateParagraph("3. Manufacturer", medicine.getManufacturer().getName()));
+            document.add(generateParagraph("4. Active ingredients", medicine.getContent()));
+            document.add(generateParagraph("5. Side effects", medicine.getSideEffects()));
+            document.add(generateParagraph("6. Additional notes", medicine.getAdditionalNotes()));
+            document.add(generateParagraph("7. Medicine type", medicine.getMedicineType().getName()));
+            document.add(generateParagraph("8. Medicine form", medicine.getMedicineForm().getName()));
+            document.add(generateParagraph("9. Daily intake", String.valueOf(medicine.getDailyIntake())));
+            document.add(generateParagraph("10. Average grade", String.valueOf(medicine.getAvgGrade())));
+            document.add(generateAlternativesParagraph("11. Alternative medicine", medicine));
+            document.close();
+
+        } catch (DocumentException ex) {
+            System.err.println("ERROR. PDF file not generated");
+            return null;
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    private Paragraph generateParagraph(String title, String text) {
+        Font headerFont = FontFactory.getFont(FontFactory.COURIER, "Cp1250", true);
+        headerFont.setSize(12);
+        headerFont.setStyle(Font.BOLD);
+        Font textFont = FontFactory.getFont(FontFactory.COURIER, "Cp1250", true);
+        textFont.setSize(12);
+
+        Phrase headerPhrase = new Phrase(String.format("%s\n", title), headerFont);
+        Paragraph textParagraph = new Paragraph(text, textFont);
+        textParagraph.setIndentationLeft(12f);
+        Paragraph p = new Paragraph();
+        p.add(headerPhrase);
+        p.add(textParagraph);
+        p.setSpacingAfter(14f);
+        return p;
+    }
+
+    private Paragraph generateAlternativesParagraph(String title, Medicine m) {
+        Font headerFont = FontFactory.getFont(FontFactory.COURIER, "Cp1250", true);
+        headerFont.setSize(12);
+        headerFont.setStyle(Font.BOLD);
+        Font textFont = FontFactory.getFont(FontFactory.COURIER, "Cp1250", true);
+        textFont.setSize(12);
+
+        Phrase headerPhrase = new Phrase(String.format("%s\n", title), headerFont);
+        Paragraph p = new Paragraph();
+        p.add(headerPhrase);
+
+        Paragraph bodyParagraph = new Paragraph();
+        for (Medicine alt: m.getAlternativeMedicine()) {
+            Chunk c = new Chunk(String.format("%s - %s\n", alt.getName(), alt.getCode()), textFont);
+            // TODO change base URL if needed
+            String baseURL = "http://localhost:8080/api/medicine/{id}/get-pdf";
+            String altUrl = baseURL.replace("{id}", alt.getId().toString());
+            c.setAnchor(altUrl);
+            bodyParagraph.add(c);
+        }
+        if (m.getAlternativeMedicine().isEmpty()) {
+            bodyParagraph.add(new Chunk("Nema zamenskih lekova", textFont));
+        }
+
+        bodyParagraph.setIndentationLeft(12f);
+
+        p.add(bodyParagraph);
+        p.setSpacingAfter(14f);
+        return p;
     }
 }

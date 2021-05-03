@@ -29,6 +29,8 @@ import UserCrud from "./components/users/UserCrud";
 import PharmaciesWithFreePharmacists from "./components/unregisteredAndPatient/PharmaciesWithFreePharmacists";
 import ConsultationsInsight from "./components/unregisteredAndPatient/ConsultationsInsight";
 import CheckupsInsight from "./components/unregisteredAndPatient/CheckupsInsight";
+import ComplaintsPage from "./components/complaints/ComplaintsPage";
+import ComplaintResponsesPage from "./components/complaintResponses/ComplaintResponsesPage";
 
 import "./styling/navbar.css";
 
@@ -79,6 +81,8 @@ function App() {
             component={AppointmentReport}
           />
           <Route path="/worker/vacation" component={VacationRequest} />
+          <Route path="/user/complaints" component={ComplaintsPage} />
+          <Route path="/admin/complaint-responses" component={ComplaintResponsesPage} />
         </Switch>
       </div>
       <Footer />

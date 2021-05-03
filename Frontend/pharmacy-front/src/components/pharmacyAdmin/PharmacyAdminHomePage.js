@@ -12,10 +12,12 @@ import EditBasicInfo from "./EditBasicInfo";
 import DisplayPurchaseOrders from "./DisplayPurchaseOrders";
 import AddAppointment from "./AddAppointment";
 import DisplayMedicine from "./DisplayMedicine";
+import DisplayHolidayRequests from "./DisplayHolidayRequests";
 import DisplayWorkers from "./DisplayWorkers";
 
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
+  const [refreshPriceList, setRefreshPriceList] = useState(false);
 
   async function fetchPharmacy() {
     // TODO vidi koji je user pa uzmi apoteku koja ti treba
@@ -60,7 +62,7 @@ function PharmacyAdminHomePage() {
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link className="my__nav__link" eventKey="fifth">
-                  Inquiries
+                  Holiday requests
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
@@ -73,6 +75,11 @@ function PharmacyAdminHomePage() {
                   Purchase orders
                 </Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link className="my__nav__link" eventKey="eight">
+                  Inquiries
+                </Nav.Link>
+              </Nav.Item>
             </Nav>
           </Col>
           <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
@@ -82,12 +89,16 @@ function PharmacyAdminHomePage() {
                 changedPharmacy={changedPharmacy}
               />
               <DisplayWorkers idOfPharmacy={pharmacyDetails?.id} />
+              <DisplayHolidayRequests idOfPharmacy={pharmacyDetails?.id} />
               <AddAppointment idOfPharmacy={pharmacyDetails?.id} />
               <DisplayMedicine
+                setRefreshPriceList={setRefreshPriceList}
+                refreshPriceList={refreshPriceList}
                 idOfPharmacy={pharmacyDetails?.id}
                 priceListId={pharmacyDetails?.priceListId}
               />
               <DisplayPurchaseOrders
+                refresh={refreshPriceList}
                 idOfPharmacy={pharmacyDetails?.id}
                 priceListId={pharmacyDetails?.priceListId}
               />

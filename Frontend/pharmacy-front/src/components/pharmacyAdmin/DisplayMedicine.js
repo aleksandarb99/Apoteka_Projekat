@@ -9,7 +9,12 @@ import "../../styling/pharmacy.css";
 import AddingMedicineModal from "./AddingMedicineModal";
 import ChangePriceModal from "./ChangePriceModal";
 
-function DisplayMedicine({ idOfPharmacy, priceListId }) {
+function DisplayMedicine({
+  idOfPharmacy,
+  priceListId,
+  refreshPriceList,
+  setRefreshPriceList,
+}) {
   const [medicineItems, setMedicineItems] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(-1);
   const [selectedRowPrice, setSelectedRowPrice] = useState(-1);
@@ -47,6 +52,7 @@ function DisplayMedicine({ idOfPharmacy, priceListId }) {
       )
       .then(() => {
         fetchPriceList();
+        setRefreshPriceList(!refreshPriceList);
         displayAlert(
           true,
           "You have successfully added the medicine to the pharmacy."
@@ -68,6 +74,7 @@ function DisplayMedicine({ idOfPharmacy, priceListId }) {
       )
       .then(() => {
         fetchPriceList();
+        setRefreshPriceList(!refreshPriceList);
         displayAlert(
           true,
           "You have successfully removed the medicine from the pharmacy."

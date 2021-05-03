@@ -33,11 +33,18 @@ function AddAppointment({ idOfPharmacy }) {
   useEffect(() => {
     if (dermatogistPicked != 0) {
       async function fetchAppointments() {
-        const request = await axios.get(
-          `http://localhost:8080/api/appointment/all/bydermatologistid/${dermatogistPicked}`,
-          { params: { date: startDate.getTime() } }
-        );
-        setAppointments(request.data);
+        const request = await axios
+          .get(
+            `http://localhost:8080/api/appointment/all/bydermatologistid/${dermatogistPicked}`,
+            { params: { date: startDate.getTime() } }
+          )
+          .then((res) => {
+            setAppointments(res.data);
+          })
+          .catch((err) => {
+            alert("He is on holiday on that day.");
+          });
+
         return request;
       }
       fetchAppointments();

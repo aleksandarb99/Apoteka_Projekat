@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.users.pharmacyWorker;
 
+import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -8,4 +9,10 @@ public interface PharmacyWorkerService {
     PharmacyWorker getWorkerForCalendar(Long id);
 
     List<PharmacyWorker> getFreePharmacistsByPharmacyIdAndDate(Long id, long date, Sort sorter);
+
+    List<PharmacyWorker> getNotWorkingWorkersByPharmacyId(Long pharmacyId, RequestForWorkerDTO dto);
+
+    PharmacyWorker getOne(Long id);
+
+    void save(PharmacyWorker worker);
 }

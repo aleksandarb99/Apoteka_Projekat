@@ -4,8 +4,13 @@ import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.appointment.AppointmentCalendarDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyConsultationDTO;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyDTO;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyWorkerDTO;
 import com.team11.PharmacyProject.dto.pharmacyWorker.PharmacyWorkerFreePharmacistDTO;
+import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.workplace.WorkplaceController;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -20,6 +25,9 @@ import java.util.List;
 @RestController
 @RequestMapping("api/workers")
 public class PharmacyWorkerController {
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     PharmacyWorkerService pharmacyWorkerService;
@@ -56,4 +64,24 @@ public class PharmacyWorkerController {
 
         return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/notexistingworkplacebypharmacyid/{pharmacyId}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getNotWorkingWorkersByPharmacyId(@PathVariable("pharmacyId") Long pharmacyId, @RequestBody RequestForWorkerDTO dto) {
+        if (WorkplaceController.checkDto(dto)) return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+
+        List<PharmacyWorker> workers = pharmacyWorkerService.getNotWorkingWorkersByPharmacyId(pharmacyId, dto);
+
+        List<PharmacyWorkerDTO> retVal = new ArrayList<>();
+        for(PharmacyWorker pw : workers) {
+            retVal.add(convertToDto(pw));
+        }
+
+        return new ResponseEntity<>(retVal, HttpStatus.OK);
+    }
+
+    private PharmacyWorkerDTO convertToDto(PharmacyWorker worker) {
+        return modelMapper.map(worker, PharmacyWorkerDTO.class);
+    }
+
+
 }
