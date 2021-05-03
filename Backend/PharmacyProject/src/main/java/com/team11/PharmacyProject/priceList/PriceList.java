@@ -12,7 +12,7 @@ public class PriceList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)  //todo ovde moze eager, price list nema smisla bez itema
     private List<MedicineItem> medicineItems;
 
     public PriceList(Long id, List<MedicineItem> medicineItems) {

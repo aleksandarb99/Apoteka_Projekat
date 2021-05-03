@@ -2,11 +2,17 @@ package com.team11.PharmacyProject.appointment;
 
 import com.team11.PharmacyProject.dto.appointment.AppointmentPatientInsightDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
+import com.team11.PharmacyProject.dto.therapyPrescription.TherapyPresriptionDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemService;
+import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.priceList.PriceList;
 import com.team11.PharmacyProject.rankingCategory.RankingCategory;
+import com.team11.PharmacyProject.therapyPrescription.TherapyPrescription;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
@@ -43,6 +49,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     PatientRepository patientRepository;
+
+    @Autowired
+    MedicineItemService medicineItemService;
 
     public Appointment getNextAppointment(String email, Long workerId) {
         Pageable pp = PageRequest.of(0, 1, Sort.by("startTime").ascending());
@@ -474,5 +483,45 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
 
         return appointments;
+    }
+
+    public boolean addTherapyToAppointment(Long appt_id, List<TherapyPresriptionDTO> therapyDTOList){
+        List<TherapyPrescription> therapyPrescriptionList = new ArrayList<>();
+
+        List<MedicineItem> medicineItemsOfTherapy = new ArrayList<>();
+        List<MedicineItem> medicineItemsToNotif = new ArrayList<>();
+
+        for (TherapyPresriptionDTO tpDTO : therapyDTOList){ //uga buga, todo da li moze bolje
+            medicineItemsOfTherapy.add(medicineItemService.findById(tpDTO.getMedicineItemID()));
+            if (tpDTO.isAlternative()){
+                medicineItemsToNotif.add(medicineItemService.findById(tpDTO.getOriginalMedicineItemID()));
+            }
+        }
+
+        for (int i = 0; i < therapyDTOList.size(); i++){
+            List<MedicinePrice> priceList = medicineItemsOfTherapy.get(i).getMedicinePrices();
+            double price = priceList.size() > 0 ? priceList.get(priceList.size()-1).getPrice() : 0;
+            therapyPrescriptionList.add(new TherapyPrescription(medicineItemsOfTherapy.get(i),
+                    therapyDTOList.get(i).getDuration(), Instant.now().toEpochMilli(),price));
+        }
+
+        Optional<Appointment> appt = appointmentRepository.findById(appt_id);
+        Appointment appointment = appt.orElse(null);
+        if (appointment == null){
+            return false;
+        }
+        appointment.setTherapyPrescriptionList(therapyPrescriptionList);
+        appointmentRepository.save(appointment);
+        return true;
+    }
+
+    public Appointment getAppointmentForReport(Long appointmentID){
+        //todo pazi ovde zezne ako se stavi lazy loading
+        Optional<Appointment> appt = appointmentRepository.findById(appointmentID);
+        Appointment appointment = appt.orElse(null);
+        if (appointment == null){
+            return null;
+        }
+        return appointment;
     }
 }

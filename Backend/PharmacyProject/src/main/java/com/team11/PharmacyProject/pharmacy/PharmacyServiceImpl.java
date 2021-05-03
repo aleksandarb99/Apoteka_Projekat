@@ -9,6 +9,7 @@ import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.users.pharmacist.PharmacistRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
@@ -211,6 +212,16 @@ public class PharmacyServiceImpl implements PharmacyService {
         }
 
         return chosenPharmacies;
+    }
+
+    @Override
+    public Pharmacy getPharmacyWithMedicineNoAllergies(Long pharmid, Long patientid) {
+        return pharmacyRepository.getPharmacyMedicineWithoutAllergies(pharmid, patientid);
+    }
+
+    @Override
+    public Pharmacy getPharmacyWithAlternativeForMedicineNoAllergies(Long pharmid, Long patientID, Long medicineID) {
+        return pharmacyRepository.getPharmacyWithAlternativeForMedicineNoAllergies(pharmid, patientID, medicineID);
     }
 
 }

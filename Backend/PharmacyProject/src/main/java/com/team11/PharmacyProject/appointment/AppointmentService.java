@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.appointment;
 
 import com.team11.PharmacyProject.dto.appointment.AppointmentPatientInsightDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
+import com.team11.PharmacyProject.dto.therapyPrescription.TherapyPresriptionDTO;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -41,4 +42,8 @@ public interface AppointmentService {
     boolean cancelCheckup(Long id);
 
     List<AppointmentPatientInsightDTO> getUpcomingCheckupsByPatientId(Long id, Sort sort);
+
+    boolean addTherapyToAppointment(Long appt_id, List<TherapyPresriptionDTO> tpDTO);
+
+    Appointment getAppointmentForReport(Long appointmentID);
 }

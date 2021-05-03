@@ -64,6 +64,7 @@ insert into medicine_item (amount, medicine_id) values (14, 3);
 insert into medicine_item (amount, medicine_id) values (55, 4);
 insert into medicine_item (amount, medicine_id) values (67, 5);
 insert into medicine_item (amount, medicine_id) values (30, 1);
+insert into medicine_item (amount, medicine_id) values (0, 5);
 
 /*Supplier items*/
 insert into supplier_item (amount, medicine_id) values (30, 1);
@@ -106,6 +107,7 @@ insert into price_list_medicine_items (price_list_id, medicine_items_id) values 
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 5);
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 4);
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (2, 6);
+insert into price_list_medicine_items (price_list_id, medicine_items_id) values (1, 7);
 
 
 /*Workplace - WorkDays*/
@@ -282,6 +284,7 @@ insert into medicine_price (price, start_date) values (250, 1615482000000);
 insert into medicine_price (price, start_date) values (670, 1613062800000);
 insert into medicine_price (price, start_date) values (1200, 1610384400000);
 insert into medicine_price (price, start_date) values (470, 1578769200000);
+insert into medicine_price (price, start_date) values (470, 1578769200000);
 -- insert into medicine_price (price, start_date) values (879, 1616241600000;
 
 /* MedicineItem - MedicinePrices*/
@@ -291,6 +294,7 @@ insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id)
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (3, 4);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (4, 5);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (6, 6);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (7, 7);
 -- insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (5, 6);
 
 /*Complaints*/
@@ -425,7 +429,7 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1614800300000, 1614801300000, 'Placanje u unapred.', 1800, 10, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CONSULTATION', 2, 1620800300000, 1620801300000, 'Placanje u unapred.', 1800, 10, 1, 6);
+                    values ('RESERVED', 'CONSULTATION', 2, 1620069000000, 1620069500000, 'Placanje u unapred.', 1800, 1, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                 values ('FINISHED', 'CONSULTATION', 2, 1617354000000, 1617354500000, 'Placanje u unapred.', 1800, 2, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
@@ -510,3 +514,6 @@ insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id)
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (3, 4);
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (4, 5);
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (1, 5);
+insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (5, 1);
+insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (5, 2);
+insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (5, 3);
