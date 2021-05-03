@@ -38,10 +38,13 @@ function AddAppointment({ idOfPharmacy }) {
             `http://localhost:8080/api/appointment/all/bydermatologistid/${dermatogistPicked}`,
             { params: { date: startDate.getTime() } }
           )
-          .catch(() => {
+          .then((res) => {
+            setAppointments(res.data);
+          })
+          .catch((err) => {
             alert("He is on holiday on that day.");
           });
-        setAppointments(request.data);
+
         return request;
       }
       fetchAppointments();

@@ -441,11 +441,11 @@ insert into request_for_holiday (absence_type, decline_text, start_date, end_dat
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
                     values ('LEAVE', '', 1619953200000, 1620817200000, 'ACCEPTED', 7);
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-values ('LEAVE', '', 1623754800000, 1623756600000, 'PENDING', 6);
+values ('LEAVE', '', 1623754800000, 1624190195000, 'PENDING', 6);
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-values ('VACATION', '', 1623754800000, 1623756600000, 'PENDING', 7);
+values ('VACATION', '', 1623754800000, 1624190195000, 'PENDING', 7);
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
-values ('VACATION', '', 1623754800000, 1623756600000, 'PENDING', 6);
+values ('VACATION', '', 1623754800000, 1624190195000, 'PENDING', 6);
 
 
 /*MyOrders*/

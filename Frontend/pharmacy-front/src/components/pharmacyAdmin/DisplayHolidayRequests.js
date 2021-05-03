@@ -102,8 +102,8 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
                     <td>{index + 1}</td>
                     <td>{item.absenceType}</td>
                     <td>{item.requestState}</td>
-                    <td>{moment(item.start).format("hh:mm a")}</td>
-                    <td>{moment(item.end).format("hh:mm a")}</td>
+                    <td>{moment(item.start).format("DD-MM-YYYY")}</td>
+                    <td>{moment(item.end).format("DD-MM-YYYY")}</td>
                     <td>{item.workerDetails}</td>
                   </tr>
                 ))}
