@@ -5,12 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/complaints")
@@ -26,5 +25,15 @@ public class ComplaintController {
         } else {
             return new ResponseEntity<>("Error. Complaint not added", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<List<ComplaintCrudDTO>> getComplaints(@PathVariable("id") long patientId) {
+        List<Complaint> complaints = complaintService.getComplaintsForPatient(patientId);
+        List<ComplaintCrudDTO> complaintCrudDTOs = complaints
+                .stream()
+                .map(ComplaintCrudDTO::new)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(complaintCrudDTOs, HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.dto.complaint;
 
+import com.team11.PharmacyProject.complaint.Complaint;
 import com.team11.PharmacyProject.enums.ComplaintType;
 
 import javax.validation.constraints.NotBlank;
@@ -19,6 +20,19 @@ public class ComplaintCrudDTO {
     private Long date;
     @NotNull
     private long patientId;
+
+    public ComplaintCrudDTO(Complaint c) {
+        this.id = c.getId();
+        this.content = c.getContent();
+        this.complaintOn = c.getComplaintOn();
+        this.complaintOnId = c.getComplaintOnId();
+        this.type = c.getType();
+        this.date = c.getDate();
+        this.patientId = c.getPatient().getId();
+    }
+
+    public ComplaintCrudDTO() {
+    }
 
     public long getId() {
         return id;
