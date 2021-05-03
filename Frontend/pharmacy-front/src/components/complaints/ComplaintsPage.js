@@ -1,5 +1,7 @@
 import React from 'react'
-import { Col, Nav, Row, Tab } from 'react-bootstrap'
+import { Col, Nav, Row, Tab, TabPane } from 'react-bootstrap'
+import SubmitComplaintForm from './SubmitComplaintForm'
+import ComplaintHistory from './ComplaintHistory'
 
 const ComplaintsPage = () => {
     return (
@@ -22,8 +24,12 @@ const ComplaintsPage = () => {
                     </Col>
                     <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
                         <Tab.Content>
-                            <div />
-                            <div />
+                            <TabPane eventKey="first">
+                                <SubmitComplaintForm></SubmitComplaintForm>
+                            </TabPane>
+                            <TabPane eventKey="second">
+                                <ComplaintHistory></ComplaintHistory>
+                            </TabPane>
                         </Tab.Content>
                     </Col>
                 </Row>
