@@ -1,7 +1,7 @@
 import React from 'react'
 import { Col, Nav, Row, Tab, TabPane } from 'react-bootstrap'
-import SubmitComplaintForm from './SubmitComplaintForm'
-import ComplaintHistory from './ComplaintHistory'
+import NewComplaintsList from './NewComplaintsList'
+import ComplaintResponsesHistory from './ComplaintResponsesHistory'
 
 const ComplaintsPage = () => {
     return (
@@ -12,12 +12,12 @@ const ComplaintsPage = () => {
                         <Nav variant="pills" className="flex-column">
                             <Nav.Item>
                                 <Nav.Link className="my__nav__link" eventKey="first">
-                                    Submit a complaint
+                                    New complaints
                                 </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
                                 <Nav.Link className="my__nav__link" eventKey="second">
-                                    My complaints
+                                    History
                                 </Nav.Link>
                             </Nav.Item>
                         </Nav>
@@ -25,10 +25,10 @@ const ComplaintsPage = () => {
                     <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
                         <Tab.Content>
                             <TabPane eventKey="first">
-                                <SubmitComplaintForm></SubmitComplaintForm>
+                                <NewComplaintsList></NewComplaintsList>
                             </TabPane>
                             <TabPane eventKey="second">
-                                <ComplaintHistory></ComplaintHistory>
+                                <ComplaintResponsesHistory></ComplaintResponsesHistory>
                             </TabPane>
                         </Tab.Content>
                     </Col>

@@ -7,4 +7,6 @@ import java.util.List;
 public interface ComplaintService {
     boolean addComplaint(ComplaintCrudDTO complaintCrudDTO);
     List<Complaint> getComplaintsForPatient(long patientId);
+
+    List<Complaint> getComplaints();
 }

@@ -301,9 +301,9 @@ insert into complaint (content, complaint_on, complaint_on_id, type, date, patie
 
 /*Complaint Response*/
 insert into complaint_response (response_text, date, complaint_id, user_id)
-                    values ('Bice sakcionisan!', 1616673600000, 1, 7);
+                    values ('Bice sakcionisan!', 1616673600000, 1, 8);
 insert into complaint_response (response_text, date, complaint_id, user_id)
-                    values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602000, 2, 7);
+                    values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602000, 2, 8);
 
 /*Pharmacies*/
 insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, address_id, price_list_id)

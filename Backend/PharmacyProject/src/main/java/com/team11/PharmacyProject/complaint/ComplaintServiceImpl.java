@@ -41,4 +41,9 @@ public class ComplaintServiceImpl implements ComplaintService {
     public List<Complaint> getComplaintsForPatient(long patientId) {
         return complaintRepository.getComplaintUsingPatientIdFetchPatient(patientId);
     }
+
+    @Override
+    public List<Complaint> getComplaints() {
+        return complaintRepository.getComplaintsFetchPatient();
+    }
 }
