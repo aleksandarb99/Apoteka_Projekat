@@ -143,17 +143,17 @@ public class MedicineServiceImpl implements MedicineService {
             document.addTitle(medicine.getName());
             document.add(nameParagraph);
             document.add(Chunk.NEWLINE);
-            document.add(generateParagraph("1. Kod", medicine.getCode()));
-            document.add(generateParagraph("2. Naziv", medicine.getName()));
-            document.add(generateParagraph("3. Proizvođač", medicine.getManufacturer().getName()));
-            document.add(generateParagraph("4. Sastojci", medicine.getContent()));
-            document.add(generateParagraph("5. Neželjena dejstva", medicine.getSideEffects()));
-            document.add(generateParagraph("6. Dodatne napomene", medicine.getAdditionalNotes()));
-            document.add(generateParagraph("7. Tip leka", medicine.getMedicineType().getName()));
-            document.add(generateParagraph("8. Oblik leka", medicine.getMedicineForm().getName()));
-            document.add(generateParagraph("9. Preporučeni dnevni unos", String.valueOf(medicine.getDailyIntake())));
-            document.add(generateParagraph("10. Prosečna ocena", String.valueOf(medicine.getAvgGrade())));
-            document.add(generateAlternativesParagraph("11. Zamenski lekovi", medicine));
+            document.add(generateParagraph("1. Medicine code", medicine.getCode()));
+            document.add(generateParagraph("2. Medicine name", medicine.getName()));
+            document.add(generateParagraph("3. Manufacturer", medicine.getManufacturer().getName()));
+            document.add(generateParagraph("4. Active ingredients", medicine.getContent()));
+            document.add(generateParagraph("5. Side effects", medicine.getSideEffects()));
+            document.add(generateParagraph("6. Additional notes", medicine.getAdditionalNotes()));
+            document.add(generateParagraph("7. Medicine type", medicine.getMedicineType().getName()));
+            document.add(generateParagraph("8. Medicine form", medicine.getMedicineForm().getName()));
+            document.add(generateParagraph("9. Daily intake", String.valueOf(medicine.getDailyIntake())));
+            document.add(generateParagraph("10. Average grade", String.valueOf(medicine.getAvgGrade())));
+            document.add(generateAlternativesParagraph("11. Alternative medicine", medicine));
             document.close();
 
         } catch (DocumentException ex) {
