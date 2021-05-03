@@ -96,15 +96,23 @@ public class PatientService {
     }
 
     public List<PharmacyWorker> getMyPharmacists(long patientId) {
+        return getMyPharmacyWorkers(patientId, UserType.PHARMACIST);
+    }
+
+    public List<PharmacyWorker> getMyDermatologists(long patientId) {
+        return getMyPharmacyWorkers(patientId, UserType.DERMATOLOGIST);
+    }
+
+    private List<PharmacyWorker> getMyPharmacyWorkers(long patientId, UserType pharmacyWorkerType) {
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
         List<Appointment> apps = patient.getAppointments();
         return apps
                 .stream()
-                .distinct()
                 .filter(appointment -> appointment.getEndTime() < System.currentTimeMillis()
                         && appointment.getAppointmentState() == AppointmentState.FINISHED)
                 .map(Appointment::getWorker)
-                .filter(pharmacyWorker -> pharmacyWorker.getUserType() == UserType.PHARMACIST)
+                .filter(pharmacyWorker -> pharmacyWorker.getUserType() == pharmacyWorkerType)
+                .distinct()
                 .collect(Collectors.toList());
     }
 }

@@ -9,6 +9,7 @@ import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -191,10 +192,21 @@ public class PatientController {
     @GetMapping(value = "/{id}/my-pharmacists")
     public ResponseEntity<List<PharmacyWorkerInfoDTO>> getMyPharmacists(@PathVariable("id") long patientId) {
         List<PharmacyWorker> pharmacists = patientService.getMyPharmacists(patientId);
-        if (pharmacists == null) {
+        return getListResponseEntity(pharmacists);
+    }
+
+    @GetMapping(value = "/{id}/my-dermatologists")
+    public ResponseEntity<List<PharmacyWorkerInfoDTO>> getMyDermatologists(@PathVariable("id") long patientId) {
+        List<PharmacyWorker> dermatologists = patientService.getMyDermatologists(patientId);
+        return getListResponseEntity(dermatologists);
+    }
+
+    @NotNull
+    private ResponseEntity<List<PharmacyWorkerInfoDTO>> getListResponseEntity(List<PharmacyWorker> pharmacyWorkers) {
+        if (pharmacyWorkers == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        List<PharmacyWorkerInfoDTO> pDTOs = pharmacists
+        List<PharmacyWorkerInfoDTO> pDTOs = pharmacyWorkers
                 .stream()
                 .map(PharmacyWorkerInfoDTO::new)
                 .collect(Collectors.toList());
