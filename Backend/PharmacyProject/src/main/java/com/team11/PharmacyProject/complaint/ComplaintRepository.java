@@ -9,4 +9,7 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
     @Query("SELECT c FROM Complaint c LEFT JOIN FETCH c.patient p WHERE p.id = ?1")
     List<Complaint> getComplaintUsingPatientIdFetchPatient(long patientId);
+
+    @Query("SELECT c FROM Complaint c LEFT JOIN FETCH c.patient p")
+    List<Complaint> getComplaintsFetchPatient();
 }

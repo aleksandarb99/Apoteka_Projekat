@@ -36,4 +36,14 @@ public class ComplaintController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(complaintCrudDTOs, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/")
+    public ResponseEntity<List<ComplaintCrudDTO>> getAllComplaints() {
+        List<Complaint> complaints = complaintService.getComplaints();
+        List<ComplaintCrudDTO> complaintCrudDTOs = complaints
+                .stream()
+                .map(ComplaintCrudDTO::new)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(complaintCrudDTOs, HttpStatus.OK);
+    }
 }

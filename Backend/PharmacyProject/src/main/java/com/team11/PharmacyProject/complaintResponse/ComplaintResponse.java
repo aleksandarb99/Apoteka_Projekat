@@ -19,12 +19,13 @@ public class ComplaintResponse {
     private Long date;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "complaint_id")
+    @JoinColumn(name = "complaint_id", unique = true)
     private Complaint complaint;
 
+    // Ko je odgovorio na zalbu
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private MyUser user;
+    private MyUser admin;
 
     public ComplaintResponse() {
     }
@@ -34,7 +35,7 @@ public class ComplaintResponse {
         this.responseText = responseText;
         this.date = date;
         this.complaint = complaint;
-        this.user = user;
+        this.admin = user;
     }
 
     public Long getId() {
@@ -69,11 +70,11 @@ public class ComplaintResponse {
         this.complaint = complaint;
     }
 
-    public MyUser getUser() {
-        return user;
+    public MyUser getAdmin() {
+        return admin;
     }
 
-    public void setUser(MyUser user) {
-        this.user = user;
+    public void setAdmin(MyUser admin) {
+        this.admin = admin;
     }
 }
