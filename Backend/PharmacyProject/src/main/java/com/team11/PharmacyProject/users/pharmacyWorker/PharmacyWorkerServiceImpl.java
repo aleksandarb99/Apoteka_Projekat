@@ -1,12 +1,14 @@
 package com.team11.PharmacyProject.users.pharmacyWorker;
 
 import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
+import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -23,9 +25,99 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
     @Autowired
     PharmacyRepository pharmacyRepository;
 
+    @Autowired
+    WorkplaceService workplaceService;
+
+    @Override
+    public PharmacyWorker getOne(Long id) {
+        return pharmacyWorkerRepository.findByIdAndFetchAWorkplaces(id);
+    }
+
     @Override
     public PharmacyWorker getWorkerForCalendar(Long id) {
         return pharmacyWorkerRepository.getPharmacyWorkerForCalendar(id);
+    }
+
+    @Override
+    public void save(PharmacyWorker worker) {
+        pharmacyWorkerRepository.save(worker);
+    }
+
+    @Override
+    public List<PharmacyWorker> getNotWorkingWorkersByPharmacyId(Long pharmacyId, RequestForWorkerDTO dto) {
+        List<PharmacyWorker> workers = new ArrayList<>();
+        List<PharmacyWorker> allWorkers = pharmacyWorkerRepository.findAllAndFetchAWorkplaces();
+
+        List<Workplace> workplaceList = workplaceService.getWorkplacesByPharmacyId(pharmacyId);
+
+        for (PharmacyWorker worker:
+            allWorkers) {
+            if(worker.getWorkplaces().size() == 0) {
+                workers.add(worker);
+                continue;
+            }
+            if(worker.getUserType().equals(UserType.DERMATOLOGIST)){
+                boolean flag = false;
+                boolean heIsFree = true;
+                for (Workplace workplace: worker.getWorkplaces()) {
+                    for (Workplace workplace2:workplaceList) {
+                        if (workplace.getId().equals(workplace2.getId())) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if(flag){
+                        heIsFree = false;
+                       break;
+                    }
+
+                    for (WorkDay day:workplace.getWorkDays()) {
+                        boolean flag2 = false;
+                        if(day.getWeekday().ordinal() == 0){
+                            flag2 = dto.isEnable7();
+                        }else if(day.getWeekday().ordinal() == 1){
+                            flag2 = dto.isEnable1();
+                        }
+                        else if(day.getWeekday().ordinal()== 2){
+                            flag2 = dto.isEnable2();
+                        }
+                        else if(day.getWeekday().ordinal()== 3){
+                            flag2 = dto.isEnable3();
+                        }
+                        else if(day.getWeekday().ordinal() == 4){
+                            flag2 = dto.isEnable4();
+                        }
+                        else if(day.getWeekday().ordinal() == 5){
+                            flag2 = dto.isEnable5();
+                        }
+                        else if(day.getWeekday().ordinal() == 6){
+                            flag2 = dto.isEnable6();
+                        }
+
+                        if(flag2){
+                            if(dto.getEndHour() < day.getStartTime()){
+                                continue;
+                            }
+                            else if(dto.getStartHour() > day.getEndTime()){
+                                continue;
+                            }else {
+                                heIsFree = false;
+                                break;
+                            }
+                        }
+
+                    }
+
+                }
+
+                if(heIsFree){
+                    workers.add(worker);
+                }
+
+            }
+
+        }
+        return workers;
     }
 
     @Override

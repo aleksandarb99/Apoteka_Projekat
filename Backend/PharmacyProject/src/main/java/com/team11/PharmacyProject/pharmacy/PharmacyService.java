@@ -11,6 +11,10 @@ public interface PharmacyService {
 
     Pharmacy getPharmacyById(Long id);
 
+    Pharmacy getPharmacyByIdWithWorkplaces(Long id);
+
+    void save(Pharmacy p);
+
     List<Pharmacy> searchPharmaciesByNameOrCity(String searchValue);
 
     List<Pharmacy> filterPharmacies(String gradeValue, String distanceValue, double longitude, double latitude);
