@@ -4,10 +4,12 @@ import com.team11.PharmacyProject.dto.appointment.AppointmentDTORequest;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.therapyPrescription.TherapyPrescription;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Appointment {
@@ -48,6 +50,9 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.EAGER)
     private Pharmacy pharmacy;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<TherapyPrescription> therapyPrescriptionList;
+
     public Appointment(Long id, Long startTime, Long endTime, int duration, AppointmentState appointmentState,
                        String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker) {
         this.id = id;
@@ -77,6 +82,14 @@ public class Appointment {
     }
 
     public Appointment() {
+    }
+
+    public List<TherapyPrescription> getTherapyPrescriptionList() {
+        return therapyPrescriptionList;
+    }
+
+    public void setTherapyPrescriptionList(List<TherapyPrescription> therapyPrescriptionList) {
+        this.therapyPrescriptionList = therapyPrescriptionList;
     }
 
     public Pharmacy getPharmacy() {

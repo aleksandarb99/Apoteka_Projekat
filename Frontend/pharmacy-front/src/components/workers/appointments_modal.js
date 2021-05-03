@@ -44,7 +44,13 @@ function AppointmentsModal(props) { // id usera, id workera, bool farmaceut, nam
             .then(
                 () => {
                     alert("Appointment started!");
-                    history.push("/worker/appointment_report");
+                    history.push(
+                        {
+                            pathname:"/worker/appointment_report",
+                            state: {  // location state
+                                appointmentID: props.appointment.id 
+                            }
+                        });
                 })
             .catch(() => alert("You can't start this appointment! y"));
     }

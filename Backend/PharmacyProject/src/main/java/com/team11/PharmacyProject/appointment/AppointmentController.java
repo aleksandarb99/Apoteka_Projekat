@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.appointment;
 
 import com.team11.PharmacyProject.dto.appointment.*;
+import com.team11.PharmacyProject.dto.therapyPrescription.TherapyDTO;
 import com.team11.PharmacyProject.email.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -226,6 +227,27 @@ public class AppointmentController {
             return new ResponseEntity<>("reserved", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("failed", HttpStatus.OK);
+        }
+    }
+
+    @PostMapping(value="/addTherapy", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> addTherapyToAppointment (@RequestBody TherapyDTO therapyDTO)
+    {
+        boolean result = appointmentServiceImpl.addTherapyToAppointment(therapyDTO.getApptId(), therapyDTO.getMedicineList());
+        if (result)
+            return new ResponseEntity<>("Therapy added!", HttpStatus.OK);
+        return new ResponseEntity<>("Failed to add therapy!", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/getApptForReport", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AppointmentReportDTO> getAppointmentForReport (@RequestParam(value="id") Long id)
+    {
+        Appointment appt = appointmentServiceImpl.getAppointmentForReport(id);
+        if(appt != null){
+            AppointmentReportDTO dto = new AppointmentReportDTO(appt);
+            return new ResponseEntity<AppointmentReportDTO>(dto, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<AppointmentReportDTO>(new AppointmentReportDTO(), HttpStatus.NOT_FOUND);
         }
     }
 }

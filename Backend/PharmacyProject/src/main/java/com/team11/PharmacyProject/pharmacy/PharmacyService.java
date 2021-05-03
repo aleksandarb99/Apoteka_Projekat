@@ -38,4 +38,8 @@ public interface PharmacyService {
     Pharmacy getPharmacyByIdAndPriceList(Long id);
 
     List<Pharmacy> getPharmaciesByFreePharmacists(long date, Sort sorter);
+
+    Pharmacy getPharmacyWithMedicineNoAllergies(Long pharmid, Long patientid);
+
+    Pharmacy getPharmacyWithAlternativeForMedicineNoAllergies(Long pharmid, Long patientID, Long medicineID);
 }

@@ -1,6 +1,11 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import com.team11.PharmacyProject.dto.medicine.MedicineInfoDTO;
+import com.team11.PharmacyProject.dto.medicine.MedicineItemDTO;
+import com.team11.PharmacyProject.dto.medicine.MedicineTherapyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.*;
+import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -145,6 +150,41 @@ public class PharmacyController {
             pharmacyDTOS.add(convertToAllDto(p));
         }
         return new ResponseEntity<>(pharmacyDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getMedicineFromPharmWithoutAllergies", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MedicineTherapyDTO>> getPharmacyMedicine
+            (@RequestParam(value = "pharm_id", required = true) Long pharmID,
+             @RequestParam(value = "patient_id", required = true) Long patientID)
+    {
+        Pharmacy pharm = pharmacyService.getPharmacyWithMedicineNoAllergies(pharmID, patientID);
+        List<MedicineTherapyDTO> medDto = new ArrayList<>();
+        try {
+            for (MedicineItem m : pharm.getPriceList().getMedicineItems()) {
+                medDto.add(new MedicineTherapyDTO(m));
+            }
+            return new ResponseEntity<>(medDto, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/getAlternativeFromPharmacy", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MedicineTherapyDTO>> getPharmacyAlternativeMedicine
+            (@RequestParam(value = "pharm_id", required = true) Long pharmID,
+             @RequestParam(value = "patient_id", required = true) Long patientID,
+             @RequestParam(value = "medicine_id", required = true) Long medicineID)
+    {
+        Pharmacy pharm = pharmacyService.getPharmacyWithAlternativeForMedicineNoAllergies(pharmID, patientID, medicineID);
+        List<MedicineTherapyDTO> medDto = new ArrayList<>();
+        try {
+            for (MedicineItem m : pharm.getPriceList().getMedicineItems()) {
+                medDto.add(new MedicineTherapyDTO(m));
+            }
+            return new ResponseEntity<>(medDto, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     private PharmacyDTO convertToDto(Pharmacy pharmacy) {
