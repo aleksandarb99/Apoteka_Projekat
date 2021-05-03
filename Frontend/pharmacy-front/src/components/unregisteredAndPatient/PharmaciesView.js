@@ -68,25 +68,41 @@ function PharmaciesView() {
 
     if (filterGrade === "" && filterDistance === "") return;
 
-    axios.get("https://api.ipify.org?format=json").then((res) => {
-      axios
-        .get(
-          "https://api.ipgeolocation.io/ipgeo?apiKey=4939eda48b984abfbb45b4b69f1b6923&ip=" +
-            res.data.ip
-        )
-        .then((res) => {
-          axios
-            .get("http://localhost:8080/api/pharmacy/filter", {
-              params: {
-                gradeValue: filterGrade,
-                distanceValue: filterDistance,
-                longitude: res.data.longitude,
-                latitude: res.data.latitude,
-              },
-            })
-            .then((resp) => setPharmacies(resp.data));
-        });
-    });
+    // axios.get("https://api.ipify.org?format=json").then((res) => {
+    //   axios
+    //     .get(
+    //       "https://api.ipgeolocation.io/ipgeo?apiKey=4939eda48b984abfbb45b4b69f1b6923&ip=" +
+    //         res.data.ip
+    //     )
+    //     .then((res) => {
+    //       axios
+    //         .get("http://localhost:8080/api/pharmacy/filter", {
+    //           params: {
+    //             gradeValue: filterGrade,
+    //             distanceValue: filterDistance,
+    //             longitude: res.data.longitude,
+    //             latitude: res.data.latitude,
+    //           },
+    //         })
+    //         .then((resp) => setPharmacies(resp.data));
+    //     });
+    // });
+
+    if (navigator.geolocation) {
+      // Ako odredjeni browser podrzava geolocation
+      navigator.geolocation.getCurrentPosition((position) => {
+        axios
+          .get("http://localhost:8080/api/pharmacy/filter", {
+            params: {
+              gradeValue: filterGrade,
+              distanceValue: filterDistance,
+              longitude: position.coords.longitude,
+              latitude: position.coords.latitude,
+            },
+          })
+          .then((resp) => setPharmacies(resp.data));
+      });
+    }
   };
 
   const resetSearch = function () {
