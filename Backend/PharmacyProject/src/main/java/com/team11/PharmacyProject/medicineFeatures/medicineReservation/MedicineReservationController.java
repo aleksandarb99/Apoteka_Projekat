@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class MedicineReservationController {
         List<MedicineReservation> medicines = service.getReservedMedicinesByPatientId(id);
 
         if (medicines == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
 
         List<MedicineReservationInfoDTO> reservations = medicines.stream().map(mr -> mapper.map(mr, MedicineReservationInfoDTO.class)).collect(Collectors.toList());
