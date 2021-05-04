@@ -32,7 +32,7 @@ public class Pharmacy {
     @Column(name = "consultation_duration")
     private int consultationDuration;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Patient> subscribers;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

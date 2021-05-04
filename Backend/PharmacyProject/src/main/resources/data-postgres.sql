@@ -319,6 +319,8 @@ insert into pharmacy (avg_grade, consultation_price, consultation_duration, desc
 
 /*Pharmacy - Subscribers*/
 insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (1, 1);
+insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (2, 1);
+insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (3, 1);
 insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (3, 2);
 
 /*Workplaces*/
