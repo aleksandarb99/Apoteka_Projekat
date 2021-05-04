@@ -91,6 +91,13 @@ public class WorkplaceController {
         return new ResponseEntity<>(workplaceDTOList, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/pharmacies/byworkerid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getPharmacyNamesByWorkerId(@PathVariable("id") Long id) {
+        List<String> pharmacies = workplaceServiseImpl.getPharmacyNamesByWorkerId(id);
+
+        return new ResponseEntity<>(pharmacies, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/dermatologist/get_workplaces/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<WorkplaceForWorkerProfileDTO>> getWorkplacesOfDermatologist(@PathVariable("id") Long id) {
         List<Workplace> workplaceList = workplaceServiseImpl.getWorkplacesOfDermatologist(id);

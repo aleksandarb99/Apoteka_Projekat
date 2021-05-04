@@ -17,4 +17,6 @@ public interface WorkplaceService {
     List<Workplace> getWorkplacesOfDermatologist(Long workerID);
 
     Workplace getWorkplaceOfPharmacist(Long workerID);
+
+    List<String> getPharmacyNamesByWorkerId(Long id);
 }

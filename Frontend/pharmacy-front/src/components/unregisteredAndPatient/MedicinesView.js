@@ -61,7 +61,7 @@ function MedicinesView() {
   };
 
   return (
-    <Tab.Pane eventKey="second">
+    <Tab.Pane eventKey="third">
       <Container fluid>
         <Row>
           {showedMedicines &&

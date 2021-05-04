@@ -111,10 +111,28 @@ public class WorkplaceServiseImpl implements WorkplaceService {
         return true;
     }
 
+//    Ako je pharmacyId -1, to znaci da zeli da se vracaju radnici svih apoteka
     public List<Workplace> getWorkplacesByPharmacyId(Long pharmacyId) {
         List<Workplace> workplaces = new ArrayList<>();
-        workplaceRepository.getWorkplacesByPharmacyId(pharmacyId).forEach(workplaces::add);
+
+        if (pharmacyId == -1)
+            workplaceRepository.getWorkplacesWhichAreWorkers().forEach(workplaces::add);
+        else
+            workplaceRepository.getWorkplacesByPharmacyId(pharmacyId).forEach(workplaces::add);
+
         return workplaces;
+    }
+
+    @Override
+    public List<String> getPharmacyNamesByWorkerId(Long id) {
+        List<String> pharmacies = new ArrayList<>();
+        List<Workplace> workplaceList = workplaceRepository.getWorkplacesOfWorker(id);
+
+        for (Workplace w:
+             workplaceList) {
+            pharmacies.add(w.getPharmacy().getName());
+        }
+        return pharmacies;
     }
 
     public List<Workplace> getDermatologistWorkplacesByPharmacyId(Long pharmacyId) {

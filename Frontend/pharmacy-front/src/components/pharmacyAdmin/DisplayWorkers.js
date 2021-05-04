@@ -6,11 +6,16 @@ import axios from "../../app/api";
 
 import "../../styling/pharmacy.css";
 import AddingWorkerModal from "./AddingWorkerModal";
+import DetailsOfWorkerModal from "./DetailsOfWorkerModal";
+
+// Ako je idOfPharmacy -1, onda se prikazuju svi i skrivaju akcije dodavanja i brisanja, iz razloga sto je onda prikazano registrovanom kupcu
+// U suprotnom se prikazuju samo radnici te specificne apoteke i admin ima pravo da manipulise tom listom
 
 function DisplayWorkers({ idOfPharmacy }) {
   const [workers, setWorkers] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(-1);
   const [addModalShow, setAddModalShow] = useState(false);
+  const [detailsModalShow, setDetailsModalShow] = useState(false);
 
   async function fetchWorkers() {
     const request = await axios.get(
@@ -61,6 +66,10 @@ function DisplayWorkers({ idOfPharmacy }) {
     addWorker(selectedMedicineId, dto);
   };
 
+  let handleInfo = () => {
+    setDetailsModalShow(true);
+  };
+
   return (
     <Tab.Pane eventKey="second">
       <h1 className="content-header">Pharmacists and dermatologists</h1>
@@ -103,31 +112,52 @@ function DisplayWorkers({ idOfPharmacy }) {
           </Table>
 
           <div className="center">
-            <Button
-              onClick={() => {
-                setAddModalShow(true);
-                setSelectedRowId(-1);
-              }}
-              variant="success"
-            >
-              Add worker
-            </Button>
+            {idOfPharmacy != -1 && (
+              <div>
+                <Button
+                  onClick={() => {
+                    setAddModalShow(true);
+                    setSelectedRowId(-1);
+                  }}
+                  variant="success"
+                >
+                  Add worker
+                </Button>
+                <Button
+                  disabled={selectedRowId == -1}
+                  onClick={handleRemove}
+                  variant="danger"
+                >
+                  Remove worker
+                </Button>
+
+                <AddingWorkerModal
+                  workersLength={workers?.length}
+                  idOfPharmacy={idOfPharmacy}
+                  show={addModalShow}
+                  onHide={() => {
+                    setAddModalShow(false);
+                  }}
+                  handleAdd={handleAddModalSave}
+                />
+              </div>
+            )}
             <Button
               disabled={selectedRowId == -1}
-              onClick={handleRemove}
-              variant="danger"
+              onClick={handleInfo}
+              variant="info"
             >
-              Remove worker
+              Show pharmacies
             </Button>
-
-            <AddingWorkerModal
-              workersLength={workers?.length}
-              idOfPharmacy={idOfPharmacy}
-              show={addModalShow}
-              onHide={() => {
-                setAddModalShow(false);
+            <DetailsOfWorkerModal
+              workerId={selectedRowId}
+              show={detailsModalShow}
+              handleClose={() => {
+                setDetailsModalShow(false);
               }}
-              handleAdd={handleAddModalSave}
+              onHide={() => {
+                setDetailsModalShow(false);
+              }}
             />
           </div>
         </Col>

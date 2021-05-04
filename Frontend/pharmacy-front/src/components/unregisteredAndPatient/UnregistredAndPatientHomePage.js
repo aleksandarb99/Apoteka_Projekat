@@ -3,6 +3,7 @@ import "../../styling/home_page.css";
 import { Nav, Tab, Row, Col } from "react-bootstrap";
 import PharmaciesView from "./PharmaciesView";
 import MedicinesView from "./MedicinesView";
+import DisplayWorkers from "../pharmacyAdmin/DisplayWorkers";
 
 function UnregistredAndPatientHomePage() {
   return (
@@ -18,6 +19,11 @@ function UnregistredAndPatientHomePage() {
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link className="my__nav__link" eventKey="second">
+                  Dermatologits and pharmacists
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link className="my__nav__link" eventKey="third">
                   Medicines
                 </Nav.Link>
               </Nav.Item>
@@ -27,6 +33,7 @@ function UnregistredAndPatientHomePage() {
             <Tab.Content>
               <PharmaciesView />
               <MedicinesView />
+              <DisplayWorkers idOfPharmacy={-1} />
             </Tab.Content>
           </Col>
         </Row>
