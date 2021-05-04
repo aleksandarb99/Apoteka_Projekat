@@ -147,15 +147,13 @@ public class PatientService {
     }
 
     public void givePenaltyForNotPickedUpOrCanceledReservation() {
-        List<Patient> patients = patientRepository.findAllFetchReservations();
+        List<Patient> patients = patientRepository.findAllFetchReservations(System.currentTimeMillis());
 
         for(Patient p : patients) {
             for(MedicineReservation mr : p.getMedicineReservation()) {
-                if (mr.getState().equals(ReservationState.RESERVED) && System.currentTimeMillis() > mr.getPickupDate() && p.getPenalties() < 3) {
-                    p.setPenalties(p.getPenalties() + 1);
-                    mr.setState(ReservationState.NOT_RECEIVED);
-                    reservationRepository.save(mr);     // Promenimo u NOT_RECEIVED da i sutradan ne bi gledao ovaj reservation i dao mu opet penal
-                }
+                p.setPenalties(p.getPenalties() + 1);
+                mr.setState(ReservationState.NOT_RECEIVED);
+                reservationRepository.save(mr);     // Promenimo u NOT_RECEIVED da i sutradan ne bi gledao ovaj reservation i dao mu opet penal
             }
             patientRepository.save(p);
         }
