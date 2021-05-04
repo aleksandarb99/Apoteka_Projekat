@@ -72,6 +72,17 @@ public class PatientController {
         return new ResponseEntity<>(Integer.toString(patient.getPoints()), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}/penalties", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getPenalties(@PathVariable("id") Long id) {
+        Patient patient = patientService.getPatient(id);
+
+        if (patient == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(Integer.toString(patient.getPenalties()), HttpStatus.OK);
+    }
+
 
     @GetMapping(value = "/getExaminedPatients", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PatientWorkerSearchDTO>> getExaminedPatients(
