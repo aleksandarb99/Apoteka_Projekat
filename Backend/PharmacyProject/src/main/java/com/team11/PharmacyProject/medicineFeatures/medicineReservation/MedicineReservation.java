@@ -37,6 +37,15 @@ public class MedicineReservation {
     public MedicineReservation() {
     }
 
+    public MedicineReservation(Long pickupDate, Long reservationDate, String reservationID, ReservationState state, MedicineItem medicineItem, Pharmacy pharmacy) {
+        this.pickupDate = pickupDate;
+        this.reservationDate = reservationDate;
+        this.reservationID = reservationID;
+        this.state = state;
+        this.medicineItem = medicineItem;
+        this.pharmacy = pharmacy;
+    }
+
     public Long getId() {
         return id;
     }

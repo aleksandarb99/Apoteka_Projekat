@@ -28,16 +28,6 @@ const TherapyMedicineModal = (props) => {
         setShowHideSecondary(false);
         setSelectedMedicine(null);
         setAmount('');
-        //todo hardkod
-        let pharm_id = props.appt.pharmacyID;
-        let pat_id = props.appt.patientID;
-        if (!props.appt){
-            return;
-        }
-        api.get('http://localhost:8080/api/pharmacy/getMedicineFromPharmWithoutAllergies?pharm_id=' + pharm_id + '&patient_id=' + pat_id)
-           .then((resp) => {
-                setPrimaryOptions(resp.data);
-           });
     }
 
     useEffect(() => {
@@ -51,7 +41,7 @@ const TherapyMedicineModal = (props) => {
             setPrimaryOptions(response.data);
         }
         fetchMedicine();
-    }, []);
+    }, [props.clickedShow]);
 
     const setAlternatives = (med_id) => {
         if (!props.appt){
@@ -124,6 +114,7 @@ const TherapyMedicineModal = (props) => {
                     <Form.Group>
                         <Form.Label>Medicine</Form.Label>
                         <Typeahead
+                            id = '1'
                             labelKey={(option) => `${option.code} -- ${option.name}`}
                             onChange={(data) => {
                                 setSingleSelection(data); 
@@ -191,6 +182,7 @@ const TherapyMedicineModal = (props) => {
                             <Form.Group>
                                 <Form.Label>Selected medicine '{singleSelection[0].name}' is currently not in stock. Please select an alternative medicine:</Form.Label>
                                 <Typeahead
+                                id = '2'
                                     labelKey={(option) => `${option.code} -- ${option.name}`}
                                     onChange={(data) => {
                                         setAlternativeSelection(data);
