@@ -38,6 +38,24 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
     }
 
     @Override
+    public List<MedicineReservation> getReservedMedicinesByPatientId(Long id) {
+
+        Patient patient = patientRepository.findPatientFetchReservedMedicines(id);
+
+        if(patient == null) return null;
+
+        List<MedicineReservation> medicines = new ArrayList<>();
+
+        for (MedicineReservation mr : patient.getMedicineReservation()) {
+            if (mr.getState().equals(ReservationState.RESERVED)) {
+                medicines.add(mr);
+            }
+        }
+
+        return medicines;
+    }
+
+    @Override
     public MedicineReservationNotifyPatientDTO insertMedicineReservation(MedicineReservationInsertDTO dto) {
 
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByPharmacyAndMedicineId(dto.getPharmacyId(), dto.getMedicineId());
