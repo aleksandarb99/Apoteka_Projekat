@@ -38,6 +38,16 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
     }
 
     @Override
+    public List<MedicineReservation> getReservedMedicinesByPatientId(Long id) {
+
+        Patient patient = patientRepository.findPatientFetchReservedMedicines(id, System.currentTimeMillis());
+
+        if(patient == null) return null;
+
+        return patient.getMedicineReservation();
+    }
+
+    @Override
     public MedicineReservationNotifyPatientDTO insertMedicineReservation(MedicineReservationInsertDTO dto) {
 
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByPharmacyAndMedicineId(dto.getPharmacyId(), dto.getMedicineId());
@@ -76,5 +86,24 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         patientRepository.save(patient.get());
 
         return new MedicineReservationNotifyPatientDTO(patient.get(), pharmacy, reservation);
+    }
+
+    @Override
+    public boolean cancelReservation(Long id) {
+        Optional<MedicineReservation> reservationOptional = reservationRepository.findById(id);
+        if (reservationOptional.isEmpty()) return false;
+
+        MedicineReservation reservation = reservationOptional.get();
+
+        if (reservation.getState() != ReservationState.RESERVED) return false;
+        if (reservation.getPickupDate() < System.currentTimeMillis()) return false; // Provera da ipak nije rezervacija iz proslosti
+
+        long differenceInMinutes = ((reservation.getPickupDate() - System.currentTimeMillis()) / (1000 * 60));
+        if(differenceInMinutes < 1440) return false;
+
+        reservation.setState(ReservationState.CANCELLED);
+
+        reservationRepository.save(reservation);
+        return true;
     }
 }
