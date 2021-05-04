@@ -29,6 +29,7 @@ import UserCrud from "./components/users/UserCrud";
 import PharmaciesWithFreePharmacists from "./components/unregisteredAndPatient/PharmaciesWithFreePharmacists";
 import ConsultationsInsight from "./components/unregisteredAndPatient/ConsultationsInsight";
 import CheckupsInsight from "./components/unregisteredAndPatient/CheckupsInsight";
+import SubscribedPharmacies from "./components/unregisteredAndPatient/SubscribedPharmacies";
 import ComplaintsPage from "./components/complaints/ComplaintsPage";
 import ComplaintResponsesPage from "./components/complaintResponses/ComplaintResponsesPage";
 
@@ -50,6 +51,10 @@ function App() {
           <Route
             path="/consultations-insight"
             component={ConsultationsInsight}
+          />
+          <Route
+            path="/subscribed-pharmacies"
+            component={SubscribedPharmacies}
           />
           <Route path="/checkups-insight" component={CheckupsInsight} />
           <Route path="/registration" component={Registration} />
@@ -82,7 +87,10 @@ function App() {
           />
           <Route path="/worker/vacation" component={VacationRequest} />
           <Route path="/user/complaints" component={ComplaintsPage} />
-          <Route path="/admin/complaint-responses" component={ComplaintResponsesPage} />
+          <Route
+            path="/admin/complaint-responses"
+            component={ComplaintResponsesPage}
+          />
         </Switch>
       </div>
       <Footer />

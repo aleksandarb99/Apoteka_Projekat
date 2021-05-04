@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.pharmacy;
 import com.team11.PharmacyProject.address.Address;
 import org.springframework.data.domain.Sort;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface PharmacyService {
@@ -42,4 +43,6 @@ public interface PharmacyService {
     Pharmacy getPharmacyWithMedicineNoAllergies(Long pharmid, Long patientid);
 
     Pharmacy getPharmacyWithAlternativeForMedicineNoAllergies(Long pharmid, Long patientID, Long medicineID);
+
+    List<Pharmacy> getSubscribedPharmaciesByPatientId(Long id);
 }

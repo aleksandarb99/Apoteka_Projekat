@@ -9,6 +9,7 @@ import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.pharmacist.PharmacistRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
@@ -233,6 +234,24 @@ public class PharmacyServiceImpl implements PharmacyService {
     @Override
     public Pharmacy getPharmacyWithAlternativeForMedicineNoAllergies(Long pharmid, Long patientID, Long medicineID) {
         return pharmacyRepository.getPharmacyWithAlternativeForMedicineNoAllergies(pharmid, patientID, medicineID);
+    }
+
+    @Override
+    public List<Pharmacy> getSubscribedPharmaciesByPatientId(Long id) {
+       List<Pharmacy> chosenPharmacies = new ArrayList<>();
+
+       List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchSubscribed();
+
+       for (Pharmacy p : pharmacies) {
+           for (Patient patient : p.getSubscribers()) {
+               if (patient.getId().equals(id)) {
+                   chosenPharmacies.add(p);
+                   break;
+               }
+           }
+       }
+
+       return chosenPharmacies;
     }
 
 }

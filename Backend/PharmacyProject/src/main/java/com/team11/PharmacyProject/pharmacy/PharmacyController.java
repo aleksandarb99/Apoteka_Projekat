@@ -44,6 +44,12 @@ public class PharmacyController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/subscribed/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PharmacySubscribedDTO>> getSubscribedPharmaciesByPatientId(@PathVariable("id") Long id) {
+        List<PharmacySubscribedDTO> pharmacyCrudDTOs = pharmacyService.getSubscribedPharmaciesByPatientId(id).stream().map(p -> modelMapper.map(p, PharmacySubscribedDTO.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(pharmacyCrudDTOs, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyConsultationDTO>> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date) {
 

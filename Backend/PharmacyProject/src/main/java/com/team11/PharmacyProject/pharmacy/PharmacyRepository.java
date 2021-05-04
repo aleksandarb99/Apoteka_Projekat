@@ -47,4 +47,7 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
             "and mi.medicine.id in " +
             "(select alt.id from Medicine req_med left join req_med.alternativeMedicine alt where req_med.id = ?3)")
     Pharmacy getPharmacyWithAlternativeForMedicineNoAllergies(Long pharmID, Long patientID, Long medicineID);
+
+    @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.subscribers")
+    List<Pharmacy> findPharmaciesFetchSubscribed();
 }
