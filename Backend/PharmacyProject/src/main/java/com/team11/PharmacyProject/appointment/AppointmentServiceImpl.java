@@ -5,9 +5,11 @@ import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import com.team11.PharmacyProject.dto.therapyPrescription.TherapyPresriptionDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
+import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemService;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.priceList.PriceList;
@@ -503,6 +505,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     public boolean addTherapyToAppointment(Long appt_id, List<TherapyPresriptionDTO> therapyDTOList){
+        Optional<Appointment> appt = appointmentRepository.findById(appt_id);
+        Appointment appointment = appt.orElse(null);
+        if (appointment == null){
+            return false;
+        }
+
         List<TherapyPrescription> therapyPrescriptionList = new ArrayList<>();
 
         List<MedicineItem> medicineItemsOfTherapy = new ArrayList<>();
@@ -516,16 +524,16 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
 
         for (int i = 0; i < therapyDTOList.size(); i++){
-            List<MedicinePrice> priceList = medicineItemsOfTherapy.get(i).getMedicinePrices();
-            double price = priceList.size() > 0 ? priceList.get(priceList.size()-1).getPrice() : 0;
-            therapyPrescriptionList.add(new TherapyPrescription(medicineItemsOfTherapy.get(i),
-                    therapyDTOList.get(i).getDuration(), Instant.now().toEpochMilli(),price));
-        }
+            //dajemo nedelju dana da pacijent pokupi rezervaciju terapije
+            Long pickupDate = Instant.now().plus(7, ChronoUnit.DAYS).toEpochMilli();
+            Long resDate = Instant.now().toEpochMilli();
+            String resID = UUID.randomUUID().toString();
+            ReservationState state = ReservationState.RESERVED;
+            MedicineItem mi = medicineItemsOfTherapy.get(i);
+            Pharmacy pharmacy = appointment.getPharmacy();
+            MedicineReservation medicineReservation = new MedicineReservation(pickupDate, resDate, resID, state, mi, pharmacy);
 
-        Optional<Appointment> appt = appointmentRepository.findById(appt_id);
-        Appointment appointment = appt.orElse(null);
-        if (appointment == null){
-            return false;
+            therapyPrescriptionList.add(new TherapyPrescription(medicineReservation, therapyDTOList.get(i).getDuration()));
         }
         appointment.setTherapyPrescriptionList(therapyPrescriptionList);
         appointmentRepository.save(appointment);
