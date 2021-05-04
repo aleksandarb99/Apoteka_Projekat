@@ -1,7 +1,10 @@
 package com.team11.PharmacyProject.medicineFeatures.medicineReservation;
 
+import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationInsertDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
+import com.team11.PharmacyProject.enums.AppointmentState;
+import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
@@ -94,5 +97,24 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         patientRepository.save(patient.get());
 
         return new MedicineReservationNotifyPatientDTO(patient.get(), pharmacy, reservation);
+    }
+
+    @Override
+    public boolean cancelReservation(Long id) {
+        Optional<MedicineReservation> reservationOptional = reservationRepository.findById(id);
+        if (reservationOptional.isEmpty()) return false;
+
+        MedicineReservation reservation = reservationOptional.get();
+
+        if (reservation.getState() != ReservationState.RESERVED) return false;
+        if (reservation.getPickupDate() < System.currentTimeMillis()) return false; // Provera da ipak nije rezervacija iz proslosti
+
+        long differenceInMinutes = ((reservation.getPickupDate() - System.currentTimeMillis()) / (1000 * 60));
+        if(differenceInMinutes < 1440) return false;
+
+        reservation.setState(ReservationState.CANCELLED);
+
+        reservationRepository.save(reservation);
+        return true;
     }
 }

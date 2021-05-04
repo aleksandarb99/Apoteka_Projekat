@@ -13,4 +13,6 @@ public interface MedicineReservationService {
     boolean isMedicineItemReserved(Long id);
 
     List<MedicineReservation> getReservedMedicinesByPatientId(Long id);
+
+    boolean cancelReservation(Long id);
 }
