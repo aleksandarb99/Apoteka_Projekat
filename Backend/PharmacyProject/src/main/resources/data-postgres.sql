@@ -234,7 +234,7 @@ insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (5.0, 1, 18)
 /*Patients*/
 insert into patient (points, penalties, id) values (50, 2, 1);
 insert into patient (points, penalties, id) values (43, 0, 2);
-insert into patient (points, penalties, id) values (13, 0, 3);
+insert into patient (points, penalties, id) values (13, 3, 3);
 insert into patient (points, penalties, id) values (150, 0, 10);
 insert into patient (points, penalties, id) values (200, 0, 11);
 insert into patient (points, penalties, id) values (305, 0, 12);

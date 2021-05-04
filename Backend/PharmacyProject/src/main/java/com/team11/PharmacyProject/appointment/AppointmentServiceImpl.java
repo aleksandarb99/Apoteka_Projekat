@@ -266,6 +266,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
         if(patient == null) return null;
+        if(patient.getPenalties() == 3) return null;
 
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(appId);
         if(appointmentOptional.isEmpty()) return null;
@@ -291,6 +292,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
         if (patient == null) return null;
+        if (patient.getPenalties() == 3) return null;
 
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByIdFetchAppointments(pharmacyId);
         if (pharmacy == null) return null;
