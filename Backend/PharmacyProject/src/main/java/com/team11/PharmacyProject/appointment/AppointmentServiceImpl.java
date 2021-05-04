@@ -504,12 +504,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointments;
     }
 
-    public boolean addTherapyToAppointment(Long appt_id, List<TherapyPresriptionDTO> therapyDTOList){
+    public boolean addTherapyToAppointment(Long appt_id, List<TherapyPresriptionDTO> therapyDTOList, String info){
         Optional<Appointment> appt = appointmentRepository.findById(appt_id);
         Appointment appointment = appt.orElse(null);
         if (appointment == null){
             return false;
         }
+        appointment.setInfo(info);
 
         List<TherapyPrescription> therapyPrescriptionList = new ArrayList<>();
 

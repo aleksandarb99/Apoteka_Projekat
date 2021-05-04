@@ -233,7 +233,7 @@ public class AppointmentController {
     @PostMapping(value="/addTherapy", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addTherapyToAppointment (@RequestBody TherapyDTO therapyDTO)
     {
-        boolean result = appointmentServiceImpl.addTherapyToAppointment(therapyDTO.getApptId(), therapyDTO.getMedicineList());
+        boolean result = appointmentServiceImpl.addTherapyToAppointment(therapyDTO.getApptId(), therapyDTO.getMedicineList(), therapyDTO.getInfo());
         if (result)
             return new ResponseEntity<>("Therapy added!", HttpStatus.OK);
         return new ResponseEntity<>("Failed to add therapy!", HttpStatus.BAD_REQUEST);

@@ -15,6 +15,7 @@ function AppointmentReport() {
     const [showModal, setShowModal] = useState(false);
     const [showClicked, setShowClicked] = useState(false);
     const [currAppt, setCurrAppt] = useState(null);
+    const [apptInfo, setApptInfo] = useState('');
 
     const location = useLocation();
 
@@ -48,7 +49,7 @@ function AppointmentReport() {
 
     const addTherapy = () => {
         let appointment_id = currAppt.id; 
-        api.post('http://localhost:8080/api/appointment/addTherapy', { apptId: appointment_id, medicineList: selectedMedicine })
+        api.post('http://localhost:8080/api/appointment/addTherapy', { apptId: appointment_id, medicineList: selectedMedicine, info: apptInfo})
             .then(()=> alert("uspeh"))  //todo ovde redirekcija na finalizaciju 
             .catch(() => alert("Couldn't add therapy, no appointment with sent id!"));
     }
@@ -84,7 +85,7 @@ function AppointmentReport() {
                 <Form>
                     <Form.Group as={Row} className="justify-content-center align-items-center">
                         <Form.Label>Input information about the consultation</Form.Label>
-                        <Form.Control as="textarea" rows="8"  name="address"/>
+                        <Form.Control as="textarea" rows="8"  name="address" value={apptInfo} onChange={(e)=>setApptInfo(e.target.value)}/>
                     </Form.Group>
                 </Form>
             </Col>

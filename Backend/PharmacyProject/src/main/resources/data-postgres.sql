@@ -431,7 +431,7 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1614800300000, 1614801300000, 'Placanje u unapred.', 1800, 10, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
-                    values ('RESERVED', 'CONSULTATION', 2, 1620150300000, 1620150500000, 'Placanje u unapred.', 1800, 1, 1, 6);
+                    values ('RESERVED', 'CONSULTATION', 2, 1620156300000, 1620156500000, 'Placanje u unapred.', 1800, 1, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                 values ('FINISHED', 'CONSULTATION', 2, 1617354000000, 1617354500000, 'Placanje u unapred.', 1800, 2, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)

@@ -5,8 +5,17 @@ import java.util.List;
 public class TherapyDTO {
     Long apptId;
     List<TherapyPresriptionDTO> medicineList;
+    String info;
 
     public TherapyDTO() {
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public Long getApptId() {

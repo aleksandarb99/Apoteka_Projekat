@@ -45,7 +45,7 @@ public interface AppointmentService {
 
     List<AppointmentPatientInsightDTO> getUpcomingCheckupsByPatientId(Long id, Sort sort);
 
-    boolean addTherapyToAppointment(Long appt_id, List<TherapyPresriptionDTO> tpDTO);
+    boolean addTherapyToAppointment(Long appt_id, List<TherapyPresriptionDTO> tpDTO, String info);
 
     Appointment getAppointmentForReport(Long appointmentID);
 }
