@@ -14,6 +14,9 @@ import DetailsOfWorkerModal from "./DetailsOfWorkerModal";
 function DisplayWorkers({ idOfPharmacy }) {
   const [workers, setWorkers] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(-1);
+
+  const [selectedWorker, setSelectedWorker] = useState(-1);
+
   const [addModalShow, setAddModalShow] = useState(false);
   const [detailsModalShow, setDetailsModalShow] = useState(false);
 
@@ -52,13 +55,15 @@ function DisplayWorkers({ idOfPharmacy }) {
     }
   }, [idOfPharmacy]);
 
-  let handleClick = (requestId) => {
+  let handleClick = (requestId, workerId) => {
     setSelectedRowId(requestId);
+    setSelectedWorker(workerId);
   };
 
   let handleRemove = () => {
     removeWorker();
     setSelectedRowId(-1);
+    setSelectedWorker(-1);
   };
 
   let handleAddModalSave = (selectedMedicineId, dto) => {
@@ -93,7 +98,7 @@ function DisplayWorkers({ idOfPharmacy }) {
                 workers?.map((item, index) => (
                   <tr
                     onClick={() => {
-                      handleClick(item.id);
+                      handleClick(item.id, item.worker.id);
                     }}
                     className={`${
                       selectedRowId == item.id ? "selectedRow" : "pointer"
@@ -150,7 +155,7 @@ function DisplayWorkers({ idOfPharmacy }) {
               Show pharmacies
             </Button>
             <DetailsOfWorkerModal
-              workerId={selectedRowId}
+              workerId={selectedWorker}
               show={detailsModalShow}
               handleClose={() => {
                 setDetailsModalShow(false);
