@@ -1,10 +1,7 @@
 package com.team11.PharmacyProject.medicineFeatures.medicineReservation;
 
-import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationInsertDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
-import com.team11.PharmacyProject.enums.AppointmentState;
-import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
