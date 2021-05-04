@@ -158,4 +158,13 @@ public class PatientService {
             patientRepository.save(p);
         }
     }
+
+    public void resetPenalties() {
+        List<Patient> patients = patientRepository.findAll();
+
+        for(Patient p : patients) {
+            p.setPenalties(0);
+            patientRepository.save(p);
+        }
+    }
 }

@@ -244,4 +244,9 @@ public class PatientController {
     public void givePenaltyForNotPickedUpOrCanceledReservation() {
         patientService.givePenaltyForNotPickedUpOrCanceledReservation();
     }
+
+    @Scheduled(cron = "${greeting.cron.firstDayInMonth}")
+    public void resetPenalties() {
+        patientService.resetPenalties();
+    }
 }
