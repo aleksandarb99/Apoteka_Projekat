@@ -20,7 +20,7 @@ public class Rating {
     private GradedType gradedType;
 
     @Column(name = "gradedID", nullable = false)
-    private String gradedID;
+    private Long gradedID;
 
     @Column(name = "date", nullable = false)
     private Long date;
@@ -32,7 +32,7 @@ public class Rating {
     public Rating() {
     }
 
-    public Rating(Long id, int grade, GradedType gradedType, String gradedID, Long date, Patient patient) {
+    public Rating(Long id, int grade, GradedType gradedType, Long gradedID, Long date, Patient patient) {
         this.id = id;
         this.grade = grade;
         this.gradedType = gradedType;
@@ -65,11 +65,11 @@ public class Rating {
         this.gradedType = gradedType;
     }
 
-    public String getGradedID() {
+    public Long getGradedID() {
         return gradedID;
     }
 
-    public void setGradedID(String gradedID) {
+    public void setGradedID(Long gradedID) {
         this.gradedID = gradedID;
     }
 

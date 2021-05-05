@@ -14,14 +14,13 @@ import Dropdown from "react-bootstrap/Dropdown";
 import axios from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
-import moment from "moment";
-
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
 
 function Rating() {
   const [dropdownLabel, setDropdownLabel] = useState("Dermatologist");
   const [entities, setEntitites] = useState([]);
+  const [selectedEntity, setSelectedEntity] = useState(null);
 
   useEffect(() => {
     async function fetchEntities() {
@@ -44,6 +43,11 @@ function Rating() {
     fetchEntities();
   }, [dropdownLabel]);
 
+  const updateSelectedEntity = (selectedEntity) => {
+    console.log(selectedEntity);
+    setSelectedEntity(selectedEntity);
+  };
+
   return (
     <Container fluid className="consultation__insight__container">
       <div className="consultation__insight__content">
@@ -60,6 +64,7 @@ function Rating() {
               <Dropdown.Item
                 onClick={() => {
                   setDropdownLabel("Dermatologist");
+                  setSelectedEntity(null);
                 }}
               >
                 Dermatologist
@@ -67,6 +72,7 @@ function Rating() {
               <Dropdown.Item
                 onClick={() => {
                   setDropdownLabel("Pharmacist");
+                  setSelectedEntity(null);
                 }}
               >
                 Pharmacist
@@ -74,6 +80,7 @@ function Rating() {
               <Dropdown.Item
                 onClick={() => {
                   setDropdownLabel("Medicine");
+                  setSelectedEntity(null);
                 }}
               >
                 Medicine
@@ -81,6 +88,7 @@ function Rating() {
               <Dropdown.Item
                 onClick={() => {
                   setDropdownLabel("Pharmacy");
+                  setSelectedEntity(null);
                 }}
               >
                 Pharmacy
@@ -111,7 +119,15 @@ function Rating() {
             <tbody>
               {entities &&
                 entities.map((e) => (
-                  <tr key={e.id}>
+                  <tr
+                    key={e.id}
+                    onClick={() => updateSelectedEntity(e)}
+                    className={
+                      selectedEntity?.id === e.id
+                        ? "my__row__selected my__table__row"
+                        : "my__table__row"
+                    }
+                  >
                     <td>{e.name}</td>
                     <td>{e.avgGrade}</td>
                   </tr>
@@ -136,7 +152,15 @@ function Rating() {
             <tbody>
               {entities &&
                 entities.map((e) => (
-                  <tr key={e.id}>
+                  <tr
+                    key={e.id}
+                    onClick={() => updateSelectedEntity(e)}
+                    className={
+                      selectedEntity?.id === e.id
+                        ? "my__row__selected my__table__row"
+                        : "my__table__row"
+                    }
+                  >
                     <td>{e.medicineCode}</td>
                     <td>{e.name}</td>
                     <td>{e.avgGrade}</td>
@@ -162,7 +186,15 @@ function Rating() {
             <tbody>
               {entities &&
                 entities.map((e) => (
-                  <tr key={e.id}>
+                  <tr
+                    key={e.id}
+                    onClick={() => updateSelectedEntity(e)}
+                    className={
+                      selectedEntity?.id === e.id
+                        ? "my__row__selected my__table__row"
+                        : "my__table__row"
+                    }
+                  >
                     <td>{e.name}</td>
                     <td>{e.avgGrade}</td>
                     <td>{e.address}</td>
