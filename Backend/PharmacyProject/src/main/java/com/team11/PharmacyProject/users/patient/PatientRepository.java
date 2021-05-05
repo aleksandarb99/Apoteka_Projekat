@@ -68,4 +68,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     @Query("SELECT p FROM Patient p LEFT JOIN FETCH p.medicineReservation mr LEFT JOIN FETCH mr.medicineItem mi LEFT JOIN FETCH mi.medicine WHERE p.id = ?1 AND mr.state = 'RECEIVED'")
     Patient findByIdFetchReceivedMedicines(Long id);
+
+    @Query("SELECT p FROM Patient p LEFT JOIN FETCH p.medicineReservation mr LEFT JOIN FETCH mr.pharmacy LEFT JOIN FETCH mr.medicineItem mi LEFT JOIN FETCH mi.medicine WHERE p.id = ?1")
+    Patient findByIdFetchReceivedMedicinesAndPharmacy(Long id);
 }

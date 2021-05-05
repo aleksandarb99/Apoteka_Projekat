@@ -3,15 +3,15 @@ package com.team11.PharmacyProject.pharmacy;
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.enums.AppointmentState;
-import com.team11.PharmacyProject.enums.AppointmentType;
+import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.users.patient.Patient;
-import com.team11.PharmacyProject.users.pharmacist.PharmacistRepository;
-import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
+import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
@@ -33,6 +33,9 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Autowired
     PharmacyWorkerRepository workerRepository;
+
+    @Autowired
+    PatientRepository patientRepository;
 
 
     @Override
@@ -252,6 +255,34 @@ public class PharmacyServiceImpl implements PharmacyService {
        }
 
        return chosenPharmacies;
+    }
+
+    @Override
+    public List<Pharmacy> getPharmaciesByPatientId(Long id) {
+        Patient patient = patientRepository.findByIdFetchReceivedMedicinesAndPharmacy(id);
+        if (patient == null) return null;
+
+        List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchReceivedCheckupsAndConsultations();
+
+        List<Pharmacy> chosenPharmacies = new ArrayList<>();
+
+        for (Pharmacy p :pharmacies) {
+            for (Appointment a : p.getAppointments()) {
+                if (a.getPatient().getId().equals(id) && a.getAppointmentState().equals(AppointmentState.RESERVED)) {
+                    chosenPharmacies.add(p);
+                    break;
+                }
+            }
+        }
+
+        for (MedicineReservation mr : patient.getMedicineReservation()) {
+            if (!mr.getState().equals(ReservationState.RECEIVED)) continue;
+            if(!chosenPharmacies.contains(mr.getPharmacy())) {
+                chosenPharmacies.add(mr.getPharmacy());
+            }
+        }
+
+        return chosenPharmacies;
     }
 
 }

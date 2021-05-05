@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.dto.rating;
 
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 
 public class RatingGetEntitiesDTO {
@@ -27,6 +28,14 @@ public class RatingGetEntitiesDTO {
         setAvgGrade(medicine.getAvgGrade());
         setMedicineCode(medicine.getCode());
         setAddress("");
+    }
+
+    public RatingGetEntitiesDTO(Pharmacy pharmacy) {
+        setId(pharmacy.getId());
+        setName(pharmacy.getName());
+        setAvgGrade(pharmacy.getAvgGrade());
+        setMedicineCode("");
+        setAddress(pharmacy.getAddress().getStreet() + ", " + pharmacy.getAddress().getCity() + ", " + pharmacy.getAddress().getCountry());
     }
 
     public long getId() {

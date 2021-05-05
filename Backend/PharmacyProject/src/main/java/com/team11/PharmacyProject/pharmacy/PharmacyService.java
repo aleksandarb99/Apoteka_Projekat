@@ -45,4 +45,6 @@ public interface PharmacyService {
     Pharmacy getPharmacyWithAlternativeForMedicineNoAllergies(Long pharmid, Long patientID, Long medicineID);
 
     List<Pharmacy> getSubscribedPharmaciesByPatientId(Long id);
+
+    List<Pharmacy> getPharmaciesByPatientId(Long id);
 }
