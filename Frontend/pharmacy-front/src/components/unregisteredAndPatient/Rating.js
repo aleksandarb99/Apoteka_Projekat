@@ -27,13 +27,13 @@ function Rating() {
     async function fetchEntities() {
       let url;
       if (dropdownLabel === "Dermatologist") {
-        url = "";
+        url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
       } else if (dropdownLabel === "Pharmacist") {
-        url = "";
+        url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
       } else if (dropdownLabel === "Medicine") {
-        url = "";
+        url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
       } else {
-        url = "";
+        url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
       }
 
       const request = await axios.get(url + getIdFromToken());
@@ -87,6 +87,30 @@ function Rating() {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
+        </Row>
+        <Row>
+          <Table
+            striped
+            bordered
+            variant="light"
+            className="my__table__pharmacies"
+          >
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Average grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              {entities &&
+                entities.map((e) => (
+                  <tr key={e.id}>
+                    <td>{e.name}</td>
+                    <td>{e.avgGrade}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
         </Row>
       </div>
     </Container>
