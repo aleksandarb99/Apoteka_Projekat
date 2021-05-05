@@ -31,7 +31,7 @@ function Rating() {
       } else if (dropdownLabel === "Pharmacist") {
         url = "http://localhost:8080/api/workers/all-pharmacists/patient/";
       } else if (dropdownLabel === "Medicine") {
-        url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
+        url = "http://localhost:8080/api/medicine/all-medicines/patient/";
       } else {
         url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
       }
@@ -88,7 +88,14 @@ function Rating() {
             </Dropdown.Menu>
           </Dropdown>
         </Row>
-        <Row>
+        <Row
+          style={{
+            display:
+              dropdownLabel == "Dermatologist" || dropdownLabel == "Pharmacist"
+                ? "flex"
+                : "none",
+          }}
+        >
           <Table
             striped
             bordered
@@ -105,6 +112,32 @@ function Rating() {
               {entities &&
                 entities.map((e) => (
                   <tr key={e.id}>
+                    <td>{e.name}</td>
+                    <td>{e.avgGrade}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </Row>
+        <Row style={{ display: dropdownLabel == "Medicine" ? "flex" : "none" }}>
+          <Table
+            striped
+            bordered
+            variant="light"
+            className="my__table__pharmacies"
+          >
+            <thead>
+              <tr>
+                <th>Medicine code</th>
+                <th>Name</th>
+                <th>Average grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              {entities &&
+                entities.map((e) => (
+                  <tr key={e.id}>
+                    <td>{e.medicineCode}</td>
                     <td>{e.name}</td>
                     <td>{e.avgGrade}</td>
                   </tr>
