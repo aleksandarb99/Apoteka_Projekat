@@ -516,6 +516,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         List<MedicineItem> medicineItemsOfTherapy = new ArrayList<>();
         List<MedicineItem> medicineItemsToNotif = new ArrayList<>();
+        //TODO slanje mail-a, kada se povezu pharmAdmin i apoteka
 
         for (TherapyPresriptionDTO tpDTO : therapyDTOList){ //uga buga, todo da li moze bolje
             medicineItemsOfTherapy.add(medicineItemService.findById(tpDTO.getMedicineItemID()));
@@ -532,8 +533,18 @@ public class AppointmentServiceImpl implements AppointmentService {
             ReservationState state = ReservationState.RESERVED;
             MedicineItem mi = medicineItemsOfTherapy.get(i);
             Pharmacy pharmacy = appointment.getPharmacy();
+            if(!mi.setAmountLessOne()) return false; //smanjujemo kolicinu za 1, todo kod transakcija ovo ce biti zabavno
+
             MedicineReservation medicineReservation = new MedicineReservation(pickupDate, resDate, resID, state, mi, pharmacy);
 
+            Optional<Patient> patient = Optional.ofNullable(patientRepository.findByIdAndFetchReservationsEagerly(appointment.getPatient().getId()));
+            if(patient.isEmpty()) {  //todo videti sa Jovanom sta ovo tacno radi
+                patient = patientRepository.findById(appointment.getPatient().getId());
+                if(patient.isEmpty()) return false;
+                patient.get().setMedicineReservation(new ArrayList<>());
+            }
+            patient.get().getMedicineReservation().add(medicineReservation);
+            //todo notif za pacijenta
             therapyPrescriptionList.add(new TherapyPrescription(medicineReservation, therapyDTOList.get(i).getDuration()));
         }
         appointment.setTherapyPrescriptionList(therapyPrescriptionList);

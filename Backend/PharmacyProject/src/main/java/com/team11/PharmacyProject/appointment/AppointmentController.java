@@ -233,6 +233,7 @@ public class AppointmentController {
     @PostMapping(value="/addTherapy", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addTherapyToAppointment (@RequestBody TherapyDTO therapyDTO)
     {
+        //TODO trebace kasnije - ako je neko u medjuvremenu uzeo te lekove, javi frontu! i resetuj terapiju
         boolean result = appointmentServiceImpl.addTherapyToAppointment(therapyDTO.getApptId(), therapyDTO.getMedicineList(), therapyDTO.getInfo());
         if (result)
             return new ResponseEntity<>("Therapy added!", HttpStatus.OK);

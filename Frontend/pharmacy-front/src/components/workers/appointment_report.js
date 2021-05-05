@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import { Rainbow } from "react-bootstrap-icons";
 import TherapyMedicineModal from "./appointment_report_therapy_modal";
 import api from '../../app/api';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import moment from "moment";
 
 
@@ -18,6 +18,7 @@ function AppointmentReport() {
     const [apptInfo, setApptInfo] = useState('');
 
     const location = useLocation();
+    const history = useHistory();
 
     useEffect(() => {
         let bodyFormData = new FormData();
@@ -50,7 +51,7 @@ function AppointmentReport() {
     const addTherapy = () => {
         let appointment_id = currAppt.id; 
         api.post('http://localhost:8080/api/appointment/addTherapy', { apptId: appointment_id, medicineList: selectedMedicine, info: apptInfo})
-            .then(()=> alert("uspeh"))  //todo ovde redirekcija na finalizaciju 
+            .then(()=> history.push('/'))  //todo da bude modal
             .catch(() => alert("Couldn't add therapy, no appointment with sent id!"));
     }
   
@@ -114,7 +115,7 @@ function AppointmentReport() {
             </Col>
         </Row>
         <Row className="justify-content-center m-5 align-items-center">
-            <Button onClick={addTherapy}> End appointment </Button>
+            <Button onClick={addTherapy}> Finalize and schedule another appointment </Button>
         </Row>
         <TherapyMedicineModal show={showModal} appt={currAppt} onHideModal={hideModal} onAddMedicine={onAdd} clickedShow={showClicked}></TherapyMedicineModal>
     </div>
