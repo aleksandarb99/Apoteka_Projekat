@@ -1,8 +1,10 @@
 package com.team11.PharmacyProject.workplace;
 
+import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface WorkplaceService {
 
@@ -19,4 +21,8 @@ public interface WorkplaceService {
     Workplace getWorkplaceOfPharmacist(Long workerID);
 
     List<String> getPharmacyNamesByWorkerId(Long id);
+
+    List<Workplace> searchWorkplacesByNameOrSurnameOfWorker(String searchValue, Long pharmacyId);
+
+    Map<Long, List<String>> getAllPharmacyNames();
 }
