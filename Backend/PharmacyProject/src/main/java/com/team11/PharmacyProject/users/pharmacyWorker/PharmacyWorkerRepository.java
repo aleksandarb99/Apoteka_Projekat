@@ -18,4 +18,7 @@ public interface PharmacyWorkerRepository extends JpaRepository<PharmacyWorker, 
 
     @Query("select w from PharmacyWorker w left join fetch w.appointmentList where w.id = ?1")
     PharmacyWorker getPharmacyWorkerForCalendar(Long workerID);
+
+    @Query("SELECT DISTINCT d FROM PharmacyWorker d LEFT JOIN FETCH d.appointmentList a WHERE d.userType = 'DERMATOLOGIST' AND a.appointmentState = 'FINISHED' AND a.appointmentType = 'CHECKUP'")
+    List<PharmacyWorker> getDermatologistsFetchFinishedCheckups();
 }

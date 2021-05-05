@@ -6,6 +6,8 @@ import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceService;
@@ -21,6 +23,9 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
 
     @Autowired
     PharmacyWorkerRepository pharmacyWorkerRepository;
+
+    @Autowired
+    PatientRepository patientRepository;
 
     @Autowired
     PharmacyRepository pharmacyRepository;
@@ -186,5 +191,26 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
                     .collect(Collectors.toList());
 
         return chosenWorkers;
+    }
+
+    @Override
+    public List<PharmacyWorker> getDermatologistsByPatientId(Long id) {
+
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isEmpty()) return null;
+
+        List<PharmacyWorker> dermatologists = pharmacyWorkerRepository.getDermatologistsFetchFinishedCheckups();
+        List<PharmacyWorker> chosenDermatologists = new ArrayList<>();
+
+        for (PharmacyWorker d : dermatologists) {
+            for (Appointment a : d.getAppointmentList()) {
+                if (a.getPatient().getId().equals(id)) {
+                    chosenDermatologists.add(d);
+                    break;
+                }
+            }
+        }
+
+        return chosenDermatologists;
     }
 }
