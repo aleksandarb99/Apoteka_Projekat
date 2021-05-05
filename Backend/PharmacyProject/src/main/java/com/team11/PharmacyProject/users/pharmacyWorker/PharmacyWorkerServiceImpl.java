@@ -200,17 +200,31 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
         if (patient.isEmpty()) return null;
 
         List<PharmacyWorker> dermatologists = pharmacyWorkerRepository.getDermatologistsFetchFinishedCheckups();
-        List<PharmacyWorker> chosenDermatologists = new ArrayList<>();
+        return getChosenWorkers(dermatologists, id);
+    }
 
-        for (PharmacyWorker d : dermatologists) {
-            for (Appointment a : d.getAppointmentList()) {
+    @Override
+    public List<PharmacyWorker> getPharmacistsByPatientId(Long id) {
+
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isEmpty()) return null;
+
+        List<PharmacyWorker> pharmacists = pharmacyWorkerRepository.getPharmacistsFetchFinishedConsultations();
+        return getChosenWorkers(pharmacists, id);
+    }
+
+    private List<PharmacyWorker> getChosenWorkers(List<PharmacyWorker> workers, long id) {
+
+        List<PharmacyWorker> chosenWorkers = new ArrayList<>();
+
+        for (PharmacyWorker pw : workers) {
+            for (Appointment a : pw.getAppointmentList()) {
                 if (a.getPatient().getId().equals(id)) {
-                    chosenDermatologists.add(d);
+                    chosenWorkers.add(pw);
                     break;
                 }
             }
         }
-
-        return chosenDermatologists;
+        return chosenWorkers;
     }
 }

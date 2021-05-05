@@ -29,7 +29,7 @@ function Rating() {
       if (dropdownLabel === "Dermatologist") {
         url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
       } else if (dropdownLabel === "Pharmacist") {
-        url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
+        url = "http://localhost:8080/api/workers/all-pharmacists/patient/";
       } else if (dropdownLabel === "Medicine") {
         url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
       } else {

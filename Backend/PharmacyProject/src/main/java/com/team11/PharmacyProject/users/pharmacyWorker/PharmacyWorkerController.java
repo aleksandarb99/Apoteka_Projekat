@@ -81,6 +81,19 @@ public class PharmacyWorkerController {
         return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/all-pharmacists/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getPharmacistsByPatientId(@PathVariable("id") Long id) {
+
+        List<PharmacyWorker> workers = pharmacyWorkerService.getPharmacistsByPatientId(id);
+
+        if (workers == null) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+
+        List<RatingGetEntitiesDTO> retVal = workers.stream().map(RatingGetEntitiesDTO::new).collect(Collectors.toList());
+        return new ResponseEntity<>(retVal, HttpStatus.OK);
+    }
+
     @PostMapping(value = "/notexistingworkplacebypharmacyid/{pharmacyId}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getNotWorkingWorkersByPharmacyId(@PathVariable("pharmacyId") Long pharmacyId, @RequestBody RequestForWorkerDTO dto) {
         if (WorkplaceController.checkDto(dto)) return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);

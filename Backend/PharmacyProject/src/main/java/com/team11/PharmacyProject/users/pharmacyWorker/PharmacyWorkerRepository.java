@@ -21,4 +21,7 @@ public interface PharmacyWorkerRepository extends JpaRepository<PharmacyWorker, 
 
     @Query("SELECT DISTINCT d FROM PharmacyWorker d LEFT JOIN FETCH d.appointmentList a WHERE d.userType = 'DERMATOLOGIST' AND a.appointmentState = 'FINISHED' AND a.appointmentType = 'CHECKUP'")
     List<PharmacyWorker> getDermatologistsFetchFinishedCheckups();
+
+    @Query("SELECT DISTINCT p FROM PharmacyWorker p LEFT JOIN FETCH p.appointmentList a WHERE p.userType = 'PHARMACIST' AND a.appointmentState = 'FINISHED' AND a.appointmentType = 'CONSULTATION'")
+    List<PharmacyWorker> getPharmacistsFetchFinishedConsultations();
 }
