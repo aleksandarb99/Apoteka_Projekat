@@ -14,4 +14,22 @@ public class RatingServiceImpl implements RatingService{
 
         return ratingRepository.findDermatologistRatingFetchPatient(dId, pId);
     }
+
+    @Override
+    public Rating getPharmacistGrade(Long pId, Long paId) {
+
+        return ratingRepository.findPharmacistRatingFetchPatient(pId, paId);
+    }
+
+    @Override
+    public Rating getMedicineGrade(Long mId, Long paId) {
+
+        return ratingRepository.findMedicineRatingFetchPatient(mId, paId);
+    }
+
+    @Override
+    public Rating getPharmacyGrade(Long pId, Long paId) {
+
+        return ratingRepository.findPharmacyRatingFetchPatient(pId, paId);
+    }
 }

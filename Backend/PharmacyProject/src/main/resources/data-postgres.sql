@@ -261,6 +261,7 @@ insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 
 insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, 'MEDICINE', 1, 1616510769000, 1);
 insert into rating (grade, graded_type, gradedId, date, patient_id) values (5, 'MEDICINE', 3, 1616586369000, 2);
 insert into rating (grade, graded_type, gradedId, date, patient_id) values (5, 'DERMATOLOGIST', 6, 1616586369000, 1);
+insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, 'DERMATOLOGIST', 7, 1616586369000, 1);
 
 /*RankingCategory*/
 insert into ranking_category (name, points_required, discount) values ('Bronza', 50, 5.0);

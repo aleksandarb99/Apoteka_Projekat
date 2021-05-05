@@ -25,6 +25,39 @@ public class RatingController {
         return new ResponseEntity<>(new RatingCreateUpdateDTO(grade), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/pharmacist/{pId}/patient/{paId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getPharmacistGrade(@PathVariable("pId") Long pId, @PathVariable("paId") Long paId){
+        Rating grade = ratingService.getPharmacistGrade(pId, paId);
+
+        if (grade == null) {
+            return new ResponseEntity<>("not graded", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(new RatingCreateUpdateDTO(grade), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/medicine/{mId}/patient/{paId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMedicineGrade(@PathVariable("mId") Long mId, @PathVariable("paId") Long paId){
+        Rating grade = ratingService.getMedicineGrade(mId, paId);
+
+        if (grade == null) {
+            return new ResponseEntity<>("not graded", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(new RatingCreateUpdateDTO(grade), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/pharmacy/{pId}/patient/{paId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getPharmacyGrade(@PathVariable("pId") Long pId, @PathVariable("paId") Long paId){
+        Rating grade = ratingService.getPharmacyGrade(pId, paId);
+
+        if (grade == null) {
+            return new ResponseEntity<>("not graded", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(new RatingCreateUpdateDTO(grade), HttpStatus.OK);
+    }
+
 //    @PostMapping(value = "/rejectrequest/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<String> rejectRequest(@PathVariable("requestId") String requestId, @RequestBody String reason){
 //        boolean flag = requestForHolidayService.rejectRequest(requestId, reason);
