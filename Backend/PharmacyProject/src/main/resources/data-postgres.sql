@@ -453,13 +453,13 @@ values ('VACATION', '', 1623754800000, 1624190195000, 'PENDING', 6);
 
 
 /*MyOrders*/
-insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
-insert into my_order (deadline, pharmacy_id) values (1620903600000, 2);
-insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
-insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
-insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
-insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
-insert into my_order (deadline, pharmacy_id) values (1613411940000, 1);
+insert into my_order (deadline, pharmacy_id, order_state) values (1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (deadline, pharmacy_id, order_state) values (1620903600000, 2, 'IN_PROGRESS');
+insert into my_order (deadline, pharmacy_id, order_state) values (1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (deadline, pharmacy_id, order_state) values (1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (deadline, pharmacy_id, order_state) values (1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (deadline, pharmacy_id, order_state) values (1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (deadline, pharmacy_id, order_state) values (1613411940000, 1, 'ON_HOLD');
 
 /*MyOrders - OrderItems*/
 insert into my_order_order_item (my_order_id, order_item_id) values (1, 1);

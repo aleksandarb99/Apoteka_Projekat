@@ -213,7 +213,7 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
       <Row>
         <Col>
           {showedOrder && (
-            <Table striped bordered variant="light">
+            <Table striped bordered variant="dark">
               <thead>
                 <tr>
                   <th>#</th>

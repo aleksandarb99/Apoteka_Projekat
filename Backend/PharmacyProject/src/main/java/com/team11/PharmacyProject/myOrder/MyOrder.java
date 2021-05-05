@@ -1,7 +1,10 @@
 package com.team11.PharmacyProject.myOrder;
 
+import com.team11.PharmacyProject.enums.OrderState;
+import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.orderItem.OrderItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import org.hibernate.criterion.Order;
 
 import javax.persistence.*;
 import java.util.List;
@@ -23,6 +26,10 @@ public class MyOrder {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<OrderItem> orderItem;
 
+    @Column(name = "order_state", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderState orderState;
+
     public MyOrder() {
     }
 
@@ -30,6 +37,7 @@ public class MyOrder {
         this.deadline = deadline;
         this.pharmacy = pharmacy;
         this.orderItem = orderItem;
+        this.orderState = OrderState.IN_PROGRESS;
     }
 
     public MyOrder(Long id, Long deadline, Pharmacy pharmacy, List<OrderItem> orderItem) {
@@ -37,6 +45,15 @@ public class MyOrder {
         this.deadline = deadline;
         this.pharmacy = pharmacy;
         this.orderItem = orderItem;
+        this.orderState = OrderState.IN_PROGRESS;
+    }
+
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
     }
 
     public Long getId() {

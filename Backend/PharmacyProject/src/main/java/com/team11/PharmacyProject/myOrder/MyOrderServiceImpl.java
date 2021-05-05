@@ -85,6 +85,11 @@ public class MyOrderServiceImpl implements MyOrderService {
             return false;
         }
 
+        Date now = new Date();
+        if(dto.getDeadline() <= now.getTime()){
+            return false;
+        }
+
         MyOrder order = new MyOrder(dto.getDeadline(), pharmacy, items);
         myOrderRepository.save(order);
         return true;
