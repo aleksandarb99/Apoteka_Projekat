@@ -33,7 +33,7 @@ function Rating() {
       } else if (dropdownLabel === "Medicine") {
         url = "http://localhost:8080/api/medicine/all-medicines/patient/";
       } else {
-        url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
+        url = "http://localhost:8080/api/pharmacy/all-pharmacies/patient/";
       }
 
       const request = await axios.get(url + getIdFromToken());
@@ -140,6 +140,32 @@ function Rating() {
                     <td>{e.medicineCode}</td>
                     <td>{e.name}</td>
                     <td>{e.avgGrade}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </Row>
+        <Row style={{ display: dropdownLabel == "Pharmacy" ? "flex" : "none" }}>
+          <Table
+            striped
+            bordered
+            variant="light"
+            className="my__table__pharmacies"
+          >
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Average grade</th>
+                <th>Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              {entities &&
+                entities.map((e) => (
+                  <tr key={e.id}>
+                    <td>{e.name}</td>
+                    <td>{e.avgGrade}</td>
+                    <td>{e.address}</td>
                   </tr>
                 ))}
             </tbody>
