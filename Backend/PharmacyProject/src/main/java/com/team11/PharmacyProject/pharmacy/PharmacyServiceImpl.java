@@ -262,14 +262,15 @@ public class PharmacyServiceImpl implements PharmacyService {
         Patient patient = patientRepository.findByIdFetchReceivedMedicinesAndPharmacy(id);
         if (patient == null) return null;
 
-        List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchReceivedCheckupsAndConsultations();
+        List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchFinishedCheckupsAndConsultations();
+        if (pharmacies == null) return null;
 
         List<Pharmacy> chosenPharmacies = new ArrayList<>();
 
         for (Pharmacy p :pharmacies) {
             for (Appointment a : p.getAppointments()) {
-                if (a.getPatient().getId().equals(id) && a.getAppointmentState().equals(AppointmentState.RESERVED)) {
-                    chosenPharmacies.add(p);
+                if (a.getPatient().getId().equals(id)) {
+                    addPharmacy(chosenPharmacies, a.getPharmacy());
                     break;
                 }
             }
@@ -277,12 +278,28 @@ public class PharmacyServiceImpl implements PharmacyService {
 
         for (MedicineReservation mr : patient.getMedicineReservation()) {
             if (!mr.getState().equals(ReservationState.RECEIVED)) continue;
-            if(!chosenPharmacies.contains(mr.getPharmacy())) {
-                chosenPharmacies.add(mr.getPharmacy());
-            }
+            addPharmacy(chosenPharmacies, mr.getPharmacy());
         }
 
         return chosenPharmacies;
+    }
+
+    private List<Pharmacy> addPharmacy(List<Pharmacy> pharmacies, Pharmacy p) {
+
+        if (pharmacies.size() == 0) {
+            pharmacies.add(p);
+            return pharmacies;
+        }
+
+        for (Pharmacy p1 : pharmacies) {
+            if (p1.getId().equals(p.getId())) {
+                return pharmacies;
+            }
+        }
+
+        pharmacies.add(p);
+        return pharmacies;
+
     }
 
 }

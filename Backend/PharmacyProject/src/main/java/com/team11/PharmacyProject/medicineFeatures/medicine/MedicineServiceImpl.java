@@ -180,8 +180,27 @@ public class MedicineServiceImpl implements MedicineService {
 
         for (MedicineReservation m : patient.getMedicineReservation()) {
             chosenMedicines.add(m.getMedicineItem().getMedicine());
+            addMedicine(chosenMedicines, m.getMedicineItem().getMedicine());
         }
         return chosenMedicines;
+    }
+
+    private List<Medicine> addMedicine(List<Medicine> medicines, Medicine m) {
+
+        if (medicines.size() == 0) {
+            medicines.add(m);
+            return medicines;
+        }
+
+        for (Medicine m1 : medicines) {
+            if (m1.getId().equals(m.getId())) {
+                return medicines;
+            }
+        }
+
+        medicines.add(m);
+        return medicines;
+
     }
 
     private Paragraph generateParagraph(String title, String text) {
