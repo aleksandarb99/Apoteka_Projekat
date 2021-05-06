@@ -179,7 +179,6 @@ public class MedicineServiceImpl implements MedicineService {
         List<Medicine> chosenMedicines = new ArrayList<>();
 
         for (MedicineReservation m : patient.getMedicineReservation()) {
-            chosenMedicines.add(m.getMedicineItem().getMedicine());
             addMedicine(chosenMedicines, m.getMedicineItem().getMedicine());
         }
         return chosenMedicines;

@@ -514,12 +514,21 @@ insert into medicine_reservation (pickup_date, reservation_date, reservationid, 
                     values (1618531200000, 1618666801000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3456', 'RESERVED', 1, 1);
 insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
                     values (1618531200000, 1618666801000, 'f8c3de44-1fea-4d7c-a8b0-29f63c4c3456', 'RECEIVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+                    values (1618489800000, 1617714000000, 'f8c3de44-1fea-4d7c-a8b0-29f63c4c6666', 'RECEIVED', 2, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+                    values (1618920720000, 1617717600000, 'f8c3de44-1fea-4d7c-a8b0-29f63c4c7777', 'RECEIVED', 3, 2);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+                    values (1619352720000, 1617804000000, 'f8c3de44-1fea-4d7c-a8b0-29f63c4c8888', 'RECEIVED', 4, 3);
 
 /*Patient - MedicineReservations*/
 insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 1);
 insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 2);
-insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (2, 3);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (3, 3);
 insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 4);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 5);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 6);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (3, 7);
 
 /*Medicine - Alternative Medicines*/
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (1, 2);
