@@ -25,7 +25,7 @@ public class Rating {
     @Column(name = "date", nullable = false)
     private Long date;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "patient_id")
     private Patient patient;
 

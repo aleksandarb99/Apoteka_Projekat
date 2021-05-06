@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.rating;
 
+import com.team11.PharmacyProject.dto.rating.RatingCreateUpdateDTO;
+
 public interface RatingService {
     Rating getDermatologistGrade(Long dId, Long pId);
 
@@ -8,4 +10,6 @@ public interface RatingService {
     Rating getMedicineGrade(Long mId, Long paId);
 
     Rating getPharmacyGrade(Long pId, Long paId);
+
+    boolean addRating(RatingCreateUpdateDTO dto);
 }

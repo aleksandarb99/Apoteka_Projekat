@@ -27,6 +27,7 @@ function Rating() {
   const [selectedEntity, setSelectedEntity] = useState(null);
   const [rating, setRating] = useState(null);
   const [enabledRating, setEnabledRating] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   var spans = document.querySelectorAll("span");
 
   useEffect(() => {
@@ -70,9 +71,36 @@ function Rating() {
 
   const ratingChanged = (newRating) => {
     console.log(newRating);
-    //let spans = document.querySelectorAll("span");
     for (let span of spans) {
       span.classList.remove("my__color__star");
+    }
+
+    let forSend = {
+      id: -1,
+      grade: newRating,
+      gradedID: selectedEntity.id,
+      date: new Date().getTime(),
+      patientId: getIdFromToken(),
+      type: dropdownLabel.toUpperCase(),
+    };
+
+    if (enabledRating === false) {
+      axios
+        .post("http://localhost:8080/api/rating/", forSend)
+        .then((res) => {
+          if (res.data === "added") {
+            setShowAlert(true);
+            setTimeout(function () {
+              setShowAlert(false);
+            }, 5000);
+            setEnabledRating(false);
+            updateSelectedEntity(selectedEntity);
+          }
+        })
+        .catch((err) => {
+          setShowAlert(false);
+          alert("failed!" + err.data);
+        });
     }
   };
 
@@ -283,6 +311,13 @@ function Rating() {
             size={48}
             activeColor="green"
           />
+        </Row>
+        <Row style={{ justifyContent: "center" }}>
+          {showAlert && (
+            <Alert transition={true} variant="success">
+              Successfully graded!
+            </Alert>
+          )}
         </Row>
       </div>
     </Container>

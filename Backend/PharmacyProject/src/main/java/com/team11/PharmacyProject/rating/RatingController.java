@@ -1,11 +1,15 @@
 package com.team11.PharmacyProject.rating;
 
+import com.team11.PharmacyProject.dto.medicine.MedicineCrudDTO;
 import com.team11.PharmacyProject.dto.rating.RatingCreateUpdateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api/rating")
@@ -58,12 +62,17 @@ public class RatingController {
         return new ResponseEntity<>(new RatingCreateUpdateDTO(grade), HttpStatus.OK);
     }
 
-//    @PostMapping(value = "/rejectrequest/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<String> rejectRequest(@PathVariable("requestId") String requestId, @RequestBody String reason){
-//        boolean flag = requestForHolidayService.rejectRequest(requestId, reason);
-//        if(!flag){
-//            return new ResponseEntity<>("Failed to reject", HttpStatus.BAD_REQUEST);
-//        }
-//        return new ResponseEntity<>("Successfully rejected", HttpStatus.OK);
-//    }
+    @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addRating(@Valid @RequestBody RatingCreateUpdateDTO dto, BindingResult result){
+
+        if (result.hasErrors()) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+
+        if(!ratingService.addRating(dto)){
+            return new ResponseEntity<>("not added", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("added", HttpStatus.OK);
+    }
 }
