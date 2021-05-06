@@ -28,6 +28,7 @@ function Rating() {
   const [rating, setRating] = useState(null);
   const [enabledRating, setEnabledRating] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [reload, setReload] = useState(false);
   var spans = document.querySelectorAll("span");
 
   useEffect(() => {
@@ -55,7 +56,7 @@ function Rating() {
       return request;
     }
     fetchEntities();
-  }, [dropdownLabel]);
+  }, [dropdownLabel, reload]);
 
   const updateSelectedEntity = (selectedEntity) => {
     setSelectedEntity(selectedEntity);
@@ -101,6 +102,7 @@ function Rating() {
             }, 5000);
             setEnabledRating(false);
             updateSelectedEntity(selectedEntity);
+            setReload(!reload);
           }
         })
         .catch((err) => {
@@ -119,6 +121,7 @@ function Rating() {
             }, 5000);
             setEnabledRating(false);
             updateSelectedEntity(selectedEntity);
+            setReload(!reload);
           }
         })
         .catch((err) => {

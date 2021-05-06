@@ -14,6 +14,7 @@ import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -72,21 +73,69 @@ public class RatingServiceImpl implements RatingService{
             if (worker.isEmpty()) return false;
             Rating existRating = ratingRepository.findIfRatingExistsDermatologist(dto.getGradedID(), dto.getPatientId());
             if (existRating != null) return false;
+            List<Rating> ratings = ratingRepository.findAllRatingsByDermatologistId(worker.get().getId());
+            if (ratings == null) {
+                worker.get().setAvgGrade(dto.getGrade());
+            } else {
+                double sum = 0;
+                for (Rating r : ratings) {
+                    sum += r.getGrade();
+                }
+                sum += dto.getGrade();
+                worker.get().setAvgGrade(sum / (ratings.size() + 1));
+            }
+            workerRepository.save(worker.get());
         } else if (dto.getType().equals(GradedType.PHARMACIST)) {
             Optional<PharmacyWorker> worker = workerRepository.findById(dto.getGradedID());
             if (worker.isEmpty()) return false;
             Rating existRating = ratingRepository.findIfRatingExistsPharmacist(dto.getGradedID(), dto.getPatientId());
             if (existRating != null) return false;
+            List<Rating> ratings = ratingRepository.findAllRatingsByPharmacistId(worker.get().getId());
+            if (ratings == null) {
+                worker.get().setAvgGrade(dto.getGrade());
+            } else {
+                double sum = 0;
+                for (Rating r : ratings) {
+                    sum += r.getGrade();
+                }
+                sum += dto.getGrade();
+                worker.get().setAvgGrade(sum / (ratings.size() + 1));
+            }
+            workerRepository.save(worker.get());
         } else if (dto.getType().equals(GradedType.PHARMACY)) {
             Optional<Pharmacy> pharmacy = pharmacyRepository.findById(dto.getGradedID());
             if (pharmacy.isEmpty()) return false;
             Rating existRating = ratingRepository.findIfRatingExistsPharmacy(dto.getGradedID(), dto.getPatientId());
             if (existRating != null) return false;
+            List<Rating> ratings = ratingRepository.findAllRatingsByPharmacyId(pharmacy.get().getId());
+            if (ratings == null) {
+                pharmacy.get().setAvgGrade((double) dto.getGrade());
+            } else {
+                double sum = 0;
+                for (Rating r : ratings) {
+                    sum += r.getGrade();
+                }
+                sum += dto.getGrade();
+                pharmacy.get().setAvgGrade(sum / (ratings.size() + 1));
+            }
+            pharmacyRepository.save(pharmacy.get());
         } else if (dto.getType().equals(GradedType.MEDICINE)) {
             Optional<Medicine> medicine = medicineRepository.findById(dto.getGradedID());
             if (medicine.isEmpty()) return false;
             Rating existRating = ratingRepository.findIfRatingExistsMedicine(dto.getGradedID(), dto.getPatientId());
             if (existRating != null) return false;
+            List<Rating> ratings = ratingRepository.findAllRatingsByMedicineId(medicine.get().getId());
+            if (ratings == null) {
+                medicine.get().setAvgGrade(dto.getGrade());
+            } else {
+                double sum = 0;
+                for (Rating r : ratings) {
+                    sum += r.getGrade();
+                }
+                sum += dto.getGrade();
+                medicine.get().setAvgGrade(sum / (ratings.size() + 1));
+                medicineRepository.save(medicine.get());
+            }
         } else {
             return  false;
         }
@@ -117,21 +166,58 @@ public class RatingServiceImpl implements RatingService{
             if (worker.isEmpty()) return false;
             Rating existRating = ratingRepository.findIfRatingExistsDermatologist(dto.getGradedID(), dto.getPatientId());
             if (existRating == null) return false;
+            List<Rating> ratings = ratingRepository.findAllRatingsByDermatologistId(worker.get().getId());
+            double sum = 0;
+            for (Rating r : ratings) {
+                if (r.getId().equals(rating.get().getId())) continue;
+                sum += r.getGrade();
+            }
+            sum += dto.getGrade();
+            worker.get().setAvgGrade(sum / ratings.size());
+            workerRepository.save(worker.get());
         } else if (dto.getType().equals(GradedType.PHARMACIST)) {
             Optional<PharmacyWorker> worker = workerRepository.findById(dto.getGradedID());
             if (worker.isEmpty()) return false;
             Rating existRating = ratingRepository.findIfRatingExistsPharmacist(dto.getGradedID(), dto.getPatientId());
             if (existRating == null) return false;
+            List<Rating> ratings = ratingRepository.findAllRatingsByPharmacistId(worker.get().getId());
+            double sum = 0;
+            for (Rating r : ratings) {
+                if (r.getId().equals(rating.get().getId())) continue;
+                sum += r.getGrade();
+            }
+            sum += dto.getGrade();
+            worker.get().setAvgGrade(sum / ratings.size());
+            workerRepository.save(worker.get());
         } else if (dto.getType().equals(GradedType.PHARMACY)) {
             Optional<Pharmacy> pharmacy = pharmacyRepository.findById(dto.getGradedID());
             if (pharmacy.isEmpty()) return false;
             Rating existRating = ratingRepository.findIfRatingExistsPharmacy(dto.getGradedID(), dto.getPatientId());
             if (existRating == null) return false;
+            List<Rating> ratings = ratingRepository.findAllRatingsByPharmacyId(pharmacy.get().getId());
+
+            double sum = 0;
+            for (Rating r : ratings) {
+                if (r.getId().equals(rating.get().getId())) continue;
+                sum += r.getGrade();
+            }
+            sum += dto.getGrade();
+            pharmacy.get().setAvgGrade(sum / ratings.size());
+            pharmacyRepository.save(pharmacy.get());
         } else if (dto.getType().equals(GradedType.MEDICINE)) {
             Optional<Medicine> medicine = medicineRepository.findById(dto.getGradedID());
             if (medicine.isEmpty()) return false;
             Rating existRating = ratingRepository.findIfRatingExistsMedicine(dto.getGradedID(), dto.getPatientId());
             if (existRating == null) return false;
+            List<Rating> ratings = ratingRepository.findAllRatingsByMedicineId(medicine.get().getId());
+            double sum = 0;
+            for (Rating r : ratings) {
+                if (r.getId().equals(rating.get().getId())) continue;
+                sum += r.getGrade();
+            }
+            sum += dto.getGrade();
+            medicine.get().setAvgGrade(sum / ratings.size());
+            medicineRepository.save(medicine.get());
         } else {
             return  false;
         }
