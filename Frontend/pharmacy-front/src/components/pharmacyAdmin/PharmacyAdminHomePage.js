@@ -14,6 +14,7 @@ import AddAppointment from "./AddAppointment";
 import DisplayMedicine from "./DisplayMedicine";
 import DisplayHolidayRequests from "./DisplayHolidayRequests";
 import DisplayWorkers from "./DisplayWorkers";
+import DisplayInquiries from "./DisplayInquiries";
 
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
@@ -102,6 +103,7 @@ function PharmacyAdminHomePage() {
                 idOfPharmacy={pharmacyDetails?.id}
                 priceListId={pharmacyDetails?.priceListId}
               />
+              <DisplayInquiries idOfPharmacy={pharmacyDetails?.id} />
             </Tab.Content>
           </Col>
         </Row>
