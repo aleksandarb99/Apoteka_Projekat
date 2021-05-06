@@ -198,7 +198,9 @@ function Rating() {
         <Row
           style={{
             display:
-              dropdownLabel == "Dermatologist" || dropdownLabel == "Pharmacist"
+              (dropdownLabel == "Dermatologist" ||
+                dropdownLabel == "Pharmacist") &&
+              entities.length > 0
                 ? "flex"
                 : "none",
           }}
@@ -234,7 +236,14 @@ function Rating() {
             </tbody>
           </Table>
         </Row>
-        <Row style={{ display: dropdownLabel == "Medicine" ? "flex" : "none" }}>
+        <Row
+          style={{
+            display:
+              dropdownLabel == "Medicine" && entities.length > 0
+                ? "flex"
+                : "none",
+          }}
+        >
           <Table
             striped
             bordered
@@ -268,7 +277,14 @@ function Rating() {
             </tbody>
           </Table>
         </Row>
-        <Row style={{ display: dropdownLabel == "Pharmacy" ? "flex" : "none" }}>
+        <Row
+          style={{
+            display:
+              dropdownLabel == "Pharmacy" && entities.length > 0
+                ? "flex"
+                : "none",
+          }}
+        >
           <Table
             striped
             bordered
@@ -346,6 +362,17 @@ function Rating() {
               Successfully graded!
             </Alert>
           )}
+        </Row>
+
+        <Row
+          style={{
+            justifyContent: "center",
+            display: entities.length === 0 ? "flex" : "none",
+          }}
+        >
+          <Alert transition={true} variant="warning">
+            There's no {dropdownLabel.toLowerCase()} to grade!
+          </Alert>
         </Row>
       </div>
     </Container>
