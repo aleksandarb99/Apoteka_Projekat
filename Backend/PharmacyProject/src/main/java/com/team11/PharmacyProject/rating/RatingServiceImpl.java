@@ -102,4 +102,45 @@ public class RatingServiceImpl implements RatingService{
 
         return true;
     }
+
+    @Override
+    public boolean editRating(RatingCreateUpdateDTO dto) {
+
+        Optional<Rating> rating = ratingRepository.findById(dto.getId());
+        if(rating.isEmpty()) return false;
+
+        Optional<Patient> patient = patientRepository.findById(dto.getPatientId());
+        if (patient.isEmpty()) return false;
+
+        if (dto.getType().equals(GradedType.DERMATOLOGIST)) {
+            Optional<PharmacyWorker> worker = workerRepository.findById(dto.getGradedID());
+            if (worker.isEmpty()) return false;
+            Rating existRating = ratingRepository.findIfRatingExistsDermatologist(dto.getGradedID(), dto.getPatientId());
+            if (existRating == null) return false;
+        } else if (dto.getType().equals(GradedType.PHARMACIST)) {
+            Optional<PharmacyWorker> worker = workerRepository.findById(dto.getGradedID());
+            if (worker.isEmpty()) return false;
+            Rating existRating = ratingRepository.findIfRatingExistsPharmacist(dto.getGradedID(), dto.getPatientId());
+            if (existRating == null) return false;
+        } else if (dto.getType().equals(GradedType.PHARMACY)) {
+            Optional<Pharmacy> pharmacy = pharmacyRepository.findById(dto.getGradedID());
+            if (pharmacy.isEmpty()) return false;
+            Rating existRating = ratingRepository.findIfRatingExistsPharmacy(dto.getGradedID(), dto.getPatientId());
+            if (existRating == null) return false;
+        } else if (dto.getType().equals(GradedType.MEDICINE)) {
+            Optional<Medicine> medicine = medicineRepository.findById(dto.getGradedID());
+            if (medicine.isEmpty()) return false;
+            Rating existRating = ratingRepository.findIfRatingExistsMedicine(dto.getGradedID(), dto.getPatientId());
+            if (existRating == null) return false;
+        } else {
+            return  false;
+        }
+
+        rating.get().setDate(dto.getDate());
+        rating.get().setGrade(dto.getGrade());
+
+        ratingRepository.save(rating.get());
+
+        return true;
+    }
 }

@@ -43,8 +43,14 @@ function Rating() {
         url = "http://localhost:8080/api/pharmacy/all-pharmacies/patient/";
       }
 
-      const request = await axios.get(url + getIdFromToken());
-      setEntitites(request.data);
+      const request = await axios
+        .get(url + getIdFromToken())
+        .then((res) => {
+          setEntitites(res.data);
+        })
+        .catch(() => {
+          setEntitites([]);
+        });
 
       return request;
     }
@@ -89,6 +95,24 @@ function Rating() {
         .post("http://localhost:8080/api/rating/", forSend)
         .then((res) => {
           if (res.data === "added") {
+            setShowAlert(true);
+            setTimeout(function () {
+              setShowAlert(false);
+            }, 5000);
+            setEnabledRating(false);
+            updateSelectedEntity(selectedEntity);
+          }
+        })
+        .catch((err) => {
+          setShowAlert(false);
+          alert("failed!" + err.data);
+        });
+    } else {
+      forSend.id = rating.id;
+      axios
+        .put("http://localhost:8080/api/rating/", forSend)
+        .then((res) => {
+          if (res.data === "updated") {
             setShowAlert(true);
             setTimeout(function () {
               setShowAlert(false);
@@ -292,7 +316,11 @@ function Rating() {
               <StarFill style={{ width: "1.5rem" }} />
             ))}
           </p>
-          <Button variant="info" onClick={() => setEnabledRating(true)}>
+          <Button
+            disabled={enabledRating}
+            variant="info"
+            onClick={() => setEnabledRating(true)}
+          >
             Change grade
           </Button>
         </Row>

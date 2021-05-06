@@ -75,4 +75,18 @@ public class RatingController {
 
         return new ResponseEntity<>("added", HttpStatus.OK);
     }
+
+    @PutMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> editRating(@Valid @RequestBody RatingCreateUpdateDTO dto, BindingResult result){
+
+        if (result.hasErrors()) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+
+        if(!ratingService.editRating(dto)){
+            return new ResponseEntity<>("not updated", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("updated", HttpStatus.OK);
+    }
 }
