@@ -15,4 +15,10 @@ public interface MyOrderService {
     MyOrderDTO getOrder(long id);
 
     List<MyOrderDTO> getAvailableOrdersForSupplier(long supplierId);
+
+    Long getAdminIdOfOrderId(Long id);
+
+    boolean removeOrder(long orderId);
+
+    boolean editOrder(long orderId, long date);
 }

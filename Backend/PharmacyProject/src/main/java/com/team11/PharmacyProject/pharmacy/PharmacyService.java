@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.address.Address;
+import com.team11.PharmacyProject.myOrder.MyOrder;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -42,4 +43,6 @@ public interface PharmacyService {
     Pharmacy getPharmacyWithMedicineNoAllergies(Long pharmid, Long patientid);
 
     Pharmacy getPharmacyWithAlternativeForMedicineNoAllergies(Long pharmid, Long patientID, Long medicineID);
+
+    void addMedicineToStock(MyOrder order1);
 }

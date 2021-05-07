@@ -13,9 +13,19 @@ public class MyOrderDTO {
 
     private List<OrderItemDTO> orderItem;
 
+    private Long adminId;
+
     private OrderState orderState;
 
     public MyOrderDTO() {
+    }
+
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 
     public MyOrderDTO(Long id, Long deadline, List<OrderItemDTO> orderItem, OrderState orderState) {

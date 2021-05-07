@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import {
   Pagination,
@@ -8,6 +9,8 @@ import {
   Col,
   Card,
   Button,
+  Alert,
+  Spinner,
 } from "react-bootstrap";
 
 import Dropdown from "react-bootstrap/Dropdown";
@@ -17,6 +20,8 @@ import axios from "../../app/api";
 import moment from "moment";
 
 import AddPurchaseOrderModal from "./AddPurchaseOrderModal";
+import SelectOfferModal from "./SelectOfferModal";
+import EditOrderModal from "./EditOrderModal";
 
 function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
   const [orders, setOrders] = useState([]);
@@ -26,6 +31,11 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
   const [dropdownLabel, setDropdownLabel] = useState("All");
+
+  const [selectOfferModalShow, setSelectOfferModalShow] = useState(false);
+  const [showEditOrderModal, setShowEditOrderModal] = useState(false);
+
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const [addModalShow, setAddModalShow] = useState(false);
   const [medicineItems, setMedicineItems] = useState([]);
@@ -85,6 +95,7 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
       pharmacyId: idOfPharmacy,
       deadline: data.startDate.getTime(),
       items: [...data.orders],
+      adminId: getIdFromToken(),
     };
 
     const request = await axios
@@ -119,6 +130,74 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
     setAddModalShow(false);
   };
 
+  async function deletePOrder() {
+    const request = await axios
+      .delete(`http://localhost:8080/api/orders/${showedOrder.id}`)
+      .then(() => {
+        fetchOrders();
+      })
+      .catch(() => {
+        alert("Failed to delete order");
+      });
+    return request;
+  }
+
+  let deleteOrder = () => {
+    deletePOrder();
+  };
+
+  async function selectOrder(selectedOfferId) {
+    let dto = {
+      selectedOfferId,
+      orderId: showedOrder.id,
+    };
+    setShowSpinner(true);
+    const request = await axios
+      .post(`http://localhost:8080/api/suppliers/offers/accept/`, dto)
+      .then(() => {
+        setShowSpinner(false);
+        filterOrders("All");
+        setDropdownLabel("All");
+        alert("Successfully accepted offer!");
+      })
+      .catch(() => {
+        alert("Failed");
+      });
+    return request;
+  }
+
+  let handleSelectOfferModalSave = (selectedOfferId) => {
+    setSelectOfferModalShow(false);
+    selectOrder(selectedOfferId);
+  };
+
+  let handleSelectOfferModalClose = () => {
+    setSelectOfferModalShow(false);
+  };
+
+  async function editOrder(date) {
+    const request = await axios
+      .put(
+        `http://localhost:8080/api/orders/${showedOrder.id}/${date.getTime()}/`
+      )
+      .then(() => {
+        fetchOrders();
+      })
+      .catch(() => {
+        alert("Failed to edit deadline");
+      });
+    return request;
+  }
+
+  let handleEditModalSave = (date) => {
+    setShowEditOrderModal(false);
+    editOrder(date);
+  };
+
+  let handleEditModalClose = () => {
+    setShowEditOrderModal(false);
+  };
+
   return (
     <Tab.Pane eventKey="seventh">
       <h1 className="content-header">Purchase orders</h1>
@@ -149,11 +228,20 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
+                filterOrders("OnHold");
+                setDropdownLabel("OnHold");
+              }}
+            >
+              On hold
+            </Dropdown.Item>
+
+            <Dropdown.Item
+              onClick={() => {
                 filterOrders("Processed");
                 setDropdownLabel("Processed");
               }}
             >
-              Processed
+              Ended
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
@@ -210,6 +298,71 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
           </Pagination>
         </Col>
       </Row>
+      {showedOrder != null && (
+        <Row>
+          <Col>
+            <Alert variant="secondary">
+              <Alert.Heading>Order {showedOrder.id}</Alert.Heading>
+            </Alert>
+          </Col>
+          <Col className="center">
+            <Button
+              disabled={
+                showedOrder == null || showedOrder.adminId != getIdFromToken()
+              }
+              variant="info"
+              size="lg"
+              onClick={() => {
+                setShowEditOrderModal(true);
+              }}
+            >
+              Edit
+            </Button>
+            <EditOrderModal
+              order={showedOrder}
+              show={showEditOrderModal}
+              onHide={handleEditModalClose}
+              handleEdit={handleEditModalSave}
+            />
+            <Button
+              disabled={
+                showedOrder == null ||
+                dropdownLabel !== "OnHold" ||
+                showedOrder.adminId != getIdFromToken()
+              }
+              variant="primary"
+              size="lg"
+              onClick={() => {
+                setSelectOfferModalShow(true);
+              }}
+            >
+              Choose offer
+            </Button>
+            <Button
+              disabled={
+                showedOrder == null || showedOrder.adminId != getIdFromToken()
+              }
+              variant="danger"
+              size="lg"
+              onClick={() => {
+                deleteOrder();
+              }}
+            >
+              Delete
+            </Button>
+          </Col>
+        </Row>
+      )}
+      <Row>
+        <Col className="center">
+          {" "}
+          <Spinner
+            style={{ display: showSpinner ? "block" : "none" }}
+            animation="border"
+          />
+          <hr></hr>
+        </Col>
+      </Row>
       <Row>
         <Col>
           {showedOrder && (
@@ -223,6 +376,12 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
                 </tr>
               </thead>
               <tbody>
+                <SelectOfferModal
+                  orderId={showedOrder.id}
+                  show={selectOfferModalShow}
+                  onHide={handleSelectOfferModalClose}
+                  handleSelect={handleSelectOfferModalSave}
+                />
                 {showedOrder &&
                   showedOrder.orderItem.map((item, index) => (
                     <tr>

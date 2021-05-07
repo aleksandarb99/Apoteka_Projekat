@@ -4,6 +4,8 @@ import com.team11.PharmacyProject.enums.OrderState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.orderItem.OrderItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.user.MyUser;
 import org.hibernate.criterion.Order;
 
 import javax.persistence.*;
@@ -23,6 +25,9 @@ public class MyOrder {
     @JoinColumn(name = "pharmacy_id")
     private Pharmacy pharmacy;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private MyUser admin;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<OrderItem> orderItem;
 
@@ -33,11 +38,13 @@ public class MyOrder {
     public MyOrder() {
     }
 
-    public MyOrder(Long deadline, Pharmacy pharmacy, List<OrderItem> orderItem) {
+
+    public MyOrder(Long deadline, Pharmacy pharmacy, List<OrderItem> orderItem, MyUser admin) {
         this.deadline = deadline;
         this.pharmacy = pharmacy;
         this.orderItem = orderItem;
         this.orderState = OrderState.IN_PROGRESS;
+        this.admin = admin;
     }
 
     public MyOrder(Long id, Long deadline, Pharmacy pharmacy, List<OrderItem> orderItem) {
@@ -46,6 +53,14 @@ public class MyOrder {
         this.pharmacy = pharmacy;
         this.orderItem = orderItem;
         this.orderState = OrderState.IN_PROGRESS;
+    }
+
+    public MyUser getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(MyUser admin) {
+        this.admin = admin;
     }
 
     public OrderState getOrderState() {

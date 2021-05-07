@@ -15,5 +15,9 @@ public interface MyOrderRepository extends CrudRepository<MyOrder, Long> {
     Iterable<MyOrder> getOrdersByPharmacyId(Long id);
     List<MyOrder> getAllByDeadlineAfter(Long deadline);
 
+    @Query("SELECT u FROM MyOrder u LEFT JOIN FETCH u.pharmacy p LEFT JOIN FETCH p.priceList pl LEFT JOIN FETCH pl.medicineItems mi WHERE u.id = ?1")
     Optional<MyOrder> getMyOrderById(long id);
+
+    @Query("SELECT u FROM MyOrder u LEFT JOIN FETCH u.admin WHERE u.id = ?1")
+    MyOrder findOrderByIdWithAdmin(Long id);
 }

@@ -4,6 +4,8 @@ import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayDTO;
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayWithWorkerDetailsDTO;
+import com.team11.PharmacyProject.myOrder.MyOrder;
+import com.team11.PharmacyProject.orderItem.OrderItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
@@ -61,8 +63,6 @@ public class EmailService {
 
     @Async
     public void notifyWorkerAboutRequestForHoliday(String email, RequestForHolidayWithWorkerDetailsDTO dto, String reason) throws MailException {
-
-
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
         SimpleMailMessage mail = new SimpleMailMessage();
@@ -88,4 +88,41 @@ public class EmailService {
     }
 
 
+    public void notifySupplierThatHisOfferIsAccepted(String email, MyOrder myOrder, String name) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(email);
+        mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
+        mail.setSubject("Ponuda za porudzbinu");
+
+        StringBuilder text = new StringBuilder();
+        for (OrderItem item:
+                myOrder.getOrderItem()) {
+            text.append(item.getMedicine().getName()).append(", ");
+        }
+
+        String line = text.toString();
+
+        mail.setText("Pozdrav " + name+ ", \n Zelimo da Vas obavestimo da Vasa ponuda za porudzbinom koja potrazuje " + line + " je prihvacena. \nPozdrav");
+
+        javaMailSender.send(mail);
+    }
+
+    public void notifySupplierThatHisOfferIsRefused(String email, MyOrder myOrder, String name) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(email);
+        mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
+        mail.setSubject("Ponuda za porudzbinu");
+
+        StringBuilder text = new StringBuilder();
+        for (OrderItem item:
+                myOrder.getOrderItem()) {
+            text.append(item.getMedicine().getName()).append(", ");
+        }
+
+        String line = text.toString();
+
+        mail.setText("Pozdrav " + name+", \n Zelimo da Vas obavestimo da Vasa ponuda za porudzbinom koja potrazuje " + line + " je odbijena. \nPozdrav");
+
+        javaMailSender.send(mail);
+    }
 }

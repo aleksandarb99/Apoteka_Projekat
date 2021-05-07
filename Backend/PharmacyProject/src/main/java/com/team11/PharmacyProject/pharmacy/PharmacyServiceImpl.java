@@ -9,6 +9,8 @@ import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.myOrder.MyOrder;
+import com.team11.PharmacyProject.orderItem.OrderItem;
 import com.team11.PharmacyProject.users.pharmacist.PharmacistRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
@@ -33,6 +35,21 @@ public class PharmacyServiceImpl implements PharmacyService {
     @Autowired
     PharmacyWorkerRepository workerRepository;
 
+
+    @Override
+    public void addMedicineToStock(MyOrder order1) {
+        Pharmacy pharmacy = order1.getPharmacy();
+        for (OrderItem item:order1.getOrderItem()) {
+            for (MedicineItem mitem:pharmacy.getPriceList().getMedicineItems()) {
+                if(item.getMedicine().getId().equals(mitem.getMedicine().getId())) {
+                    mitem.setAmount(mitem.getAmount() + item.getAmount());
+                    break;
+                }
+            }
+        }
+
+        pharmacyRepository.save(pharmacy);
+    }
 
     @Override
     public void save(Pharmacy p) {

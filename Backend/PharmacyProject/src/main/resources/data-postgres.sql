@@ -88,7 +88,7 @@ insert into order_item (amount, medicine_id) values (130, 5);
 insert into order_item (amount, medicine_id) values (110, 1);
 insert into order_item (amount, medicine_id) values (130, 4);
 insert into order_item (amount, medicine_id) values (110, 1);
-insert into order_item (amount, medicine_id) values (130, 4);
+insert into order_item (amount, medicine_id) values (130, 5);
 
 /*WorkCalendars*/
 insert into work_calendar (id) values (1);
@@ -453,13 +453,13 @@ values ('VACATION', '', 1623754800000, 1624190195000, 'PENDING', 6);
 
 
 /*MyOrders*/
-insert into my_order (deadline, pharmacy_id, order_state) values (1620817200000, 1, 'IN_PROGRESS');
-insert into my_order (deadline, pharmacy_id, order_state) values (1620903600000, 2, 'IN_PROGRESS');
-insert into my_order (deadline, pharmacy_id, order_state) values (1620817200000, 1, 'IN_PROGRESS');
-insert into my_order (deadline, pharmacy_id, order_state) values (1620817200000, 1, 'IN_PROGRESS');
-insert into my_order (deadline, pharmacy_id, order_state) values (1620817200000, 1, 'IN_PROGRESS');
-insert into my_order (deadline, pharmacy_id, order_state) values (1620817200000, 1, 'IN_PROGRESS');
-insert into my_order (deadline, pharmacy_id, order_state) values (1613411940000, 1, 'ON_HOLD');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620903600000, 2, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1613411940000, 1, 'ON_HOLD');
 
 /*MyOrders - OrderItems*/
 insert into my_order_order_item (my_order_id, order_item_id) values (1, 1);
@@ -485,11 +485,17 @@ insert into offer (delivery_date, offer_state, price, order_id)
                     values (1620730800000, 'PENDING', 2100, 3);
 insert into offer (delivery_date, offer_state, price, order_id)
                     values (1620730800000, 'ACCEPTED', 3560, 2);
+insert into offer (delivery_date, offer_state, price, order_id)
+                    values (1612256008000, 'PENDING', 3560, 7);
+insert into offer (delivery_date, offer_state, price, order_id)
+                    values (1612256008000, 'PENDING', 2500, 7);
 
 /*Supplier - Offers*/
 insert into supplier_offers (supplier_id, offers_id) values (5, 1);
 insert into supplier_offers (supplier_id, offers_id) values (4, 2);
 insert into supplier_offers (supplier_id, offers_id) values (5, 3);
+insert into supplier_offers (supplier_id, offers_id) values (4, 4);
+insert into supplier_offers (supplier_id, offers_id) values (5, 5);
 
 /*Advertisements*/
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id)
