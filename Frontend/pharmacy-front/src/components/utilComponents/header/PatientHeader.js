@@ -48,6 +48,23 @@ const PatientHeader = () => {
           <Nav.Link as={Link} style={{ color: "white" }} to="/user/complaints">
             Complaints
           </Nav.Link>
+          <Nav.Link
+            as={Link}
+            style={{ color: "white" }}
+            to="/subscribed-pharmacies"
+          >
+            Subscribed pharmacies
+          </Nav.Link>
+          <Nav.Link
+            as={Link}
+            style={{ color: "white" }}
+            to="/reserved-medicines"
+          >
+            Reserved medicines
+          </Nav.Link>
+          <Nav.Link as={Link} style={{ color: "white" }} to="/rating">
+            Rating
+          </Nav.Link>
         </Nav>
         <Nav>
           <Nav.Link as={Link} style={{ color: "white" }} to="/profile">

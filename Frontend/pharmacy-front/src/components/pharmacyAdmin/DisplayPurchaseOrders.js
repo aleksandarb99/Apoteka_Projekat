@@ -23,7 +23,13 @@ import AddPurchaseOrderModal from "./AddPurchaseOrderModal";
 import SelectOfferModal from "./SelectOfferModal";
 import EditOrderModal from "./EditOrderModal";
 
-function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
+function DisplayPurchaseOrders({
+  idOfPharmacy,
+  priceListId,
+  refresh,
+  refreshInq,
+  setRefreshInq,
+}) {
   const [orders, setOrders] = useState([]);
   const [filterValue, setFilterValue] = useState("All");
   const [showedOrders, setShowedOrders] = useState([]);
@@ -159,6 +165,7 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId, refresh }) {
         filterOrders("All");
         setDropdownLabel("All");
         alert("Successfully accepted offer!");
+        setRefreshInq(!refreshInq);
       })
       .catch(() => {
         alert("Failed");

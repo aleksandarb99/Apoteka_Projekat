@@ -21,4 +21,6 @@ public interface MyOrderService {
     boolean removeOrder(long orderId);
 
     boolean editOrder(long orderId, long date);
+
+    void checkIfOrderIsOver();
 }

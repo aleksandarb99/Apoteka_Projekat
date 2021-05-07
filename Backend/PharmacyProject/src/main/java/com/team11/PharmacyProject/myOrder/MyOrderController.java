@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -83,6 +84,11 @@ public class MyOrderController {
         else
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
 
+    }
+
+    @Scheduled(cron = "${greeting.cron}")
+    public void checkIfOrderIsOver() {
+        orderService.checkIfOrderIsOver();
     }
 
 }

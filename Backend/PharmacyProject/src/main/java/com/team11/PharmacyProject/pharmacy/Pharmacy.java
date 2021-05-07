@@ -4,6 +4,7 @@ import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.priceList.PriceList;
 import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.user.MyUser;
 import com.team11.PharmacyProject.workplace.Workplace;
 
 import javax.persistence.*;
@@ -32,7 +33,7 @@ public class Pharmacy {
     @Column(name = "consultation_duration")
     private int consultationDuration;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Patient> subscribers;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -48,6 +49,9 @@ public class Pharmacy {
 
     @OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Workplace> workplaces;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<MyUser> admins;
 
     public Pharmacy() {
     }
@@ -66,6 +70,14 @@ public class Pharmacy {
         this.workplaces = workplaces;
         this.consultationPrice = consultationPrice;
         this.consultationDuration = consultationDuration;
+    }
+
+    public List<MyUser> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(List<MyUser> admins) {
+        this.admins = admins;
     }
 
     public Long getId() {
@@ -118,6 +130,10 @@ public class Pharmacy {
 
     public List<Appointment> getAppointments() {
         return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 
     public void setAppointments(ArrayList<Appointment> appointments) {

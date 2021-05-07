@@ -1,9 +1,11 @@
 package com.team11.PharmacyProject.workplace;
 
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyAllDTO;
 import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
 import com.team11.PharmacyProject.dto.workplace.WorkplaceDTO;
 import com.team11.PharmacyProject.dto.workplace.WorkplaceDTOWithWorkdays;
 import com.team11.PharmacyProject.dto.workplace.WorkplaceForWorkerProfileDTO;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import org.hibernate.jdbc.Work;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -89,6 +93,21 @@ public class WorkplaceController {
 
         List<WorkplaceDTO> workplaceDTOList = workplaceList.stream().map(m -> modelMapper.map(m, WorkplaceDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(workplaceDTOList, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/search/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<WorkplaceDTO>> searchWorkplaces(@PathVariable("id") Long pharmacyId, @Valid @RequestParam(value = "searchValue", required = false) String searchValue) throws Exception {
+        List<Workplace> workplaceList = workplaceServiseImpl.searchWorkplacesByNameOrSurnameOfWorker(searchValue, pharmacyId);
+
+        List<WorkplaceDTO> workplaceDTOList = workplaceList.stream().map(m -> modelMapper.map(m, WorkplaceDTO.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(workplaceDTOList, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/pharmacies/all/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<Long, List<String>>> getAllPharmacyNames() {
+        Map<Long, List<String>> pharmacies = workplaceServiseImpl.getAllPharmacyNames();
+
+        return new ResponseEntity<>(pharmacies, HttpStatus.OK);
     }
 
     @GetMapping(value = "/dermatologist/get_workplaces/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

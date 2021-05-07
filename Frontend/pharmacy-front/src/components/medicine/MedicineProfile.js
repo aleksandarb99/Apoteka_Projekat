@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Table, Button, Alert, Spinner } from "react-bootstrap";
+import { Table, Button, Alert } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 
 import {
@@ -20,7 +20,7 @@ function MedicineProfile() {
   const [pickupDate, setPickupDate] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [successAlert, setSuccessAlert] = useState(false);
-  const [spinner, setSpinner] = useState(false);
+  const [penaltiesAlert, setPenaltiesAlert] = useState(false);
   const [selectedPharmacy, setSelectedPharmacy] = useState({});
 
   let { id, pid } = useParams();
@@ -55,11 +55,10 @@ function MedicineProfile() {
 
   const createReservation = () => {
     setSuccessAlert(false);
+    setPenaltiesAlert(false);
+    setShowAlert(false);
     if (pickupDate) {
-      if (pickupDate > new Date()) {
-        setShowAlert(false);
-      } else {
-        setSuccessAlert(false);
+      if (pickupDate < new Date()) {
         setShowAlert(true);
         return;
       }
@@ -72,18 +71,16 @@ function MedicineProfile() {
       userId: getIdFromToken(),
     };
 
-    setSpinner(true);
-
     axios2
       .post("http://localhost:8080/api/medicine-reservation/", forSend)
       .then(() => {
-        setSpinner(false);
         setSuccessAlert(true);
         setShowAlert(false);
+        setPenaltiesAlert(false);
       })
       .catch(() => {
         setSuccessAlert(false);
-        setShowAlert(true);
+        setPenaltiesAlert(true);
       });
 
     setSelectedPharmacy({});
@@ -208,21 +205,16 @@ function MedicineProfile() {
           >
             Successfully reserved the medicine!
           </Alert>
-          <div
-            className="my__spinner__email"
+          <Alert
             style={{
-              display: spinner ? "flex" : "none",
+              display: penaltiesAlert ? "block" : "none",
+              width: "80%",
+              margin: "35px auto",
             }}
+            variant="danger"
           >
-            <p>Email is sending...</p>
-            <Spinner
-              animation="border"
-              variant="success"
-              style={{
-                display: "inline-block",
-              }}
-            />
-          </div>
+            You have reached 3/3 penalties! Can not reserve the medicine!
+          </Alert>
           <Button
             variant="info"
             onClick={createReservation}

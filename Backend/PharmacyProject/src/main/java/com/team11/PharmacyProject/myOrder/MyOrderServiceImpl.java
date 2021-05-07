@@ -111,6 +111,17 @@ public class MyOrderServiceImpl implements MyOrderService {
         return true;
     }
 
+    @Override
+    public void checkIfOrderIsOver() {
+        Iterable<MyOrder> all = myOrderRepository.findAll();
+        for (MyOrder order:all) {
+            if(System.currentTimeMillis() > order.getDeadline() && order.getOrderState().equals(OrderState.IN_PROGRESS)) {
+                order.setOrderState(OrderState.ON_HOLD);
+                myOrderRepository.save(order);
+            }
+        }
+    }
+
     public boolean addOrder(MyOrderAddingDTO dto) {
         Pharmacy pharmacy = pharmacyService.getPharmacyById(dto.getPharmacyId());
         if(pharmacy==null){

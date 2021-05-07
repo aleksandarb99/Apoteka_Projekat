@@ -13,6 +13,7 @@ import moment from "moment";
 function AppointmentReport() {
     const [selectedMedicine, setSelectedMedicine] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [showClicked, setShowClicked] = useState(false);
     const [currAppt, setCurrAppt] = useState(null);
 
     const location = useLocation();
@@ -92,11 +93,11 @@ function AppointmentReport() {
             <Col md={8}>
                 <Row className="justify-content-center align-items-center">
                     Therapy medicine
-                    <Button size="sm" onClick={(event) => setShowModal(true)}>Add new</Button>
+                    <Button size="sm" onClick={(event) => { setShowModal(true); setShowClicked(!showClicked); }}>Add new</Button>
                 </Row>
                 {(selectedMedicine ? selectedMedicine : []).map((value, index) => {
                     return (
-                        <Row className="justify-content-center align-items-center mt-3 ml=5">
+                        <Row className="justify-content-center align-items-center mt-3 ml=5" key={value.code}>
                             <div>Medicine: {value.code} - {value.name}. Duration of therapy(in days): {value.duration}</div>
                             <Button onClick={() => { 
                                 let newArray = [];
@@ -114,7 +115,7 @@ function AppointmentReport() {
         <Row className="justify-content-center m-5 align-items-center">
             <Button onClick={addTherapy}> End appointment </Button>
         </Row>
-        <TherapyMedicineModal show={showModal} appt={currAppt} onHideModal={hideModal} onAddMedicine={onAdd}></TherapyMedicineModal>
+        <TherapyMedicineModal show={showModal} appt={currAppt} onHideModal={hideModal} onAddMedicine={onAdd} clickedShow={showClicked}></TherapyMedicineModal>
     </div>
     );
 }

@@ -2,20 +2,17 @@ package com.team11.PharmacyProject.users.patient;
 
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.enums.AppointmentState;
+import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
+import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservationRepository;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
-import com.team11.PharmacyProject.users.user.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +25,9 @@ public class PatientService {
 
     @Autowired
     MedicineRepository medicineRepository;
+
+    @Autowired
+    MedicineReservationRepository reservationRepository;
 
     public List<Patient> searchPatientsByFirstAndLastName(String firstname, String lastname){
         return patientRepository.searchPatientsByFirstAndLastName(firstname, lastname);
@@ -144,5 +144,27 @@ public class PatientService {
         // Spoji ove dve liste
         pharmaciesWithAppointments.addAll(pharmaciesWithReservations);
         return pharmaciesWithAppointments.stream().distinct().collect(Collectors.toList());
+    }
+
+    public void givePenaltyForNotPickedUpOrCanceledReservation() {
+        List<Patient> patients = patientRepository.findAllFetchReservations(System.currentTimeMillis());
+
+        for(Patient p : patients) {
+            for(MedicineReservation mr : p.getMedicineReservation()) {
+                p.setPenalties(p.getPenalties() + 1);
+                mr.setState(ReservationState.NOT_RECEIVED);
+                reservationRepository.save(mr);     // Promenimo u NOT_RECEIVED da i sutradan ne bi gledao ovaj reservation i dao mu opet penal
+            }
+            patientRepository.save(p);
+        }
+    }
+
+    public void resetPenalties() {
+        List<Patient> patients = patientRepository.findAll();
+
+        for(Patient p : patients) {
+            p.setPenalties(0);
+            patientRepository.save(p);
+        }
     }
 }

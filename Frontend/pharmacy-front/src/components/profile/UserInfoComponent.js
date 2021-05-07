@@ -5,10 +5,10 @@ import { Button, Form, Alert, Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 import PatientBenefits from "./PatientBenefits";
+import PatientPenalties from "./PatientPenalties";
 import BasicProfileInfo from "./BasicProfileInfo";
 
 function UserInfo(props) {
-
   return (
     <Container>
       <BasicProfileInfo title={props.title}></BasicProfileInfo>
@@ -18,6 +18,8 @@ function UserInfo(props) {
       </Row>
       <hr />
       <PatientBenefits />
+      <hr />
+      <PatientPenalties />
     </Container>
   );
 }

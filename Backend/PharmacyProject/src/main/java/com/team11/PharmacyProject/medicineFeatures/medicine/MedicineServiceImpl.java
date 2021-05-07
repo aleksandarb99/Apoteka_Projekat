@@ -2,16 +2,20 @@ package com.team11.PharmacyProject.medicineFeatures.medicine;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
 import com.team11.PharmacyProject.priceList.PriceListService;
+import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.patient.PatientRepository;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.lang.annotation.Documented;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +28,9 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Autowired
     private PharmacyService pharmacyService;
+
+    @Autowired
+    private PatientRepository patientRepository;
 
     @Autowired
     private PriceListService priceListService;
@@ -162,6 +169,37 @@ public class MedicineServiceImpl implements MedicineService {
         }
 
         return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    @Override
+    public List<Medicine> getReceivedMedicinesByPatientId(Long id) {
+        Patient patient = patientRepository.findByIdFetchReceivedMedicines(id);
+        if (patient == null) return null;
+
+        List<Medicine> chosenMedicines = new ArrayList<>();
+
+        for (MedicineReservation m : patient.getMedicineReservation()) {
+            addMedicine(chosenMedicines, m.getMedicineItem().getMedicine());
+        }
+        return chosenMedicines;
+    }
+
+    private List<Medicine> addMedicine(List<Medicine> medicines, Medicine m) {
+
+        if (medicines.size() == 0) {
+            medicines.add(m);
+            return medicines;
+        }
+
+        for (Medicine m1 : medicines) {
+            if (m1.getId().equals(m.getId())) {
+                return medicines;
+            }
+        }
+
+        medicines.add(m);
+        return medicines;
+
     }
 
     private Paragraph generateParagraph(String title, String text) {
