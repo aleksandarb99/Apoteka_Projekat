@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.workplace;
 
+import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.appointment.AppointmentService;
 import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
@@ -16,9 +17,8 @@ import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkplaceServiseImpl implements WorkplaceService {
@@ -111,10 +111,74 @@ public class WorkplaceServiseImpl implements WorkplaceService {
         return true;
     }
 
+    @Override
+    public List<Workplace> searchWorkplacesByNameOrSurnameOfWorker(String searchValue, Long pharmacyId) {
+        List<Workplace> workplaces = new ArrayList<>();
+        List<Workplace> workplacesWhichAreWorkers;
+        if(pharmacyId == -1)
+            workplacesWhichAreWorkers = (List<Workplace>) workplaceRepository.searchWorkplacesByNameOrSurnameOfWorker(searchValue);
+        else
+            workplacesWhichAreWorkers = (List<Workplace>) workplaceRepository.searchWorkplacesInPharmacyByNameOrSurnameOfWorker(searchValue, pharmacyId);
+        for (Workplace w: workplacesWhichAreWorkers) {
+            boolean isIn = false;
+            for (Workplace w2: workplaces) {
+                if (w.getWorker().getId().equals(w2.getWorker().getId())) {
+                    isIn = true;
+                    break;
+                }
+            }
+            if(!isIn)
+                workplaces.add(w);
+        }
+
+        return workplaces;
+    }
+
+    //    Ako je pharmacyId -1, to znaci da zeli da se vracaju radnici svih apoteka
     public List<Workplace> getWorkplacesByPharmacyId(Long pharmacyId) {
         List<Workplace> workplaces = new ArrayList<>();
-        workplaceRepository.getWorkplacesByPharmacyId(pharmacyId).forEach(workplaces::add);
+
+        if (pharmacyId == -1) {
+            List<Workplace> workplacesWhichAreWorkers = (List<Workplace>) workplaceRepository.getWorkplacesWhichAreWorkers();
+            for (Workplace w: workplacesWhichAreWorkers) {
+                boolean isIn = false;
+                for (Workplace w2: workplaces) {
+                    if (w.getWorker().getId().equals(w2.getWorker().getId())) {
+                        isIn = true;
+                        break;
+                    }
+                }
+                if(!isIn)
+                    workplaces.add(w);
+            }
+        }
+        else
+            workplaceRepository.getWorkplacesByPharmacyId(pharmacyId).forEach(workplaces::add);
+
         return workplaces;
+    }
+
+    @Override
+    public Map<Long, List<String>> getAllPharmacyNames() {
+        Map<Long, List<String>> map = new HashMap<>();
+        List<PharmacyWorker> workers = pharmacyWorkerService.findAll();
+        for (PharmacyWorker w: workers) {
+            List<String> names = getPharmacyNamesByWorkerId(w.getId());
+            map.put(w.getId(), names);
+        }
+        return map;
+    }
+
+    @Override
+    public List<String> getPharmacyNamesByWorkerId(Long id) {
+        List<String> pharmacies = new ArrayList<>();
+        List<Workplace> workplaceList = workplaceRepository.getWorkplacesOfWorker(id);
+
+        for (Workplace w:
+             workplaceList) {
+            pharmacies.add(w.getPharmacy().getName());
+        }
+        return pharmacies;
     }
 
     public List<Workplace> getDermatologistWorkplacesByPharmacyId(Long pharmacyId) {

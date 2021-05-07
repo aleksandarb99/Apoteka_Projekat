@@ -539,3 +539,13 @@ insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id)
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (5, 1);
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (5, 2);
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (5, 3);
+
+/*Pharmacy - PharmacyAdmin*/
+insert into pharmacy_admins (pharmacy_id, admins_id) values (1, 9);
+
+/*Inquiries*/
+insert into inquiry (pharmacy_id, worker_id, medicine_items_id, is_active, date) values (1, 6, 7, true, 1619974515000);
+insert into inquiry (pharmacy_id, worker_id, medicine_items_id, is_active, date) values (1, 6, 1, false , 1617382515000);
+insert into inquiry (pharmacy_id, worker_id, medicine_items_id, is_active, date) values (1, 7, 2, false, 1617382515000);
+insert into inquiry (pharmacy_id, worker_id, medicine_items_id, is_active, date) values (1, 7, 1, false, 1617382515000);
+insert into inquiry (pharmacy_id, worker_id, medicine_items_id, is_active, date) values (1, 6, 2, false, 1617382515000);

@@ -49,6 +49,11 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
     }
 
     @Override
+    public List<PharmacyWorker> findAll() {
+        return pharmacyWorkerRepository.findAll();
+    }
+
+    @Override
     public List<PharmacyWorker> getNotWorkingWorkersByPharmacyId(Long pharmacyId, RequestForWorkerDTO dto) {
         List<PharmacyWorker> workers = new ArrayList<>();
         List<PharmacyWorker> allWorkers = pharmacyWorkerRepository.findAllAndFetchAWorkplaces();

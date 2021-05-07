@@ -15,8 +15,11 @@ public interface PharmacyWorkerService {
     PharmacyWorker getOne(Long id);
 
     void save(PharmacyWorker worker);
-
+    
     List<PharmacyWorker> getDermatologistsByPatientId(Long id);
 
     List<PharmacyWorker> getPharmacistsByPatientId(Long id);
+
+    List<PharmacyWorker> findAll();
+
 }
