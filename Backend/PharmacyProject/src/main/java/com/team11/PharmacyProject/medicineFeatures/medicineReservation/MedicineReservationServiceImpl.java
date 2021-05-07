@@ -50,6 +50,11 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
     @Override
     public MedicineReservationNotifyPatientDTO insertMedicineReservation(MedicineReservationInsertDTO dto) {
 
+        Optional<Patient> p = patientRepository.findById(dto.getUserId());
+        if(p.isPresent()) {
+            if(p.get().getPenalties() == 3) return null;
+        }
+
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByPharmacyAndMedicineId(dto.getPharmacyId(), dto.getMedicineId());
         if (pharmacy == null) return null;
 
