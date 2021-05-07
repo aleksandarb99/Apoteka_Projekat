@@ -72,11 +72,6 @@ public class Pharmacy {
         this.consultationDuration = consultationDuration;
     }
 
-
-    public void setAppointments(List<Appointment> appointments) {
-        this.appointments = appointments;
-    }
-
     public List<MyUser> getAdmins() {
         return admins;
     }
@@ -135,6 +130,10 @@ public class Pharmacy {
 
     public List<Appointment> getAppointments() {
         return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 
     public void setAppointments(ArrayList<Appointment> appointments) {

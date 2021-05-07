@@ -16,13 +16,28 @@ import DisplayHolidayRequests from "./DisplayHolidayRequests";
 import DisplayWorkers from "./DisplayWorkers";
 import DisplayInquiries from "./DisplayInquiries";
 
+import { getIdFromToken } from "../../app/jwtTokenUtils";
+
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
   const [refreshPriceList, setRefreshPriceList] = useState(false);
 
+  const [pharmacyId, setPharmacyId] = useState(null);
+
+  const [refreshInq, setRefreshInq] = useState(false);
+
+  async function fetchPharmacyid() {
+    const request = await axios.get(
+      `http://localhost:8080/api/pharmacy/getpharmacyidbyadmin/${getIdFromToken()}`
+    );
+    setPharmacyId(request.data);
+    return request;
+  }
+
   async function fetchPharmacy() {
-    // TODO vidi koji je user pa uzmi apoteku koja ti treba
-    const request = await axios.get("http://localhost:8080/api/pharmacy/1");
+    const request = await axios.get(
+      `http://localhost:8080/api/pharmacy/${pharmacyId}`
+    );
     setPharmacyDetails(request.data);
     return request;
   }
@@ -32,7 +47,11 @@ function PharmacyAdminHomePage() {
   };
 
   useEffect(() => {
-    fetchPharmacy();
+    if (pharmacyId != null) fetchPharmacy();
+  }, [pharmacyId]);
+
+  useEffect(() => {
+    fetchPharmacyid();
   }, []);
 
   return (
@@ -99,11 +118,16 @@ function PharmacyAdminHomePage() {
                 priceListId={pharmacyDetails?.priceListId}
               />
               <DisplayPurchaseOrders
+                refreshInq={refreshInq}
+                setRefreshInq={setRefreshInq}
                 refresh={refreshPriceList}
                 idOfPharmacy={pharmacyDetails?.id}
                 priceListId={pharmacyDetails?.priceListId}
               />
-              <DisplayInquiries idOfPharmacy={pharmacyDetails?.id} />
+              <DisplayInquiries
+                refreshInq={refreshInq}
+                idOfPharmacy={pharmacyDetails?.id}
+              />
             </Tab.Content>
           </Col>
         </Row>

@@ -1,16 +1,12 @@
 package com.team11.PharmacyProject.pharmacy;
 
-import com.team11.PharmacyProject.dto.medicine.MedicineInfoDTO;
-import com.team11.PharmacyProject.dto.medicine.MedicineItemDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineTherapyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.*;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
-import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +41,17 @@ public class PharmacyController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/getpharmacyidbyadmin/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Long> getPharmacyIdByAdminId(@PathVariable("id") Long id) {
+        Pharmacy pharmacy = pharmacyService.getPharmacyIdByAdminId(id);
+
+        if (pharmacy == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(pharmacy.getId(), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/subscribed/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacySubscribedDTO>> getSubscribedPharmaciesByPatientId(@PathVariable("id") Long id) {
         List<PharmacySubscribedDTO> pharmacyCrudDTOs = pharmacyService.getSubscribedPharmaciesByPatientId(id).stream().map(p -> modelMapper.map(p, PharmacySubscribedDTO.class)).collect(Collectors.toList());
@@ -54,14 +61,14 @@ public class PharmacyController {
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyConsultationDTO>> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date) {
 
-        List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByFreePharmacists(date,  pageable.getSort());
+        List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByFreePharmacists(date, pageable.getSort());
 
-        if(pharmacies == null) {
+        if (pharmacies == null) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
 
         List<PharmacyConsultationDTO> retVal = new ArrayList<>();
-        for(Pharmacy p : pharmacies) {
+        for (Pharmacy p : pharmacies) {
             retVal.add(new PharmacyConsultationDTO(p));
         }
 
@@ -77,7 +84,7 @@ public class PharmacyController {
         }
 
         List<PharmacyCertainMedicineDTO> dtos = new ArrayList<>();
-        for(Pharmacy p : pharmacies) {
+        for (Pharmacy p : pharmacies) {
             dtos.add(new PharmacyCertainMedicineDTO(p));
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
@@ -162,8 +169,7 @@ public class PharmacyController {
     @GetMapping(value = "/getMedicineFromPharmWithoutAllergies", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MedicineTherapyDTO>> getPharmacyMedicine
             (@RequestParam(value = "pharm_id", required = true) Long pharmID,
-             @RequestParam(value = "patient_id", required = true) Long patientID)
-    {
+             @RequestParam(value = "patient_id", required = true) Long patientID) {
         Pharmacy pharm = pharmacyService.getPharmacyWithMedicineNoAllergies(pharmID, patientID);
         List<MedicineTherapyDTO> medDto = new ArrayList<>();
         try {
@@ -171,7 +177,7 @@ public class PharmacyController {
                 medDto.add(new MedicineTherapyDTO(m));
             }
             return new ResponseEntity<>(medDto, HttpStatus.OK);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -180,8 +186,7 @@ public class PharmacyController {
     public ResponseEntity<List<MedicineTherapyDTO>> getPharmacyAlternativeMedicine
             (@RequestParam(value = "pharm_id", required = true) Long pharmID,
              @RequestParam(value = "patient_id", required = true) Long patientID,
-             @RequestParam(value = "medicine_id", required = true) Long medicineID)
-    {
+             @RequestParam(value = "medicine_id", required = true) Long medicineID) {
         Pharmacy pharm = pharmacyService.getPharmacyWithAlternativeForMedicineNoAllergies(pharmID, patientID, medicineID);
         List<MedicineTherapyDTO> medDto = new ArrayList<>();
         try {
@@ -189,7 +194,7 @@ public class PharmacyController {
                 medDto.add(new MedicineTherapyDTO(m));
             }
             return new ResponseEntity<>(medDto, HttpStatus.OK);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

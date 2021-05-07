@@ -249,4 +249,5 @@ public class PatientController {
     public void resetPenalties() {
         patientService.resetPenalties();
     }
+
 }

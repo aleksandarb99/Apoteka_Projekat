@@ -5,4 +5,6 @@ import java.util.List;
 public interface InquiryService {
 
     List<Inquiry> getInquiriesByPharmacyId(Long id);
+
+    void save(Inquiry i);
 }

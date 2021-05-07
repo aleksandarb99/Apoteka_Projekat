@@ -16,4 +16,8 @@ public class InquiryServiceImpl implements InquiryService {
         return inquiryRepository.findAllByPharmacyId(id);
     }
 
+    @Override
+    public void save(Inquiry i) {
+        inquiryRepository.save(i);
+    }
 }

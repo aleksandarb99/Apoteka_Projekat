@@ -8,7 +8,7 @@ import axios from "../../app/api";
 
 import moment from "moment";
 
-function DisplayInquiries({ idOfPharmacy }) {
+function DisplayInquiries({ idOfPharmacy, refreshInq }) {
   const [inquiries, setInquiries] = useState([]);
   const [showedInquiries, setShowedInquiries] = useState([]);
   const [dropdownLabel, setDropdownLabel] = useState("Active");
@@ -31,7 +31,7 @@ function DisplayInquiries({ idOfPharmacy }) {
     if (idOfPharmacy != undefined) {
       fetchInquiries();
     }
-  }, [idOfPharmacy]);
+  }, [idOfPharmacy, refreshInq]);
 
   let filterInquiries = (filter) => {
     let result = inquiries.filter((item) => {

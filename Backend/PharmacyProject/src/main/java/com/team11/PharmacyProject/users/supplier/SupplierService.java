@@ -7,6 +7,7 @@ import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SupplierService {
     List<SupplierItem> getStockForId(long id);
@@ -20,4 +21,8 @@ public interface SupplierService {
     boolean insertOffer(long id, OfferListDTO offerDTO);
 
     boolean updateOffer(long id, OfferListDTO offerDTO);
+
+    Map<String, List<Offer>> getOffersByOrderId(long orderId);
+
+    boolean acceptOffer(Long selectedOfferId, Long orderId);
 }

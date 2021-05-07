@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,10 @@ public class MyOrderController {
     @GetMapping(value = "/bypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MyOrderDTO>> getOrdersByPharmacyId(@PathVariable("id") Long id, @RequestParam(value = "filter", required = false) String filterValue) {
         List<MyOrderDTO> myOrderDTOS = orderService.getOrdersByPharmacyId(id, filterValue).stream().map(m -> modelMapper.map(m, MyOrderDTO.class)).collect(Collectors.toList());
+        for (MyOrderDTO dto:
+                myOrderDTOS) {
+            dto.setAdminId(orderService.getAdminIdOfOrderId(dto.getId()));
+        }
         return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
     }
 
@@ -59,6 +64,31 @@ public class MyOrderController {
         else
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
 
+    }
+
+    @DeleteMapping(value = "/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> removeOrder(@PathVariable("orderId") long orderId) {
+        boolean flag = orderService.removeOrder(orderId);
+        if(flag)
+            return new ResponseEntity<>("Succesfully removed", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+
+    }
+
+    @PutMapping(value = "/{orderId}/{date}/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editOrder(@PathVariable("orderId") long orderId, @PathVariable("date") Long date) {
+        boolean flag = orderService.editOrder(orderId, date);
+        if(flag)
+            return new ResponseEntity<>("Succesfully edited", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Scheduled(cron = "${greeting.cron}")
+    public void checkIfOrderIsOver() {
+        orderService.checkIfOrderIsOver();
     }
 
 }
