@@ -19,4 +19,6 @@ public interface MedicineService {
     Medicine getMedicineById(Long id);
 
     ByteArrayInputStream getMedicinePdf(long medicineId);
+
+    List<Medicine> getReceivedMedicinesByPatientId(Long id);
 }

@@ -4,6 +4,7 @@ import com.team11.PharmacyProject.dto.medicine.MedicineInfoDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineItemDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineTherapyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.*;
+import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import org.modelmapper.ModelMapper;
@@ -191,6 +192,19 @@ public class PharmacyController {
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "/all-pharmacies/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getPharmaciesByPatientId(@PathVariable("id") Long id) {
+
+        List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByPatientId(id);
+
+        if (pharmacies == null) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+
+        List<RatingGetEntitiesDTO> retVal = pharmacies.stream().map(RatingGetEntitiesDTO::new).collect(Collectors.toList());
+        return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 
     private PharmacyDTO convertToDto(Pharmacy pharmacy) {

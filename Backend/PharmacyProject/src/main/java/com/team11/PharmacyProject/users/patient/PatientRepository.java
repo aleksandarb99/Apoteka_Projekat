@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long> {
@@ -64,4 +65,10 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     @Query("SELECT DISTINCT p FROM Patient p LEFT JOIN FETCH p.medicineReservation mr WHERE p.penalties < 3 AND mr.state = 'RESERVED' AND mr.pickupDate < ?1")
     List<Patient> findAllFetchReservations(Long currentTime);
+
+    @Query("SELECT p FROM Patient p LEFT JOIN FETCH p.medicineReservation mr LEFT JOIN FETCH mr.medicineItem mi LEFT JOIN FETCH mi.medicine WHERE p.id = ?1 AND mr.state = 'RECEIVED'")
+    Patient findByIdFetchReceivedMedicines(Long id);
+
+    @Query("SELECT p FROM Patient p LEFT JOIN FETCH p.medicineReservation mr LEFT JOIN FETCH mr.pharmacy LEFT JOIN FETCH mr.medicineItem mi LEFT JOIN FETCH mi.medicine WHERE p.id = ?1")
+    Patient findByIdFetchReceivedMedicinesAndPharmacy(Long id);
 }

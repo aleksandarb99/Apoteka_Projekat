@@ -6,6 +6,8 @@ import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceService;
@@ -21,6 +23,9 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
 
     @Autowired
     PharmacyWorkerRepository pharmacyWorkerRepository;
+
+    @Autowired
+    PatientRepository patientRepository;
 
     @Autowired
     PharmacyRepository pharmacyRepository;
@@ -190,6 +195,41 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
                     .sorted(Comparator.comparingDouble(PharmacyWorker::getAvgGrade))
                     .collect(Collectors.toList());
 
+        return chosenWorkers;
+    }
+
+    @Override
+    public List<PharmacyWorker> getDermatologistsByPatientId(Long id) {
+
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isEmpty()) return null;
+
+        List<PharmacyWorker> dermatologists = pharmacyWorkerRepository.getDermatologistsFetchFinishedCheckups();
+        return getChosenWorkers(dermatologists, id);
+    }
+
+    @Override
+    public List<PharmacyWorker> getPharmacistsByPatientId(Long id) {
+
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isEmpty()) return null;
+
+        List<PharmacyWorker> pharmacists = pharmacyWorkerRepository.getPharmacistsFetchFinishedConsultations();
+        return getChosenWorkers(pharmacists, id);
+    }
+
+    private List<PharmacyWorker> getChosenWorkers(List<PharmacyWorker> workers, long id) {
+
+        List<PharmacyWorker> chosenWorkers = new ArrayList<>();
+
+        for (PharmacyWorker pw : workers) {
+            for (Appointment a : pw.getAppointmentList()) {
+                if (a.getPatient().getId().equals(id)) {
+                    chosenWorkers.add(pw);
+                    break;
+                }
+            }
+        }
         return chosenWorkers;
     }
 }
