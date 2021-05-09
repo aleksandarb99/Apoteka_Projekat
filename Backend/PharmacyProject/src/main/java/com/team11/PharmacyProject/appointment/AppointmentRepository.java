@@ -40,4 +40,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT a FROM Appointment  a where a.worker.id=?1 and a.appointmentState='RESERVED' and a.startTime > ?2 and a.pharmacy.id = ?3")
     List<Appointment> getUpcomingAppointmentsForWorkerByWorkerIdAndPharmacyId(Long id, Long startTime, Long pharmacyId);
+
+    @Query("SELECT a FROM Appointment  a where (a.worker.id=?1 or a.patient.id=?2) and a.startTime > ?3 and a.endTime < ?4 " +
+            "order by a.startTime asc")
+    List<Appointment> getAppointmentsOfPatientWorkerOnDate(Long workerID, Long patID, Long start, Long end);
+
+    @Query("select case when count(a) > 0 then true else false end from Appointment a where " +
+            "(a.worker.id = ?1 or a.patient.id = ?2) and " +
+            "((a.startTime >= ?3 and a.startTime <= ?4) or (a.endTime >= ?3 and a.endTime <= ?4) or " +
+            "(a.startTime >= ?3 and a.endTime <= ?4) or (a.startTime <= ?3 and a.endTime >= ?4))")
+    boolean hasAppointmentsInRange(Long workerID, Long patientID, Long apptStart, Long apptEnd);
 }

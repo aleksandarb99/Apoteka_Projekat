@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RestController
@@ -230,12 +232,13 @@ public class AppointmentController {
         }
     }
 
-    @PostMapping(value="/addTherapy", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> addTherapyToAppointment (@RequestBody TherapyDTO therapyDTO)
+    @PostMapping(value="/finalizeAppointment", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> finalizeAppointment (@RequestBody TherapyDTO therapyDTO)
     {
-        boolean result = appointmentServiceImpl.addTherapyToAppointment(therapyDTO.getApptId(), therapyDTO.getMedicineList());
+        //TODO trebace kasnije - ako je neko u medjuvremenu uzeo te lekove, javi frontu! i resetuj terapiju
+        boolean result = appointmentServiceImpl.finalizeAppointment(therapyDTO.getApptId(), therapyDTO.getMedicineList(), therapyDTO.getInfo());
         if (result)
-            return new ResponseEntity<>("Therapy added!", HttpStatus.OK);
+            return new ResponseEntity<>("Finalized appointment!", HttpStatus.OK);
         return new ResponseEntity<>("Failed to add therapy!", HttpStatus.BAD_REQUEST);
     }
 
@@ -249,5 +252,53 @@ public class AppointmentController {
         }else{
             return new ResponseEntity<AppointmentReportDTO>(new AppointmentReportDTO(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping(value = "/appointmentsOnThatDate", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AppointmentTimeRangeDTO>> getAppointmentsOnDate(@RequestParam("workerID") Long workerID,
+                                                                      @RequestParam("patientID") Long patientID,
+                                                                      @RequestParam("date") Long date)
+    {
+        List<AppointmentTimeRangeDTO> appointmentsDTO = null;
+        try {
+            appointmentsDTO = appointmentServiceImpl.getAppointmentsOfPatientWorkerOnDate(workerID, patientID, date)
+                    .stream().map(m -> modelMapper.map(m, AppointmentTimeRangeDTO.class)).collect(Collectors.toList());
+            return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(appointmentsDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/scheduleConsultationPharmacist", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> scheduleConsultationPharmacist(@RequestParam("patientID") Long patientId,
+                                                                 @RequestParam("workerID") Long workerId,
+                                                                 @RequestParam("pharmacyID") Long pharmacyId,
+                                                                 @RequestParam("price") double price,
+                                                                 @RequestParam("date") Long date,
+                                                                 @RequestParam("duration") int duration)
+    {
+        if (duration < 0){
+            return new ResponseEntity<>("Duration less than 0!", HttpStatus.BAD_REQUEST);
+        }
+        long endTime = date + TimeUnit.MINUTES.toMillis(duration); // appt end time
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        c1.setTimeInMillis(date);
+        c2.setTimeInMillis(endTime);
+        if (!(c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR) &&
+                c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR))){
+            return new ResponseEntity<>("Appointment has to start and end on the same date!", HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            Appointment appt = appointmentServiceImpl.scheduleAppointmentInRange(workerId, patientId, pharmacyId, date, endTime, price, duration);
+            if (appt != null){
+                return new ResponseEntity<>("All good", HttpStatus.OK);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Invalid appt date!", HttpStatus.BAD_REQUEST);
     }
 }

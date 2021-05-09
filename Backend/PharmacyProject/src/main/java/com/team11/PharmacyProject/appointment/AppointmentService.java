@@ -45,7 +45,11 @@ public interface AppointmentService {
 
     List<AppointmentPatientInsightDTO> getUpcomingCheckupsByPatientId(Long id, Sort sort);
 
-    boolean addTherapyToAppointment(Long appt_id, List<TherapyPresriptionDTO> tpDTO);
+    boolean finalizeAppointment(Long appt_id, List<TherapyPresriptionDTO> tpDTO, String info);
 
     Appointment getAppointmentForReport(Long appointmentID);
+
+    List<Appointment> getAppointmentsOfPatientWorkerOnDate(Long workerID, Long patID, Long date);
+
+    Appointment scheduleAppointmentInRange(Long workerID, Long patientID, Long pharmID, Long apptStart, Long apptEnd, double price, int duration) throws Exception;
 }

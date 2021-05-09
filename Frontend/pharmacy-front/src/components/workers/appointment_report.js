@@ -4,8 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link} from "react-router-dom";
 import { Rainbow } from "react-bootstrap-icons";
 import TherapyMedicineModal from "./appointment_report_therapy_modal";
+import ScheduleAnotherApp from "./appointment_report_schedule_modal";
 import api from '../../app/api';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import moment from "moment";
 
 
@@ -13,10 +14,13 @@ import moment from "moment";
 function AppointmentReport() {
     const [selectedMedicine, setSelectedMedicine] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [showScheduleAnother, setShowScheduleAnother] = useState(false);
     const [showClicked, setShowClicked] = useState(false);
     const [currAppt, setCurrAppt] = useState(null);
+    const [apptInfo, setApptInfo] = useState('');
 
     const location = useLocation();
+    const history = useHistory();
 
     useEffect(() => {
         let bodyFormData = new FormData();
@@ -46,11 +50,11 @@ function AppointmentReport() {
         setShowModal(false);
     }
 
-    const addTherapy = () => {
+    const finishAppt = () => {
         let appointment_id = currAppt.id; 
-        api.post('http://localhost:8080/api/appointment/addTherapy', { apptId: appointment_id, medicineList: selectedMedicine })
-            .then(()=> alert("uspeh"))  //todo ovde redirekcija na finalizaciju 
-            .catch(() => alert("Couldn't add therapy, no appointment with sent id!"));
+        api.post('http://localhost:8080/api/appointment/finalizeAppointment', { apptId: appointment_id, medicineList: selectedMedicine, info: apptInfo})
+            .then(()=> { alert("Appointment finished!"); history.push('/'); })  
+            .catch(() => alert("Couldn't add therapy, no appointment with sent id!")); 
     }
   
     return (
@@ -84,7 +88,7 @@ function AppointmentReport() {
                 <Form>
                     <Form.Group as={Row} className="justify-content-center align-items-center">
                         <Form.Label>Input information about the consultation</Form.Label>
-                        <Form.Control as="textarea" rows="8"  name="address"/>
+                        <Form.Control as="textarea" rows="8"  name="address" value={apptInfo} onChange={(e)=>setApptInfo(e.target.value)}/>
                     </Form.Group>
                 </Form>
             </Col>
@@ -110,12 +114,19 @@ function AppointmentReport() {
                         </Row>
                         );
                 })}
+
+                <Row className="justify-content-center mt-5 align-items-center">
+                    Finalize appointment
+                </Row>
+                <Row className="justify-content-center mt-3 mb-5 align-items-center">
+                    <Button onClick={() => { setShowScheduleAnother(true); }}>Schedule another and finish appointment</Button>
+                    <Button onClick={() => finishAppt()}> Finish appointment without scheduling</Button>
+                </Row>
             </Col>
         </Row>
-        <Row className="justify-content-center m-5 align-items-center">
-            <Button onClick={addTherapy}> End appointment </Button>
-        </Row>
+        
         <TherapyMedicineModal show={showModal} appt={currAppt} onHideModal={hideModal} onAddMedicine={onAdd} clickedShow={showClicked}></TherapyMedicineModal>
+        <ScheduleAnotherApp show={showScheduleAnother} appt={currAppt} onHide={()=> setShowScheduleAnother(false)} onSchedule={()=>{setShowScheduleAnother(false); finishAppt();}}></ScheduleAnotherApp>
     </div>
     );
 }
