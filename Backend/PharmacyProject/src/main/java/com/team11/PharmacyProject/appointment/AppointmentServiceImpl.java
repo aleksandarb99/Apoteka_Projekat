@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.appointment;
 import com.team11.PharmacyProject.dto.appointment.AppointmentPatientInsightDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import com.team11.PharmacyProject.dto.therapyPrescription.TherapyPresriptionDTO;
+import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.enums.ReservationState;
@@ -21,18 +22,23 @@ import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
+import com.team11.PharmacyProject.users.user.MyUser;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceRepository;
+import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -59,6 +65,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     RequestForHolidayService requestForHolidayService;
+
+    @Autowired
+    WorkplaceService workplaceService;
 
     public Appointment getNextAppointment(String email, Long workerId) {
         Pageable pp = PageRequest.of(0, 1, Sort.by("startTime").ascending());
@@ -504,7 +513,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointments;
     }
 
-    public boolean addTherapyToAppointment(Long appt_id, List<TherapyPresriptionDTO> therapyDTOList, String info){
+    @Override
+    public boolean finalizeAppointment(Long appt_id, List<TherapyPresriptionDTO> therapyDTOList, String info){
         Optional<Appointment> appt = appointmentRepository.findById(appt_id);
         Appointment appointment = appt.orElse(null);
         if (appointment == null){
@@ -548,6 +558,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             therapyPrescriptionList.add(new TherapyPrescription(medicineReservation, therapyDTOList.get(i).getDuration()));
         }
         appointment.setTherapyPrescriptionList(therapyPrescriptionList);
+        appointment.setAppointmentState(AppointmentState.FINISHED);
         appointmentRepository.save(appointment);
         return true;
     }
@@ -560,5 +571,82 @@ public class AppointmentServiceImpl implements AppointmentService {
             return null;
         }
         return appointment;
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsOfPatientWorkerOnDate(Long workerID, Long patID, Long date){
+        Long endDate = Instant.ofEpochMilli(date).plus(1, ChronoUnit.DAYS).toEpochMilli();
+        return appointmentRepository.getAppointmentsOfPatientWorkerOnDate(workerID, patID, date, endDate);
+    }
+
+    @Override
+    public Appointment scheduleAppointmentInRange(Long workerID, Long patientID, Long pharmID, Long apptStart, Long apptEnd, double price, int duration) throws Exception{
+        if (apptStart < Instant.now().toEpochMilli()){
+            throw new Exception("Appointment has to start in future!");
+        }
+        boolean taken = appointmentRepository.hasAppointmentsInRange(workerID, patientID, apptStart, apptEnd);
+        if (taken){
+            throw new Exception("Patient or worker have an appointment in that period!");
+        }
+        Workplace wp = workplaceService.getWorkplaceOfPharmacist(workerID);
+        if (wp == null){
+            throw new Exception("Invalid worker/workplace!");
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(apptStart);
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 1; //-1 zbog enuma
+        int starHour = 0; int endHour = 0;
+        for (WorkDay workDay : wp.getWorkDays()){
+            if (workDay.getWeekday().ordinal() == dayOfWeek){
+                starHour = workDay.getStartTime();
+                endHour = workDay.getEndTime();
+                break;
+            }
+        }
+        if (starHour == endHour){
+            throw new Exception("Invalid day of week (worker not working that day)!");
+        }
+        long workerStartTimeOnDate = Instant.ofEpochMilli(apptStart).truncatedTo(ChronoUnit.DAYS)
+                .plus(starHour, ChronoUnit.HOURS).toEpochMilli();
+        long workerEndTimeOnDate = Instant.ofEpochMilli(apptStart).truncatedTo(ChronoUnit.DAYS)
+                .plus(endHour, ChronoUnit.HOURS).toEpochMilli();
+        if (!(apptStart >= workerStartTimeOnDate && apptEnd <= workerEndTimeOnDate)){
+            throw new Exception("Invalid appointment time (worker not working in that time period)!");
+        }
+
+        if (requestForHolidayService.hasAppointmentsInThatDateRange(workerID, apptStart, apptEnd)){
+            throw new Exception("Worker has a vacation in that period!");
+        }
+
+        Optional<PharmacyWorker> worker = pharmacyWorkerRepository.findById(workerID);
+        if (worker.isEmpty()) throw new Exception("Invalid worker");
+        PharmacyWorker pw = worker.get();
+
+        Optional<Patient> patient = patientRepository.findById(patientID);
+        if (patient.isEmpty()) throw new Exception("Invalid patient");
+        Patient pat = patient.get();
+
+        Optional<Pharmacy> pharmacy = pharmacyRepository.findById(pharmID);
+        if (pharmacy.isEmpty()) throw new Exception("Invalid pharmacy");
+        Pharmacy pharm = pharmacy.get();
+
+        Appointment cosultation = new Appointment();
+        cosultation.setPatient(pat);
+        cosultation.setWorker(pw);
+        cosultation.setAppointmentState(AppointmentState.RESERVED);
+        cosultation.setAppointmentType(AppointmentType.CONSULTATION);
+        cosultation.setPharmacy(pharm);
+        cosultation.setDuration(duration);
+        cosultation.setStartTime(apptStart);
+        cosultation.setEndTime(apptEnd);
+        cosultation.setPrice(price);
+
+//        pat.addAppointment(cosultation);
+//        pw.addAppointment(cosultation);
+//        pharm.addAppointment(cosultation);
+
+        appointmentRepository.save(cosultation);
+
+        return cosultation;
     }
 }

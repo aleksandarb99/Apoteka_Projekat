@@ -8,8 +8,14 @@ import com.team11.PharmacyProject.dto.pharmacy.PharmacyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyWorkerDTO;
 import com.team11.PharmacyProject.dto.pharmacyWorker.PharmacyWorkerFreePharmacistDTO;
 import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
+import com.team11.PharmacyProject.dto.worker.HolidayStartEndDTO;
+import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
+import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayService;
+import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceController;
+import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +37,12 @@ public class PharmacyWorkerController {
 
     @Autowired
     PharmacyWorkerService pharmacyWorkerService;
+
+    @Autowired
+    WorkplaceService workplaceService;
+
+    @Autowired
+    RequestForHolidayService requestForHolidayService;
 
     @GetMapping(value = "/calendarAppointments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AppointmentCalendarDTO>> getWorkerCalendar(@PathVariable("id") Long id){
@@ -77,6 +89,26 @@ public class PharmacyWorkerController {
         }
 
         return new ResponseEntity<>(retVal, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/getWorkTimeForReport", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WorktimeDTO> getWorkTimeForPharmacist(@RequestParam("workerID") Long workerID) {
+        Workplace wp = workplaceService.getWorkplaceOfPharmacist(workerID);
+        if (wp == null){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        WorktimeDTO worktimeDTO = new WorktimeDTO();
+        worktimeDTO.setWorkDayList(wp.getWorkDays());
+
+        List<RequestForHoliday> holidays = requestForHolidayService.getRequestForHolidayAcceptedOrPendingInFuture(workerID);
+        if (holidays != null && !holidays.isEmpty()){
+            List<HolidayStartEndDTO> holidayStartEndDTOS = new ArrayList<>(holidays.size());
+            for (RequestForHoliday req : holidays){
+                holidayStartEndDTOS.add(new HolidayStartEndDTO(req));
+            }
+            worktimeDTO.setHolidays(holidayStartEndDTOS);
+        }
+        return new ResponseEntity<>(worktimeDTO, HttpStatus.OK);
     }
 
     private PharmacyWorkerDTO convertToDto(PharmacyWorker worker) {

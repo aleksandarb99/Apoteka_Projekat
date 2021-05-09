@@ -16,6 +16,7 @@ import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -161,4 +162,15 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
     public List<RequestForHoliday> getAcceptedWorkerHolidays(Long workerID) {
         return requestForHolidayRepository.getAcceptedRequestsFromUser(workerID);
     }
+
+    @Override
+    public List<RequestForHoliday> getRequestForHolidayAcceptedOrPendingInFuture(Long workerID) {
+        return requestForHolidayRepository.getRequestForHolidayAcceptedOrPendingInFuture(workerID, Instant.now().toEpochMilli());
+    }
+
+    @Override
+    public boolean hasAppointmentsInThatDateRange(Long workerID, Long start, Long end){
+        return requestForHolidayRepository.hasVacationInThatDateRange(workerID, start, end);
+    }
+
 }

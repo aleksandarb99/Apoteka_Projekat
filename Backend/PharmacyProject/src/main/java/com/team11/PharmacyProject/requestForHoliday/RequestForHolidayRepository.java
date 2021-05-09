@@ -12,7 +12,8 @@ public interface RequestForHolidayRepository  extends JpaRepository<RequestForHo
 
     @Query("select case when count(r)> 0 then true else false end from RequestForHoliday r where " +
             "r.requestState <> 'CANCELLED' and " +
-            "r.pharmacyWorker.id = ?1 and ((r.startDate >= ?2 and r.startDate <= ?3) or (r.endDate >= ?2 and r.endDate <= ?3))")
+            "r.pharmacyWorker.id = ?1 and ((r.startDate >= ?2 and r.startDate <= ?3) or (r.endDate >= ?2 and r.endDate <= ?3) or " +
+            " (r.startDate >= ?2 and r.endDate <= ?3) or (r.startDate <= ?2 and r.endDate >= ?3)) ")
     boolean hasVacationInThatDateRange(Long workerID, Long vacationStartTime, Long vacationEndTime);
 
     @Query("select r from RequestForHoliday r where r.pharmacyWorker.id = ?1")
@@ -29,4 +30,8 @@ public interface RequestForHolidayRepository  extends JpaRepository<RequestForHo
 
     @Query("select r from RequestForHoliday r where r.pharmacyWorker.id = ?1 and r.requestState='ACCEPTED' and r.startDate < ?2 and r.endDate > ?2")
     List<RequestForHoliday> findOneWithWorkerAndCheckIsHeOnHoliday(Long workerId, long currentTime);
+
+    @Query("select r from RequestForHoliday r where r.pharmacyWorker.id = ?1 and (r.requestState='ACCEPTED' or r.requestState='PENDING') " +
+            "and (r.startDate > ?2 or (r.startDate < ?2 and r.endDate > ?2))")
+    List<RequestForHoliday> getRequestForHolidayAcceptedOrPendingInFuture(Long workerID, Long currentTime);
 }
