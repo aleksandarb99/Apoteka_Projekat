@@ -8,15 +8,30 @@ public class MyOrderAddingDTO {
 
     private Long deadline;
 
+    private Long adminId;
+
     private List<OrderItemAddingDTO> items;
 
-    public MyOrderAddingDTO(long pharmacyId, Long deadline, List<OrderItemAddingDTO> items) {
+    public MyOrderAddingDTO(Long pharmacyId, Long deadline, Long adminId, List<OrderItemAddingDTO> items) {
         this.pharmacyId = pharmacyId;
         this.deadline = deadline;
+        this.adminId = adminId;
         this.items = items;
     }
 
     public MyOrderAddingDTO() {
+    }
+
+    public void setPharmacyId(Long pharmacyId) {
+        this.pharmacyId = pharmacyId;
+    }
+
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 
     public long getPharmacyId() {

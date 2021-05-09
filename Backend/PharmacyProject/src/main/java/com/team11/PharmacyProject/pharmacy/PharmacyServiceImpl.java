@@ -3,16 +3,21 @@ package com.team11.PharmacyProject.pharmacy;
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.enums.AppointmentState;
-import com.team11.PharmacyProject.enums.AppointmentType;
+import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.enums.UserType;
+import com.team11.PharmacyProject.inquiry.Inquiry;
+import com.team11.PharmacyProject.inquiry.InquiryService;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
+import com.team11.PharmacyProject.myOrder.MyOrder;
+import com.team11.PharmacyProject.orderItem.OrderItem;
 import com.team11.PharmacyProject.users.patient.Patient;
-import com.team11.PharmacyProject.users.pharmacist.PharmacistRepository;
-import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
+import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
+import com.team11.PharmacyProject.users.user.MyUser;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +39,52 @@ public class PharmacyServiceImpl implements PharmacyService {
     @Autowired
     PharmacyWorkerRepository workerRepository;
 
+    @Autowired
+    PatientRepository patientRepository;
+
+    @Autowired
+    InquiryService inquiryService;
+
+
+    @Override
+    public void addMedicineToStock(MyOrder order1) {
+        Pharmacy pharmacy = order1.getPharmacy();
+        for (OrderItem item : order1.getOrderItem()) {
+            for (MedicineItem mitem : pharmacy.getPriceList().getMedicineItems()) {
+                if (item.getMedicine().getId().equals(mitem.getMedicine().getId())) {
+                    mitem.setAmount(mitem.getAmount() + item.getAmount());
+                    break;
+                }
+            }
+        }
+
+        pharmacyRepository.save(pharmacy);
+
+        List<Inquiry> list = inquiryService.getInquiriesByPharmacyId(pharmacy.getId());
+        for (Inquiry i:list) {
+            for (OrderItem item : order1.getOrderItem()) {
+                if(item.getMedicine().getId().equals(i.getMedicineItems().getMedicine().getId())) {
+                    i.setActive(false);
+                    inquiryService.save(i);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public Pharmacy getPharmacyIdByAdminId(Long id) {
+        List<Pharmacy> list = pharmacyRepository.findAllWithAdmins();
+        for (Pharmacy p:
+             list) {
+            for (MyUser admin:
+                 p.getAdmins()) {
+                if(id.equals(admin.getId()))
+                    return p;
+            }
+        }
+        return null;
+    }
 
     @Override
     public void save(Pharmacy p) {
@@ -169,7 +220,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 
         List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchWorkplaces(sorter);
 
-        if (pharmacies.size() == 0) return  null;
+        if (pharmacies.size() == 0) return null;
 
         Date requestedDateAndTime = new Date(date);
         Date requestedDateAndTimeEnd = new Date(date + 15 * 60000L);
@@ -181,7 +232,7 @@ public class PharmacyServiceImpl implements PharmacyService {
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
         List<Pharmacy> chosenPharmacies = new ArrayList<>();
-        for(Pharmacy p : pharmacies) {
+        for (Pharmacy p : pharmacies) {
             boolean pharmacyIsChosen = false;
             for (Workplace wp : p.getWorkplaces()) {
                 if (pharmacyIsChosen) break;
@@ -196,24 +247,25 @@ public class PharmacyServiceImpl implements PharmacyService {
                         boolean isPharmacistFree = true;
                         // Kad prebacimo u lazi, prepravi da kad gore dobavim apoteke, fetchujem i workere i njihove appointemnte
                         for (Appointment a : workerRepository.getPharmacyWorkerForCalendar(wp.getWorker().getId()).getAppointmentList()) {
-                            if(p.getId().equals(a.getPharmacy().getId()) && a.getAppointmentState() == AppointmentState.CANCELLED) continue;
+                            if (p.getId().equals(a.getPharmacy().getId()) && a.getAppointmentState() == AppointmentState.CANCELLED)
+                                continue;
                             Date startTime = new Date(a.getStartTime());
                             Date endTime = new Date(a.getEndTime());
-                            if(startTime.compareTo(requestedDateAndTime) == 0) {
+                            if (startTime.compareTo(requestedDateAndTime) == 0) {
                                 isPharmacistFree = false;
                                 break;
                             }
-                            if(requestedDateAndTime.after(startTime) && requestedDateAndTime.before(endTime)) {
+                            if (requestedDateAndTime.after(startTime) && requestedDateAndTime.before(endTime)) {
                                 isPharmacistFree = false;
                                 break;
                             }
-                            if(requestedDateAndTimeEnd.after(startTime) && requestedDateAndTimeEnd.before(endTime)) {
+                            if (requestedDateAndTimeEnd.after(startTime) && requestedDateAndTimeEnd.before(endTime)) {
                                 isPharmacistFree = false;
                                 break;
                             }
                         }
 
-                        if(!isPharmacistFree) continue;
+                        if (!isPharmacistFree) continue;
 
                         chosenPharmacies.add(p);
                         pharmacyIsChosen = true;
@@ -238,20 +290,65 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Override
     public List<Pharmacy> getSubscribedPharmaciesByPatientId(Long id) {
-       List<Pharmacy> chosenPharmacies = new ArrayList<>();
+        List<Pharmacy> chosenPharmacies = new ArrayList<>();
 
-       List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchSubscribed();
+        List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchSubscribed();
 
-       for (Pharmacy p : pharmacies) {
-           for (Patient patient : p.getSubscribers()) {
-               if (patient.getId().equals(id)) {
-                   chosenPharmacies.add(p);
-                   break;
-               }
-           }
-       }
+        for (Pharmacy p : pharmacies) {
+            for (Patient patient : p.getSubscribers()) {
+                if (patient.getId().equals(id)) {
+                    chosenPharmacies.add(p);
+                    break;
+                }
+            }
+        }
 
-       return chosenPharmacies;
+        return chosenPharmacies;
+    }
+
+    @Override
+    public List<Pharmacy> getPharmaciesByPatientId(Long id) {
+        Patient patient = patientRepository.findByIdFetchReceivedMedicinesAndPharmacy(id);
+        if (patient == null) return null;
+
+        List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchFinishedCheckupsAndConsultations();
+        if (pharmacies == null) return null;
+
+        List<Pharmacy> chosenPharmacies = new ArrayList<>();
+
+        for (Pharmacy p : pharmacies) {
+            for (Appointment a : p.getAppointments()) {
+                if (a.getPatient().getId().equals(id)) {
+                    addPharmacy(chosenPharmacies, a.getPharmacy());
+                    break;
+                }
+            }
+        }
+
+        for (MedicineReservation mr : patient.getMedicineReservation()) {
+            if (!mr.getState().equals(ReservationState.RECEIVED)) continue;
+            addPharmacy(chosenPharmacies, mr.getPharmacy());
+        }
+
+        return chosenPharmacies;
+    }
+
+    private List<Pharmacy> addPharmacy(List<Pharmacy> pharmacies, Pharmacy p) {
+
+        if (pharmacies.size() == 0) {
+            pharmacies.add(p);
+            return pharmacies;
+        }
+
+        for (Pharmacy p1 : pharmacies) {
+            if (p1.getId().equals(p.getId())) {
+                return pharmacies;
+            }
+        }
+
+        pharmacies.add(p);
+        return pharmacies;
+
     }
 
 }

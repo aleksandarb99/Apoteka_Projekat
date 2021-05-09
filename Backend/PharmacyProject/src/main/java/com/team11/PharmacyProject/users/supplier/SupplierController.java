@@ -1,16 +1,23 @@
 package com.team11.PharmacyProject.users.supplier;
 
+import com.team11.PharmacyProject.dto.offer.OfferAcceptDTO;
+import com.team11.PharmacyProject.dto.offer.OfferWithWorkerDTO;
 import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
 import com.team11.PharmacyProject.dto.offer.OfferListDTO;
+import com.team11.PharmacyProject.dto.workplace.WorkplaceDTOWithWorkdays;
 import com.team11.PharmacyProject.enums.OfferState;
+import com.team11.PharmacyProject.offer.Offer;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,6 +26,9 @@ public class SupplierController {
 
     @Autowired
     private SupplierService supplierService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping(value="/stock/{id}")
     public ResponseEntity<List<SupplierStockItemDTO>> getStock(@PathVariable("id") long supplierId) {
@@ -54,6 +64,36 @@ public class SupplierController {
             supplierOffers = supplierOffers.stream().filter(offerListDTO -> offerListDTO.getOfferState() == type).collect(Collectors.toList());
         }
         return new ResponseEntity<>(supplierOffers, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/offers/byorderid/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getOffersByOrderId(@PathVariable("orderId") long orderId) {
+        Map<String, List<Offer>> map = supplierService.getOffersByOrderId(orderId);
+
+        List<OfferWithWorkerDTO> offersOfferListDTOS = new ArrayList<>();
+        List<OfferWithWorkerDTO> offersList;
+
+        if (map != null) {
+            for (String s:map.keySet()) {
+                List<Offer> list = map.get(s);
+                offersList = list.stream().map(m -> modelMapper.map(m, OfferWithWorkerDTO.class)).collect(Collectors.toList());
+                for (OfferWithWorkerDTO item:offersList) {
+                    item.setWorker(s);
+                    offersOfferListDTOS.add(item);
+                }
+            }
+            return new ResponseEntity<>(offersOfferListDTOS, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value="/offers/accept/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> acceptOffer(@RequestBody OfferAcceptDTO dto) {
+        boolean flag = supplierService.acceptOffer(dto.getSelectedOfferId(), dto.getOrderId());
+
+        if(flag)
+            return new ResponseEntity<>("Successfully accepted offer", HttpStatus.OK);
+        return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(value="/offers/{id}")

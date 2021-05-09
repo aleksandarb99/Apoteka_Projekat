@@ -50,4 +50,10 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
 
     @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.subscribers")
     List<Pharmacy> findPharmaciesFetchSubscribed();
+
+    @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.appointments a WHERE a.appointmentState = 'FINISHED'")
+    List<Pharmacy> findPharmaciesFetchFinishedCheckupsAndConsultations();
+
+    @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.admins")
+    List<Pharmacy> findAllWithAdmins();
 }

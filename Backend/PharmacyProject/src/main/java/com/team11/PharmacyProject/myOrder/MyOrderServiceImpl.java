@@ -2,10 +2,14 @@ package com.team11.PharmacyProject.myOrder;
 
 
 import com.team11.PharmacyProject.dto.order.MyOrderDTO;
+import com.team11.PharmacyProject.enums.OrderState;
 import com.team11.PharmacyProject.offer.Offer;
+import com.team11.PharmacyProject.offer.OfferService;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import com.team11.PharmacyProject.users.supplier.Supplier;
 import com.team11.PharmacyProject.users.supplier.SupplierRepository;
+import com.team11.PharmacyProject.users.user.MyUser;
+import com.team11.PharmacyProject.users.user.UserService;
 import org.modelmapper.ModelMapper;
 import com.team11.PharmacyProject.dto.order.MyOrderAddingDTO;
 import com.team11.PharmacyProject.dto.order.OrderItemAddingDTO;
@@ -38,7 +42,13 @@ public class MyOrderServiceImpl implements MyOrderService {
     private MedicineService medicineService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private SupplierRepository supplierRepository;
+
+    @Autowired
+    OfferService offerService;
 
     @Override
     public List<MyOrder> getOrdersByPharmacyId(Long id, String filterValue) {
@@ -48,9 +58,11 @@ public class MyOrderServiceImpl implements MyOrderService {
         for (MyOrder order : myOrderRepository.getOrdersByPharmacyId(id)) {
             if (filterValue.equals("All")) {
                 myOrderList.add(order);
-            } else if (filterValue.equals("InProgress") && currentTime < order.getDeadline()) {
+            } else if (filterValue.equals("InProgress") && order.getOrderState().equals(OrderState.IN_PROGRESS)) {
                 myOrderList.add(order);
-            } else if (filterValue.equals("Processed") && currentTime > order.getDeadline()) {
+            } else if (filterValue.equals("Processed") && order.getOrderState().equals(OrderState.ENDED)) {
+                myOrderList.add(order);
+            } else if (filterValue.equals("OnHold") && order.getOrderState().equals(OrderState.ON_HOLD)) {
                 myOrderList.add(order);
             }
         }
@@ -62,6 +74,52 @@ public class MyOrderServiceImpl implements MyOrderService {
         return orders.stream()
                 .map(myOrder -> modelMapper.map(myOrder, MyOrderDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean removeOrder(long orderId) {
+        Optional<MyOrder> order = myOrderRepository.findById(orderId);
+        if(order.isEmpty())
+            return false;
+        List<Offer> offers = offerService.findOffersByOrderId(orderId);
+        if(offers.isEmpty()) {
+            myOrderRepository.delete(order.get());
+            return true;
+        }
+        return false;
+
+    }
+
+    @Override
+    public boolean editOrder(long orderId, long date) {
+        Optional<MyOrder> order = myOrderRepository.findById(orderId);
+        if(order.isEmpty())
+            return false;
+
+        Date now = new Date();
+        if(now.getTime() > date)
+            return false;
+
+        List<Offer> offers = offerService.findOffersByOrderId(orderId);
+        if(!offers.isEmpty()) {
+            return false;
+        }
+
+        MyOrder order1 = order.get();
+        order1.setDeadline(date);
+        myOrderRepository.save(order1);
+        return true;
+    }
+
+    @Override
+    public void checkIfOrderIsOver() {
+        Iterable<MyOrder> all = myOrderRepository.findAll();
+        for (MyOrder order:all) {
+            if(System.currentTimeMillis() > order.getDeadline() && order.getOrderState().equals(OrderState.IN_PROGRESS)) {
+                order.setOrderState(OrderState.ON_HOLD);
+                myOrderRepository.save(order);
+            }
+        }
     }
 
     public boolean addOrder(MyOrderAddingDTO dto) {
@@ -85,9 +143,22 @@ public class MyOrderServiceImpl implements MyOrderService {
             return false;
         }
 
-        MyOrder order = new MyOrder(dto.getDeadline(), pharmacy, items);
+        Date now = new Date();
+        if(dto.getDeadline() <= now.getTime()){
+            return false;
+        }
+
+        MyUser admin = userService.findOne(dto.getAdminId());
+
+        MyOrder order = new MyOrder(dto.getDeadline(), pharmacy, items, admin);
         myOrderRepository.save(order);
         return true;
+    }
+
+    @Override
+    public Long getAdminIdOfOrderId(Long id) {
+        MyOrder order = myOrderRepository.findOrderByIdWithAdmin(id);
+        return order.getAdmin().getId();
     }
 
     @Override

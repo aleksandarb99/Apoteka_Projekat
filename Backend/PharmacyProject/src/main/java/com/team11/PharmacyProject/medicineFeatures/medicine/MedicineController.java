@@ -3,6 +3,8 @@ package com.team11.PharmacyProject.medicineFeatures.medicine;
 import com.team11.PharmacyProject.dto.medicine.MedicineCrudDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineInfoDTO;
+import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -100,6 +102,19 @@ public class MedicineController {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(new InputStreamResource(medicineBis));
+    }
+
+    @GetMapping(value = "/all-medicines/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getReceivedMedicinesByPatientId(@PathVariable("id") Long id) {
+
+        List<Medicine> medicines = medicineService.getReceivedMedicinesByPatientId(id);
+
+        if (medicines == null) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+
+        List<RatingGetEntitiesDTO> retVal = medicines.stream().map(RatingGetEntitiesDTO::new).collect(Collectors.toList());
+        return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 
     private Medicine convertToEntity(MedicineCrudDTO medicineCrudDto) {

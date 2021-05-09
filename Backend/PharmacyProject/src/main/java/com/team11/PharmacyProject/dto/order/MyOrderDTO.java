@@ -1,6 +1,8 @@
 package com.team11.PharmacyProject.dto.order;
 
 
+import com.team11.PharmacyProject.enums.OrderState;
+
 import java.util.List;
 
 public class MyOrderDTO {
@@ -11,13 +13,34 @@ public class MyOrderDTO {
 
     private List<OrderItemDTO> orderItem;
 
+    private Long adminId;
+
+    private OrderState orderState;
+
     public MyOrderDTO() {
     }
 
-    public MyOrderDTO(Long id, Long deadline, List<OrderItemDTO> orderItem) {
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
+    public MyOrderDTO(Long id, Long deadline, List<OrderItemDTO> orderItem, OrderState orderState) {
         this.id = id;
         this.deadline = deadline;
         this.orderItem = orderItem;
+        this.orderState = orderState;
+    }
+
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
     }
 
     public Long getId() {

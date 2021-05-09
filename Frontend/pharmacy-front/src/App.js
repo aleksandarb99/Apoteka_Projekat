@@ -30,6 +30,8 @@ import PharmaciesWithFreePharmacists from "./components/unregisteredAndPatient/P
 import ConsultationsInsight from "./components/unregisteredAndPatient/ConsultationsInsight";
 import CheckupsInsight from "./components/unregisteredAndPatient/CheckupsInsight";
 import SubscribedPharmacies from "./components/unregisteredAndPatient/SubscribedPharmacies";
+import ReservedMedicines from "./components/unregisteredAndPatient/ReservedMedicines";
+import Rating from "./components/unregisteredAndPatient/Rating";
 import ComplaintsPage from "./components/complaints/ComplaintsPage";
 import ComplaintResponsesPage from "./components/complaintResponses/ComplaintResponsesPage";
 
@@ -56,6 +58,8 @@ function App() {
             path="/subscribed-pharmacies"
             component={SubscribedPharmacies}
           />
+          <Route path="/rating" component={Rating} />
+          <Route path="/reserved-medicines" component={ReservedMedicines} />
           <Route path="/checkups-insight" component={CheckupsInsight} />
           <Route path="/registration" component={Registration} />
           <Route path="/login" component={LoginPage} />

@@ -88,7 +88,7 @@ insert into order_item (amount, medicine_id) values (130, 5);
 insert into order_item (amount, medicine_id) values (110, 1);
 insert into order_item (amount, medicine_id) values (130, 4);
 insert into order_item (amount, medicine_id) values (110, 1);
-insert into order_item (amount, medicine_id) values (130, 4);
+insert into order_item (amount, medicine_id) values (130, 5);
 
 /*WorkCalendars*/
 insert into work_calendar (id) values (1);
@@ -234,7 +234,7 @@ insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (5.0, 1, 18)
 /*Patients*/
 insert into patient (points, penalties, id) values (50, 2, 1);
 insert into patient (points, penalties, id) values (43, 0, 2);
-insert into patient (points, penalties, id) values (13, 0, 3);
+insert into patient (points, penalties, id) values (13, 3, 3);
 insert into patient (points, penalties, id) values (150, 0, 10);
 insert into patient (points, penalties, id) values (200, 0, 11);
 insert into patient (points, penalties, id) values (305, 0, 12);
@@ -260,6 +260,8 @@ insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 
 /*Ratings*/
 insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, 'MEDICINE', 1, 1616510769000, 1);
 insert into rating (grade, graded_type, gradedId, date, patient_id) values (5, 'MEDICINE', 3, 1616586369000, 2);
+insert into rating (grade, graded_type, gradedId, date, patient_id) values (5, 'DERMATOLOGIST', 6, 1616586369000, 1);
+insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, 'DERMATOLOGIST', 7, 1616586369000, 1);
 
 /*RankingCategory*/
 insert into ranking_category (name, points_required, discount) values ('Bronza', 50, 5.0);
@@ -455,13 +457,13 @@ values ('VACATION', '', 1628754800000, 1629190195000, 'PENDING', 6);
 
 
 /*MyOrders*/
-insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
-insert into my_order (deadline, pharmacy_id) values (1620903600000, 2);
-insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
-insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
-insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
-insert into my_order (deadline, pharmacy_id) values (1620817200000, 1);
-insert into my_order (deadline, pharmacy_id) values (1613411940000, 1);
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620903600000, 2, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1613411940000, 1, 'ON_HOLD');
 
 /*MyOrders - OrderItems*/
 insert into my_order_order_item (my_order_id, order_item_id) values (1, 1);
@@ -487,11 +489,17 @@ insert into offer (delivery_date, offer_state, price, order_id)
                     values (1620730800000, 'PENDING', 2100, 3);
 insert into offer (delivery_date, offer_state, price, order_id)
                     values (1620730800000, 'ACCEPTED', 3560, 2);
+insert into offer (delivery_date, offer_state, price, order_id)
+                    values (1612256008000, 'PENDING', 3560, 7);
+insert into offer (delivery_date, offer_state, price, order_id)
+                    values (1612256008000, 'PENDING', 2500, 7);
 
 /*Supplier - Offers*/
 insert into supplier_offers (supplier_id, offers_id) values (5, 1);
 insert into supplier_offers (supplier_id, offers_id) values (4, 2);
 insert into supplier_offers (supplier_id, offers_id) values (5, 3);
+insert into supplier_offers (supplier_id, offers_id) values (4, 4);
+insert into supplier_offers (supplier_id, offers_id) values (5, 5);
 
 /*Advertisements*/
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id)
@@ -505,10 +513,28 @@ insert into advertising (advertisement_id, medicine_price_id) values (2, 3);
 
 /*MedicineReservations*/
 insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
-                    values (1618839601000, 1618666801000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+                    values (1626307200000, 1618666801000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+                    values (1618444800000, 1618666801000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3455', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+                    values (1618531200000, 1618666801000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3456', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+                    values (1618531200000, 1618666801000, 'f8c3de44-1fea-4d7c-a8b0-29f63c4c3456', 'RECEIVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+                    values (1618489800000, 1617714000000, 'f8c3de44-1fea-4d7c-a8b0-29f63c4c6666', 'RECEIVED', 2, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+                    values (1618920720000, 1617717600000, 'f8c3de44-1fea-4d7c-a8b0-29f63c4c7777', 'RECEIVED', 3, 2);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+                    values (1619352720000, 1617804000000, 'f8c3de44-1fea-4d7c-a8b0-29f63c4c8888', 'RECEIVED', 4, 3);
 
 /*Patient - MedicineReservations*/
-insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (3, 1);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 1);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 2);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (3, 3);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 4);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 5);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 6);
+insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (3, 7);
 
 /*Medicine - Alternative Medicines*/
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (1, 2);
@@ -519,3 +545,13 @@ insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id)
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (5, 1);
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (5, 2);
 insert into medicine_alternative_medicine (medicine_id, alternative_medicine_id) values (5, 3);
+
+/*Pharmacy - PharmacyAdmin*/
+insert into pharmacy_admins (pharmacy_id, admins_id) values (1, 9);
+
+/*Inquiries*/
+insert into inquiry (pharmacy_id, worker_id, medicine_items_id, is_active, date) values (1, 6, 7, true, 1619974515000);
+insert into inquiry (pharmacy_id, worker_id, medicine_items_id, is_active, date) values (1, 6, 1, false , 1617382515000);
+insert into inquiry (pharmacy_id, worker_id, medicine_items_id, is_active, date) values (1, 7, 2, false, 1617382515000);
+insert into inquiry (pharmacy_id, worker_id, medicine_items_id, is_active, date) values (1, 7, 1, false, 1617382515000);
+insert into inquiry (pharmacy_id, worker_id, medicine_items_id, is_active, date) values (1, 6, 2, false, 1617382515000);

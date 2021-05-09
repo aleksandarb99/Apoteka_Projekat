@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,6 +70,17 @@ public class PatientController {
         }
 
         return new ResponseEntity<>(Integer.toString(patient.getPoints()), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}/penalties", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getPenalties(@PathVariable("id") Long id) {
+        Patient patient = patientService.getPatient(id);
+
+        if (patient == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(Integer.toString(patient.getPenalties()), HttpStatus.OK);
     }
 
 
@@ -227,4 +239,15 @@ public class PatientController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(pDTOs, HttpStatus.OK);
     }
+
+    @Scheduled(cron = "${greeting.cron}")
+    public void givePenaltyForNotPickedUpOrCanceledReservation() {
+        patientService.givePenaltyForNotPickedUpOrCanceledReservation();
+    }
+
+    @Scheduled(cron = "${greeting.cron.firstDayInMonth}")
+    public void resetPenalties() {
+        patientService.resetPenalties();
+    }
+
 }

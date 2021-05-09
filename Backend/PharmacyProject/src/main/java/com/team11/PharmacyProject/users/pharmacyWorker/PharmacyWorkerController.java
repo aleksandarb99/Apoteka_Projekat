@@ -10,6 +10,7 @@ import com.team11.PharmacyProject.dto.pharmacyWorker.PharmacyWorkerFreePharmacis
 import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
 import com.team11.PharmacyProject.dto.worker.HolidayStartEndDTO;
 import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
+import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayService;
@@ -25,8 +26,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/workers")
@@ -74,6 +77,32 @@ public class PharmacyWorkerController {
             retVal.add(new PharmacyWorkerFreePharmacistDTO(pw));
         }
 
+        return new ResponseEntity<>(retVal, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/all-dermatologists/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getDermatologistsByPatientId(@PathVariable("id") Long id) {
+
+        List<PharmacyWorker> workers = pharmacyWorkerService.getDermatologistsByPatientId(id);
+
+        if (workers == null) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+
+        List<RatingGetEntitiesDTO> retVal = workers.stream().map(RatingGetEntitiesDTO::new).collect(Collectors.toList());
+        return new ResponseEntity<>(retVal, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/all-pharmacists/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getPharmacistsByPatientId(@PathVariable("id") Long id) {
+
+        List<PharmacyWorker> workers = pharmacyWorkerService.getPharmacistsByPatientId(id);
+
+        if (workers == null) {
+            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        }
+
+        List<RatingGetEntitiesDTO> retVal = workers.stream().map(RatingGetEntitiesDTO::new).collect(Collectors.toList());
         return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 

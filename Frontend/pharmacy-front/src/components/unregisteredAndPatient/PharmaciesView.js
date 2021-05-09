@@ -7,7 +7,6 @@ import {
   Col,
   Container,
   Card,
-  Accordion,
   ListGroup,
   ListGroupItem,
   Pagination,

@@ -2,20 +2,22 @@ package com.team11.PharmacyProject.users.supplier;
 
 import com.team11.PharmacyProject.dto.offer.OfferListDTO;
 import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
+import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.OfferState;
+import com.team11.PharmacyProject.enums.OrderState;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
 import com.team11.PharmacyProject.myOrder.MyOrder;
 import com.team11.PharmacyProject.myOrder.MyOrderRepository;
 import com.team11.PharmacyProject.offer.Offer;
+import com.team11.PharmacyProject.offer.OfferService;
 import com.team11.PharmacyProject.orderItem.OrderItem;
+import com.team11.PharmacyProject.pharmacy.PharmacyService;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +29,15 @@ public class SupplierServiceImpl implements SupplierService {
     private MedicineRepository medicineRepository;
     @Autowired
     private MyOrderRepository myOrderRepository;
+
+    @Autowired
+    private OfferService offerService;
+
+    @Autowired
+    PharmacyService pharmacyService;
+
+    @Autowired
+    EmailService emailService;
 
     @Override
     public List<SupplierItem> getStockForId(long id) {
@@ -102,6 +113,77 @@ public class SupplierServiceImpl implements SupplierService {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean acceptOffer(Long selectedOfferId, Long orderId) {
+        Map<String, List<Offer>> offersForOrder = getOffersByOrderId(orderId);
+
+        Optional<MyOrder> order = myOrderRepository.getMyOrderById(orderId);
+        if(order.isEmpty())
+            return false;
+
+        boolean flag = true;
+
+        String email = "abuljevic8@gmail.com";
+
+        for (String key:offersForOrder.keySet()) {
+            List<Offer> offers = offersForOrder.get(key);
+
+            for (Offer o:offers) {
+                if(o.getId().equals(selectedOfferId)) {
+                    o.setOfferState(OfferState.ACCEPTED);
+                    try {
+                        emailService.notifySupplierThatHisOfferIsAccepted(email, order.get(), key);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                    offerService.save(o);
+                }
+                else {
+                    o.setOfferState(OfferState.DENIED);
+                    try {
+                        emailService.notifySupplierThatHisOfferIsRefused(email, order.get(), key);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                    offerService.save(o);
+                }
+            }
+        }
+
+        MyOrder order1 = order.get();
+        order1.setOrderState(OrderState.ENDED);
+        myOrderRepository.save(order1);
+
+        pharmacyService.addMedicineToStock(order1);
+
+//        TODO proveri da li se trebaju deaktivirati inquries
+
+        return true;
+    }
+
+    @Override
+    public Map<String, List<Offer>> getOffersByOrderId(long orderId) {
+        List<Supplier> supplierList = supplierRepository.findAllWithOffers();
+        Map<String, List<Offer>> offerMap = new HashMap();
+
+        for (Supplier s:supplierList) {
+            String key = s.getFirstName()+" " + s.getLastName();
+            for (Offer o:s.getOffers()) {
+                if(o.getOrder().getId().equals(orderId) && o.getOfferState().equals(OfferState.PENDING)) {
+                    if(offerMap.containsKey(key))
+                        offerMap.get(key).add(o);
+                    else
+                        offerMap.put(key, new ArrayList<Offer>());
+                        offerMap.get(key).add(o);
+                }
+            }
+        }
+
+        return offerMap;
     }
 
     @Override
