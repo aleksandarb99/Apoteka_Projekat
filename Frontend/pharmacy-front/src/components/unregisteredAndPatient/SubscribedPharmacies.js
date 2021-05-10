@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { XCircle } from 'react-bootstrap-icons'
 
 import {
   Row,
@@ -17,21 +18,39 @@ import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
+import api from "../../app/api";
+import DeleteModal from "../utilComponents/modals/DeleteModal";
 
 function SubscribedPharmacies() {
   const [pharmacies, setPharmacies] = useState([]);
+  const [selectedPharmacy, setSelectedPharmacy] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   useEffect(() => {
+    loadPharmacies();
+  }, []);
+
+  const loadPharmacies = () => {
     async function fetchPharmacies() {
       const request = await axios.get(
         "http://localhost:8080/api/pharmacy/subscribed/patient/" +
-          getIdFromToken()
+        getIdFromToken()
       );
       setPharmacies(request.data);
 
       return request;
     }
     fetchPharmacies();
-  }, []);
+  }
+
+  const unsubscribe = () => {
+    api.post(`http://localhost:8080/api/pharmacy/${selectedPharmacy.id}/unsubscribe/${getIdFromToken()}`)
+      .then(() => {
+        loadPharmacies()
+        setShowDeleteModal(false)
+      })
+  }
+
   return (
     <Container fluid className="consultation__insight__container">
       <div className="consultation__insight__content">
@@ -51,12 +70,13 @@ function SubscribedPharmacies() {
                 <th>Description</th>
                 <th>Average grade</th>
                 <th>Address</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {pharmacies &&
                 pharmacies.map((p) => (
-                  <tr key={p.id}>
+                  <tr key={p.id} onClick={() => { setSelectedPharmacy(p) }}>
                     <td>{p.name}</td>
                     <td>
                       {p.description.length > 30
@@ -65,12 +85,16 @@ function SubscribedPharmacies() {
                     </td>
                     <td>{p.avgGrade}</td>
                     <td>{p.address}</td>
+                    <td>
+                      <XCircle style={{ color: 'red' }} onClick={() => { setShowDeleteModal(true) }} />
+                    </td>
                   </tr>
                 ))}
             </tbody>
           </Table>
         </Row>
       </div>
+      <DeleteModal show={showDeleteModal} title={`Unsubscribe from ${selectedPharmacy.name}`} bodyText="Press 'confirm' to unsubscribe" onDelete={unsubscribe} onHide={() => { setShowDeleteModal(false) }}> </DeleteModal>
     </Container>
   );
 }
