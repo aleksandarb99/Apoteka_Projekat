@@ -38,6 +38,15 @@ public class Inquiry {
         this.date = date;
     }
 
+    public Inquiry(Pharmacy pharmacy, PharmacyWorker worker, MedicineItem medicineItems, Long date) {
+        this.id = null;
+        this.active = true;
+        this.pharmacy = pharmacy;
+        this.worker = worker;
+        this.medicineItems = medicineItems;
+        this.date = date;
+    }
+
     public Inquiry() {
     }
 

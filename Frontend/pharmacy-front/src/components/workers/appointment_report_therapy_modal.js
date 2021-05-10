@@ -43,13 +43,16 @@ const TherapyMedicineModal = (props) => {
         fetchMedicine();
     }, [props.clickedShow]);
 
-    const setAlternatives = (med_id) => {
+    const setAlternatives = (med_item_id, med_id) => {
         if (!props.appt){
             return;
         }
+        let worker_id = getIdFromToken();
+        if (!worker_id) { return; }
         let pharm_id = props.appt.pharmacyID;
         let pat_id = props.appt.patientID;
-        api.get('http://localhost:8080/api/pharmacy/getAlternativeFromPharmacy?pharm_id=' + pharm_id + '&patient_id=' + pat_id + '&medicine_id=' + med_id)
+        api.get('http://localhost:8080/api/pharmacy/getAlternativeFromPharmacy?worker_id=' + worker_id + '&pharm_id=' + pharm_id 
+                    + '&patient_id=' + pat_id + '&medicine_item_id=' + med_item_id+ '&medicine_id=' + med_id)
            .then((resp) => {
                 if (resp.data.length == 0){
                     alert('no valid alternatives');
@@ -87,16 +90,6 @@ const TherapyMedicineModal = (props) => {
             return;
         }
         selectedMedicine.duration = therapyLen;
-        if (alternativeSelection.length > 0 && singleSelection.length > 0){
-            selectedMedicine.isAlternative = true;
-            selectedMedicine.originalMedicineItemID = singleSelection[0].medicineItemID;
-        }else if (alternativeSelection.length == 0){
-            selectedMedicine.isAlternative = false;
-            selectedMedicine.originalMedicineItemID = null;
-        }else{
-            alert("internal error");
-            return;
-        }
         props.onAddMedicine(selectedMedicine);
         reset();
     }
@@ -122,7 +115,7 @@ const TherapyMedicineModal = (props) => {
                                 setAlternativeSelection([]);
                                 if (data.length > 0 ){
                                     if (data[0].amount <= 0){
-                                        setAlternatives(data[0].medicineID);
+                                        setAlternatives(data[0].medicineItemID, data[0].medicineID);
                                     }else{
                                         setSelectedMedicine(data[0]);
                                     }
