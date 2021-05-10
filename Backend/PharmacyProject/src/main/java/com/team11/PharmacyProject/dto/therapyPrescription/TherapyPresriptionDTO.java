@@ -5,10 +5,6 @@ public class TherapyPresriptionDTO {
 
     int duration;
 
-    boolean isAlternative;
-
-    Long originalMedicineItemID; //id prvobitnog leka; zbog notifikacija
-
     public TherapyPresriptionDTO() {
     }
 
@@ -28,19 +24,4 @@ public class TherapyPresriptionDTO {
         this.duration = duration;
     }
 
-    public boolean isAlternative() {
-        return isAlternative;
-    }
-
-    public void setAlternative(boolean alternative) {
-        isAlternative = alternative;
-    }
-
-    public Long getOriginalMedicineItemID() {
-        return originalMedicineItemID;
-    }
-
-    public void setOriginalMedicineItemID(Long originalMedicineItemID) {
-        this.originalMedicineItemID = originalMedicineItemID;
-    }
 }

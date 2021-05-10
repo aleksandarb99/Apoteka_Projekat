@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -527,14 +528,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<TherapyPrescription> therapyPrescriptionList = new ArrayList<>();
 
         List<MedicineItem> medicineItemsOfTherapy = new ArrayList<>();
-        List<MedicineItem> medicineItemsToNotif = new ArrayList<>();
-        //TODO slanje mail-a, kada se povezu pharmAdmin i apoteka
 
-        for (TherapyPresriptionDTO tpDTO : therapyDTOList){ //uga buga, todo da li moze bolje
+        for (TherapyPresriptionDTO tpDTO : therapyDTOList){
             medicineItemsOfTherapy.add(medicineItemService.findById(tpDTO.getMedicineItemID()));
-            if (tpDTO.isAlternative()){
-                medicineItemsToNotif.add(medicineItemService.findById(tpDTO.getOriginalMedicineItemID()));
-            }
         }
 
         for (int i = 0; i < therapyDTOList.size(); i++){
@@ -608,10 +604,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (starHour == endHour){
             throw new Exception("Invalid day of week (worker not working that day)!");
         }
+        //OVO -2 JE OFFSET zbog zonske razlike, ovaj truncutated to je malo glup
         long workerStartTimeOnDate = Instant.ofEpochMilli(apptStart).truncatedTo(ChronoUnit.DAYS)
-                .plus(starHour, ChronoUnit.HOURS).toEpochMilli();
+                .plus(starHour-2, ChronoUnit.HOURS).toEpochMilli();
         long workerEndTimeOnDate = Instant.ofEpochMilli(apptStart).truncatedTo(ChronoUnit.DAYS)
-                .plus(endHour, ChronoUnit.HOURS).toEpochMilli();
+                .plus(endHour-2, ChronoUnit.HOURS).toEpochMilli();
         if (!(apptStart >= workerStartTimeOnDate && apptEnd <= workerEndTimeOnDate)){
             throw new Exception("Invalid appointment time (worker not working in that time period)!");
         }

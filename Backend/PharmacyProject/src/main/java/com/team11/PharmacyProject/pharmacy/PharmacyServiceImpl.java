@@ -6,16 +6,19 @@ import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.inquiry.Inquiry;
+import com.team11.PharmacyProject.inquiry.InquiryRepository;
 import com.team11.PharmacyProject.inquiry.InquiryService;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.myOrder.MyOrder;
 import com.team11.PharmacyProject.orderItem.OrderItem;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.users.user.MyUser;
 import com.team11.PharmacyProject.workDay.WorkDay;
@@ -24,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +48,12 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Autowired
     InquiryService inquiryService;
+
+    @Autowired
+    MedicineItemRepository medicineItemRepository;
+
+    @Autowired
+    InquiryRepository inquiryRepository;
 
 
     @Override
@@ -385,6 +395,19 @@ public class PharmacyServiceImpl implements PharmacyService {
         pharmacies.add(p);
         return pharmacies;
 
+    }
+
+    public boolean createInquiry(Long workerID, Long medicineItemID, Pharmacy pharmacy){
+        Optional<PharmacyWorker> workerOptional = workerRepository.findById(workerID);
+        Optional<MedicineItem> medicineItemOptional = medicineItemRepository.findById(medicineItemID);
+        if (workerOptional.isEmpty() || medicineItemOptional.isEmpty()){
+            return false;
+        }
+        PharmacyWorker pharmacyWorker = workerOptional.get();
+        MedicineItem medicineItem = medicineItemOptional.get();
+        Inquiry inquiry = new Inquiry(pharmacy, pharmacyWorker, medicineItem, Instant.now().toEpochMilli());
+        inquiryRepository.save(inquiry);
+        return true;
     }
 
 }

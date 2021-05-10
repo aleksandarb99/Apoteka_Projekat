@@ -53,7 +53,7 @@ function AppointmentReport() {
     const finishAppt = () => {
         let appointment_id = currAppt.id; 
         api.post('http://localhost:8080/api/appointment/finalizeAppointment', { apptId: appointment_id, medicineList: selectedMedicine, info: apptInfo})
-            .then(()=> { alert("Appointment finished!"); history.push('/'); })  
+            .then(()=> { alert("Appointment finished!"); setShowScheduleAnother(false); history.push('/'); })  
             .catch(() => alert("Couldn't add therapy, no appointment with sent id!")); 
     }
   

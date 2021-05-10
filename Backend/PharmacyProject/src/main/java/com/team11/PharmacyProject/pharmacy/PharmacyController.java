@@ -4,6 +4,8 @@ import com.team11.PharmacyProject.dto.medicine.MedicineTherapyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.*;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
+import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -210,14 +212,21 @@ public class PharmacyController {
 
     @GetMapping(value = "/getAlternativeFromPharmacy", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MedicineTherapyDTO>> getPharmacyAlternativeMedicine
-            (@RequestParam(value = "pharm_id", required = true) Long pharmID,
+            (@RequestParam(value="worker_id", required = true) Long workerID,
+             @RequestParam(value = "pharm_id", required = true) Long pharmID,
              @RequestParam(value = "patient_id", required = true) Long patientID,
+             @RequestParam(value = "medicine_item_id", required = true) Long medicineItemID,
              @RequestParam(value = "medicine_id", required = true) Long medicineID) {
         Pharmacy pharm = pharmacyService.getPharmacyWithAlternativeForMedicineNoAllergies(pharmID, patientID, medicineID);
         List<MedicineTherapyDTO> medDto = new ArrayList<>();
         try {
             for (MedicineItem m : pharm.getPriceList().getMedicineItems()) {
                 medDto.add(new MedicineTherapyDTO(m));
+            }
+
+            boolean creatingInquiry = pharmacyService.createInquiry(workerID, medicineItemID, pharm);
+            if (!creatingInquiry){
+                System.out.println("Errror while creating inquiry!");
             }
             return new ResponseEntity<>(medDto, HttpStatus.OK);
         } catch (Exception e) {
