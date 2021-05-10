@@ -51,4 +51,6 @@ public interface PharmacyService {
     List<Pharmacy> getPharmaciesByPatientId(Long id);
 
     Pharmacy getPharmacyIdByAdminId(Long id);
+
+    boolean subscribe(long pharmacyId, long patientId);
 }

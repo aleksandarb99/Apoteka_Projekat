@@ -58,6 +58,16 @@ public class PharmacyController {
         return new ResponseEntity<>(pharmacyCrudDTOs, HttpStatus.OK);
     }
 
+    @PostMapping(value="/{pharmacyId}/subscribe/{patientId}")
+    public ResponseEntity<String> subscribe(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
+        boolean b = pharmacyService.subscribe(pharmacyId, patientId);
+        if (b) {
+            return new ResponseEntity<>("User successfully subscribed", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error. User not subscribed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyConsultationDTO>> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date) {
 

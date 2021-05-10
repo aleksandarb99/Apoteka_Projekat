@@ -87,6 +87,21 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
+    public boolean subscribe(long pharmacyId, long patientId) {
+        Optional<Pharmacy> pharmacy = pharmacyRepository.findPharmacyByIdFetchSubscribed(pharmacyId);
+        if (pharmacy.isEmpty())
+            return false;
+        Optional<Patient> patient = patientRepository.findById(patientId);
+        if (patient.isEmpty())
+            return false;
+        if (pharmacy.get().getSubscribers().stream().anyMatch(p -> p.getId() == patientId))
+            return false;
+        pharmacy.get().getSubscribers().add(patient.get());
+        pharmacyRepository.save(pharmacy.get());
+        return true;
+    }
+
+    @Override
     public void save(Pharmacy p) {
         pharmacyRepository.save(p);
     }
