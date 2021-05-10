@@ -44,7 +44,12 @@ function PharmacyBasic({ details }) {
 
   const subscribe = () => {
     if (isUserSubscribed) {
-      alert("TODO unsubscribe")
+      api.post(`http://localhost:8080/api/pharmacy/${details.id}/unsubscribe/${getIdFromToken()}`)
+        .then(() => {
+          alert("Success")
+          checkIfUserIsSubscribed()
+        })
+        .catch(() => { alert("Error") })
     } else {
       api.post(`http://localhost:8080/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
         .then(() => {
