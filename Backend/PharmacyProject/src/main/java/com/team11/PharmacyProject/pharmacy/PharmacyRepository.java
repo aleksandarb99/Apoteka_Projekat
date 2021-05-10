@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
@@ -56,4 +57,7 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
 
     @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.admins")
     List<Pharmacy> findAllWithAdmins();
+
+    @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.subscribers WHERE p.id = ?1")
+    Optional<Pharmacy> findPharmacyByIdFetchSubscribed(long pharmacyId);
 }
