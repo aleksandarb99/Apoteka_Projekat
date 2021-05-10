@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -192,12 +194,15 @@ public class MedicineServiceImpl implements MedicineService {
     public List<Medicine> filterMedicine(String searchParams) {
         List<SearchCriteria> sc = new ArrayList<>();
         if (searchParams != null) {
-            Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w*),", Pattern.UNICODE_CHARACTER_CLASS);
+            Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w ]*),", Pattern.UNICODE_CHARACTER_CLASS);
             Matcher matcher = pattern.matcher(searchParams + ",");
             while (matcher.find()) {
                 sc.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
             }
+        } else {
+            return new ArrayList<>();
         }
+
         // TODO refactor
         return medicineRepository.findAllFetchTypeForm().stream().filter(m ->
                 m.getName().toLowerCase().contains(sc.get(0).getValue().toString().toLowerCase()) &&
