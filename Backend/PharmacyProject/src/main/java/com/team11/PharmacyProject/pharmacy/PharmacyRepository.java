@@ -2,10 +2,13 @@ package com.team11.PharmacyProject.pharmacy;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,4 +63,9 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
 
     @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.subscribers WHERE p.id = ?1")
     Optional<Pharmacy> findPharmacyByIdFetchSubscribed(long pharmacyId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from pharmacy_subscribers where pharmacy_id=?1 and subscribers_id=?2", nativeQuery = true)
+    int removeSubscription(long pharmacyId, long patientId);
 }

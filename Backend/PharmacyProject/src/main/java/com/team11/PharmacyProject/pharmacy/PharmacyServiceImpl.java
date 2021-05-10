@@ -102,6 +102,16 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
+    public boolean unsubscribe(long pharmacyId, long patientId) {
+        try {
+            int num = pharmacyRepository.removeSubscription(pharmacyId, patientId);
+            return num != 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public boolean isSubscribed(long pharmacyId, long patientId) {
         Optional<Pharmacy> pharmacy = pharmacyRepository.findPharmacyByIdFetchSubscribed(pharmacyId);
         if (pharmacy.isEmpty())

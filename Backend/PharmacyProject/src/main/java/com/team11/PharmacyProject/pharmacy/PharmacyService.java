@@ -54,5 +54,7 @@ public interface PharmacyService {
 
     boolean subscribe(long pharmacyId, long patientId);
 
+    boolean unsubscribe(long pharmacyId, long patientId);
+
     boolean isSubscribed(long pharmacyId, long patientId);
 }

@@ -68,6 +68,16 @@ public class PharmacyController {
         }
     }
 
+    @PostMapping(value="/{pharmacyId}/unsubscribe/{patientId}")
+    public ResponseEntity<String> unsubscribe(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
+        boolean b = pharmacyService.unsubscribe(pharmacyId, patientId);
+        if (b) {
+            return new ResponseEntity<>("User successfully unsubscribed", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error. User not unsubscribed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping(value="/{pharmacyId}/subscribe/{patientId}")
     public ResponseEntity<Boolean> isSubscribed(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
         boolean isSubscribed = pharmacyService.isSubscribed(pharmacyId, patientId);
