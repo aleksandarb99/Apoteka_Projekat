@@ -27,6 +27,7 @@ public class ComplaintRepositoryController {
     public ResponseEntity<ComplaintResponseInfoDTO> getResponseForComplaint(@PathVariable("complaintId") long complaintId){
         ComplaintResponse cr = complaintResponseService.getComplaintResponse(complaintId);
         // cr ce biti null ako nema odgovora
+        if (cr == null) return null;
         ComplaintResponseInfoDTO criDTO = modelMapper.map(cr, ComplaintResponseInfoDTO.class);
         return new ResponseEntity<>(criDTO, HttpStatus.OK);
     }

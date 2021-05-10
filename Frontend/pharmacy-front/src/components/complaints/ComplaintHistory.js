@@ -8,7 +8,7 @@ const ComplaintHistory = () => {
 
     useEffect(() => {
         async function fetchComplaints() {
-            api.get(`http://localhost:8080/api/complaints/${getIdFromToken()}`)
+            api.get(`http://localhost:8080/api/complaints/patient/${getIdFromToken()}`)
                 .then((res) => {
                     setComplaints(res.data)
                 })
