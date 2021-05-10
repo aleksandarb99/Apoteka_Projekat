@@ -49,6 +49,8 @@ function UserTable({ initialUserType }) {
                 return "Pharmacist"
             case "DERMATOLOGIST":
                 return "Dermatologist"
+            case "SUPPLIER":
+                return "Supplier"
             case "ADMIN":
                 return "System Admin"
             case "PHARMACY_ADMIN":
@@ -83,6 +85,7 @@ function UserTable({ initialUserType }) {
                     <Form.Control as="select" onChange={updateCurrentUserType.bind(this)}>
                         <option value="PHARMACIST">Pharmacist</option>
                         <option value="DERMATOLOGIST">Dermatologist</option>
+                        <option value="SUPPLIER">Supplier</option>
                         <option value="PHARMACY_ADMIN">Pharmacy Admin</option>
                         <option value="ADMIN">System Admin</option>
                     </Form.Control>
@@ -122,7 +125,7 @@ function UserTable({ initialUserType }) {
 }
 
 UserTable.propTypes = {
-    userType: PropTypes.oneOf(['DERMATOLOGIST', 'PHARMACIST', 'PHARMACY_ADMIN', 'ADMIN'])
+    userType: PropTypes.oneOf(['DERMATOLOGIST', 'PHARMACIST', 'SUPPLIER', 'PHARMACY_ADMIN', 'ADMIN'])
 }
 
 export default UserTable
