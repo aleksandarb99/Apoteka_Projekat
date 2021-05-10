@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MedicineRepository extends JpaRepository<Medicine, Long> {
 
@@ -14,4 +16,7 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long> {
 
     @Query("SELECT m FROM Medicine m JOIN FETCH m.medicineForm JOIN FETCH m.medicineType JOIN FETCH m.manufacturer LEFT JOIN FETCH m.alternativeMedicine WHERE m.id = ?1")
     Medicine findByIdAndFetchFormTypeManufacturerAlternative(@Param("id") Long id);
+
+    @Query("SELECT m FROM Medicine m JOIN FETCH m.medicineForm JOIN FETCH m.medicineType")
+    List<Medicine> findAllFetchTypeForm();
 }
