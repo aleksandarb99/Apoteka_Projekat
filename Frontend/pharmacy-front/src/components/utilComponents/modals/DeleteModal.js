@@ -11,7 +11,7 @@ function DeleteModal(props) {
             </Modal.Header>
 
             <Modal.Body>
-                <p class="text-danger">Delete this item?</p>
+                <p class="text-danger">{props.bodyText ? props.bodyText : 'Delete this item?'}</p>
             </Modal.Body>
 
             <Modal.Footer>
