@@ -53,6 +53,13 @@ public class MedicineController {
         return new ResponseEntity<>(medicineDTOs, HttpStatus.OK);
     }
 
+    @GetMapping(value="", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MedicineDTO>> getFilteredMedicine(@RequestParam(value = "search") String searchParams) {
+        List<Medicine> medicine = medicineService.filterMedicine(searchParams);
+        List<MedicineDTO> medicineDTOs = medicine.stream().map(m -> mapper.map(m, MedicineDTO.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(medicineDTOs, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/crud", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MedicineCrudDTO>> getCrudMedicines() {
         List<MedicineCrudDTO> medicineCrudDTOs = medicineService.getAllMedicines().stream().map(this::convertToCrudDto).collect(Collectors.toList());

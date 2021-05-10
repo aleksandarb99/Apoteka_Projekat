@@ -21,4 +21,6 @@ public interface MedicineService {
     ByteArrayInputStream getMedicinePdf(long medicineId);
 
     List<Medicine> getReceivedMedicinesByPatientId(Long id);
+
+    List<Medicine> filterMedicine(String searchParams);
 }

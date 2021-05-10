@@ -2,23 +2,29 @@ package com.team11.PharmacyProject.medicineFeatures.medicine;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
 import com.team11.PharmacyProject.priceList.PriceListService;
+import com.team11.PharmacyProject.search.SearchCriteria;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
-import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class MedicineServiceImpl implements MedicineService {
@@ -182,6 +188,27 @@ public class MedicineServiceImpl implements MedicineService {
             addMedicine(chosenMedicines, m.getMedicineItem().getMedicine());
         }
         return chosenMedicines;
+    }
+
+    @Override
+    public List<Medicine> filterMedicine(String searchParams) {
+        List<SearchCriteria> sc = new ArrayList<>();
+        if (searchParams != null) {
+            Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w ]*),", Pattern.UNICODE_CHARACTER_CLASS);
+            Matcher matcher = pattern.matcher(searchParams + ",");
+            while (matcher.find()) {
+                sc.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
+            }
+        } else {
+            return new ArrayList<>();
+        }
+
+        // TODO refactor
+        return medicineRepository.findAllFetchTypeForm().stream().filter(m ->
+                m.getName().toLowerCase().contains(sc.get(0).getValue().toString().toLowerCase()) &&
+                        (sc.get(1).getValue().toString().isEmpty() || m.getMedicineType().getName().equalsIgnoreCase(sc.get(1).getValue().toString())) &&
+                        (sc.get(2).getValue().toString().isEmpty() || m.getMedicineForm().getName().equalsIgnoreCase(sc.get(2).getValue().toString())))
+                .collect(Collectors.toList());
     }
 
     private List<Medicine> addMedicine(List<Medicine> medicines, Medicine m) {

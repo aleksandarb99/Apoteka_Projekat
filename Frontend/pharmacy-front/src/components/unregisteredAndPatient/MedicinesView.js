@@ -17,12 +17,14 @@ import { StarFill } from "react-bootstrap-icons";
 import axios from "axios";
 
 import "../../styling/pharmaciesAndMedicines.css";
+import MedicineSearchAndFilter from "./MedicineSearchAndFilter";
 
 function MedicinesView() {
   const [medicines, setMedicines] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
   const [showedMedicines, setShowedMedicines] = useState([]);
+  const [searchParams, setSearchParams] = useState("");
 
   useEffect(() => {
     async function fetchMedicines() {
@@ -33,6 +35,20 @@ function MedicinesView() {
     }
     fetchMedicines();
   }, []);
+
+  useEffect(() => {
+    async function fetchMedicines() {
+      const request = await axios.get(`http://localhost:8080/api/medicine?search=${searchParams}`);
+      setMedicines(request.data);
+
+      return request;
+    }
+    fetchMedicines();
+  }, [searchParams])
+
+  function updateSearchParams(newParams) {
+    setSearchParams(newParams)
+  }
 
   useEffect(() => {
     let maxNumber = Math.floor(medicines?.length / 12) - 1;
@@ -63,6 +79,7 @@ function MedicinesView() {
   return (
     <Tab.Pane eventKey="third">
       <Container fluid>
+        <MedicineSearchAndFilter updateParams={(newParams) => { updateSearchParams(newParams) }}></MedicineSearchAndFilter>
         <Row>
           {showedMedicines &&
             showedMedicines.map((medicine, index) => (
@@ -107,7 +124,7 @@ function MedicinesView() {
           </Col>
         </Row>
       </Container>
-    </Tab.Pane>
+    </Tab.Pane >
   );
 }
 
