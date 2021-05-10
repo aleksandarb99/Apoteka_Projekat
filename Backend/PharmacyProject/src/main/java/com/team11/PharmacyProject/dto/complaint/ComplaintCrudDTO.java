@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.dto.complaint;
 
 import com.team11.PharmacyProject.complaint.Complaint;
+import com.team11.PharmacyProject.enums.ComplaintState;
 import com.team11.PharmacyProject.enums.ComplaintType;
 
 import javax.validation.constraints.NotBlank;
@@ -16,6 +17,8 @@ public class ComplaintCrudDTO {
     private long complaintOnId;
     @NotNull
     private ComplaintType type;
+
+    private ComplaintState state;
     @NotNull
     private Long date;
     @NotNull
@@ -27,6 +30,7 @@ public class ComplaintCrudDTO {
         this.complaintOn = c.getComplaintOn();
         this.complaintOnId = c.getComplaintOnId();
         this.type = c.getType();
+        this.state = c.getState();
         this.date = c.getDate();
         this.patientId = c.getPatient().getId();
     }
@@ -88,5 +92,13 @@ public class ComplaintCrudDTO {
 
     public void setPatientId(long patientId) {
         this.patientId = patientId;
+    }
+
+    public ComplaintState getState() {
+        return state;
+    }
+
+    public void setState(ComplaintState state) {
+        this.state = state;
     }
 }

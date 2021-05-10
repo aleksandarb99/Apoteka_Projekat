@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.complaint;
 
 import com.team11.PharmacyProject.dto.complaint.ComplaintCrudDTO;
+import com.team11.PharmacyProject.enums.ComplaintState;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class ComplaintServiceImpl implements ComplaintService {
                 complaintCrudDTO.getComplaintOn(),
                 complaintCrudDTO.getComplaintOnId(),
                 complaintCrudDTO.getType(),
+                ComplaintState.IN_PROGRESS,
                 complaintCrudDTO.getDate(),
                 patient.get()
         );
@@ -46,4 +48,10 @@ public class ComplaintServiceImpl implements ComplaintService {
     public List<Complaint> getComplaints() {
         return complaintRepository.getComplaintsFetchPatient();
     }
+
+    @Override
+    public List<Complaint> getNewComplaints() {
+        return complaintRepository.getNewComplaintsBeforeFetchPatient(System.currentTimeMillis());
+    }
+
 }

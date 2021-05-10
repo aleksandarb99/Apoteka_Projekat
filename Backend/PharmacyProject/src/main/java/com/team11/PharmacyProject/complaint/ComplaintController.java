@@ -27,9 +27,19 @@ public class ComplaintController {
         }
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<List<ComplaintCrudDTO>> getComplaints(@PathVariable("id") long patientId) {
+    @GetMapping(value = "/patient/{patientId}")
+    public ResponseEntity<List<ComplaintCrudDTO>> getComplaintsForPatient(@PathVariable("patientId") long patientId) {
         List<Complaint> complaints = complaintService.getComplaintsForPatient(patientId);
+        List<ComplaintCrudDTO> complaintCrudDTOs = complaints
+                .stream()
+                .map(ComplaintCrudDTO::new)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(complaintCrudDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/new")
+    public ResponseEntity<List<ComplaintCrudDTO>> getUpcomingComplaints() {
+        List<Complaint> complaints = complaintService.getNewComplaints();
         List<ComplaintCrudDTO> complaintCrudDTOs = complaints
                 .stream()
                 .map(ComplaintCrudDTO::new)

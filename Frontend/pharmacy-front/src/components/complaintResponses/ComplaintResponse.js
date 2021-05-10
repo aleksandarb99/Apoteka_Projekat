@@ -3,7 +3,7 @@ import { Button, Col, Container, Form, FormGroup, FormLabel, Row } from 'react-b
 import api from '../../app/api'
 import { getIdFromToken } from '../../app/jwtTokenUtils'
 
-const ComplaintResponse = ({ complaint }) => {
+const ComplaintResponse = ({ complaint, onSuccessfulSubmit }) => {
     const [responseText, setResponseText] = useState()
 
     const handleSubmit = (e) => {
@@ -25,6 +25,7 @@ const ComplaintResponse = ({ complaint }) => {
         let url = `http://localhost:8080/api/complaint-responses/${complaint.id}`;
         api.post(url, JSON.stringify(data))
             .then(() => {
+                onSuccessfulSubmit()
                 alert("Successfully submitted");
             })
             .catch((err) => {

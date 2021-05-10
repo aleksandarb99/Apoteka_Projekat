@@ -300,10 +300,10 @@ insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id)
 -- insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (5, 6);
 
 /*Complaints*/
-insert into complaint (content, complaint_on, complaint_on_id, type, date, patient_id)
-                    values ('Nije ispostovan dogovor, trazim da bude sankcionisan.', 'Nebojsa Radovanovic', 5, 'PHARMACIST', 1616587200000, 1);
-insert into complaint (content, complaint_on, complaint_on_id, type, date, patient_id)
-                    values ('Neprikladno ponasanje.', 'Marko Maric', 6, 'DERMATOLOGIST', 1616587203000, 2);
+insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
+                    values ('Nije ispostovan dogovor, trazim da bude sankcionisan.', 'Nebojsa Radovanovic', 5, 'PHARMACIST', 'RESOLVED', 1616587200000, 1);
+insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
+                    values ('Neprikladno ponasanje.', 'Marko Maric', 6, 'DERMATOLOGIST', 'RESOLVED', 1616587203000, 2);
 
 /*Complaint Response*/
 insert into complaint_response (response_text, date, complaint_id, user_id)
