@@ -17,6 +17,7 @@ import { StarFill } from "react-bootstrap-icons";
 import axios from "axios";
 
 import "../../styling/pharmaciesAndMedicines.css";
+import MedicineSearchAndFilter from "./MedicineSearchAndFilter";
 
 function MedicinesView() {
   const [medicines, setMedicines] = useState([]);
@@ -63,6 +64,7 @@ function MedicinesView() {
   return (
     <Tab.Pane eventKey="third">
       <Container fluid>
+        <MedicineSearchAndFilter></MedicineSearchAndFilter>
         <Row>
           {showedMedicines &&
             showedMedicines.map((medicine, index) => (
