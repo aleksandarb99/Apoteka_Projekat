@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from '../../app/api'
-import { getIdFromToken } from '../../app/jwtTokenUtils'
+import { getIdFromToken, getUserTypeFromToken } from '../../app/jwtTokenUtils'
 
 import { StarFill } from "react-bootstrap-icons";
 
@@ -85,7 +85,11 @@ function PharmacyBasic({ details }) {
               {details?.address?.street}, {details?.address?.city},{" "}
               {details?.address?.country}
             </h4>
-            <Button variant="primary" onClick={subscribe}>{isUserSubscribed ? "Unsubscribe" : "Subscribe"}</Button>
+            <Button
+              variant="primary"
+              hidden={getUserTypeFromToken() !== "PATIENT"}
+              onClick={subscribe}>{isUserSubscribed ? "Unsubscribe" : "Subscribe"}
+            </Button>
           </Col>
           <Col lg={6} md={6} sm={12} id="mapCol" className="center"></Col>
         </Row>
