@@ -9,4 +9,8 @@ public interface MedicineReservationRepository extends JpaRepository<MedicineRes
 
     @Query("SELECT m FROM MedicineReservation m JOIN FETCH m.medicineItem WHERE m.medicineItem.id = (:id) AND m.state ='RESERVED'")
     MedicineReservation findReservationByMedicineItemId(Long id);
+
+    @Query("SELECT m FROM MedicineReservation m JOIN FETCH m.medicineItem mi JOIN FETCH mi.medicine WHERE m.pharmacy.id = ?1 " +
+            "AND m.reservationID = ?2 AND m.state ='RESERVED'")
+    MedicineReservation getMedicineReservationFromPharmacy(Long pharmID, String resID);
 }
