@@ -9,4 +9,6 @@ public interface ComplaintService {
     List<Complaint> getComplaintsForPatient(long patientId);
 
     List<Complaint> getComplaints();
+
+    List<Complaint> getNewComplaints();
 }

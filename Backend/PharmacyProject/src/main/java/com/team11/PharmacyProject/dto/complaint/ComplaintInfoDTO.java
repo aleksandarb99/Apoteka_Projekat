@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.dto.complaint;
 
+import com.team11.PharmacyProject.enums.ComplaintState;
 import com.team11.PharmacyProject.enums.ComplaintType;
 
 public class ComplaintInfoDTO {
@@ -8,6 +9,7 @@ public class ComplaintInfoDTO {
     private String complaintOn;
     private long date;
     private ComplaintType type;
+    private ComplaintState state;
 
     public long getId() {
         return id;
@@ -47,5 +49,13 @@ public class ComplaintInfoDTO {
 
     public void setType(ComplaintType type) {
         this.type = type;
+    }
+
+    public ComplaintState getState() {
+        return state;
+    }
+
+    public void setState(ComplaintState state) {
+        this.state = state;
     }
 }

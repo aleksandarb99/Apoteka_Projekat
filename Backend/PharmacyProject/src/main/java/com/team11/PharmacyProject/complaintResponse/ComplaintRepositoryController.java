@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/complaint-responses")
@@ -25,6 +27,7 @@ public class ComplaintRepositoryController {
     public ResponseEntity<ComplaintResponseInfoDTO> getResponseForComplaint(@PathVariable("complaintId") long complaintId){
         ComplaintResponse cr = complaintResponseService.getComplaintResponse(complaintId);
         // cr ce biti null ako nema odgovora
+        if (cr == null) return null;
         ComplaintResponseInfoDTO criDTO = modelMapper.map(cr, ComplaintResponseInfoDTO.class);
         return new ResponseEntity<>(criDTO, HttpStatus.OK);
     }
@@ -36,5 +39,13 @@ public class ComplaintRepositoryController {
         } else {
             return new ResponseEntity<>("Error. Response not submitted", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value= "/admin/{adminId}")
+    public ResponseEntity<List<ComplaintResponseInfoDTO>> getResponsesForAdmin(@PathVariable("adminId") long adminId) {
+        List<ComplaintResponse> cr = complaintResponseService.getComplaintResponsesForAdmin(adminId);
+        // cr ce biti prazna ako nema odgovora
+        List<ComplaintResponseInfoDTO> crInfo = cr.stream().map(complaintResponse -> modelMapper.map(complaintResponse, ComplaintResponseInfoDTO.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(crInfo, HttpStatus.OK);
     }
 }
