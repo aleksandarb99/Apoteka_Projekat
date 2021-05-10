@@ -20,7 +20,7 @@ public class UserUpdateDTO {
     private String email;
 
     @NotBlank
-    @Pattern(regexp="(^$|[0-9]{10})")
+    //@Pattern(regexp="(^$|[0-9]{10})")
     private String telephone;
 
     @NotNull

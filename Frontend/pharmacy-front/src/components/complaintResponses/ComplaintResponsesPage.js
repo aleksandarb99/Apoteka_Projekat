@@ -5,7 +5,7 @@ import ComplaintResponsesHistory from './ComplaintResponsesHistory'
 
 const ComplaintsPage = () => {
     return (
-        <main className="home__page">
+        <main style={{ padding: '0px' }}>
             <Tab.Container id="left-tabs-example" defaultActiveKey="first" unmountOnExit>
                 <Row className="my-panel">
                     <Col sm={3} md={3} lg={2} xs={12} className="side__bar">
