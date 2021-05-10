@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.email;
 
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
+import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWorkerDTO;
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayDTO;
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayWithWorkerDetailsDTO;
 import com.team11.PharmacyProject.myOrder.MyOrder;
@@ -15,6 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -122,6 +124,31 @@ public class EmailService {
         String line = text.toString();
 
         mail.setText("Pozdrav " + name+", \n Zelimo da Vas obavestimo da Vasa ponuda za porudzbinom koja potrazuje " + line + " je odbijena. \nPozdrav");
+
+        javaMailSender.send(mail);
+    }
+
+    @Async
+    public void notifyPatientAboutPickingUpMedicine(MedicineReservationWorkerDTO reservationDTO) throws MailException {
+        SimpleMailMessage mail = new SimpleMailMessage();
+//        mail.setTo(reservationDTO.getEmail()); //todo izmeniti
+        mail.setTo("darko1705@gmail.com");
+        mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
+        mail.setSubject("Potvrda izdavanja leka");
+
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(reservationDTO.getReservationDate());
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTimeInMillis(reservationDTO.getPickupDate());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd. M. yyyy. : HH:mm");
+
+        mail.setText("Pozdrav " + reservationDTO.getFirstName() + " " + reservationDTO.getLastName() + ",\n\n"
+                + "Dobili ste ovaj mail kao potvrdu izdavanja leka.\nID rezervacije - " + reservationDTO.getReservationID() + "\n"
+                + "Datum rezervacije: " +  sdf.format(cal1.getTime()) + "\nRok za podizanje rezervacije: " + sdf.format(cal2.getTime()) + "\n"
+                + "Naziv leka: " + reservationDTO.getMedicineName() + "\nKod leka: " + reservationDTO.getMedicineID() + "\n\n"
+                + "Hvala Vam na poverenju, nadamo se daljoj zajednickoj saradnji!");
 
         javaMailSender.send(mail);
     }

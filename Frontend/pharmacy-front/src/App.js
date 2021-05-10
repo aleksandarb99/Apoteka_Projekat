@@ -24,6 +24,7 @@ import AppointmentReport from "./components/workers/appointment_report";
 import VacationRequest from "./components/workers/vacation_request";
 import DermatologistProfile from "./components/workers/dermatologist_profile";
 import PharmacistProfile from "./components/workers/pharmacist_profile";
+import IssueMedicine from "./components/workers/issue_medicine";
 
 import UserCrud from "./components/users/UserCrud";
 import PharmaciesWithFreePharmacists from "./components/unregisteredAndPatient/PharmaciesWithFreePharmacists";
@@ -90,6 +91,7 @@ function App() {
             component={AppointmentReport}
           />
           <Route path="/worker/vacation" component={VacationRequest} />
+          <Route path="/worker/issue_medicine" component={IssueMedicine}/>
           <Route path="/user/complaints" component={ComplaintsPage} />
           <Route
             path="/admin/complaint-responses"

@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.medicineFeatures.medicineReservation;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationInfoDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationInsertDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
+import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWorkerDTO;
 import com.team11.PharmacyProject.email.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.time.Instant;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RestController
@@ -72,6 +77,38 @@ public class MedicineReservationController {
             return new ResponseEntity<>("canceled", HttpStatus.OK);
         }else{
             return new ResponseEntity<>("not canceled",HttpStatus.OK);
+        }
+    }
+
+    @PostMapping(value = "/getReservedIssue", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MedicineReservationWorkerDTO> getReservedMedicine(@RequestParam("workerID") Long workerdID, @RequestParam("resID") String resID) {
+        MedicineReservation medicineReservation = service.getMedicineReservationFromPharmacy(workerdID, resID);
+        if (medicineReservation == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Medicine reservation with given ID not found in this pharmacy!");
+        }
+        Long dueDate = medicineReservation.getPickupDate();
+        Long currTime = Instant.now().toEpochMilli();
+        if (dueDate - currTime <= 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pickup due date has passed!");
+        }else if (TimeUnit.MILLISECONDS.toHours(dueDate-currTime) < 24){  //manje od 24 h do izdavanja
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid reservationID! Pickup due date is less than 24h!");
+        }
+        MedicineReservationWorkerDTO medicineReservationWorkerDTO = new MedicineReservationWorkerDTO(medicineReservation);
+        return new ResponseEntity<>(medicineReservationWorkerDTO, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/issueMedicine", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> issueMedicine(@RequestParam("workerID") Long workerdID, @RequestParam("resID") String resID) {
+        MedicineReservationWorkerDTO dto = service.issueMedicine(workerdID, resID);
+        if (dto != null){
+            try {
+                emailService.notifyPatientAboutPickingUpMedicine(dto);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new ResponseEntity<>("Succesfuly issued medicine!", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("Issue of medicine failed! Request error!", HttpStatus.BAD_REQUEST);
         }
     }
 }

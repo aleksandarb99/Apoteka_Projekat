@@ -31,7 +31,7 @@ const PharmacistHeader = () => {
                     <Nav.Link as={Link} style={{ color: "white" }} to="/worker/search-patients">
                         Search patients
                     </Nav.Link>
-                    <Nav.Link as={Link} style={{ color: "white" }} to="/worker/calendar">
+                    <Nav.Link as={Link} style={{ color: "white" }} to="/worker/issue_medicine">
                         Issue medicine
                     </Nav.Link>
                     <Nav.Link as={Link} style={{ color: "white" }} to="/worker/calendar">

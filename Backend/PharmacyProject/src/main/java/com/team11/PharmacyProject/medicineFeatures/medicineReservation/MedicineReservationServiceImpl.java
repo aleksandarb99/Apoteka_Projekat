@@ -2,19 +2,27 @@ package com.team11.PharmacyProject.medicineFeatures.medicineReservation;
 
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationInsertDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
+import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWorkerDTO;
+import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
+import com.team11.PharmacyProject.workplace.Workplace;
+import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class MedicineReservationServiceImpl implements MedicineReservationService  {
@@ -27,6 +35,9 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
     @Autowired
     PatientRepository patientRepository;
+
+    @Autowired
+    WorkplaceService workplaceService;
 
     @Override
     public boolean isMedicineItemReserved(Long id) {
@@ -110,5 +121,39 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
         reservationRepository.save(reservation);
         return true;
+    }
+
+    @Override
+    public MedicineReservation getMedicineReservationFromPharmacy(Long workerID, String resID){
+        Workplace workplace = workplaceService.getWorkplaceOfPharmacist(workerID);
+        if (workplace == null){
+            return null;
+        }
+        return reservationRepository.getMedicineReservationFromPharmacy(workplace.getPharmacy().getId(),resID);
+    }
+
+    @Override
+    public MedicineReservationWorkerDTO issueMedicine(Long workerID, String resID){
+        //todo srediti da ima i cenu mozda
+        MedicineReservation medicineReservation = getMedicineReservationFromPharmacy(workerID, resID);
+        if (medicineReservation == null) {
+            return null;
+        }
+        Long dueDate = medicineReservation.getPickupDate();
+        Long currTime = Instant.now().toEpochMilli();
+        if (dueDate - currTime <= 0){
+            return null;
+        }else if (TimeUnit.MILLISECONDS.toHours(dueDate-currTime) < 24){  //manje od 24 h do izdavanja
+            return null;
+        }
+        Patient pat = patientRepository.findByReservationID(medicineReservation.getId());
+        if (pat == null){
+            return null;
+        }
+
+        medicineReservation.setState(ReservationState.RECEIVED);
+        reservationRepository.save(medicineReservation);
+
+        return new MedicineReservationWorkerDTO(medicineReservation, pat);
     }
 }
