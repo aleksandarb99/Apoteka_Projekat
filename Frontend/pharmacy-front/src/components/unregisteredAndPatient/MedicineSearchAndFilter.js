@@ -3,12 +3,13 @@ import { Col, Container, Form, Row, Button } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import api from '../../app/api';
 
-const MedicineSearchAndFilter = () => {
+const MedicineSearchAndFilter = (props) => {
 
     const [singleSelectionType, setSingleSelectionType] = useState([]);
     const [singleSelectionForm, setSingleSelectionForm] = useState([]);
     const [medTypes, setMedTypes] = useState([]);
     const [medForms, setMedForms] = useState([]);
+    const [medName, setMedName] = useState("");
 
     useEffect(() => {
         api.get(`http://localhost:8080/api/medicine-types/`)
@@ -34,8 +35,17 @@ const MedicineSearchAndFilter = () => {
     const handleSubmit = (event) => {
         event.preventDefault()
         event.stopPropagation()
+
+        props.updateParams(generateSearchParams())
     }
 
+
+    const generateSearchParams = () => {
+        let mt = singleSelectionType[0].id === -1 ? "" : singleSelectionType[0].name;
+        let mf = singleSelectionForm[0].id === -1 ? "" : singleSelectionForm[0].name;
+        let searchParam = `name:${medName},medicineType:${mt},medicineForm:${mf}`
+        return searchParam
+    }
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -44,7 +54,9 @@ const MedicineSearchAndFilter = () => {
                     <Col md={5}>
                         <Form.Group>
                             <Form.Label>Name:</Form.Label>
-                            <Form.Control type="text" />
+                            <Form.Control
+                                type="text"
+                                onChange={(event) => { setMedName(event.target.value) }} />
                         </Form.Group>
                     </Col>
                     <Col md={3}>
