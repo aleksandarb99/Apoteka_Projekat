@@ -53,4 +53,6 @@ public interface PharmacyService {
     Pharmacy getPharmacyIdByAdminId(Long id);
 
     boolean subscribe(long pharmacyId, long patientId);
+
+    boolean isSubscribed(long pharmacyId, long patientId);
 }

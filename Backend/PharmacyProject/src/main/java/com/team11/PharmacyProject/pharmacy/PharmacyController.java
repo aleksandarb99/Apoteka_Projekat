@@ -68,6 +68,12 @@ public class PharmacyController {
         }
     }
 
+    @GetMapping(value="/{pharmacyId}/subscribe/{patientId}")
+    public ResponseEntity<Boolean> isSubscribed(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
+        boolean isSubscribed = pharmacyService.isSubscribed(pharmacyId, patientId);
+        return new ResponseEntity<>(isSubscribed, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyConsultationDTO>> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date) {
 

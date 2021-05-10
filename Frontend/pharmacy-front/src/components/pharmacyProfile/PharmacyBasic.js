@@ -17,6 +17,7 @@ import Button from "react-bootstrap/Button";
 import Tab from "react-bootstrap/Tab";
 
 function PharmacyBasic({ details }) {
+
   useEffect(() => {
     document.getElementById("mapCol").innerHTML = "";
     return new Map({
