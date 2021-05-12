@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.eRecipe;
 
+import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,8 +21,8 @@ public class ERecipeController {
     @GetMapping(value = "/upload-qr")
     public ResponseEntity<?> parseQRCode(@RequestParam("file") MultipartFile file) {
         // TODO change to ERecipeDTO
-        String data = eRecipeService.getERecipeFromQRCode(file);
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        ERecipeDTO eRecipeDTO = eRecipeService.getERecipe(file);
+        return new ResponseEntity<>(eRecipeDTO, HttpStatus.OK);
     }
 
 }

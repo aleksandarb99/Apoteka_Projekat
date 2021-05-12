@@ -273,7 +273,7 @@ insert into erecipe_item (medicine_code, medicine_name, quantity) values ('M01AE
 insert into erecipe_item (medicine_code, medicine_name, quantity) values ('N02BE01', 'Paracetamol', 1);
 
 /*ERecipes*/
-insert into erecipe (dispensing_date, state, code, patient_id) values (1616846400000, 'NEW', '1234', 1);
+insert into erecipe (prescription_date, dispensing_date, state, code, patient_id) values (1616846400000, 1620812258708, 'PROCESSED', 'EP0001', 1);
 
 /*ERecipes - ERecipes Items*/
 insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 1);
