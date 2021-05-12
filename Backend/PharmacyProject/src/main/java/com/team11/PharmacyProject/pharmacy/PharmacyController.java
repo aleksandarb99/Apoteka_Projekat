@@ -10,6 +10,7 @@ import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -88,8 +89,18 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/e-recipe")
-    public ResponseEntity<List<PharmacyERecipeDTO>> getPharmaciesWithAllMedicine(@RequestBody @Valid ERecipeDTO eRecipeDTO) {
-        List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO);
+    public ResponseEntity<List<PharmacyERecipeDTO>> getPharmaciesWithAllMedicine(@RequestBody @Valid ERecipeDTO eRecipeDTO,
+                                                                                 @RequestParam(value = "sort", required = false) String criteria,
+                                                                                 @RequestParam(value = "orderBy", required = false) String order) {
+        Sort.Direction dir = Sort.Direction.ASC;
+        if (criteria == null || criteria.isEmpty()) {
+            criteria = "name";
+        }
+        if (order == null || order.equals("DESC")) {
+            dir = Sort.Direction.DESC;
+        }
+        Sort s = Sort.by(dir, criteria);
+        List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO, s);
         return new ResponseEntity<>(pharmacyERecipeDTOS, HttpStatus.OK);
     }
 

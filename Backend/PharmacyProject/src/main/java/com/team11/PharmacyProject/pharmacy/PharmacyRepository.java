@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
+public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, PharmacyRepositoryCustom {
     @Query("select p from Pharmacy p where lower(p.name) like lower(concat('%', ?1, '%')) or lower(p.address.city) like lower(concat('%', ?1, '%'))")
     List<Pharmacy> searchPharmaciesByNameOrCity(String searchValue);
 
@@ -73,13 +74,6 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
             "JOIN FETCH p.priceList pl " +
             "JOIN FETCH pl.medicineItems mi " +
             "JOIN FETCH mi.medicine m " +
-            "WHERE m.code = ?1 AND mi.amount >= ?2")
-    List<Pharmacy> findPharmacyByIdWithMedOnStock(String medicineCode, int amount);
-
-    @Query("SELECT DISTINCT p FROM Pharmacy p " +
-            "JOIN FETCH p.priceList pl " +
-            "JOIN FETCH pl.medicineItems mi " +
-            "JOIN FETCH mi.medicine m " +
             "WHERE p.id = ?1")
-    Optional<Pharmacy> getPharmacyByIdFetchPriceList(long pharmacyId);
+    Optional<Pharmacy> getPharmacyByIdFetchPriceList(long pharmacyId, Sort sort);
 }

@@ -421,7 +421,7 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
-    public List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO) {
+    public List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, Sort sort) {
         // TODO provera alergena, podataka i tako to
         if (eRecipeDTO.getState() == ERecipeState.REJECTED) {
             throw new RuntimeException("This prescription in not valid");
@@ -445,21 +445,12 @@ public class PharmacyServiceImpl implements PharmacyService {
             throw new RuntimeException("Invalid patient's ID");
         }
         // get pharmacies with required medicine
-        List<Pharmacy> pharmaciesWithMedInStock = new ArrayList<>();
-        for (ERecipeItem eRecipeItem : eRecipeDTO.geteRecipeItems()) {
-            List<Pharmacy> p = pharmacyRepository
-                    .findPharmacyByIdWithMedOnStock(eRecipeItem.getMedicineCode(), eRecipeItem.getQuantity());
-            if (pharmaciesWithMedInStock.isEmpty()) {
-                pharmaciesWithMedInStock.addAll(p);
-            } else {
-                // intersection
-                pharmaciesWithMedInStock = pharmacyIntersection(pharmaciesWithMedInStock, p);
-            }
-        }
+        List<Pharmacy> pharmaciesWithMedInStock = pharmacyRepository.findPharmacyWithMedOnStock(eRecipeDTO.geteRecipeItems());
+
         // calculate total price for every pharmacy
         List<PharmacyERecipeDTO> pharmacyERecipeDTOS = new ArrayList<>();
         for (var p : pharmaciesWithMedInStock) {
-            Optional<Pharmacy> optionalPharmacy = pharmacyRepository.getPharmacyByIdFetchPriceList(p.getId());
+            Optional<Pharmacy> optionalPharmacy = pharmacyRepository.getPharmacyByIdFetchPriceList(p.getId(), sort);
             if (optionalPharmacy.isEmpty()) {
                 return new ArrayList<>();
             }
@@ -481,17 +472,6 @@ public class PharmacyServiceImpl implements PharmacyService {
             }
         }
         return price;
-    }
-
-    private List<Pharmacy> pharmacyIntersection(List<Pharmacy> list1, List<Pharmacy> list2) {
-        List<Pharmacy> list = new ArrayList<Pharmacy>();
-
-        for (Pharmacy p : list1) {
-            if(list2.stream().anyMatch(pharmacy -> pharmacy.getId().equals(p.getId()))) {
-                list.add(p);
-            }
-        }
-        return list;
     }
 
 }
