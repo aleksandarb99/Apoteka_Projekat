@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
+import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,7 +34,8 @@ public class PharmacyRepositoryCustomImpl implements PharmacyRepositoryCustom {
         query.select(pharmacy)
                 .distinct(true)
                 .where(cb.or(predicates.toArray(new Predicate[predicates.size()])))
-                .groupBy(pharmacy.get("id")).having(cb.equal(cb.count(pharmacy), items.size()));
+                .groupBy(pharmacy.get("id"))
+                .having(cb.equal(cb.count(pharmacy), items.size()));
         return entityManager.createQuery(query)
                 .getResultList();
     }

@@ -20,7 +20,7 @@ public class ERecipeController {
 
     @GetMapping(value = "/upload-qr")
     public ResponseEntity<?> parseQRCode(@RequestParam("file") MultipartFile file) {
-        // TODO change to ERecipeDTO
+
         ERecipeDTO eRecipeDTO = eRecipeService.getERecipe(file);
         return new ResponseEntity<>(eRecipeDTO, HttpStatus.OK);
     }

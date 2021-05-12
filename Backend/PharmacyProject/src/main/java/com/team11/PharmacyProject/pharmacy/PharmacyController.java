@@ -91,16 +91,15 @@ public class PharmacyController {
     @GetMapping(value = "/e-recipe")
     public ResponseEntity<List<PharmacyERecipeDTO>> getPharmaciesWithAllMedicine(@RequestBody @Valid ERecipeDTO eRecipeDTO,
                                                                                  @RequestParam(value = "sort", required = false) String criteria,
-                                                                                 @RequestParam(value = "orderBy", required = false) String order) {
-        Sort.Direction dir = Sort.Direction.ASC;
+                                                                                 @RequestParam(value = "order", required = false) String order) {
+        String dir = "ASC";
         if (criteria == null || criteria.isEmpty()) {
             criteria = "name";
         }
-        if (order == null || order.equals("DESC")) {
-            dir = Sort.Direction.DESC;
+        if (order != null && order.equals("DESC")) {
+            dir = "DESC";
         }
-        Sort s = Sort.by(dir, criteria);
-        List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO, s);
+        List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO, criteria, dir);
         return new ResponseEntity<>(pharmacyERecipeDTOS, HttpStatus.OK);
     }
 

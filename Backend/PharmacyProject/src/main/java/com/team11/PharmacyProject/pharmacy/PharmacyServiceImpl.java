@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Predicate;
@@ -421,7 +422,7 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
-    public List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, Sort sort) {
+    public List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order) {
         // TODO provera alergena, podataka i tako to
         if (eRecipeDTO.getState() == ERecipeState.REJECTED) {
             throw new RuntimeException("This prescription in not valid");
@@ -450,7 +451,7 @@ public class PharmacyServiceImpl implements PharmacyService {
         // calculate total price for every pharmacy
         List<PharmacyERecipeDTO> pharmacyERecipeDTOS = new ArrayList<>();
         for (var p : pharmaciesWithMedInStock) {
-            Optional<Pharmacy> optionalPharmacy = pharmacyRepository.getPharmacyByIdFetchPriceList(p.getId(), sort);
+            Optional<Pharmacy> optionalPharmacy = pharmacyRepository.getPharmacyByIdFetchPriceList(p.getId());
             if (optionalPharmacy.isEmpty()) {
                 return new ArrayList<>();
             }
@@ -460,7 +461,37 @@ public class PharmacyServiceImpl implements PharmacyService {
             pharmacyERecipeDTOS.add(pharmacyERecipeDTO);
         }
 
-        return pharmacyERecipeDTOS;
+        return sorted(pharmacyERecipeDTOS, sortBy, order);
+    }
+
+    private List<PharmacyERecipeDTO> sorted(List<PharmacyERecipeDTO> toSort, String sortBy, String order) {
+        Class<PharmacyERecipeDTO> c = PharmacyERecipeDTO.class;
+        int direction = order.equals("ASC") ? 1 : -1;
+        List<PharmacyERecipeDTO> pS = toSort;
+        try {
+            Field field = c.getDeclaredField(sortBy);
+            field.setAccessible(true);
+            Comparator<PharmacyERecipeDTO> comp = (o1, o2) -> {
+                try {
+                    if (field.getType() == String.class) {
+                        String s1 = (String) field.get(o1);
+                        String s2 = (String) field.get(o2);
+                        return s1.compareToIgnoreCase(s2) * direction;
+                    } else if (field.getType() == Integer.class || field.getType() == Double.class) {
+                        return ((Double) field.get(o1)).compareTo((Double) field.get(o2)) * direction;
+                    }
+                } catch (IllegalAccessException e) {
+                    return 0;
+                }
+                return 0;
+            };
+
+            pS = toSort.stream().sorted(comp).collect(Collectors.toList());
+            return pS;
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return toSort;
     }
 
     private double calculateTotalPrice(Pharmacy pharmacy, ERecipeDTO eRecipeDTO) {

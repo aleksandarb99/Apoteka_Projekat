@@ -63,5 +63,5 @@ public interface PharmacyService {
 
     boolean createInquiry(Long workerID, Long medicineItemID, Pharmacy pharmacy);
 
-    List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, Sort sort);
+    List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order);
 }

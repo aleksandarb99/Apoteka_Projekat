@@ -1,20 +1,20 @@
 package com.team11.PharmacyProject.dto.pharmacy;
 
-import com.team11.PharmacyProject.address.Address;
-
 public class PharmacyERecipeDTO {
     private long id;
     private String name;
-    private double avgGrade;
-    private double totalPrice;
-    private Address address;
+    private Double avgGrade;
+    private Double totalPrice;
+    private String addressCity;
+    private String addressStreet;
 
-    public PharmacyERecipeDTO(long id, String name, double avgGrade, double totalPrice, Address address) {
+    public PharmacyERecipeDTO(long id, String name, Double avgGrade, Double totalPrice, String addressCity, String addressStreet) {
         this.id = id;
         this.name = name;
         this.avgGrade = avgGrade;
         this.totalPrice = totalPrice;
-        this.address = address;
+        this.addressCity = addressCity;
+        this.addressStreet = addressStreet;
     }
 
     public PharmacyERecipeDTO() {
@@ -52,11 +52,27 @@ public class PharmacyERecipeDTO {
         this.totalPrice = totalPrice;
     }
 
-    public Address getAddress() {
-        return address;
+    public void setAvgGrade(Double avgGrade) {
+        this.avgGrade = avgGrade;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public String getAddressCity() {
+        return addressCity;
+    }
+
+    public void setAddressCity(String addressCity) {
+        this.addressCity = addressCity;
+    }
+
+    public String getAddressStreet() {
+        return addressStreet;
+    }
+
+    public void setAddressStreet(String addressStreet) {
+        this.addressStreet = addressStreet;
     }
 }
