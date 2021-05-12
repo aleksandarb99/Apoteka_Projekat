@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineTherapyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.*;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
@@ -84,6 +85,12 @@ public class PharmacyController {
     public ResponseEntity<Boolean> isSubscribed(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
         boolean isSubscribed = pharmacyService.isSubscribed(pharmacyId, patientId);
         return new ResponseEntity<>(isSubscribed, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/e-recipe")
+    public ResponseEntity<List<PharmacyERecipeDTO>> getPharmaciesWithAllMedicine(@RequestBody @Valid ERecipeDTO eRecipeDTO) {
+        List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO);
+        return new ResponseEntity<>(pharmacyERecipeDTOS, HttpStatus.OK);
     }
 
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)

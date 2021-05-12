@@ -68,4 +68,18 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
     @Modifying
     @Query(value = "delete from pharmacy_subscribers where pharmacy_id=?1 and subscribers_id=?2", nativeQuery = true)
     int removeSubscription(long pharmacyId, long patientId);
+
+    @Query("SELECT DISTINCT p FROM Pharmacy p " +
+            "JOIN FETCH p.priceList pl " +
+            "JOIN FETCH pl.medicineItems mi " +
+            "JOIN FETCH mi.medicine m " +
+            "WHERE m.code = ?1 AND mi.amount >= ?2")
+    List<Pharmacy> findPharmacyByIdWithMedOnStock(String medicineCode, int amount);
+
+    @Query("SELECT DISTINCT p FROM Pharmacy p " +
+            "JOIN FETCH p.priceList pl " +
+            "JOIN FETCH pl.medicineItems mi " +
+            "JOIN FETCH mi.medicine m " +
+            "WHERE p.id = ?1")
+    Optional<Pharmacy> getPharmacyByIdFetchPriceList(long pharmacyId);
 }
