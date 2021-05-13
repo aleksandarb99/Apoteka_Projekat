@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +19,7 @@ public class ERecipeController {
     @Autowired
     ERecipeService eRecipeService;
 
-    @GetMapping(value = "/upload-qr")
+    @PostMapping(value = "/upload-qr")
     public ResponseEntity<?> parseQRCode(@RequestParam("file") MultipartFile file) {
 
         ERecipeDTO eRecipeDTO = eRecipeService.getERecipe(file);

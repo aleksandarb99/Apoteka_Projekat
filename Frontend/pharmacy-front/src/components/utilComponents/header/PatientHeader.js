@@ -65,6 +65,9 @@ const PatientHeader = () => {
           <Nav.Link as={Link} style={{ color: "white" }} to="/rating">
             Rating
           </Nav.Link>
+          <Nav.Link as={Link} style={{ color: "white" }} to="/e-prescription">
+            E-Prescription
+          </Nav.Link>
         </Nav>
         <Nav>
           <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
