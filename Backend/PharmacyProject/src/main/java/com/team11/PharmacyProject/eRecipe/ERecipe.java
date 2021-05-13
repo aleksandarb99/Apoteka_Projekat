@@ -14,7 +14,10 @@ public class ERecipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "dispensing_date", nullable = false)
+    @Column(name = "prescription_date", nullable = false)
+    private Long prescriptionDate;
+
+    @Column(name = "dispensing_date")
     private Long dispensingDate;
 
     @Column(name = "state", nullable = false)

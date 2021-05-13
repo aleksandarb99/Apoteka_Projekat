@@ -1,8 +1,13 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
+import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyERecipeDTO;
+import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.AppointmentState;
+import com.team11.PharmacyProject.enums.ERecipeState;
 import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.inquiry.Inquiry;
@@ -23,16 +28,22 @@ import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.users.user.MyUser;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
 public class PharmacyServiceImpl implements PharmacyService {
+
+    @Autowired
+    ModelMapper modelMapper;
 
     @Autowired
     PharmacyRepository pharmacyRepository;
@@ -408,6 +419,90 @@ public class PharmacyServiceImpl implements PharmacyService {
         Inquiry inquiry = new Inquiry(pharmacy, pharmacyWorker, medicineItem, Instant.now().toEpochMilli());
         inquiryRepository.save(inquiry);
         return true;
+    }
+
+    @Override
+    public List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order) {
+        // TODO provera alergena, podataka i tako to
+        if (eRecipeDTO.getState() == ERecipeState.REJECTED) {
+            throw new RuntimeException("This prescription in not valid");
+        }
+        if (eRecipeDTO.getState() == ERecipeState.PROCESSED) {
+            throw new RuntimeException("This prescription has already been processes");
+        }
+        for (var er: eRecipeDTO.geteRecipeItems()) {
+            if (er.getQuantity() <= 0) {
+                throw new RuntimeException("Quantity must be grater than 0");
+            }
+        }
+        if (eRecipeDTO.getCode() == null) {
+            throw new RuntimeException("Prescription code can not be null");
+        }
+        if (eRecipeDTO.getPrescriptionDate() > System.currentTimeMillis()) {
+            throw new RuntimeException("Prescription date is not valid");
+        }
+        Optional<Patient> pat = patientRepository.findById(eRecipeDTO.getPatientId());
+        if (pat.isEmpty()) {
+            throw new RuntimeException("Invalid patient's ID");
+        }
+        // get pharmacies with required medicine
+        List<Pharmacy> pharmaciesWithMedInStock = pharmacyRepository.findPharmacyWithMedOnStock(eRecipeDTO.geteRecipeItems());
+
+        // calculate total price for every pharmacy
+        List<PharmacyERecipeDTO> pharmacyERecipeDTOS = new ArrayList<>();
+        for (var p : pharmaciesWithMedInStock) {
+            Optional<Pharmacy> optionalPharmacy = pharmacyRepository.getPharmacyByIdFetchPriceList(p.getId());
+            if (optionalPharmacy.isEmpty()) {
+                return new ArrayList<>();
+            }
+            double totalPrice = calculateTotalPrice(optionalPharmacy.get(), eRecipeDTO);
+            PharmacyERecipeDTO pharmacyERecipeDTO = modelMapper.map(optionalPharmacy.get(), PharmacyERecipeDTO.class);
+            pharmacyERecipeDTO.setTotalPrice(totalPrice);
+            pharmacyERecipeDTOS.add(pharmacyERecipeDTO);
+        }
+
+        return sorted(pharmacyERecipeDTOS, sortBy, order);
+    }
+
+    private List<PharmacyERecipeDTO> sorted(List<PharmacyERecipeDTO> toSort, String sortBy, String order) {
+        Class<PharmacyERecipeDTO> c = PharmacyERecipeDTO.class;
+        int direction = order.equals("ASC") ? 1 : -1;
+        List<PharmacyERecipeDTO> pS = toSort;
+        try {
+            Field field = c.getDeclaredField(sortBy);
+            field.setAccessible(true);
+            Comparator<PharmacyERecipeDTO> comp = (o1, o2) -> {
+                try {
+                    if (field.getType() == String.class) {
+                        String s1 = (String) field.get(o1);
+                        String s2 = (String) field.get(o2);
+                        return s1.compareToIgnoreCase(s2) * direction;
+                    } else if (field.getType() == Integer.class || field.getType() == Double.class) {
+                        return ((Double) field.get(o1)).compareTo((Double) field.get(o2)) * direction;
+                    }
+                } catch (IllegalAccessException e) {
+                    return 0;
+                }
+                return 0;
+            };
+
+            pS = toSort.stream().sorted(comp).collect(Collectors.toList());
+            return pS;
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return toSort;
+    }
+
+    private double calculateTotalPrice(Pharmacy pharmacy, ERecipeDTO eRecipeDTO) {
+        double price = 0;
+        for (var ri: eRecipeDTO.geteRecipeItems()) {
+            Optional<MedicineItem> mi = pharmacy.getPriceList().getMedicineItems().stream().filter(medicineItem -> medicineItem.getMedicine().getCode().equals(ri.getMedicineCode())).findFirst();
+            if (mi.isPresent()) {
+                price += mi.get().getMedicinePrices().get(mi.get().getMedicinePrices().size() - 1).getPrice() * ri.getQuantity();
+            }
+        }
+        return price;
     }
 
 }

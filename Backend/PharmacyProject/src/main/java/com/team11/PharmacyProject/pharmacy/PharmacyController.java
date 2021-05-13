@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineTherapyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.*;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
@@ -9,6 +10,7 @@ import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -84,6 +86,21 @@ public class PharmacyController {
     public ResponseEntity<Boolean> isSubscribed(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
         boolean isSubscribed = pharmacyService.isSubscribed(pharmacyId, patientId);
         return new ResponseEntity<>(isSubscribed, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/e-recipe")
+    public ResponseEntity<List<PharmacyERecipeDTO>> getPharmaciesWithAllMedicine(@RequestBody @Valid ERecipeDTO eRecipeDTO,
+                                                                                 @RequestParam(value = "sort", required = false) String criteria,
+                                                                                 @RequestParam(value = "order", required = false) String order) {
+        String dir = "ASC";
+        if (criteria == null || criteria.isEmpty()) {
+            criteria = "name";
+        }
+        if (order != null && order.equals("DESC")) {
+            dir = "DESC";
+        }
+        List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO, criteria, dir);
+        return new ResponseEntity<>(pharmacyERecipeDTOS, HttpStatus.OK);
     }
 
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)
