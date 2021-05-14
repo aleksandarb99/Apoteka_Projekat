@@ -1,10 +1,12 @@
 package com.team11.PharmacyProject.email;
 
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
+import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWorkerDTO;
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayDTO;
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayWithWorkerDetailsDTO;
+import com.team11.PharmacyProject.eRecipe.ERecipe;
 import com.team11.PharmacyProject.myOrder.MyOrder;
 import com.team11.PharmacyProject.orderItem.OrderItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,6 +152,38 @@ public class EmailService {
                 + "Naziv leka: " + reservationDTO.getMedicineName() + "\nKod leka: " + reservationDTO.getMedicineID() + "\n\n"
                 + "Hvala Vam na poverenju, nadamo se daljoj zajednickoj saradnji!");
 
+        javaMailSender.send(mail);
+    }
+
+    @Async
+    public void notifyPatientAboutERecipe(ERecipe eRecipe) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(eRecipe.getPatient().getEmail()); //todo promeni kada se usklade adrese
+        mail.setTo("deja99@live.com");
+        mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
+        mail.setSubject("Potvrda izdavanja lekova putem e-recepta");
+
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(eRecipe.getPrescriptionDate());
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTimeInMillis(eRecipe.getDispensingDate());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd. M. yyyy. : HH:mm");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Poštovani ").append(eRecipe.getPatient().getFirstName()).append(" ").append(eRecipe.getPatient().getLastName())
+                .append(",\nIzvršeno je izdavanje lekova putem e-recepta\n\n")
+                .append("Datum nastanka e-recepta: ").append(sdf.format(cal1.getTime())).append("\n")
+                .append("Datum izdavanja lekova: ").append(sdf.format(cal2.getTime())).append("\n\n")
+                .append("Izdati lekovi: \n");
+
+        for (var eri : eRecipe.geteRecipeItems()) {
+            sb.append("Lek: ")
+                    .append(eri.getMedicineName()).append(" -- Kolicina: ").append(eri.getQuantity()).append("\n");
+        }
+
+        mail.setText(sb.toString());
         javaMailSender.send(mail);
     }
 }

@@ -8,7 +8,14 @@ import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
+import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.ERecipeState;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.patient.PatientRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +24,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +35,15 @@ public class ERecipeServiceImpl implements ERecipeService {
 
     @Autowired
     ERecipeRepository eRecipeRepository;
+
+    @Autowired
+    PharmacyRepository pharmacyRepository;
+
+    @Autowired
+    PatientRepository patientRepository;
+
+    @Autowired
+    ModelMapper modelMapper;
 
     @Override
     public ERecipeDTO getERecipe(MultipartFile file) {
@@ -67,6 +84,60 @@ public class ERecipeServiceImpl implements ERecipeService {
         Result result = multiFormatReader.decode(binaryBitmap);
 
         return result.getText();
+    }
+
+    @Override
+    public ERecipe dispenseMedicine(long pharmacyId, ERecipeDTO eRecipeDTO) {
+        // TODO complex validation
+        // get pharmacy
+        Optional<Pharmacy> pharmacyOp = pharmacyRepository.getPharmacyByIdFetchPriceList(pharmacyId);
+        if (pharmacyOp.isEmpty())
+            return null;
+        Pharmacy pharmacy = pharmacyOp.get();
+
+        // get e-prescription items
+        Optional<ERecipe> optionalERecipe = eRecipeRepository.findFirstByCode(eRecipeDTO.getCode());
+        if (optionalERecipe.isPresent()) {
+            return null;
+        }
+
+        ERecipe eRecipe = modelMapper.map(eRecipeDTO, ERecipe.class);
+        List<ERecipeItem> items = eRecipe.geteRecipeItems();
+
+        // get items in pharmacy
+        List<MedicineItem> medicineItems = pharmacy.getPriceList().getMedicineItems();
+
+        for (var item : items) {
+            boolean found = false;
+            for (var mi : medicineItems) {
+                if (item.getMedicineCode().equals(mi.getMedicine().getCode())) {
+                    found = true;
+                    if (mi.getAmount() < item.getQuantity()) {
+                        return null;
+                    }
+                    mi.setAmount(mi.getAmount() - item.getQuantity());
+                    break;
+                }
+            }
+            if (!found) {
+                return null;
+            }
+        }
+
+        // set null fields
+        Optional<Patient> patient = patientRepository.findById(eRecipeDTO.getPatientId());
+        if (patient.isEmpty()) {
+            return null;
+        }
+        eRecipe.setDispensingDate(System.currentTimeMillis());
+        eRecipe.setPatient(patient.get());
+        eRecipe.setState(ERecipeState.PROCESSED);
+
+        // save pharmacy
+        pharmacyRepository.save(pharmacy);
+        // save eRecipe
+        eRecipeRepository.save(eRecipe);
+        return eRecipe;
     }
 
 }

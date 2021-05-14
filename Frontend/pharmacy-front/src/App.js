@@ -35,6 +35,7 @@ import ReservedMedicines from "./components/unregisteredAndPatient/ReservedMedic
 import Rating from "./components/unregisteredAndPatient/Rating";
 import ComplaintsPage from "./components/complaints/ComplaintsPage";
 import ComplaintResponsesPage from "./components/complaintResponses/ComplaintResponsesPage";
+import EPrescriptionSearch from './components/ePrescription/EPrescriptionSearch'
 
 import "./styling/navbar.css";
 
@@ -91,12 +92,13 @@ function App() {
             component={AppointmentReport}
           />
           <Route path="/worker/vacation" component={VacationRequest} />
-          <Route path="/worker/issue_medicine" component={IssueMedicine}/>
+          <Route path="/worker/issue_medicine" component={IssueMedicine} />
           <Route path="/user/complaints" component={ComplaintsPage} />
           <Route
             path="/admin/complaint-responses"
             component={ComplaintResponsesPage}
           />
+          <Route path="/e-prescription" component={EPrescriptionSearch} />
         </Switch>
       </div>
       <Footer />

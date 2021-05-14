@@ -30,7 +30,7 @@ public class ERecipe {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ERecipeItem> eRecipeItems;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
@@ -92,5 +92,13 @@ public class ERecipe {
 
     public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public Long getPrescriptionDate() {
+        return prescriptionDate;
+    }
+
+    public void setPrescriptionDate(Long prescriptionDate) {
+        this.prescriptionDate = prescriptionDate;
     }
 }
