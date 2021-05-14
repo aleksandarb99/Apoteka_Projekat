@@ -88,7 +88,7 @@ public class PharmacyController {
         return new ResponseEntity<>(isSubscribed, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/e-recipe")
+    @PostMapping(value = "/e-recipe")
     public ResponseEntity<List<PharmacyERecipeDTO>> getPharmaciesWithAllMedicine(@RequestBody @Valid ERecipeDTO eRecipeDTO,
                                                                                  @RequestParam(value = "sort", required = false) String criteria,
                                                                                  @RequestParam(value = "order", required = false) String order) {

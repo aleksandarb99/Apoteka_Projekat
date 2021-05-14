@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Col, Container, Form, Row } from 'react-bootstrap';
 import PharmacyWithMedicineItem from './PharmacyWithMedicineItem'
 
-const PharmacyWithMedicineList = ({ pharmacies }) => {
+const PharmacyWithMedicineList = ({ hidden, pharmacies }) => {
     const [sortBy, setSortBy] = useState("totalPrice");
     const [sortOrder, setSortOrder] = useState("ASC");
     const [selectedPharmacy, setSelectedPharmacy] = useState();
@@ -12,7 +12,7 @@ const PharmacyWithMedicineList = ({ pharmacies }) => {
     }, [sortBy, sortOrder]);
 
     return (
-        <Form>
+        <Form hidden={hidden}>
             <Container>
                 <Row className="align-content-between">
                     <Col md={{ span: 3, offset: 2 }}>
