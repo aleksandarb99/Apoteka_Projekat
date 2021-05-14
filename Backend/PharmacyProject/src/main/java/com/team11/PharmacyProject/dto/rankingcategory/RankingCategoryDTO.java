@@ -1,31 +1,28 @@
-package com.team11.PharmacyProject.rankingCategory;
+package com.team11.PharmacyProject.dto.rankingcategory;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-@Entity
-public class RankingCategory {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RankingCategoryDTO {
     private Long id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @NotBlank
     private String name;
 
-    @Column(name = "points_required", nullable = false, unique = true)
+    @NotNull
     private int pointsRequired;
 
-    @Column(name = "discount", nullable = false)
+    @NotNull
     private double discount;
 
-    public RankingCategory() {
-    }
-
-    public RankingCategory(Long id, String name, int pointsRequired, double discount) {
+    public RankingCategoryDTO(Long id, @NotBlank String name, @NotNull int pointsRequired, @NotNull double discount) {
         this.id = id;
         this.name = name;
         this.pointsRequired = pointsRequired;
         this.discount = discount;
+    }
+
+    public RankingCategoryDTO() {
     }
 
     public Long getId() {

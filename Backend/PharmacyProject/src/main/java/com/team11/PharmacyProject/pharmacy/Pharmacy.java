@@ -33,6 +33,9 @@ public class Pharmacy {
     @Column(name = "consultation_duration")
     private int consultationDuration;
 
+    @Column(name = "points")
+    private int pointsPerCheckup;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Patient> subscribers;
 
@@ -58,7 +61,8 @@ public class Pharmacy {
 
     public Pharmacy(Long id, String name, String description, Double avgGrade,
                     List<Patient> subscribers, PriceList priceList, ArrayList<Appointment> appointments,
-                    Address address, List<Workplace> workplaces, Double consultationPrice, int consultationDuration) {
+                    Address address, List<Workplace> workplaces, Double consultationPrice, int consultationDuration,
+                    int pointsPerCheckup) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -70,6 +74,7 @@ public class Pharmacy {
         this.workplaces = workplaces;
         this.consultationPrice = consultationPrice;
         this.consultationDuration = consultationDuration;
+        this.pointsPerCheckup = pointsPerCheckup;
     }
 
     public List<MyUser> getAdmins() {
@@ -182,6 +187,14 @@ public class Pharmacy {
 
     public void setConsultationDuration(int consultationDuration) {
         this.consultationDuration = consultationDuration;
+    }
+
+    public int getPointsPerCheckup() {
+        return pointsPerCheckup;
+    }
+
+    public void setPointsPerCheckup(int pointsPerCheckup) {
+        this.pointsPerCheckup = pointsPerCheckup;
     }
 
     @Override
