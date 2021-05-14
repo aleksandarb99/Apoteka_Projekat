@@ -5,4 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ERecipeService {
     ERecipeDTO getERecipe(MultipartFile file);
+
+    boolean dispenseMedicine(long pharmacyId, ERecipeDTO eRecipeDTO);
 }
