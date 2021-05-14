@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.eRecipe;
 
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
+import com.team11.PharmacyProject.email.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +18,8 @@ public class ERecipeController {
 
     @Autowired
     ERecipeService eRecipeService;
+    @Autowired
+    EmailService emailService;
 
     @PostMapping(value = "/upload-qr")
     public ResponseEntity<?> parseQRCode(@RequestParam("file") MultipartFile file) {
@@ -27,8 +30,9 @@ public class ERecipeController {
 
     @PostMapping(value="/dispense-medicine/{pharmacyId}")
     public ResponseEntity<?> dispenseMedicine(@PathVariable("pharmacyId") long pharmacyId, @RequestBody @Valid ERecipeDTO eRecipeDTO) {
-        boolean isDispensed = eRecipeService.dispenseMedicine(pharmacyId, eRecipeDTO);
-        if (isDispensed) {
+        ERecipe recipe = eRecipeService.dispenseMedicine(pharmacyId, eRecipeDTO);
+        if (recipe != null) {
+            emailService.notifyPatientAboutERecipe(recipe);
             return new ResponseEntity<>("Medicine successfully dispensed", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Error. Medicine not dispensed", HttpStatus.BAD_REQUEST);

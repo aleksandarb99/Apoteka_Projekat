@@ -1,11 +1,8 @@
 import React from 'react'
 import { Button, Card, Col, Container, Row } from 'react-bootstrap'
+import api from '../../app/api'
 
-const PharmacyWithMedicineItem = ({ pharmacy }) => {
-
-    const doBuy = () => {
-
-    }
+const PharmacyWithMedicineItem = ({ pharmacy, doBuy }) => {
 
     return (
         <Card style={{ marginBottom: '20px' }}>
@@ -35,7 +32,7 @@ const PharmacyWithMedicineItem = ({ pharmacy }) => {
                             <i>{`Total price: ${pharmacy.totalPrice}`}</i>
                         </Col>
                         <Col md={{ span: 2, offset: 7 }}>
-                            <Button style={{ width: '100%' }} onClick={doBuy}>Buy</Button>
+                            <Button style={{ width: '100%' }} onClick={() => { doBuy(pharmacy.id) }}>Buy</Button>
                         </Col>
                     </Row>
                 </Container>

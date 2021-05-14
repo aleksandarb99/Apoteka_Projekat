@@ -87,18 +87,18 @@ public class ERecipeServiceImpl implements ERecipeService {
     }
 
     @Override
-    public boolean dispenseMedicine(long pharmacyId, ERecipeDTO eRecipeDTO) {
-        // TODO validation
+    public ERecipe dispenseMedicine(long pharmacyId, ERecipeDTO eRecipeDTO) {
+        // TODO complex validation
         // get pharmacy
         Optional<Pharmacy> pharmacyOp = pharmacyRepository.getPharmacyByIdFetchPriceList(pharmacyId);
         if (pharmacyOp.isEmpty())
-            return false;
+            return null;
         Pharmacy pharmacy = pharmacyOp.get();
 
         // get e-prescription items
         Optional<ERecipe> optionalERecipe = eRecipeRepository.findFirstByCode(eRecipeDTO.getCode());
         if (optionalERecipe.isPresent()) {
-            return false;
+            return null;
         }
 
         ERecipe eRecipe = modelMapper.map(eRecipeDTO, ERecipe.class);
@@ -113,21 +113,21 @@ public class ERecipeServiceImpl implements ERecipeService {
                 if (item.getMedicineCode().equals(mi.getMedicine().getCode())) {
                     found = true;
                     if (mi.getAmount() < item.getQuantity()) {
-                        return false;
+                        return null;
                     }
                     mi.setAmount(mi.getAmount() - item.getQuantity());
                     break;
                 }
             }
             if (!found) {
-                return false;
+                return null;
             }
         }
 
         // set null fields
         Optional<Patient> patient = patientRepository.findById(eRecipeDTO.getPatientId());
         if (patient.isEmpty()) {
-            return false;
+            return null;
         }
         eRecipe.setDispensingDate(System.currentTimeMillis());
         eRecipe.setPatient(patient.get());
@@ -137,7 +137,7 @@ public class ERecipeServiceImpl implements ERecipeService {
         pharmacyRepository.save(pharmacy);
         // save eRecipe
         eRecipeRepository.save(eRecipe);
-        return true;
+        return eRecipe;
     }
 
 }
