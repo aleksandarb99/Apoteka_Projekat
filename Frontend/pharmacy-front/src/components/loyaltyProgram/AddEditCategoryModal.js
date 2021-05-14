@@ -29,8 +29,14 @@ const AddEditCategoryModal = (props) => {
             })
     }
 
+    const resetData = () => {
+        setName("")
+        setRequiredPoints(0)
+        setDiscount(0.00)
+    }
+
     return (
-        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal {...props} onEnter={() => { resetData() }} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     {!!props.category ? `Edit ${props.category.name}` : "Add new category"}
