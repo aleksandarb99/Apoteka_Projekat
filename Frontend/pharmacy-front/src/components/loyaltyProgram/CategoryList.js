@@ -5,13 +5,14 @@ import CategoryItem from './CategoryItem';
 
 const CategoryList = () => {
     const [components, setComponents] = useState([]);
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         api.get(`http://localhost:8080/api/ranking-category/`)
             .then((res) => {
                 setComponents(res.data)
             })
-    }, [])
+    }, [refresh])
 
     return (
         <Container fluid>
@@ -19,13 +20,13 @@ const CategoryList = () => {
                 <Col md={{ span: 4, offset: 4 }}>
                     <div>
                         {components.map((c) => {
-                            return <CategoryItem category={c}></CategoryItem>
+                            return <CategoryItem key={c.id} category={c} onItemChanged={() => { setRefresh(!refresh) }}></CategoryItem>
                         })}
                     </div>
                 </Col>
             </Row>
 
-        </Container>
+        </Container >
     )
 }
 

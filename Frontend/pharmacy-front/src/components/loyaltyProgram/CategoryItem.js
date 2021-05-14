@@ -1,7 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Card, Col, Container, Row } from 'react-bootstrap'
+import DeleteModal from '../utilComponents/modals/DeleteModal'
+import api from '../../app/api'
+import AddEditCategoryModal from './AddEditCategoryModal'
 
-const CategoryItem = ({ category }) => {
+const CategoryItem = ({ category, onItemChanged }) => {
+    const [showAddEditModal, setShowAddEditModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+    const deleteCategory = () => {
+        api.delete(`http://localhost:8080/api/ranking-category/${category.id}`)
+            .then(() => {
+                onItemChanged();
+            })
+        setShowDeleteModal(false);
+    }
+
+    const editCategory = () => {
+        onItemChanged();
+        setShowDeleteModal(false);
+    }
+
     return (
         <Card style={{ marginBottom: '20px' }}>
             <Card.Header>
@@ -27,14 +46,26 @@ const CategoryItem = ({ category }) => {
                 <Container>
                     <Row>
                         <Col md={{ span: 4, offset: 0 }}>
-                            <Button variant="outline-success" style={{ width: '100%', marginLeft: '0' }} onClick={() => { }}>Edit</Button>
+                            <Button variant="outline-success" style={{ width: '100%', marginLeft: '0' }} onClick={() => { setShowAddEditModal(true) }}>Edit</Button>
                         </Col>
                         <Col md={{ span: 4, offset: 4 }}>
-                            <Button variant="outline-danger" style={{ width: '100%' }} onClick={() => { }}>Remove</Button>
+                            <Button variant="outline-danger" style={{ width: '100%' }} onClick={() => { setShowDeleteModal(true) }}>Remove</Button>
                         </Col>
                     </Row>
                 </Container>
             </Card.Footer>
+            <DeleteModal
+                title={"Remove " + category.name}
+                show={showDeleteModal}
+                onHide={() => setShowDeleteModal(false)}
+                onDelete={deleteCategory}
+            />
+            <AddEditCategoryModal
+                show={showAddEditModal}
+                category={category}
+                onHide={() => setShowAddEditModal(false)}
+                onAddEdit={editCategory}
+            />
         </Card>
     )
 }
