@@ -30,7 +30,7 @@ function ReservedMedicines() {
     async function fetchReservations() {
       const request = await axios.get(
         "http://localhost:8080/api/medicine-reservation/reserved-medicines/patient/" +
-          getIdFromToken()
+        getIdFromToken()
       );
       setReservations(request.data);
 
@@ -43,7 +43,7 @@ function ReservedMedicines() {
     axios
       .put(
         "http://localhost:8080/api/medicine-reservation/cancel-reservation/" +
-          id
+        id
       )
       .then((res) => {
         if (res.data == "canceled") {
