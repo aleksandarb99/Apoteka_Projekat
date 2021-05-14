@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Row } from 'react-bootstrap'
 import api from '../../app/api';
 import PharmacyWithMedicineList from './PharmacyWithMedicineList';
+import RequiredMedicineList from './RequiredMedicineList';
 
 const ERecipeSearch = () => {
     const [errorMessage, setErrorMessage] = useState("");
@@ -70,7 +71,7 @@ const ERecipeSearch = () => {
 
 
     return (
-        <Container fluid>
+        <Container>
             <Form onSubmit={(e) => { handleSubmit(e) }}>
                 <Container style={{ marginBottom: "15px" }}>
                     <Row>
@@ -89,6 +90,8 @@ const ERecipeSearch = () => {
                 </Container>
             </Form>
             <Form hidden={!showSearchPanel} >
+                <p>Required medicine: </p>
+                <RequiredMedicineList medicines={parsedData.eRecipeItems}></RequiredMedicineList>
                 <Container>
                     <Row className="align-content-between">
                         <Col md={{ span: 3, offset: 2 }}>
