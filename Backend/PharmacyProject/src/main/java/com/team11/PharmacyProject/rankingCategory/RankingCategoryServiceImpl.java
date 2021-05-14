@@ -40,6 +40,13 @@ public class RankingCategoryServiceImpl implements RankingCategoryService {
 
     @Override
     public boolean updateCategory(RankingCategory category) {
+        if (category.getDiscount() < 0 || category.getDiscount() > 100) {
+            throw new RuntimeException("Discount must be between 0 and 100");
+        }
+        if (category.getPointsRequired() < 0) {
+            throw new RuntimeException("Points must be grater than 0");
+        }
+
         Optional<RankingCategory> rankingCategoryOp = rankingRepository.findById(category.getId());
         RankingCategory rc = new RankingCategory();
         if (rankingCategoryOp.isPresent()) {

@@ -45,7 +45,7 @@ function EditPharmacyModal(props) {
         else if (name.length > 40) newErrors.name = 'Name is too long!'
         // Description errors
         if (!description || description === '') newErrors.description = 'Description cannot be blank!'
-        else if (description.length > 60) newErrors.description = 'Description is too long!'
+        else if (description.length > 180) newErrors.description = 'Description is too long!'
         // City errors
         if (!city || city === '') newErrors.city = 'City cannot be blank!'
         else if (city.length > 40) newErrors.city = 'City name is too long!'
@@ -91,6 +91,7 @@ function EditPharmacyModal(props) {
         data.id = props.pharmacy.id
         data.name = form.name;
         data.description = form.description;
+        data.pointsForAppointment = form.pointsForAppointment;
         data.address = address
         return data;
     }
@@ -128,6 +129,18 @@ function EditPharmacyModal(props) {
                         <Form.Control.Feedback type='invalid'>
                             {errors.description}
                         </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Points for appointment</Form.Label>
+                        <Form.Control
+                            type="number"
+                            onChange={(event) => setField('pointsForAppointment', event.target.value)}
+                            defaultValue={props.pharmacy.pointsForAppointment}
+                            min={0}
+                            max={100.00}
+                            step={0.01}
+                        />
                     </Form.Group>
 
                     <Location onChange={(address) => setAddress(address)} defAddress={props.pharmacy.address}></Location>

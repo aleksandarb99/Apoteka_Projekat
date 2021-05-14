@@ -10,6 +10,7 @@ public class MedicineCrudDTO {
     private String sideEffects;
     private RecipeRegime recipeRequired;
     private double dailyIntake;
+    private int points;
     private String additionalNotes;
 
     public Long getId() {
@@ -74,5 +75,13 @@ public class MedicineCrudDTO {
 
     public void setAdditionalNotes(String additionalNotes) {
         this.additionalNotes = additionalNotes;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 }
