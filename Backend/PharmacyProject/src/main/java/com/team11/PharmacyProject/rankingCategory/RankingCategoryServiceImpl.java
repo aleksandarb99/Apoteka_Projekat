@@ -20,21 +20,17 @@ public class RankingCategoryServiceImpl implements RankingCategoryService {
     public RankingCategory getCategoryByPoints(int points) {
 
         List<RankingCategory> selected = new ArrayList<>();
-        List<RankingCategory> categories = rankingRepository.findAll();
+        List<RankingCategory> categories = rankingRepository.findAll(Sort.by(Sort.Direction.ASC, "pointsRequired"));
+
+        RankingCategory cat = null;
 
         for(RankingCategory category : categories) {
-            if(category.getPointsRequired() <= points)
-                selected.add(category);
+            if(category.getPointsRequired() > points)
+                break;
+            cat = category;
         }
 
-        if(selected.size() == 0) return null;
-
-        List<RankingCategory> sorted = selected;
-        if(selected.size() > 1)
-            sorted = selected.stream().sorted(Comparator.comparingInt(RankingCategory::getPointsRequired)).collect(Collectors.toList());
-
-        // TODO da li ovde treba sorted?
-        return selected.get(selected.size() - 1);
+        return cat;
     }
 
     @Override
