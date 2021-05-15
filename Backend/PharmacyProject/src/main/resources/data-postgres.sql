@@ -2,12 +2,14 @@
 /*Locations*/
 insert into location (longitude, latitude) values (19.833549, 45.267136);       /*Novi Sad*/
 insert into location (longitude, latitude) values (20.43157, 44.80886);       /*Beograd*/
+insert into location (longitude, latitude) values (19.8419405, 45.2474401);
 
 /*Addresses*/
 insert into address (street, city, country, location_id) values ('Omladinska 19', 'Novi Sad', 'Srbija', 1);
 insert into address (street, city, country, location_id) values ('Jevrejska 4', 'Beograd', 'Srbija', 2);
 insert into address (street, city, country, location_id) values ('Bulevar kralja Aleksandra 37', 'Beograd', 'Srbija', 2);
 insert into address (street, city, country, location_id) values ('Fruskogorksa 14', 'Novi Sad', 'Srbija', 1);
+insert into address (street, city, country, location_id) values ('Bulevar oslobodjenja 119', 'Novi Sad', 'Srbija', 3);
 
 /*Medicine types*/
 insert into medicine_type (name) values ('Antibiotik');
@@ -65,6 +67,11 @@ insert into medicine_item (amount, medicine_id) values (55, 4);
 insert into medicine_item (amount, medicine_id) values (67, 5);
 insert into medicine_item (amount, medicine_id) values (30, 1);
 insert into medicine_item (amount, medicine_id) values (0, 5);
+insert into medicine_item (amount, medicine_id) values (100, 4);
+insert into medicine_item (amount, medicine_id) values (12, 2);
+insert into medicine_item (amount, medicine_id) values (63, 1);
+insert into medicine_item (amount, medicine_id) values (2, 2);
+insert into medicine_item (amount, medicine_id) values (9, 3);
 
 /*Supplier items*/
 insert into supplier_item (amount, medicine_id) values (30, 1);
@@ -108,6 +115,11 @@ insert into price_list_medicine_items (price_list_id, medicine_items_id) values 
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 4);
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (2, 6);
 insert into price_list_medicine_items (price_list_id, medicine_items_id) values (1, 7);
+insert into price_list_medicine_items (price_list_id, medicine_items_id) values (1, 8);
+insert into price_list_medicine_items (price_list_id, medicine_items_id) values (2, 9);
+insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 10);
+insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 11);
+insert into price_list_medicine_items (price_list_id, medicine_items_id) values (1, 12);
 
 
 /*Workplace - WorkDays*/
@@ -273,7 +285,7 @@ insert into erecipe_item (medicine_code, medicine_name, quantity) values ('M01AE
 insert into erecipe_item (medicine_code, medicine_name, quantity) values ('N02BE01', 'Paracetamol', 1);
 
 /*ERecipes*/
-insert into erecipe (prescription_date, dispensing_date, state, code, patient_id) values (1616846400000, 1620812258708, 'PROCESSED', 'EP0001', 1);
+insert into erecipe (prescription_date, dispensing_date, state, code, patient_id) values (1616846400000, 1620812258708, 'PROCESSED', 'EP0000', 1);
 
 /*ERecipes - ERecipes Items*/
 insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 1);
@@ -285,9 +297,20 @@ insert into medicine_price (price, start_date) values (489, 1618160400000);
 insert into medicine_price (price, start_date) values (250, 1615482000000);
 insert into medicine_price (price, start_date) values (670, 1613062800000);
 insert into medicine_price (price, start_date) values (1200, 1610384400000);
+
 insert into medicine_price (price, start_date) values (470, 1578769200000);
 insert into medicine_price (price, start_date) values (470, 1578769200000);
--- insert into medicine_price (price, start_date) values (879, 1616241600000;
+insert into medicine_price (price, start_date) values (410, 1616241600000);
+insert into medicine_price (price, start_date) values (1345, 1616241600000);
+insert into medicine_price (price, start_date) values (233, 1616241600000);
+
+insert into medicine_price (price, start_date) values (459, 1616241600000);
+insert into medicine_price (price, start_date) values (467, 1616241650000);
+insert into medicine_price (price, start_date) values (278, 1616241600000);
+insert into medicine_price (price, start_date) values (845, 1616241600000);
+insert into medicine_price (price, start_date) values (640, 1616241600000);
+
+insert into medicine_price (price, start_date) values (700, 1616241600000);
 
 /* MedicineItem - MedicinePrices*/
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (1, 1);
@@ -297,7 +320,15 @@ insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id)
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (4, 5);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (6, 6);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (7, 7);
--- insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (5, 6);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (5, 8);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (8, 9);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (9, 10);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (10, 11);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (10, 12);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (11, 13);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (12, 14);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (12, 15);
+insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (12, 16);
 
 /*Complaints*/
 insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
@@ -313,7 +344,7 @@ insert into complaint_response (response_text, date, complaint_id, user_id)
 
 /*Pharmacies*/
 insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, points, address_id, price_list_id)
-                    values (4.4, 500, 15, 'Najjaca apoteka u gradu.', 'Zelena Apoteka', 5, 1, 1);
+                    values (4.4, 500, 15, 'Najjaca apoteka u gradu.', 'Zelena Apoteka', 5, 5, 1);
 insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, points, address_id, price_list_id)
                     values (4.8, 450, 10, 'Poverenje, sigurnost i dostupnost su, već skoro 30 godina, glavna obeležja Apotekarske ustanove Jankovic.', 'Apoteka Jankovic', 10, 1, 2);
 insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, points, address_id, price_list_id)
