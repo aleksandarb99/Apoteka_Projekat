@@ -71,7 +71,10 @@ function PharmaciesView() {
   const formFilter = (event) => {
     event.preventDefault();
 
-    if (filterGrade === "" && filterDistance === "") return;
+    if (filterGrade === "" && filterDistance === "") {
+      setPharmacies(backup);
+      return;
+    }
 
     var filtered = [];
 
