@@ -35,8 +35,8 @@ import ReservedMedicines from "./components/unregisteredAndPatient/ReservedMedic
 import Rating from "./components/unregisteredAndPatient/Rating";
 import ComplaintsPage from "./components/complaints/ComplaintsPage";
 import ComplaintResponsesPage from "./components/complaintResponses/ComplaintResponsesPage";
-import EPrescriptionSearch from './components/ePrescription/EPrescriptionSearch'
-import CategotyList from './components/loyaltyProgram/CategoryList'
+import EPrescriptionPage from "./components/ePrescription/EPrescriptionPage";
+import CategotyList from "./components/loyaltyProgram/CategoryList";
 
 import "./styling/navbar.css";
 
@@ -99,7 +99,7 @@ function App() {
             path="/admin/complaint-responses"
             component={ComplaintResponsesPage}
           />
-          <Route path="/e-prescription" component={EPrescriptionSearch} />
+          <Route path="/e-prescription" component={EPrescriptionPage} />
           <Route path="/admin/loyalty" component={CategotyList} />
         </Switch>
       </div>
