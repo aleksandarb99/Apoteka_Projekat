@@ -46,14 +46,17 @@ public class ERecipeServiceImpl implements ERecipeService {
     ModelMapper modelMapper;
 
     @Override
-    public ERecipeDTO getERecipe(MultipartFile file) {
-        return getERecipeFromQRCode(file);
+    public ERecipeDTO getERecipe(long patientId, MultipartFile file) {
+        return getERecipeFromQRCode(patientId, file);
     }
 
-    private ERecipeDTO getERecipeFromQRCode(MultipartFile file) {
+    private ERecipeDTO getERecipeFromQRCode(long patientId, MultipartFile file) {
         try {
             String qrCodeText = parseQRCode(file);
             ERecipeDTO eRecipeDTO = objectMapper.readValue(qrCodeText, ERecipeDTO.class);
+            if (patientId != eRecipeDTO.getPatientId()) {
+                throw new Exception("Invalid patient Id");
+            }
             // Set state depending on eRecipeCode
             // Database will store only REJECTED/PROCESSES prescriptions
             Optional<ERecipe> er = eRecipeRepository.findFirstByCode(eRecipeDTO.getCode());
@@ -65,7 +68,7 @@ public class ERecipeServiceImpl implements ERecipeService {
                 eRecipeDTO.setState(ERecipeState.NEW);
             }
             return eRecipeDTO;
-        } catch (IOException | NotFoundException e) {
+        } catch (Exception e) {
             // If parser cannot parse QR code, or if JSON is invalid
             ERecipeDTO er = new ERecipeDTO();
             er.setState(ERecipeState.REJECTED);

@@ -4,7 +4,7 @@ import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ERecipeService {
-    ERecipeDTO getERecipe(MultipartFile file);
+    ERecipeDTO getERecipe(long patientId, MultipartFile file);
 
     ERecipe dispenseMedicine(long pharmacyId, ERecipeDTO eRecipeDTO);
 }
