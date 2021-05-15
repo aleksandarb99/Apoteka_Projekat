@@ -23,6 +23,7 @@ import "../../styling/pharmaciesAndMedicines.css";
 
 function PharmaciesView() {
   const [pharmacies, setPharmacies] = useState([]);
+  const [backup, setBackup] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
   const [showedPharmacies, setShowedPharmacies] = useState([]);
@@ -40,6 +41,7 @@ function PharmaciesView() {
     async function fetchPharmacies() {
       const request = await axios.get("http://localhost:8080/api/pharmacy/");
       setPharmacies(request.data);
+      setBackup(request.data);
 
       return request;
     }
@@ -50,15 +52,19 @@ function PharmaciesView() {
     event.preventDefault();
 
     if (fsearch.length === 0) {
-      axios
-        .get("http://localhost:8080/api/pharmacy/")
-        .then((resp) => setPharmacies(resp.data));
+      axios.get("http://localhost:8080/api/pharmacy/").then((resp) => {
+        setPharmacies(resp.data);
+        setBackup(resp.data);
+      });
     } else {
       axios
         .get("http://localhost:8080/api/pharmacy/search", {
           params: { searchValue: fsearch },
         })
-        .then((resp) => setPharmacies(resp.data));
+        .then((resp) => {
+          setPharmacies(resp.data);
+          setBackup(resp.data);
+        });
     }
   };
 
@@ -67,47 +73,98 @@ function PharmaciesView() {
 
     if (filterGrade === "" && filterDistance === "") return;
 
-    // axios.get("https://api.ipify.org?format=json").then((res) => {
-    //   axios
-    //     .get(
-    //       "https://api.ipgeolocation.io/ipgeo?apiKey=4939eda48b984abfbb45b4b69f1b6923&ip=" +
-    //         res.data.ip
-    //     )
-    //     .then((res) => {
-    //       axios
-    //         .get("http://localhost:8080/api/pharmacy/filter", {
-    //           params: {
-    //             gradeValue: filterGrade,
-    //             distanceValue: filterDistance,
-    //             longitude: res.data.longitude,
-    //             latitude: res.data.latitude,
-    //           },
-    //         })
-    //         .then((resp) => setPharmacies(resp.data));
-    //     });
-    // });
+    var filtered = [];
 
-    if (navigator.geolocation) {
-      // Ako odredjeni browser podrzava geolocation
-      navigator.geolocation.getCurrentPosition((position) => {
-        axios
-          .get("http://localhost:8080/api/pharmacy/filter", {
-            params: {
-              gradeValue: filterGrade,
-              distanceValue: filterDistance,
-              longitude: position.coords.longitude,
-              latitude: position.coords.latitude,
-            },
-          })
-          .then((resp) => setPharmacies(resp.data));
-      });
+    if (filterGrade !== "") {
+      for (let i = 0; i < backup.length; i++) {
+        if (filterGrade === "HIGH" && backup[i].avgGrade > 3) {
+          filtered.push(backup[i]);
+        } else if (filterGrade === "MEDIUM" && backup[i].avgGrade === 3) {
+          filtered.push(backup[i]);
+        } else if (filterGrade === "LOW" && backup[i].avgGrade < 3) {
+          filtered.push(backup[i]);
+        }
+      }
+
+      setPharmacies(filtered);
+      if (filtered.length === 0) return;
+    }
+
+    if (filterDistance !== "") {
+      if (navigator.geolocation) {
+        // Ako odredjeni browser podrzava geolocation
+        navigator.geolocation.getCurrentPosition((position) => {
+          let filteringList = filtered.length !== 0 ? [...filtered] : backup;
+          filtered = [];
+          for (let i = 0; i < filteringList.length; i++) {
+            if (
+              filterDistance === "5LESS" &&
+              calculateDistance(
+                filteringList[i].address,
+                position.coords.longitude,
+                position.coords.latitude
+              ) <= 5
+            ) {
+              filtered.push(filteringList[i]);
+            } else if (
+              filterDistance === "10LESS" &&
+              calculateDistance(
+                filteringList[i].address,
+                position.coords.longitude,
+                position.coords.latitude
+              ) <= 10
+            ) {
+              filtered.push(filteringList[i]);
+            } else if (
+              filterDistance === "10HIGHER" &&
+              calculateDistance(
+                filteringList[i].address,
+                position.coords.longitude,
+                position.coords.latitude
+              ) > 10
+            ) {
+              filtered.push(filteringList[i]);
+            }
+          }
+
+          setPharmacies(filtered);
+        });
+      }
+    }
+  };
+
+  const calculateDistance = (address, lon2, lat2) => {
+    let lat1 = address.location.latitude;
+    let lon1 = address.location.longitude;
+
+    if (lat1 == lat2 && lon1 == lon2) {
+      return 0;
+    } else {
+      var radlat1 = (Math.PI * lat1) / 180;
+      var radlat2 = (Math.PI * lat2) / 180;
+      var theta = lon1 - lon2;
+      var radtheta = (Math.PI * theta) / 180;
+      var dist =
+        Math.sin(radlat1) * Math.sin(radlat2) +
+        Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+      if (dist > 1) {
+        dist = 1;
+      }
+      dist = Math.acos(dist);
+      dist = (dist * 180) / Math.PI;
+      dist = dist * 60 * 1.1515 * 1.609344;
+      console.log(dist);
+      return dist;
     }
   };
 
   const resetSearch = function () {
     axios
       .get("http://localhost:8080/api/pharmacy/")
-      .then((resp) => setPharmacies(resp.data))
+      .then((resp) => {
+        setPharmacies(resp.data);
+        setBackup(resp.data);
+      })
       .catch(() => setPharmacies([]));
     setFSearch("");
   };
