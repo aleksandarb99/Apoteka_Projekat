@@ -26,7 +26,14 @@ function EPrescriptionPage() {
               </Nav.Item>
             </Nav>
           </Col>
-          <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
+          <Col
+            className="my__container"
+            sm={9}
+            md={9}
+            lg={10}
+            xs={12}
+            style={{ backgroundColor: "rgba(228, 245, 245, 0.897)" }}
+          >
             <Tab.Content>
               <TabPane eventKey="first">
                 <EPrescriptionSearch />

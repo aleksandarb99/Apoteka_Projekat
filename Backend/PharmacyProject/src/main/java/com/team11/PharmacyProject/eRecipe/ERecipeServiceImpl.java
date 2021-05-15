@@ -164,7 +164,7 @@ public class ERecipeServiceImpl implements ERecipeService {
                 MultipartFile multipartFile = new MockMultipartFile("fileItem",
                         fileEntry.getName(), "image/jpg", input);
                 ERecipeDTO dto = getERecipeFromQRCode(id, multipartFile);
-                if (dto.getId() != null && dto.getId().equals(id)) {
+                if (dto.getState() != ERecipeState.REJECTED && dto.getPatientId().equals(id)) {
                     retVal.add(dto);
                 }
             }
