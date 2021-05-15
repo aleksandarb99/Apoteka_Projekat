@@ -195,22 +195,6 @@ public class PharmacyController {
         return new ResponseEntity<>(pharmacyDTOS, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PharmacyAllDTO>> filterPharmacies
-            (@Valid @RequestParam(value = "gradeValue", required = false) String gradeValue,
-             @RequestParam(value = "distanceValue", required = false) String distanceValue,
-             @RequestParam(value = "longitude", required = false) double longitude,
-             @RequestParam(value = "latitude", required = false) double latitude) throws Exception {
-
-        // TODO vidi kako cemo hanladati errore, da li moram rucno proverati da li je prsledjeni atribut prazan string ili predugacak, null, itd.
-        List<Pharmacy> pharmacyResult = pharmacyService.filterPharmacies(gradeValue, distanceValue, longitude, latitude);
-        List<PharmacyAllDTO> pharmacyDTOS = new ArrayList<>();
-        for (Pharmacy p : pharmacyResult) {
-            pharmacyDTOS.add(convertToAllDto(p));
-        }
-        return new ResponseEntity<>(pharmacyDTOS, HttpStatus.OK);
-    }
-
     @GetMapping(value = "/getMedicineFromPharmWithoutAllergies", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MedicineTherapyDTO>> getPharmacyMedicine
             (@RequestParam(value = "pharm_id", required = true) Long pharmID,
