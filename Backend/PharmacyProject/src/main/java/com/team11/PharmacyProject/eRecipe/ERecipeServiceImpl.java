@@ -15,15 +15,19 @@ import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.mail.internet.ContentType;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -141,6 +145,34 @@ public class ERecipeServiceImpl implements ERecipeService {
         // save eRecipe
         eRecipeRepository.save(eRecipe);
         return eRecipe;
+    }
+
+    @Override
+    public List<ERecipeDTO> getEPrescriptionsByPatientId(Long id) {
+
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isEmpty())
+            return null;
+
+        List<ERecipeDTO> retVal = new ArrayList<>();
+        File qr_folder;
+        try {
+            qr_folder = ResourceUtils.getFile("classpath:qr");
+            for (File fileEntry : qr_folder.listFiles()) {
+
+                FileInputStream input = new FileInputStream(fileEntry);
+                MultipartFile multipartFile = new MockMultipartFile("fileItem",
+                        fileEntry.getName(), "image/jpg", input);
+                ERecipeDTO dto = getERecipeFromQRCode(id, multipartFile);
+                if (dto.getId() != null && dto.getId().equals(id)) {
+                    retVal.add(dto);
+                }
+            }
+        } catch (IOException e) {
+            return null;
+        }
+
+        return retVal;
     }
 
 }
