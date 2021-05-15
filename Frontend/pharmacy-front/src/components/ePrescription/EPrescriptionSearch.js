@@ -3,6 +3,7 @@ import { data } from 'jquery';
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Row } from 'react-bootstrap'
 import api from '../../app/api';
+import { getIdFromToken } from '../../app/jwtTokenUtils';
 import PharmacyWithMedicineList from './PharmacyWithMedicineList';
 import RequiredMedicineList from './RequiredMedicineList';
 
@@ -28,7 +29,7 @@ const ERecipeSearch = () => {
 
         api({
             method: 'post',
-            url: 'http://localhost:8080/api/e-recipes/upload-qr',
+            url: `http://localhost:8080/api/e-recipes/upload-qr/${getIdFromToken()}`,
             data: formData,
             headers: { 'Content-Type': 'multipart/form-data' }
         })
@@ -99,7 +100,7 @@ const ERecipeSearch = () => {
             </Form>
             <Form hidden={!showSearchPanel} >
                 <p>Required medicine: </p>
-                <RequiredMedicineList medicines={parsedData.eRecipeItems}></RequiredMedicineList>
+                <RequiredMedicineList medicines={!!parsedData.eRecipeItems ? parsedData.eRecipeItems : []}></RequiredMedicineList>
                 <Container>
                     <Row className="align-content-between">
                         <Col md={{ span: 3, offset: 2 }}>

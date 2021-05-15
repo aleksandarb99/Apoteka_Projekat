@@ -21,10 +21,10 @@ public class ERecipeController {
     @Autowired
     EmailService emailService;
 
-    @PostMapping(value = "/upload-qr")
-    public ResponseEntity<?> parseQRCode(@RequestParam("file") MultipartFile file) {
+    @PostMapping(value = "/upload-qr/{patientId}")
+    public ResponseEntity<?> parseQRCode(@PathVariable("patientId") long patientId, @RequestParam("file") MultipartFile file) {
 
-        ERecipeDTO eRecipeDTO = eRecipeService.getERecipe(file);
+        ERecipeDTO eRecipeDTO = eRecipeService.getERecipe(patientId, file);
         return new ResponseEntity<>(eRecipeDTO, HttpStatus.OK);
     }
 
