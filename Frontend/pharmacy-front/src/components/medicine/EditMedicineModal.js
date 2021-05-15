@@ -60,10 +60,10 @@ function EditMedicineModal(props) {
             <Modal.Body>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <MedicineNameFormGroup
-                        onChange={(event) => setField('code', event.target.value)}
+                        onChange={(event) => setField('name', event.target.value)}
                         defaultValue={!!props.medicine.code ? props.medicine.code : ""} />
                     <MedicineCodeFormGroup
-                        onChange={(event) => setField('name', event.target.value)}
+                        onChange={(event) => setField('code', event.target.value)}
                         defaultValue={!!props.medicine.name ? props.medicine.name : ""} />
                     <MedicineContentFormGroup
                         onChange={(event) => setField('content', event.target.value)}
@@ -91,8 +91,21 @@ function EditMedicineModal(props) {
                             step="0.1"
                             min="0"
                             max="10"
-                            value={props.medicine.dailyIntake}>
+                            defaultValue={props.medicine.dailyIntake}>
                         </Form.Control>
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Points</Form.Label>
+                        <Form.Control
+                            type="number"
+                            onChange={(event) => setField('points', event.target.value)}
+                            defaultValue={props.medicine.points}
+                            min={0}
+                            max={100.00}
+                            step={0.01}
+                            defaultValue={props.medicine.dailyIntake}
+                        />
                     </Form.Group>
 
                     <AdditionalNotesFormGroup

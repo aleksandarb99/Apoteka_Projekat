@@ -119,6 +119,18 @@ function AddPharmacyModal(props) {
                         </Form.Control.Feedback>
                     </Form.Group>
 
+                    <Form.Group>
+                        <Form.Label>Points for appointment</Form.Label>
+                        <Form.Control
+                            type="number"
+                            onChange={(event) => setField('pointsForAppointment', event.target.value)}
+                            defaultValue={0}
+                            min={0}
+                            max={100.00}
+                            step={0.01}
+                        />
+                    </Form.Group>
+
                     <Location onChange={(address) => setAddress(address)}></Location>
 
                     <Button variant="primary" onClick={handleSubmit}>Submit</Button>

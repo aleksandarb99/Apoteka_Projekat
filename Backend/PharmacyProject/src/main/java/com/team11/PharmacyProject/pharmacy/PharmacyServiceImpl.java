@@ -251,6 +251,7 @@ public class PharmacyServiceImpl implements PharmacyService {
             p2.setAddress(pharmacy.getAddress());
             p2.setName(pharmacy.getName());
             p2.setAddress(pharmacy.getAddress());
+            p2.setPointsForAppointment(pharmacy.getPointsForAppointment());
             pharmacyRepository.save(p2);
             return true;
         } else {

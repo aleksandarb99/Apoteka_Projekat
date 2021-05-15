@@ -11,6 +11,7 @@ import SuccessModal from '../utilComponents/modals/SuccessModal'
 
 function AddMedicineModal(props) {
 
+    // TODO add default value
     const [form, setForm] = useState({})
     const [validated, setValidated] = useState(false)
 
@@ -59,8 +60,8 @@ function AddMedicineModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                    <MedicineNameFormGroup onChange={(event) => setField('code', event.target.value)} />
-                    <MedicineCodeFormGroup onChange={(event) => setField('name', event.target.value)} />
+                    <MedicineNameFormGroup onChange={(event) => setField('name', event.target.value)} />
+                    <MedicineCodeFormGroup onChange={(event) => setField('code', event.target.value)} />
                     <MedicineContentFormGroup onChange={(event) => setField('content', event.target.value)} />
                     <SideEffectsFormGroup onChange={(event) => setField('sideEffects', event.target.value)} />
 
@@ -81,6 +82,18 @@ function AddMedicineModal(props) {
                             min="0"
                             max="10">
                         </Form.Control>
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Points</Form.Label>
+                        <Form.Control
+                            type="number"
+                            onChange={(event) => setField('points', event.target.value)}
+                            defaultValue={0}
+                            min={0}
+                            max={100.00}
+                            step={0.01}
+                        />
                     </Form.Group>
 
                     <AdditionalNotesFormGroup onChange={(event) => setField('additionalNotes', event.target.value)} />

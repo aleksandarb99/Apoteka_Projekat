@@ -40,6 +40,9 @@ const AdminHeader = ({ userChanged }) => {
                     <Nav.Link as={Link} style={{ color: "white" }} to="/admin/complaint-responses">
                         Complaints
                     </Nav.Link>
+                    <Nav.Link as={Link} style={{ color: "white" }} to="/admin/loyalty">
+                        Loyalty Program
+                    </Nav.Link>
                 </Nav>
                 <Nav>
                     <Nav.Link as={Link} style={{ color: "white" }} to="/profile">
