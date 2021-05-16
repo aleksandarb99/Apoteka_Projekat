@@ -47,10 +47,10 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
 
     @Query("SELECT p FROM Pharmacy p left join fetch p.priceList plist left join fetch plist.medicineItems mi " +
             "left join fetch mi.medicine med join fetch med.manufacturer join fetch med.medicineForm join fetch med.medicineType " +
-            "where p.id = ?1 and mi.amount > 0 and mi.medicine.id not in " +
-            "(select al.id from Patient pat left join pat.allergies al where pat.id = ?2)" + //dobili smo sve iz apoteke na koje pac nije alergican i koji su na stanju
-            "and mi.medicine.id in " +
-            "(select alt.id from Medicine req_med left join req_med.alternativeMedicine alt where req_med.id = ?3)")
+            "where p.id = ?1 and mi.amount > 0 and med.id not in " +
+            "(select al.id from Patient pat join pat.allergies al where pat.id = ?2)" + //dobili smo sve iz apoteke na koje pac nije alergican i koji su na stanju
+            "and med.id in " +
+            "(select alt.id from Medicine req_med join req_med.alternativeMedicine alt where req_med.id = ?3)")
     Pharmacy getPharmacyWithAlternativeForMedicineNoAllergies(Long pharmID, Long patientID, Long medicineID);
 
     @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.subscribers")

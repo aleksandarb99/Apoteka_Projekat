@@ -219,6 +219,9 @@ public class PharmacyController {
              @RequestParam(value = "medicine_item_id", required = true) Long medicineItemID,
              @RequestParam(value = "medicine_id", required = true) Long medicineID) {
         Pharmacy pharm = pharmacyService.getPharmacyWithAlternativeForMedicineNoAllergies(pharmID, patientID, medicineID);
+        if (pharm == null){
+            return new ResponseEntity<>(new ArrayList<MedicineTherapyDTO>(), HttpStatus.OK);
+        }
         List<MedicineTherapyDTO> medDto = new ArrayList<>();
         try {
             for (MedicineItem m : pharm.getPriceList().getMedicineItems()) {
@@ -227,7 +230,7 @@ public class PharmacyController {
 
             boolean creatingInquiry = pharmacyService.createInquiry(workerID, medicineItemID, pharm);
             if (!creatingInquiry){
-                System.out.println("Errror while creating inquiry!");
+                System.out.println("Inquiry not created!");
             }
             return new ResponseEntity<>(medDto, HttpStatus.OK);
         } catch (Exception e) {
