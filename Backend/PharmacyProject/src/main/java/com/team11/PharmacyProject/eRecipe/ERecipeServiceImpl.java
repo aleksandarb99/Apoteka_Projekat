@@ -133,7 +133,7 @@ public class ERecipeServiceImpl implements ERecipeService {
 
         // set null fields
         Optional<Patient> patient = patientRepository.findById(eRecipeDTO.getPatientId());
-        if (patient.isEmpty()) {
+        if (patient.isEmpty() || patient.get().getPenalties() == 3) { // Dodao bih ovo mzd negde na pocetku
             return null;
         }
         eRecipe.setDispensingDate(System.currentTimeMillis());
@@ -151,7 +151,7 @@ public class ERecipeServiceImpl implements ERecipeService {
     public List<ERecipeDTO> getEPrescriptionsByPatientId(Long id) {
 
         Optional<Patient> patient = patientRepository.findById(id);
-        if (patient.isEmpty())
+        if (patient.isEmpty() || patient.get().getPenalties() == 3)
             return null;
 
         List<ERecipeDTO> retVal = new ArrayList<>();
