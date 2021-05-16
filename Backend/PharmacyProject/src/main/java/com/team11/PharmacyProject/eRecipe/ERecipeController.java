@@ -12,8 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
+import javax.validation.*;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -26,15 +27,16 @@ public class ERecipeController {
     EmailService emailService;
 
     @PostMapping(value = "/upload-qr/{patientId}")
-    public ResponseEntity<?> parseQRCode(@PathVariable("patientId") long patientId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> parseQRCode(@PathVariable("patientId") Long patientId, @RequestParam("file") MultipartFile file) {
 
         ERecipeDTO eRecipeDTO = eRecipeService.getERecipe(patientId, file);
+
         return new ResponseEntity<>(eRecipeDTO, HttpStatus.OK);
     }
 
-    @PostMapping(value="/dispense-medicine/{pharmacyId}")
-    public ResponseEntity<?> dispenseMedicine(@PathVariable("pharmacyId") long pharmacyId, @RequestBody @Valid ERecipeDTO eRecipeDTO) {
-        ERecipe recipe = eRecipeService.dispenseMedicine(pharmacyId, eRecipeDTO);
+    @PostMapping(value="/dispense-medicine/{pharmacyId}/{patientId}")
+    public ResponseEntity<?> dispenseMedicine(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId, @RequestBody @Valid ERecipeDTO eRecipeDTO) {
+        ERecipe recipe = eRecipeService.dispenseMedicine(pharmacyId, patientId, eRecipeDTO);
         if (recipe != null) {
             emailService.notifyPatientAboutERecipe(recipe);
             return new ResponseEntity<>("Medicine successfully dispensed", HttpStatus.OK);

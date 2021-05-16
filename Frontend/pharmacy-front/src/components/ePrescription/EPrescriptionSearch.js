@@ -75,7 +75,7 @@ const ERecipeSearch = () => {
   const doBuy = (id) => {
     api
       .post(
-        `http://localhost:8080/api/e-recipes/dispense-medicine/${id}`,
+        `http://localhost:8080/api/e-recipes/dispense-medicine/${id}/${getIdFromToken()}`,
         parsedData
       )
       .then(() => {

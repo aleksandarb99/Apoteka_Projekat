@@ -15,7 +15,6 @@ import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
@@ -24,12 +23,16 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.mail.internet.ContentType;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ERecipeServiceImpl implements ERecipeService {
@@ -58,9 +61,11 @@ public class ERecipeServiceImpl implements ERecipeService {
         try {
             String qrCodeText = parseQRCode(file);
             ERecipeDTO eRecipeDTO = objectMapper.readValue(qrCodeText, ERecipeDTO.class);
+
             if (patientId != eRecipeDTO.getPatientId()) {
-                throw new Exception("Invalid patient Id");
+                throw new RuntimeException("Invalid patient Id");
             }
+
             // Set state depending on eRecipeCode
             // Database will store only REJECTED/PROCESSES prescriptions
             Optional<ERecipe> er = eRecipeRepository.findFirstByCode(eRecipeDTO.getCode());
@@ -71,6 +76,15 @@ public class ERecipeServiceImpl implements ERecipeService {
             } else {
                 eRecipeDTO.setState(ERecipeState.NEW);
             }
+
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+
+            Set<ConstraintViolation<ERecipeDTO>> violations = validator.validate(eRecipeDTO);
+            if (!violations.isEmpty()) {
+                throw new RuntimeException("Invalid QR code");
+            }
+
             return eRecipeDTO;
         } catch (Exception e) {
             // If parser cannot parse QR code, or if JSON is invalid
@@ -94,12 +108,12 @@ public class ERecipeServiceImpl implements ERecipeService {
     }
 
     @Override
-    public ERecipe dispenseMedicine(long pharmacyId, ERecipeDTO eRecipeDTO) {
+    public ERecipe dispenseMedicine(long pharmacyId, long patientId, ERecipeDTO eRecipeDTO) {
         // TODO complex validation
 
         // set null fields
         Optional<Patient> patient = patientRepository.findById(eRecipeDTO.getPatientId());
-        if (patient.isEmpty() || patient.get().getPenalties() >= 3) {
+        if (patient.isEmpty() || patient.get().getId() != patientId || patient.get().getPenalties() >= 3) {
             return null;
         }
 

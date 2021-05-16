@@ -8,7 +8,7 @@ import java.util.List;
 public interface ERecipeService {
     ERecipeDTO getERecipe(long patientId, MultipartFile file);
 
-    ERecipe dispenseMedicine(long pharmacyId, ERecipeDTO eRecipeDTO);
+    ERecipe dispenseMedicine(long pharmacyId, long patientId, ERecipeDTO eRecipeDTO);
 
     List<ERecipeDTO> getEPrescriptionsByPatientId(Long id);
 }
