@@ -6,6 +6,7 @@ import Moment from "react-moment";
 import moment from "moment";
 import api from "../../app/api";
 import {useHistory} from "react-router-dom";
+import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 
 function AppointmentsModal(props) { // id usera, id workera, bool farmaceut, name
     const history = useHistory();
@@ -102,8 +103,13 @@ function AppointmentsModal(props) { // id usera, id workera, bool farmaceut, nam
                             <Card fluid>
                                 <Card.Body>
                                     <Card.Title>
-                                        Date: <Moment format="DD/MM/yyyy hh:mm">{value.startTime}</Moment> 
+                                        Date: <Moment format="DD/MM/yyyy HH:mm">{value.start}</Moment> 
                                     </Card.Title>
+                                    <Card.Text>
+                                        {getUserTypeFromToken().trim() === 'DERMATOLOGIST' &&
+                                            <div>Pharmacy: {value.pharmacy} </div>   
+                                        }
+                                    </Card.Text>
                                 </Card.Body>
                                 <Card.Footer>
                                     <ButtonGroup>

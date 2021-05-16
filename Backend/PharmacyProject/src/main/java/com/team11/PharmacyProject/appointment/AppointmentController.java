@@ -107,18 +107,18 @@ public class AppointmentController {
     }
 
     @PostMapping(value = "/byPatWorker", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AppointmentDTO>> getNextAppointments(
+    public ResponseEntity<List<AppointmentReportDTO>> getNextAppointments(
             @RequestParam(name = "patient") String email, @RequestParam(name = "worker") Long workerId) {
 
         List<Appointment> app = appointmentServiceImpl.getNextAppointments(email, workerId);
         if (!app.isEmpty()) {
-            List<AppointmentDTO> dtos = new ArrayList<>();
+            List<AppointmentReportDTO> dtos = new ArrayList<>();
             for (Appointment apo : app) {
-                dtos.add(modelMapper.map(apo, AppointmentDTO.class));
+                dtos.add(new AppointmentReportDTO(apo)); //todo pazi lazy loading farmacije
             }
-            return new ResponseEntity<List<AppointmentDTO>>(dtos, HttpStatus.OK);
+            return new ResponseEntity<List<AppointmentReportDTO>>(dtos, HttpStatus.OK);
         } else {
-            return new ResponseEntity<List<AppointmentDTO>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<List<AppointmentReportDTO>>(HttpStatus.NOT_FOUND);
         }
     }
 
