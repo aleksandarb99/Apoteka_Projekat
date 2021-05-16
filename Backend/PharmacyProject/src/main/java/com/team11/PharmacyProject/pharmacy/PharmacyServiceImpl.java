@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -371,6 +372,10 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     public boolean createInquiry(Long workerID, Long medicineItemID, Pharmacy pharmacy){
+        if (inquiryRepository.isAlreadyQueried(workerID, medicineItemID,
+                Instant.now().minus(15, ChronoUnit.MINUTES).toEpochMilli())){
+            return false; //vec je napravio query za taj lek isti radnik pre 15 minuta, da ne bi pravio svaki put
+        }
         Optional<PharmacyWorker> workerOptional = workerRepository.findById(workerID);
         Optional<MedicineItem> medicineItemOptional = medicineItemRepository.findById(medicineItemID);
         if (workerOptional.isEmpty() || medicineItemOptional.isEmpty()){
