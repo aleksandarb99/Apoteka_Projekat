@@ -96,6 +96,13 @@ public class ERecipeServiceImpl implements ERecipeService {
     @Override
     public ERecipe dispenseMedicine(long pharmacyId, ERecipeDTO eRecipeDTO) {
         // TODO complex validation
+
+        // set null fields
+        Optional<Patient> patient = patientRepository.findById(eRecipeDTO.getPatientId());
+        if (patient.isEmpty() || patient.get().getPenalties() >= 3) {
+            return null;
+        }
+
         // get pharmacy
         Optional<Pharmacy> pharmacyOp = pharmacyRepository.getPharmacyByIdFetchPriceList(pharmacyId);
         if (pharmacyOp.isEmpty())
@@ -131,11 +138,6 @@ public class ERecipeServiceImpl implements ERecipeService {
             }
         }
 
-        // set null fields
-        Optional<Patient> patient = patientRepository.findById(eRecipeDTO.getPatientId());
-        if (patient.isEmpty()) {
-            return null;
-        }
         eRecipe.setDispensingDate(System.currentTimeMillis());
         eRecipe.setPatient(patient.get());
         eRecipe.setState(ERecipeState.PROCESSED);
@@ -151,7 +153,7 @@ public class ERecipeServiceImpl implements ERecipeService {
     public List<ERecipeDTO> getEPrescriptionsByPatientId(Long id) {
 
         Optional<Patient> patient = patientRepository.findById(id);
-        if (patient.isEmpty())
+        if (patient.isEmpty() || patient.get().getPenalties() == 3)
             return null;
 
         List<ERecipeDTO> retVal = new ArrayList<>();
