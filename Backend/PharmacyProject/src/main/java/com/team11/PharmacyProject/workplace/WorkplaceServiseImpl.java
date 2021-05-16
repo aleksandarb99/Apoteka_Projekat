@@ -205,4 +205,9 @@ public class WorkplaceServiseImpl implements WorkplaceService {
         }
         return workplaces.get(0);
     }
+
+    @Override
+    public Workplace getWorkplaceOfDermatologist(Long workerID, Long pharmacyID){
+        return workplaceRepository.getWorkplaceOfDermatologist(workerID, pharmacyID);
+    }
 }

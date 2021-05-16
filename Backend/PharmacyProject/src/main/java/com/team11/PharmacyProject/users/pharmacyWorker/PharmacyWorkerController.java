@@ -140,6 +140,28 @@ public class PharmacyWorkerController {
         return new ResponseEntity<>(worktimeDTO, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/getWorkTimeForReportDerm", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WorktimeDTO> getWorkTimeForDermatologist(@RequestParam("workerID") Long workerID,
+                                                                   @RequestParam("pharmacyID") Long pharmID) {
+        Workplace wp = workplaceService.getWorkplaceOfDermatologist(workerID, pharmID);
+        // todo ovo se moze refaktorisati, kopiranje koda
+        if (wp == null){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        WorktimeDTO worktimeDTO = new WorktimeDTO();
+        worktimeDTO.setWorkDayList(wp.getWorkDays());
+
+        List<RequestForHoliday> holidays = requestForHolidayService.getRequestForHolidayAcceptedOrPendingInFuture(workerID);
+        if (holidays != null && !holidays.isEmpty()){
+            List<HolidayStartEndDTO> holidayStartEndDTOS = new ArrayList<>(holidays.size());
+            for (RequestForHoliday req : holidays){
+                holidayStartEndDTOS.add(new HolidayStartEndDTO(req));
+            }
+            worktimeDTO.setHolidays(holidayStartEndDTOS);
+        }
+        return new ResponseEntity<>(worktimeDTO, HttpStatus.OK);
+    }
+
     private PharmacyWorkerDTO convertToDto(PharmacyWorker worker) {
         return modelMapper.map(worker, PharmacyWorkerDTO.class);
     }

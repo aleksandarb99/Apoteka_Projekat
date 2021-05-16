@@ -270,13 +270,13 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "/scheduleConsultationPharmacist", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> scheduleConsultationPharmacist(@RequestParam("patientID") Long patientId,
-                                                                 @RequestParam("workerID") Long workerId,
-                                                                 @RequestParam("pharmacyID") Long pharmacyId,
-                                                                 @RequestParam("price") double price,
-                                                                 @RequestParam("date") Long date,
-                                                                 @RequestParam("duration") int duration)
+    @PostMapping(value = "/scheduleAppointment", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> scheduleAppointment(@RequestParam("patientID") Long patientId,
+                                                      @RequestParam("workerID") Long workerId,
+                                                      @RequestParam("pharmacyID") Long pharmacyId,
+                                                      @RequestParam("date") Long date,
+                                                      @RequestParam("duration") int duration,
+                                                      @RequestParam(value = "price", required = false) double price)
     {
         if (duration < 0){
             return new ResponseEntity<>("Duration less than 0!", HttpStatus.BAD_REQUEST);

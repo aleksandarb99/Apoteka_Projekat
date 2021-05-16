@@ -4,6 +4,7 @@ import api from '../../app/api';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
 import DatePicker from "react-datepicker";
 import moment from "moment";
+import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 
 const ScheduleAnotherApp = (props) => {
     const [selectedDate, setSelectedDate] = useState(null);
@@ -24,13 +25,27 @@ const ScheduleAnotherApp = (props) => {
         }
         bodyFormData.append('workerID', workerID);
 
-        api.post("http://localhost:8080/api/workers/getWorkTimeForReport", bodyFormData)
-            .then(
-                (resp) => {
-                    setWorkersWorktime(resp.data);
-                })
-            .catch(() => alert("Couldn't get worktime!"));
-    }, [])
+        if (getUserTypeFromToken().trim() === 'PHARMACIST'){
+            api.post("http://localhost:8080/api/workers/getWorkTimeForReport", bodyFormData)
+                .then(
+                    (resp) => {
+                        setWorkersWorktime(resp.data);
+                    })
+                .catch(() => alert("Couldn't get worktime!"));
+        }else{
+            console.log("trebalo bi");
+            if (props.appt){
+                console.log("trebalo bi 2");
+                bodyFormData.append('pharmacyID', props.appt.pharmacyID);
+                api.post("http://localhost:8080/api/workers/getWorkTimeForReportDerm", bodyFormData)
+                    .then(
+                        (resp) => {
+                            setWorkersWorktime(resp.data);
+                        })
+                    .catch(() => alert("Couldn't get worktime!"));
+            }
+        }
+    }, [props.appt])
 
     useEffect(() => {
         if (!selectedDate){ setApptsOnSelectedDate([]); return; }
@@ -99,7 +114,7 @@ const ScheduleAnotherApp = (props) => {
         bodyFormData.append('price', priceF);
         bodyFormData.append('date', moment(selectedDate).valueOf() + totalMillisHourMin);
         bodyFormData.append('duration', durationI);
-        api.post("http://localhost:8080/api/appointment/scheduleConsultationPharmacist", bodyFormData)
+        api.post("http://localhost:8080/api/appointment/scheduleAppointment", bodyFormData)
             .then(
                 (resp) => {
                     alert("Appointment scheduled!");

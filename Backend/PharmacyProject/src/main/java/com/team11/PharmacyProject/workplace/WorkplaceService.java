@@ -20,6 +20,8 @@ public interface WorkplaceService {
 
     Workplace getWorkplaceOfPharmacist(Long workerID);
 
+    Workplace getWorkplaceOfDermatologist(Long workerID, Long pharmacyID);
+
     List<String> getPharmacyNamesByWorkerId(Long id);
 
     List<Workplace> searchWorkplacesByNameOrSurnameOfWorker(String searchValue, Long pharmacyId);

@@ -51,5 +51,6 @@ public interface AppointmentService {
 
     List<Appointment> getAppointmentsOfPatientWorkerOnDate(Long workerID, Long patID, Long date);
 
-    Appointment scheduleAppointmentInRange(Long workerID, Long patientID, Long pharmID, Long apptStart, Long apptEnd, double price, int duration) throws Exception;
+    Appointment scheduleAppointmentInRange(Long workerID, Long patientID, Long pharmID, Long apptStart,
+                                           Long apptEnd, double price, int duration) throws Exception;
 }

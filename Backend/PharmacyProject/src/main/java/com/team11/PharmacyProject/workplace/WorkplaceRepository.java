@@ -31,5 +31,8 @@ public interface WorkplaceRepository extends CrudRepository<Workplace, Long> {
 
     @Query("select p from Workplace p join fetch p.worker where p.pharmacy.id = ?2 and (lower(p.worker.firstName) like lower(concat('%', ?1, '%')) or lower(p.worker.lastName) like lower(concat('%', ?1, '%')))")
     List<Workplace> searchWorkplacesInPharmacyByNameOrSurnameOfWorker(String searchValue, Long pharmacyId);
+
+    @Query("SELECT u FROM Workplace u WHERE u.worker.id = ?1 and u.pharmacy.id = ?2")
+    Workplace getWorkplaceOfDermatologist(Long workerID, Long pharmacyID);
 }
 
