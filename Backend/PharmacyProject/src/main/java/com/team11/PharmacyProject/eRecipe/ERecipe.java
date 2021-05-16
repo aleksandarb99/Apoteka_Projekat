@@ -34,6 +34,9 @@ public class ERecipe {
     @Column(name = "total_price_with_discount")
     private Double totalPriceWithDiscount;
 
+    @Column(name = "points")
+    private Integer points;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ERecipeItem> eRecipeItems;
 
@@ -135,5 +138,13 @@ public class ERecipe {
 
     public void setPharmacy(Pharmacy pharmacy) {
         this.pharmacy = pharmacy;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 }

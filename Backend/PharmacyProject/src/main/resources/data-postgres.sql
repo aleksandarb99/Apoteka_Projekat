@@ -61,7 +61,7 @@ insert into medicine (name, code, content, side_effects, daily_intake, recipe_re
 
 /*Medicine items*/
 insert into medicine_item (amount, medicine_id) values (18, 1);
-insert into medicine_item (amount, medicine_id) values (23, 2);
+insert into medicine_item (amount, medicine_id) values (25, 2);
 insert into medicine_item (amount, medicine_id) values (14, 3);
 insert into medicine_item (amount, medicine_id) values (55, 4);
 insert into medicine_item (amount, medicine_id) values (67, 5);

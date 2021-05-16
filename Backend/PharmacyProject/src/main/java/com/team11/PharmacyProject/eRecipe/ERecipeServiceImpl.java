@@ -175,14 +175,17 @@ public class ERecipeServiceImpl implements ERecipeService {
         }
 
         eRecipe.setDispensingDate(System.currentTimeMillis());
-        eRecipe.setPatient(patient);
         eRecipe.setPharmacy(pharmacy);
         eRecipe.setTotalPrice(eRecipeDispenseDTO.getTotalPrice());
+        eRecipe.setPoints(points);
 
         // calculate discount
         RankingCategory rankingCategory = rankingCategoryService.getCategoryByPoints(patient.getPoints());
         double discount = rankingCategory.getDiscount();
         eRecipe.setTotalPriceWithDiscount(eRecipeDispenseDTO.getTotalPrice() * (1 - discount/100));
+
+        patient.setPoints(patient.getPoints() + points);
+        eRecipe.setPatient(patient);
 
         eRecipe.setState(ERecipeState.PROCESSED);
 
