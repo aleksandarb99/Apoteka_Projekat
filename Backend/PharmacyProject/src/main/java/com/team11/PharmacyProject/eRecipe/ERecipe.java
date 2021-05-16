@@ -29,10 +29,10 @@ public class ERecipe {
     private String code;
 
     @Column(name = "total_price")
-    private double totalPrice;
+    private Double totalPrice;
 
     @Column(name = "total_price_with_discount")
-    private double totalPriceWithDiscount;
+    private Double totalPriceWithDiscount;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ERecipeItem> eRecipeItems;
@@ -41,7 +41,7 @@ public class ERecipe {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "pharmacy_id")
     private Pharmacy pharmacy;
 
@@ -113,19 +113,19 @@ public class ERecipe {
         this.prescriptionDate = prescriptionDate;
     }
 
-    public double getTotalPrice() {
+    public Double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
+    public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
 
-    public double getTotalPriceWithDiscount() {
+    public Double getTotalPriceWithDiscount() {
         return totalPriceWithDiscount;
     }
 
-    public void setTotalPriceWithDiscount(double totalPriceWithDiscount) {
+    public void setTotalPriceWithDiscount(Double totalPriceWithDiscount) {
         this.totalPriceWithDiscount = totalPriceWithDiscount;
     }
 

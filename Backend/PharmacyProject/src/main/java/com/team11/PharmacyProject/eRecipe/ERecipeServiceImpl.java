@@ -8,11 +8,15 @@ import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
+import com.team11.PharmacyProject.dto.erecipe.ERecipeDispenseDTO;
 import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.ERecipeState;
+import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.rankingCategory.RankingCategory;
+import com.team11.PharmacyProject.rankingCategory.RankingCategoryService;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import org.modelmapper.ModelMapper;
@@ -48,6 +52,9 @@ public class ERecipeServiceImpl implements ERecipeService {
 
     @Autowired
     PatientRepository patientRepository;
+
+    @Autowired
+    RankingCategoryService rankingCategoryService;
 
     @Autowired
     ModelMapper modelMapper;
@@ -108,32 +115,44 @@ public class ERecipeServiceImpl implements ERecipeService {
     }
 
     @Override
-    public ERecipe dispenseMedicine(long pharmacyId, long patientId, ERecipeDTO eRecipeDTO) {
-        // TODO complex validation
-
+    public ERecipe dispenseMedicine(long patientId, ERecipeDispenseDTO eRecipeDispenseDTO) {
         // set null fields
-        Optional<Patient> patient = patientRepository.findById(eRecipeDTO.getPatientId());
-        if (patient.isEmpty() || patient.get().getId() != patientId || patient.get().getPenalties() >= 3) {
+        Patient patient = patientRepository.findByIdAndFetchAllergiesEagerly(eRecipeDispenseDTO.getPatientId());
+        if (patient == null || patient.getId() != patientId || patient.getPenalties() >= 3) {
             return null;
         }
 
         // get pharmacy
-        Optional<Pharmacy> pharmacyOp = pharmacyRepository.getPharmacyByIdFetchPriceList(pharmacyId);
+        Optional<Pharmacy> pharmacyOp = pharmacyRepository.getPharmacyByIdFetchPriceList(eRecipeDispenseDTO.getPharmacyId());
         if (pharmacyOp.isEmpty())
             return null;
         Pharmacy pharmacy = pharmacyOp.get();
 
         // get e-prescription items
-        Optional<ERecipe> optionalERecipe = eRecipeRepository.findFirstByCode(eRecipeDTO.getCode());
+        Optional<ERecipe> optionalERecipe = eRecipeRepository.findFirstByCode(eRecipeDispenseDTO.getCode());
         if (optionalERecipe.isPresent()) {
             return null;
         }
 
-        ERecipe eRecipe = modelMapper.map(eRecipeDTO, ERecipe.class);
+        ERecipe eRecipe = modelMapper.map(eRecipeDispenseDTO, ERecipe.class);
         List<ERecipeItem> items = eRecipe.geteRecipeItems();
+
+        // get allergens
+        List<Medicine> allergens = patient.getAllergies();
+
+        for (var item : items) {
+            for (var al : allergens) {
+                if (item.getMedicineCode().equals(al.getCode())) {
+                    return null;
+                }
+            }
+        }
 
         // get items in pharmacy
         List<MedicineItem> medicineItems = pharmacy.getPriceList().getMedicineItems();
+
+        // points achieved
+        int points = 0;
 
         for (var item : items) {
             boolean found = false;
@@ -143,7 +162,10 @@ public class ERecipeServiceImpl implements ERecipeService {
                     if (mi.getAmount() < item.getQuantity()) {
                         return null;
                     }
+                    // decrease pharmacy stock
                     mi.setAmount(mi.getAmount() - item.getQuantity());
+                    // increase achieved points
+                    points += item.getQuantity() * mi.getMedicine().getPoints();
                     break;
                 }
             }
@@ -153,11 +175,21 @@ public class ERecipeServiceImpl implements ERecipeService {
         }
 
         eRecipe.setDispensingDate(System.currentTimeMillis());
-        eRecipe.setPatient(patient.get());
+        eRecipe.setPatient(patient);
+        eRecipe.setPharmacy(pharmacy);
+        eRecipe.setTotalPrice(eRecipeDispenseDTO.getTotalPrice());
+
+        // calculate discount
+        RankingCategory rankingCategory = rankingCategoryService.getCategoryByPoints(patient.getPoints());
+        double discount = rankingCategory.getDiscount();
+        eRecipe.setTotalPriceWithDiscount(eRecipeDispenseDTO.getTotalPrice() * (1 - discount/100));
+
         eRecipe.setState(ERecipeState.PROCESSED);
 
         // save pharmacy
         pharmacyRepository.save(pharmacy);
+        // save patient
+        patientRepository.save(patient);
         // save eRecipe
         eRecipeRepository.save(eRecipe);
         return eRecipe;

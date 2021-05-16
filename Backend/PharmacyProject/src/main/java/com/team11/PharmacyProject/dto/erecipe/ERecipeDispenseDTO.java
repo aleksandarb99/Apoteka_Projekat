@@ -3,31 +3,28 @@ package com.team11.PharmacyProject.dto.erecipe;
 import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.ERecipeState;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class ERecipeDispenseDTO {
     private Long id;
+    @NotNull
     private Long prescriptionDate;
-    private Long dispensingDate;
+    @NotNull
     private ERecipeState state;
+    @NotBlank
     private String code;
+    @NotNull
     private List<ERecipeItem> eRecipeItems;
+    @NotNull
     private Long patientId;
+    @NotNull
     private Long pharmacyId;
-    private double totalPrice;
-    private double totalPriceWithDiscount;
+    @NotNull
+    private Double totalPrice;
 
     public ERecipeDispenseDTO() {
-    }
-
-    public ERecipeDispenseDTO(Long id, Long prescriptionDate, Long dispensingDate, ERecipeState state, String code, List<ERecipeItem> eRecipeItems, Long patientId) {
-        this.id = id;
-        this.prescriptionDate = prescriptionDate;
-        this.dispensingDate = dispensingDate;
-        this.state = state;
-        this.code = code;
-        this.eRecipeItems = eRecipeItems;
-        this.patientId = patientId;
     }
 
     public Long getId() {
@@ -78,14 +75,6 @@ public class ERecipeDispenseDTO {
         this.patientId = patientId;
     }
 
-    public Long getDispensingDate() {
-        return dispensingDate;
-    }
-
-    public void setDispensingDate(Long dispensingDate) {
-        this.dispensingDate = dispensingDate;
-    }
-
     public Long getPharmacyId() {
         return pharmacyId;
     }
@@ -102,11 +91,4 @@ public class ERecipeDispenseDTO {
         this.totalPrice = totalPrice;
     }
 
-    public double getTotalPriceWithDiscount() {
-        return totalPriceWithDiscount;
-    }
-
-    public void setTotalPriceWithDiscount(double totalPriceWithDiscount) {
-        this.totalPriceWithDiscount = totalPriceWithDiscount;
-    }
 }

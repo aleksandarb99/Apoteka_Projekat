@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.eRecipe;
 
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
+import com.team11.PharmacyProject.dto.erecipe.ERecipeDispenseDTO;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
 import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
@@ -34,9 +35,9 @@ public class ERecipeController {
         return new ResponseEntity<>(eRecipeDTO, HttpStatus.OK);
     }
 
-    @PostMapping(value="/dispense-medicine/{pharmacyId}/{patientId}")
-    public ResponseEntity<?> dispenseMedicine(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId, @RequestBody @Valid ERecipeDTO eRecipeDTO) {
-        ERecipe recipe = eRecipeService.dispenseMedicine(pharmacyId, patientId, eRecipeDTO);
+    @PostMapping(value="/dispense-medicine/{patientId}")
+    public ResponseEntity<?> dispenseMedicine(@PathVariable("patientId") long patientId, @RequestBody @Valid ERecipeDispenseDTO eRecipeDispenseDTO) {
+        ERecipe recipe = eRecipeService.dispenseMedicine(patientId, eRecipeDispenseDTO);
         if (recipe != null) {
             emailService.notifyPatientAboutERecipe(recipe);
             return new ResponseEntity<>("Medicine successfully dispensed", HttpStatus.OK);
