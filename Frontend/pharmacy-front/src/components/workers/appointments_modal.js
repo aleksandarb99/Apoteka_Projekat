@@ -49,7 +49,7 @@ function AppointmentsModal(props) { // id usera, id workera, bool farmaceut, nam
                         {
                             pathname:"/worker/appointment_report",
                             state: {  // location state
-                                appointmentID: props.appointment.id 
+                                appointmentID: appt.id 
                             }
                         });
                 })
