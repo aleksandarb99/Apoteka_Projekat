@@ -1,11 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Nav, Navbar } from "react-bootstrap";
 import { Link, Redirect } from "react-router-dom";
 import { House } from "react-bootstrap-icons";
 import { logout } from "../../../app/slices/userSlice";
 import { useDispatch } from "react-redux";
+import axios from "../../../app/api";
+import { getIdFromToken } from "../../../app/jwtTokenUtils";
 
 const PatientHeader = () => {
+  const [penalties, setPenalties] = useState();
+
+  useEffect(() => {
+    async function fetchPenalties() {
+      const request = await axios.get(
+        "http://localhost:8080/api/patients/" + getIdFromToken() + "/penalties"
+      );
+      setPenalties(request.data);
+
+      return request;
+    }
+    fetchPenalties();
+  }, {});
+
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -65,7 +81,14 @@ const PatientHeader = () => {
           <Nav.Link as={Link} style={{ color: "white" }} to="/rating">
             Rating
           </Nav.Link>
-          <Nav.Link as={Link} style={{ color: "white" }} to="/e-prescription">
+          <Nav.Link
+            as={Link}
+            style={{
+              display: penalties === 3 ? "none" : "block",
+              color: "white",
+            }}
+            to="/e-prescription"
+          >
             E-Prescription
           </Nav.Link>
         </Nav>

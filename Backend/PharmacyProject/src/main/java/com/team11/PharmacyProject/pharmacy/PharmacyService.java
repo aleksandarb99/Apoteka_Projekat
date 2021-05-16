@@ -1,11 +1,9 @@
 package com.team11.PharmacyProject.pharmacy;
 
-import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyERecipeDTO;
 import com.team11.PharmacyProject.myOrder.MyOrder;
 import org.springframework.data.domain.Sort;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,14 +19,6 @@ public interface PharmacyService {
     void save(Pharmacy p);
 
     List<Pharmacy> searchPharmaciesByNameOrCity(String searchValue);
-
-    List<Pharmacy> filterPharmacies(String gradeValue, String distanceValue, double longitude, double latitude);
-
-    boolean doFilteringByGrade(double avgGrade, String gradeValue);
-
-    boolean doFilteringByDistance(Address address, String distanceValue, double longitude, double latitude);
-
-    double calculateDistance(Address address, double lon2, double lat2);
 
     boolean insertPharmacy(Pharmacy pharmacy);
 

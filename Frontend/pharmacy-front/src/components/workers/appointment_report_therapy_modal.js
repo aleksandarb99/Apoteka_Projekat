@@ -15,7 +15,7 @@ const TherapyMedicineModal = (props) => {
 
     const [selectedMedicine, setSelectedMedicine] = useState(null);
 
-    const [noAlternativeError, setNoAlternativeError] = useState(false); //todo
+    const [alternativeError, setAlternativeError] = useState(false); //todo
 
     const [amount, setAmount] = useState('');
 
@@ -27,6 +27,7 @@ const TherapyMedicineModal = (props) => {
         setAlternativeOptions([]);
         setShowHideSecondary(false);
         setSelectedMedicine(null);
+        setAlternativeError(false);
         setAmount('');
     }
 
@@ -55,11 +56,12 @@ const TherapyMedicineModal = (props) => {
                     + '&patient_id=' + pat_id + '&medicine_item_id=' + med_item_id+ '&medicine_id=' + med_id)
            .then((resp) => {
                 if (resp.data.length == 0){
-                    alert('no valid alternatives');
+                    setAlternativeError(true);
                 }else{
                     setAlternativeOptions(resp.data);
                 }
-           });
+           })
+           .catch(()=>setAlternativeError(true));
         
     }
 
@@ -71,6 +73,9 @@ const TherapyMedicineModal = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        if (alternativeError){
+            return;
+        }
         if (!selectedMedicine){
             alert('No medicine is selected!');
             return;
@@ -110,6 +115,7 @@ const TherapyMedicineModal = (props) => {
                             id = '1'
                             labelKey={(option) => `${option.code} -- ${option.name}`}
                             onChange={(data) => {
+                                setAlternativeError(false);
                                 setSingleSelection(data); 
                                 setAlternativeOptions([]);
                                 setAlternativeSelection([]);
@@ -172,27 +178,34 @@ const TherapyMedicineModal = (props) => {
 
                     {(singleSelection.length > 0 && singleSelection[0].amount <= 0) &&
                         <div>
-                            <Form.Group>
-                                <Form.Label>Selected medicine '{singleSelection[0].name}' is currently not in stock. Please select an alternative medicine:</Form.Label>
-                                <Typeahead
-                                id = '2'
-                                    labelKey={(option) => `${option.code} -- ${option.name}`}
-                                    onChange={(data) => {
-                                        setAlternativeSelection(data);
-                                        if (data.length > 0 ){
-                                            setSelectedMedicine(data[0]);
-                                        }else{
-                                            setSelectedMedicine(null);
-                                        }}
-                                    }
-                                    options={alternativeOptions}
-                                    placeholder="Select a medicine..."
-                                    selected={alternativeSelection}
-                                />
-                            </Form.Group>
-                            <Row className='justify-content-center mb-4'>
-                                <Button variant="primary" onClick={()=>setShowHideSecondary(!showHideSecondary)}>Show/Hide alternative info</Button>
-                            </Row>
+                            {alternativeError ?
+                                <div style={{color: 'red'}}>Selected medicine '{singleSelection[0].name}' is currently not in stock and has no alternative medicine available. Please chose another.</div>
+                                : 
+                                <div>
+                                    <Form.Group>
+                                        <Form.Label>Selected medicine '{singleSelection[0].name}' is currently not in stock. Please select an alternative medicine:</Form.Label>
+                                        <Typeahead
+                                            id = '2'
+                                                labelKey={(option) => `${option.code} -- ${option.name}`}
+                                                onChange={(data) => {
+                                                    setAlternativeSelection(data);
+                                                    if (data.length > 0 ){
+                                                        setSelectedMedicine(data[0]);
+                                                    }else{
+                                                        setSelectedMedicine(null);
+                                                    }}
+                                                }
+                                                options={alternativeOptions}
+                                                placeholder="Select a medicine..."
+                                                selected={alternativeSelection}
+                                            />
+                                    </Form.Group>
+                                    <Row className='justify-content-center mb-4'>
+                                        <Button variant="primary" onClick={()=>setShowHideSecondary(!showHideSecondary)}>Show/Hide alternative info</Button>
+                                    </Row>
+                                </div>
+                            }
+                            
                         </div>
                     }
                     {(alternativeSelection.length > 0 && showHideSecondary) &&
