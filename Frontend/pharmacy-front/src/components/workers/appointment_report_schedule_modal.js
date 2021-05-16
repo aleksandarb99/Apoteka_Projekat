@@ -78,12 +78,18 @@ const ScheduleAnotherApp = (props) => {
         }else if (isNaN(startMinutes)){
             alert('Invalid start time!');
             return;
-        }else if (isNaN(price)){
-            alert('Invalid price!');
-            return;
+        }else if (getUserTypeFromToken().trim() === 'DERMATOLOGIST'){
+            if (isNaN(price)){
+                alert('Invalid price!');
+                return;
+            }
         }else if (isNaN(duration)){
             alert('Invalid duration!');
             return;
+        }
+
+        if (getUserTypeFromToken().trim() === 'PHARMACIST'){ //stavljamo price na default 0, ako je farmaceut u pitanju
+            setPrice('0');
         }
         let hours = parseInt(startHours);
         let minutes = parseInt(startMinutes);
@@ -219,16 +225,18 @@ const ScheduleAnotherApp = (props) => {
                         </InputGroup>
                     </Col>
                 </Row>
-                <Row className="ml-1 mt-4 mb-5">
-                    <Col md={8}>
-                        <InputGroup>
-                            <InputGroup.Prepend>
-                                <InputGroup.Text>Price:</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <Form.Control type="text" value={price} onChange={(e)=>setPrice(e.target.value)}/>
-                        </InputGroup>
-                    </Col>
-                </Row>
+                {getUserTypeFromToken().trim() === 'DERMATOLOGIST' &&
+                    <Row className="ml-1 mt-4 mb-5">
+                        <Col md={8}>
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text>Price:</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <Form.Control type="text" value={price} onChange={(e)=>setPrice(e.target.value)}/>
+                            </InputGroup>
+                        </Col>
+                    </Row>
+                }  
 
                 <Row className="justify-content-center m-3 align-items-center">
                     <Button onClick={() => scheduleAndFinish()}>Schedule</Button>
