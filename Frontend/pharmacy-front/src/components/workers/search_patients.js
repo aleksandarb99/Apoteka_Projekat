@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import  {Row, Form, Button, Container, Col, Card, Modal, ButtonGroup} from "react-bootstrap";
+import  {Row, Form, Button, Container, Col, Card, ButtonGroup} from "react-bootstrap";
 import AppointmentsModal from "./appointments_modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from "../../app/api";
@@ -12,6 +12,7 @@ function SearchPatPage() {
   const [lName, setLName] = useState(""); 
   const [patient, setPatient] = useState({});  //appointments of currently picked patient
   const [showModal, setShowModal] = useState(false);
+  const [currFetchState, setCurrFetchState] = useState('Loading...');
 
   useEffect(() => {
     async function fetchPatients() {
@@ -25,18 +26,38 @@ function SearchPatPage() {
 
   const formSearch = event => {
     event.preventDefault();
+    setCurrFetchState('Loading...');
     console.log("fn" + fName);
     console.log("fn" + lName);
     if (fName.length === 0 &&  lName.length === 0 ){
-      api.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data));
+      api.get("http://localhost:8080/api/patients/all").then((resp)=> 
+        {
+          setPatients(resp.data);
+          if (resp.data.length === 0){
+            setCurrFetchState('No result!');
+          }
+        });
     }else{
-      api.get("http://localhost:8080/api/patients/search", 
-            { params: {firstName:fName, lastName:lName}}).then((resp)=>setPatients(resp.data));
+      api.get("http://localhost:8080/api/patients/search", { params: {firstName:fName, lastName:lName}})
+          .then((resp)=> 
+            {
+              setPatients(resp.data);
+              if (resp.data.length === 0){
+                setCurrFetchState('No result!');
+              }
+            });
     } 
   }
 
   const resetSearch = function() {
-    api.get("http://localhost:8080/api/patients/all").then((resp)=>setPatients(resp.data)).catch((resp) => setPatients([]));
+    setCurrFetchState('Loading...');
+    api.get("http://localhost:8080/api/patients/all").then((resp)=> 
+      {
+        setPatients(resp.data);
+        if (resp.data.length === 0){
+          setCurrFetchState('No result!');
+        }
+      }).catch((resp) => setPatients([]));
     setFName("");
     setLName("");
   }
@@ -92,7 +113,7 @@ function SearchPatPage() {
         <Row className="justify-content-center m-3">
           <Col md={8}>
             {patients.length === 0 &&
-              <Row className="justify-content-center m-3 align-items-center"><h3>No result!</h3></Row>
+              <Row className="justify-content-center m-3 align-items-center"><h3>{currFetchState}</h3></Row>
             }
 
             {patients.map((value, index) => {
@@ -102,7 +123,7 @@ function SearchPatPage() {
                 <Card fluid>
                   <Card.Body>
                     <Card.Title>{value.firstName + " " + value.lastName} </Card.Title>
-                    <Button variant="secondary" onClick={() => onShowAppointmentsButton(value)}> Your upcomming appointments with this patient</Button>
+                    <Button variant="secondary" onClick={() => onShowAppointmentsButton(value)}> Upcomming appointments with {value.firstName + ' ' + value.lastName}</Button>
                   </Card.Body>
                 </Card>
                 </Col>
