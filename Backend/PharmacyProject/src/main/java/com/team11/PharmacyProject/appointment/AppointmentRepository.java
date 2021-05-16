@@ -50,4 +50,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             "((a.startTime >= ?3 and a.startTime <= ?4) or (a.endTime >= ?3 and a.endTime <= ?4) or " +
             "(a.startTime >= ?3 and a.endTime <= ?4) or (a.startTime <= ?3 and a.endTime >= ?4))")
     boolean hasAppointmentsInRange(Long workerID, Long patientID, Long apptStart, Long apptEnd);
+
+    @Query("SELECT a FROM Appointment  a JOIN FETCH a.pharmacy p where a.startTime > ?1 and a.startTime < ?2 and p.id = ?3 and a.appointmentState = 'FINISHED' order by a.startTime asc")
+    List<Appointment> getAppointmentBeetwenTwoTimestamps(Long yearAgo, Long currTime, Long pharmacyId);
 }

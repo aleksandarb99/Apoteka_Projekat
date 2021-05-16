@@ -1,11 +1,13 @@
 package com.team11.PharmacyProject.medicineFeatures.medicineReservation;
 
+import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationInsertDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWorkerDTO;
 import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
@@ -18,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -57,6 +56,162 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
         return patient.getMedicineReservation();
     }
+
+    @Override
+    public int calculateProfit(long start, long end, long pharmacyId) {
+        int sum = 0;
+        List<MedicineReservation> list = reservationRepository.getReservationsBeetwenTwoTimestamps(start, end, pharmacyId);
+        for (MedicineReservation a:list) {
+            List<MedicinePrice> prices =  a.getMedicineItem().getMedicinePrices();
+            double price = 0;
+            long time = 0;
+            for (MedicinePrice p:
+                 prices) {
+                if(p.getStartDate() < a.getReservationDate() && p.getStartDate() > time){
+                    price = p.getPrice();
+                    time = p.getStartDate();
+                }
+            }
+
+            sum += (int)price;
+        }
+        return sum;
+    }
+
+    @Override
+    public Map<String, Integer> getInfoForReport(String period, Long pharmacyId) {
+        String[] monthNames = {"January", "February", "March", "April", "May",
+                "June", "July", "August", "September", "October", "November", "December"};
+
+        Map<String, Integer> data = new LinkedHashMap<>();
+        List<MedicineReservation> list;
+
+        Calendar calendar = Calendar.getInstance();
+
+        long currTime = Instant.now().toEpochMilli();
+
+        calendar.setTime(new Date(currTime));
+        calendar.set(calendar.get(Calendar.YEAR)-1, calendar.get(Calendar.MONTH), 1, 0, 0, 0);
+        long yearAgo = calendar.getTimeInMillis();
+
+        if(period.equals("Monthly")){
+            int count = 0;
+            for(int i = calendar.get(Calendar.MONTH)+1; i<12; i++) {
+                String key = monthNames[i]+"-"+calendar.get(Calendar.YEAR);
+                data.put(key, 0);
+                count++;
+            }
+            for(int i = 0; i<12-count; i++) {
+                String key = monthNames[i]+"-"+(calendar.get(Calendar.YEAR)+1);
+                data.put(key, 0);
+            }
+
+            list = reservationRepository.getReservationsBeetwenTwoTimestamps(yearAgo, currTime, pharmacyId);
+
+            for (MedicineReservation a:list) {
+                calendar.setTime(new Date(a.getReservationDate()));
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+                String key = monthNames[month]+"-"+year;
+                if(data.containsKey(key))
+                    data.put(key, data.get(key) + 1);
+            }
+        }
+        else if(period.equals("Quarterly")) {
+            if(calendar.get(Calendar.MONTH)<=2) {
+                data.put(2+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(3+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(4+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
+            } else if(calendar.get(Calendar.MONTH)<=5) {
+                data.put(3+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(4+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0);
+            } else if(calendar.get(Calendar.MONTH)<=8) {
+                data.put(4+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(3+"-"+(calendar.get(Calendar.YEAR)+1),0);
+            } else {
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(3+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(4+"-"+(calendar.get(Calendar.YEAR)+1),0);
+            }
+
+            calendar.setTime(new Date(currTime));
+
+            if(calendar.get(Calendar.MONTH)<=2) {
+                calendar.setTime(new Date(yearAgo));
+                calendar.set(calendar.get(Calendar.YEAR), Calendar.APRIL, 1, 0, 0, 0);
+                yearAgo = calendar.getTimeInMillis();
+            } else if(calendar.get(Calendar.MONTH)<=5) {
+                calendar.setTime(new Date(yearAgo));
+                calendar.set(calendar.get(Calendar.YEAR), Calendar.JULY, 1, 0, 0, 0);
+                yearAgo = calendar.getTimeInMillis();
+            } else if(calendar.get(Calendar.MONTH)<=8) {
+                calendar.setTime(new Date(yearAgo));
+                calendar.set(calendar.get(Calendar.YEAR), Calendar.OCTOBER, 1, 0, 0, 0);
+                yearAgo = calendar.getTimeInMillis();
+            } else {
+                calendar.setTime(new Date(yearAgo));
+                calendar.set(calendar.get(Calendar.YEAR), Calendar.JANUARY, 1, 0, 0, 0);
+                yearAgo = calendar.getTimeInMillis();
+            }
+
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0, 0, 0);
+            yearAgo = calendar.getTimeInMillis();
+
+            list = reservationRepository.getReservationsBeetwenTwoTimestamps(yearAgo, currTime, pharmacyId);
+
+            for (MedicineReservation a:list) {
+                calendar.setTime(new Date(a.getReservationDate()));
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+                int quarter;
+
+                if(month<=2) {
+                    quarter = 1;
+                } else if(month<=5) {
+                    quarter = 2;
+                } else if(month<=8) {
+                    quarter = 3;
+                } else {
+                    quarter = 4;
+                }
+
+                String key = quarter+"-"+year;
+                if(data.containsKey(key))  data.put(key, data.get(key) + 1);
+            }
+        } else {
+            calendar.setTime(new Date(currTime));
+            calendar.set(calendar.get(Calendar.YEAR)-9, Calendar.JANUARY, 1, 0, 0, 0);
+            yearAgo = calendar.getTimeInMillis();
+
+            data.put(calendar.get(Calendar.YEAR)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+1)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+2)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+3)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+4)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+5)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+6)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+7)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+8)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+9)+"",0);
+
+            list = reservationRepository.getReservationsBeetwenTwoTimestamps(yearAgo, currTime, pharmacyId);
+
+            for (MedicineReservation a:list) {
+                calendar.setTime(new Date(a.getReservationDate()));
+                int year = calendar.get(Calendar.YEAR);
+                String key = year+"";
+                if(data.containsKey(key))  data.put(key, data.get(key) + 1);
+            }
+        }
+        return data;
+    }
+
 
     @Override
     public MedicineReservationNotifyPatientDTO insertMedicineReservation(MedicineReservationInsertDTO dto) {

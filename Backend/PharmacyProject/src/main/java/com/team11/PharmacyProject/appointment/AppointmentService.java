@@ -6,6 +6,7 @@ import com.team11.PharmacyProject.dto.therapyPrescription.TherapyPresriptionDTO;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AppointmentService {
 
@@ -52,4 +53,8 @@ public interface AppointmentService {
     List<Appointment> getAppointmentsOfPatientWorkerOnDate(Long workerID, Long patID, Long date);
 
     Appointment scheduleAppointmentInRange(Long workerID, Long patientID, Long pharmID, Long apptStart, Long apptEnd, double price, int duration) throws Exception;
+
+    Map<String, Integer> getInfoForReport(String period, Long pharmacyId);
+
+    int calculateProfit(long start, long end, long pharmacyId);
 }

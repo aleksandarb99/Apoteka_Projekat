@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,6 +31,12 @@ public class PharmacyController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @GetMapping(value = "/report/{id}/{period}/{duration}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Integer>> getInfoForReport(@PathVariable("period") String period, @PathVariable("id") Long pharmacyId, @PathVariable("duration") int duration) {
+        Map<String, Integer> data = pharmacyService.getInfoForReport(period, pharmacyId, duration);
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PharmacyDTO> getPharmacyById(@PathVariable("id") Long id) {
