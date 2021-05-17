@@ -169,7 +169,7 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
     }
 
     @Override
-    public boolean hasAppointmentsInThatDateRange(Long workerID, Long start, Long end){
+    public boolean hasVacationInThatDateRange(Long workerID, Long start, Long end){
         return requestForHolidayRepository.hasVacationInThatDateRange(workerID, start, end);
     }
 

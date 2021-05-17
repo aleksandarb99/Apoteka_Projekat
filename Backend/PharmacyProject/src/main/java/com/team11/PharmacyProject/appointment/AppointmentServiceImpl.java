@@ -7,6 +7,7 @@ import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.enums.ReservationState;
+import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemService;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
@@ -727,18 +728,39 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public Appointment scheduleAppointmentInRange(Long workerID, Long patientID, Long pharmID, Long apptStart, Long apptEnd, double price, int duration) throws Exception{
+    public Appointment scheduleAppointmentInRange(Long workerID, Long patientID, Long pharmID, Long apptStart,
+                                                  Long apptEnd, double price, int duration) throws Exception{
+        // provera da li postji radnik uopste
+        Optional<PharmacyWorker> worker = pharmacyWorkerRepository.findById(workerID);
+        if (worker.isEmpty()) throw new Exception("Invalid worker");
+        PharmacyWorker pw = worker.get();
+
+        //kog je tipa - farmaceut ili derm
+        boolean isPharmacist = pw.getUserType() == UserType.PHARMACIST;
+
+        //da li je validno vreme pocetka
         if (apptStart < Instant.now().toEpochMilli()){
             throw new Exception("Appointment has to start in future!");
         }
+
+        //da li se preklapaju appointmenti
         boolean taken = appointmentRepository.hasAppointmentsInRange(workerID, patientID, apptStart, apptEnd);
         if (taken){
             throw new Exception("Patient or worker have an appointment in that period!");
         }
-        Workplace wp = workplaceService.getWorkplaceOfPharmacist(workerID);
+
+        // provera za workplace
+        Workplace wp;
+        if (isPharmacist)
+            wp = workplaceService.getWorkplaceOfPharmacist(workerID);
+        else
+            wp = workplaceService.getWorkplaceOfDermatologist(workerID, pharmID);
+
         if (wp == null){
             throw new Exception("Invalid worker/workplace!");
         }
+
+        //da li se vreme sastanka poklapa sa radnim danom
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(apptStart);
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 1; //-1 zbog enuma
@@ -753,7 +775,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (starHour == endHour){
             throw new Exception("Invalid day of week (worker not working that day)!");
         }
+
         //OVO -2 JE OFFSET zbog zonske razlike, ovaj truncutated to je malo glup
+        // da li se poklapa radno vreme
         long workerStartTimeOnDate = Instant.ofEpochMilli(apptStart).truncatedTo(ChronoUnit.DAYS)
                 .plus(starHour-2, ChronoUnit.HOURS).toEpochMilli();
         long workerEndTimeOnDate = Instant.ofEpochMilli(apptStart).truncatedTo(ChronoUnit.DAYS)
@@ -762,13 +786,10 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new Exception("Invalid appointment time (worker not working in that time period)!");
         }
 
-        if (requestForHolidayService.hasAppointmentsInThatDateRange(workerID, apptStart, apptEnd)){
+        //da li se preklapa sa odmorom
+        if (requestForHolidayService.hasVacationInThatDateRange(workerID, apptStart, apptEnd)){
             throw new Exception("Worker has a vacation in that period!");
         }
-
-        Optional<PharmacyWorker> worker = pharmacyWorkerRepository.findById(workerID);
-        if (worker.isEmpty()) throw new Exception("Invalid worker");
-        PharmacyWorker pw = worker.get();
 
         Optional<Patient> patient = patientRepository.findById(patientID);
         if (patient.isEmpty()) throw new Exception("Invalid patient");
@@ -787,11 +808,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         cosultation.setDuration(duration);
         cosultation.setStartTime(apptStart);
         cosultation.setEndTime(apptEnd);
-        cosultation.setPrice(price);
 
-//        pat.addAppointment(cosultation);
-//        pw.addAppointment(cosultation);
-//        pharm.addAppointment(cosultation);
+        if (!isPharmacist) {
+            cosultation.setPrice(price);
+        }else{
+            cosultation.setPrice(pharm.getConsultationPrice());
+        }
 
         appointmentRepository.save(cosultation);
 

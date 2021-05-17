@@ -4,6 +4,7 @@ import api from '../../app/api';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
 import DatePicker from "react-datepicker";
 import moment from "moment";
+import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 
 const ScheduleAnotherApp = (props) => {
     const [selectedDate, setSelectedDate] = useState(null);
@@ -24,13 +25,27 @@ const ScheduleAnotherApp = (props) => {
         }
         bodyFormData.append('workerID', workerID);
 
-        api.post("http://localhost:8080/api/workers/getWorkTimeForReport", bodyFormData)
-            .then(
-                (resp) => {
-                    setWorkersWorktime(resp.data);
-                })
-            .catch(() => alert("Couldn't get worktime!"));
-    }, [])
+        if (getUserTypeFromToken().trim() === 'PHARMACIST'){
+            api.post("http://localhost:8080/api/workers/getWorkTimeForReport", bodyFormData)
+                .then(
+                    (resp) => {
+                        setWorkersWorktime(resp.data);
+                    })
+                .catch(() => alert("Couldn't get worktime!"));
+        }else{
+            console.log("trebalo bi");
+            if (props.appt){
+                console.log("trebalo bi 2");
+                bodyFormData.append('pharmacyID', props.appt.pharmacyID);
+                api.post("http://localhost:8080/api/workers/getWorkTimeForReportDerm", bodyFormData)
+                    .then(
+                        (resp) => {
+                            setWorkersWorktime(resp.data);
+                        })
+                    .catch(() => alert("Couldn't get worktime!"));
+            }
+        }
+    }, [props.appt])
 
     useEffect(() => {
         if (!selectedDate){ setApptsOnSelectedDate([]); return; }
@@ -63,12 +78,18 @@ const ScheduleAnotherApp = (props) => {
         }else if (isNaN(startMinutes)){
             alert('Invalid start time!');
             return;
-        }else if (isNaN(price)){
-            alert('Invalid price!');
-            return;
+        }else if (getUserTypeFromToken().trim() === 'DERMATOLOGIST'){
+            if (isNaN(price)){
+                alert('Invalid price!');
+                return;
+            }
         }else if (isNaN(duration)){
             alert('Invalid duration!');
             return;
+        }
+
+        if (getUserTypeFromToken().trim() === 'PHARMACIST'){ //stavljamo price na default 0, ako je farmaceut u pitanju
+            setPrice('0');
         }
         let hours = parseInt(startHours);
         let minutes = parseInt(startMinutes);
@@ -99,7 +120,7 @@ const ScheduleAnotherApp = (props) => {
         bodyFormData.append('price', priceF);
         bodyFormData.append('date', moment(selectedDate).valueOf() + totalMillisHourMin);
         bodyFormData.append('duration', durationI);
-        api.post("http://localhost:8080/api/appointment/scheduleConsultationPharmacist", bodyFormData)
+        api.post("http://localhost:8080/api/appointment/scheduleAppointment", bodyFormData)
             .then(
                 (resp) => {
                     alert("Appointment scheduled!");
@@ -204,16 +225,18 @@ const ScheduleAnotherApp = (props) => {
                         </InputGroup>
                     </Col>
                 </Row>
-                <Row className="ml-1 mt-4 mb-5">
-                    <Col md={8}>
-                        <InputGroup>
-                            <InputGroup.Prepend>
-                                <InputGroup.Text>Price:</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <Form.Control type="text" value={price} onChange={(e)=>setPrice(e.target.value)}/>
-                        </InputGroup>
-                    </Col>
-                </Row>
+                {getUserTypeFromToken().trim() === 'DERMATOLOGIST' &&
+                    <Row className="ml-1 mt-4 mb-5">
+                        <Col md={8}>
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text>Price:</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <Form.Control type="text" value={price} onChange={(e)=>setPrice(e.target.value)}/>
+                            </InputGroup>
+                        </Col>
+                    </Row>
+                }  
 
                 <Row className="justify-content-center m-3 align-items-center">
                     <Button onClick={() => scheduleAndFinish()}>Schedule</Button>

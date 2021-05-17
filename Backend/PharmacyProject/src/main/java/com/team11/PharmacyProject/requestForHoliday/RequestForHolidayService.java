@@ -16,7 +16,7 @@ public interface RequestForHolidayService {
 
     List<RequestForHoliday> getRequestForHolidayAcceptedOrPendingInFuture(Long workerID);
 
-    boolean hasAppointmentsInThatDateRange(Long workerID, Long start, Long end);
+    boolean hasVacationInThatDateRange(Long workerID, Long start, Long end);
 
     boolean isWorkerOnHoliday(Long workerId, Date date);
 
