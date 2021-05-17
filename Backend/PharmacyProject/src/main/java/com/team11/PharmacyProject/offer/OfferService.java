@@ -7,4 +7,6 @@ public interface OfferService {
     void save(Offer o);
 
     List<Offer> findOffersByOrderId(long orderId);
+
+    int calculateExpenses(long start, long end, long pharmacyId);
 }

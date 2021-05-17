@@ -169,19 +169,23 @@ public class EmailService {
         Calendar cal2 = Calendar.getInstance();
         cal2.setTimeInMillis(eRecipe.getDispensingDate());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd. M. yyyy. : HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd. M. yyyy.  HH:mm");
 
         StringBuilder sb = new StringBuilder();
         sb.append("Poštovani ").append(eRecipe.getPatient().getFirstName()).append(" ").append(eRecipe.getPatient().getLastName())
-                .append(",\nIzvršeno je izdavanje lekova putem e-recepta\n\n")
+                .append(",\nIzvršeno je izdavanje lekova putem e-recepta u apoteci \"").append(eRecipe.getPharmacy().getName()).append("\"\n\n")
                 .append("Datum nastanka e-recepta: ").append(sdf.format(cal1.getTime())).append("\n")
                 .append("Datum izdavanja lekova: ").append(sdf.format(cal2.getTime())).append("\n\n")
                 .append("Izdati lekovi: \n");
 
         for (var eri : eRecipe.geteRecipeItems()) {
             sb.append("Lek: ")
-                    .append(eri.getMedicineName()).append(" -- Kolicina: ").append(eri.getQuantity()).append("\n");
+                    .append(eri.getMedicineName()).append(" -- Količina: ").append(eri.getQuantity()).append("\n");
         }
+
+        sb.append(String.format("Ukupna cena lekova: %.2f\n", eRecipe.getTotalPrice()));
+        sb.append(String.format("Ukupna cena lekova sa popustom: %.2f\n\n", eRecipe.getTotalPriceWithDiscount()));
+        sb.append(String.format("Ovom kupovinom ste ostvarili %d bodova!\n\nPozdrav, Vaša %s", eRecipe.getPoints(), eRecipe.getPharmacy().getName()));
 
         mail.setText(sb.toString());
         javaMailSender.send(mail);

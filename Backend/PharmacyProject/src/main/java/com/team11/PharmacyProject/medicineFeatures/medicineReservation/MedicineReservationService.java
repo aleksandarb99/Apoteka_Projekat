@@ -5,6 +5,7 @@ import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNot
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWorkerDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MedicineReservationService {
 
@@ -19,4 +20,8 @@ public interface MedicineReservationService {
     MedicineReservationWorkerDTO issueMedicine(Long workerID, String resID);
 
     boolean cancelReservation(Long id);
+
+    Map<String, Integer> getInfoForReport(String period, Long pharmacyId);
+
+    int calculateProfit(long start, long end, long pharmacyId);
 }

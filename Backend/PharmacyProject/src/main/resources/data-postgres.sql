@@ -61,7 +61,7 @@ insert into medicine (name, code, content, side_effects, daily_intake, recipe_re
 
 /*Medicine items*/
 insert into medicine_item (amount, medicine_id) values (18, 1);
-insert into medicine_item (amount, medicine_id) values (23, 2);
+insert into medicine_item (amount, medicine_id) values (25, 2);
 insert into medicine_item (amount, medicine_id) values (14, 3);
 insert into medicine_item (amount, medicine_id) values (55, 4);
 insert into medicine_item (amount, medicine_id) values (67, 5);
@@ -280,17 +280,6 @@ insert into ranking_category (name, points_required, discount) values ('Bronza',
 insert into ranking_category (name, points_required, discount) values ('Srebro', 100, 15.0);
 insert into ranking_category (name, points_required, discount) values ('Zlato', 200, 30.0);
 
-/*ERecipe Items*/
-insert into erecipe_item (medicine_code, medicine_name, quantity) values ('M01AE01', 'Brufen', 2);
-insert into erecipe_item (medicine_code, medicine_name, quantity) values ('N02BE01', 'Paracetamol', 1);
-
-/*ERecipes*/
-insert into erecipe (prescription_date, dispensing_date, state, code, patient_id) values (1616846400000, 1620812258708, 'PROCESSED', 'EP0000', 1);
-
-/*ERecipes - ERecipes Items*/
-insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 1);
-insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 2);
-
 /*Medicine Prices*/
 insert into medicine_price (price, start_date) values (449, 1618077600000);
 insert into medicine_price (price, start_date) values (489, 1618160400000);
@@ -419,6 +408,64 @@ insert into workplace_work_days (workplace_id, work_days_id) values (9, 51);
 insert into workplace_work_days (workplace_id, work_days_id) values (9, 52);
 
 /*Appointments*/
+
+-- Dodano zbog izvestaja
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1557937039000, 1557940639000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1557937039000, 1557940639000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1557937039000, 1557940639000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1526404639000, 1526406319000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1526404639000, 1526406319000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1526404639000, 1526406319000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1605462319000, 1605463819000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1605462319000, 1605463819000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1599750619000, 1599754219000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1599750619000, 1599754219000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1599703819000, 1599754219000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1441901419000, 1441901519000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1441901419000, 1441901519000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1410365419000, 1410366419000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1410365419000, 1410366419000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1410365419000, 1410366419000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1607616619000, 1607617619000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1607616619000, 1607617619000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1607616619000, 1607617619000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1607616619000, 1607617619000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1589127019000, 1589128019000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1589127019000, 1589128019000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1613466603000, 1613466603000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1613466603000, 1613466603000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1621156203000, 1621156203000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1621156203000, 1621156203000, 'Placanje u unapred.', 1700, 3, 1, 6);
+insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
+values ('FINISHED', 'CONSULTATION', 2, 1621156203000, 1621156203000, 'Placanje u unapred.', 1700, 3, 1, 6);
+
+
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
                     values ('FINISHED', 'CONSULTATION', 2, 1611800300000, 1611801300000, 'Placanje u unapred.', 1700, 3, 1, 6);
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id)
@@ -532,6 +579,17 @@ insert into supplier_offers (supplier_id, offers_id) values (5, 3);
 insert into supplier_offers (supplier_id, offers_id) values (4, 4);
 insert into supplier_offers (supplier_id, offers_id) values (5, 5);
 
+/*ERecipe Items*/
+insert into erecipe_item (medicine_code, medicine_name, quantity) values ('M01AE01', 'Brufen', 2);
+insert into erecipe_item (medicine_code, medicine_name, quantity) values ('N02BE01', 'Paracetamol', 1);
+
+/*ERecipes*/
+insert into erecipe (prescription_date, dispensing_date, state, code, total_price, total_price_with_discount, patient_id, pharmacy_id) values (1616846400000, 1620812258708, 'PROCESSED', 'EP0000', 1228.0, 1228.0, 1, 1);
+
+/*ERecipes - ERecipes Items*/
+insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 1);
+insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 2);
+
 /*Advertisements*/
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id)
                     values ('Ne propustite priliku!', 5.0, 1619953200000, 1620817200000, 'SALE', 1);
@@ -557,6 +615,115 @@ insert into medicine_reservation (pickup_date, reservation_date, reservationid, 
                     values (1618920720000, 1617717600000, 'f8c3de44-1fea-4d7c-a8b0-29f63c4c7777', 'RECEIVED', 3, 2);
 insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
                     values (1619352720000, 1617804000000, 'f8c3de44-1fea-4d7c-a8b0-29f63c4c8888', 'RECEIVED', 4, 3);
+
+
+-- Rezervacije za  izvestaj
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1594397419000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1594397419000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1594397419000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1597075819000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1597075819000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1597075819000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1597075819000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1602346219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1607616619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1607616619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1607616619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1575994219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1575994219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1575994219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1575994219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1607616619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1607616619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1607616619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1575994219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1575994219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1575994219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1575994219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1607616619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1607616619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1607616619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1575994219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1525968619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1525968619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1525968619000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1512922219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1512922219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1512922219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1544458219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1544458219000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1618071019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1618071019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1618071019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1618071019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1618071019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1620663019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1620663019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1620663019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1620663019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1620663019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1620663019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1620663019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1612973419000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1612973419000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1612973419000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1618071019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1618071019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1618071019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
+insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
+values (1626307200000, 1618071019000, 'f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454', 'RESERVED', 1, 1);
 
 /*Patient - MedicineReservations*/
 insert into patient_medicine_reservation (patient_id, medicine_reservation_id) values (1, 1);

@@ -4,8 +4,9 @@ import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyERecipeDTO;
 import com.team11.PharmacyProject.myOrder.MyOrder;
 import org.springframework.data.domain.Sort;
-
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface PharmacyService {
 
@@ -54,4 +55,6 @@ public interface PharmacyService {
     boolean createInquiry(Long workerID, Long medicineItemID, Pharmacy pharmacy);
 
     List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order);
+
+    Map<String, Integer> getInfoForReport(String period, Long pharmacyId, int duration);
 }

@@ -17,6 +17,7 @@ import DisplayWorkers from "./DisplayWorkers";
 import DisplayInquiries from "./DisplayInquiries";
 
 import { getIdFromToken } from "../../app/jwtTokenUtils";
+import DisplayReports from "./DisplayReports";
 
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
@@ -128,6 +129,7 @@ function PharmacyAdminHomePage() {
                 refreshInq={refreshInq}
                 idOfPharmacy={pharmacyDetails?.id}
               />
+              <DisplayReports pharmacyDetails={pharmacyDetails} />
             </Tab.Content>
           </Col>
         </Row>

@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.eRecipe;
 
 import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.ERecipeState;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.users.patient.Patient;
 
 import javax.persistence.*;
@@ -27,12 +28,25 @@ public class ERecipe {
     @Column(name = "code", unique = true, nullable = false)
     private String code;
 
+    @Column(name = "total_price")
+    private Double totalPrice;
+
+    @Column(name = "total_price_with_discount")
+    private Double totalPriceWithDiscount;
+
+    @Column(name = "points")
+    private Integer points;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ERecipeItem> eRecipeItems;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "patient_id")
     private Patient patient;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "pharmacy_id")
+    private Pharmacy pharmacy;
 
     public ERecipe() {
     }
@@ -100,5 +114,37 @@ public class ERecipe {
 
     public void setPrescriptionDate(Long prescriptionDate) {
         this.prescriptionDate = prescriptionDate;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public Double getTotalPriceWithDiscount() {
+        return totalPriceWithDiscount;
+    }
+
+    public void setTotalPriceWithDiscount(Double totalPriceWithDiscount) {
+        this.totalPriceWithDiscount = totalPriceWithDiscount;
+    }
+
+    public Pharmacy getPharmacy() {
+        return pharmacy;
+    }
+
+    public void setPharmacy(Pharmacy pharmacy) {
+        this.pharmacy = pharmacy;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 }
