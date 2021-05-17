@@ -21,6 +21,7 @@ import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,12 @@ public class MedicineReservationController {
 
     @Autowired
     EmailService emailService;
+
+    @GetMapping(value = "/report/{id}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Integer>> getInfoForReport(@PathVariable("period") String period, @PathVariable("id") Long pharmacyId) {
+        Map<String, Integer> data = service.getInfoForReport(period, pharmacyId);
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> insertMedicineReservation(@Valid @RequestBody MedicineReservationInsertDTO dto, BindingResult result) {

@@ -36,8 +36,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
@@ -514,6 +516,153 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
 
         return appointments;
+    }
+
+    @Override
+    public int calculateProfit(long start, long end, long pharmacyId) {
+        int sum = 0;
+        List<Appointment> list = appointmentRepository.getAppointmentBeetwenTwoTimestamps(start, end, pharmacyId);
+        for (Appointment a:list) {
+            sum += a.getPrice();
+        }
+        return sum;
+    }
+
+    @Override
+    public Map<String, Integer> getInfoForReport(String period, Long pharmacyId) {
+        String[] monthNames = {"January", "February", "March", "April", "May",
+                "June", "July", "August", "September", "October", "November", "December"};
+
+        Map<String, Integer> data = new LinkedHashMap<>();
+
+        List<Appointment> list;
+
+        Calendar calendar = Calendar.getInstance();
+
+        long currTime = Instant.now().toEpochMilli();
+
+        calendar.setTime(new Date(currTime));
+        calendar.set(calendar.get(Calendar.YEAR)-1, calendar.get(Calendar.MONTH), 1, 0, 0, 0);
+        long yearAgo = calendar.getTimeInMillis();
+
+        if(period.equals("Monthly")){
+            int count = 0;
+            for(int i = calendar.get(Calendar.MONTH) + 1; i<12; i++) {
+                String key = monthNames[i]+"-"+calendar.get(Calendar.YEAR);
+                data.put(key, 0);
+                count++;
+            }
+            for(int i = 0; i<12-count; i++) {
+                String key = monthNames[i]+"-"+(calendar.get(Calendar.YEAR)+1);
+                data.put(key, 0);
+            }
+
+            list = appointmentRepository.getAppointmentBeetwenTwoTimestamps(yearAgo, currTime, pharmacyId);
+
+            for (Appointment a:list) {
+                calendar.setTime(new Date(a.getStartTime()));
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+                String key = monthNames[month]+"-"+year;
+                if(data.containsKey(key))
+                    data.put(key, data.get(key) + 1);
+            }
+        }
+        else if(period.equals("Quarterly")) {
+            if(calendar.get(Calendar.MONTH)<=2) {
+                data.put(2+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(3+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(4+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
+            } else if(calendar.get(Calendar.MONTH)<=5) {
+                data.put(3+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(4+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0);
+            } else if(calendar.get(Calendar.MONTH)<=8) {
+                data.put(4+"-"+calendar.get(Calendar.YEAR),0);
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(3+"-"+(calendar.get(Calendar.YEAR)+1),0);
+            } else {
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(3+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(4+"-"+(calendar.get(Calendar.YEAR)+1),0);
+            }
+
+
+            calendar.setTime(new Date(currTime));
+
+            if(calendar.get(Calendar.MONTH)<=2) {
+                calendar.setTime(new Date(yearAgo));
+                calendar.set(calendar.get(Calendar.YEAR), Calendar.APRIL, 1, 0, 0, 0);
+                yearAgo = calendar.getTimeInMillis();
+            } else if(calendar.get(Calendar.MONTH)<=5) {
+                calendar.setTime(new Date(yearAgo));
+                calendar.set(calendar.get(Calendar.YEAR), Calendar.JULY, 1, 0, 0, 0);
+                yearAgo = calendar.getTimeInMillis();
+            } else if(calendar.get(Calendar.MONTH)<=8) {
+                calendar.setTime(new Date(yearAgo));
+                calendar.set(calendar.get(Calendar.YEAR), Calendar.OCTOBER, 1, 0, 0, 0);
+                yearAgo = calendar.getTimeInMillis();
+            } else {
+                calendar.setTime(new Date(yearAgo));
+                calendar.set(calendar.get(Calendar.YEAR), Calendar.JANUARY, 1, 0, 0, 0);
+                yearAgo = calendar.getTimeInMillis();
+            }
+
+            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0, 0, 0);
+            yearAgo = calendar.getTimeInMillis();
+
+            list = appointmentRepository.getAppointmentBeetwenTwoTimestamps(yearAgo, currTime, pharmacyId);
+
+            for (Appointment a:list) {
+                calendar.setTime(new Date(a.getStartTime()));
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+                int quarter;
+
+                if(month<=2) {
+                    quarter = 1;
+                } else if(month<=5) {
+                    quarter = 2;
+                } else if(month<=8) {
+                    quarter = 3;
+                } else {
+                    quarter = 4;
+                }
+
+                String key = quarter+"-"+year;
+                if(data.containsKey(key))
+                    data.put(key, data.get(key) + 1);
+            }
+        } else {
+            calendar.setTime(new Date(currTime));
+            calendar.set(calendar.get(Calendar.YEAR)-9, Calendar.JANUARY, 1, 0, 0, 0);
+            yearAgo = calendar.getTimeInMillis();
+
+            data.put(calendar.get(Calendar.YEAR)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+1)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+2)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+3)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+4)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+5)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+6)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+7)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+8)+"",0);
+            data.put((calendar.get(Calendar.YEAR)+9)+"",0);
+
+            list = appointmentRepository.getAppointmentBeetwenTwoTimestamps(yearAgo, currTime, pharmacyId);
+
+            for (Appointment a:list) {
+                calendar.setTime(new Date(a.getStartTime()));
+                int year = calendar.get(Calendar.YEAR);
+                String key = year+"";
+                if(data.containsKey(key))  data.put(key, data.get(key) + 1);
+            }
+        }
+        return data;
     }
 
     @Override

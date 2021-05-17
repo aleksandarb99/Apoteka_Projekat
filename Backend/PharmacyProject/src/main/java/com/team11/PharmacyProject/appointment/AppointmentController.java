@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,12 @@ public class AppointmentController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @GetMapping(value = "/report/{id}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Integer>> getInfoForReport(@PathVariable("period") String period, @PathVariable("id") Long pharmacyId) {
+        Map<String, Integer> data = appointmentServiceImpl.getInfoForReport(period, pharmacyId);
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
 
     @PostMapping(value = "/{idP}/{idD}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addAppointment(@PathVariable("idP") Long pharmacyId, @PathVariable("idD") Long dId, @Valid @RequestBody AppointmentDTORequest dto) {
