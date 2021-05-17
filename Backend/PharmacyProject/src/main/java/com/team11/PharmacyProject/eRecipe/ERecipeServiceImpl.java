@@ -8,14 +8,17 @@ import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
+import com.team11.PharmacyProject.dto.erecipe.ERecipeDispenseDTO;
 import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.ERecipeState;
+import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.rankingCategory.RankingCategory;
+import com.team11.PharmacyProject.rankingCategory.RankingCategoryService;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
@@ -24,12 +27,16 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.mail.internet.ContentType;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ERecipeServiceImpl implements ERecipeService {
@@ -47,6 +54,9 @@ public class ERecipeServiceImpl implements ERecipeService {
     PatientRepository patientRepository;
 
     @Autowired
+    RankingCategoryService rankingCategoryService;
+
+    @Autowired
     ModelMapper modelMapper;
 
     @Override
@@ -58,9 +68,11 @@ public class ERecipeServiceImpl implements ERecipeService {
         try {
             String qrCodeText = parseQRCode(file);
             ERecipeDTO eRecipeDTO = objectMapper.readValue(qrCodeText, ERecipeDTO.class);
+
             if (patientId != eRecipeDTO.getPatientId()) {
-                throw new Exception("Invalid patient Id");
+                throw new RuntimeException("Invalid patient Id");
             }
+
             // Set state depending on eRecipeCode
             // Database will store only REJECTED/PROCESSES prescriptions
             Optional<ERecipe> er = eRecipeRepository.findFirstByCode(eRecipeDTO.getCode());
@@ -71,6 +83,15 @@ public class ERecipeServiceImpl implements ERecipeService {
             } else {
                 eRecipeDTO.setState(ERecipeState.NEW);
             }
+
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+
+            Set<ConstraintViolation<ERecipeDTO>> violations = validator.validate(eRecipeDTO);
+            if (!violations.isEmpty()) {
+                throw new RuntimeException("Invalid QR code");
+            }
+
             return eRecipeDTO;
         } catch (Exception e) {
             // If parser cannot parse QR code, or if JSON is invalid
@@ -94,32 +115,44 @@ public class ERecipeServiceImpl implements ERecipeService {
     }
 
     @Override
-    public ERecipe dispenseMedicine(long pharmacyId, ERecipeDTO eRecipeDTO) {
-        // TODO complex validation
-
+    public ERecipe dispenseMedicine(long patientId, ERecipeDispenseDTO eRecipeDispenseDTO) {
         // set null fields
-        Optional<Patient> patient = patientRepository.findById(eRecipeDTO.getPatientId());
-        if (patient.isEmpty() || patient.get().getPenalties() >= 3) {
+        Patient patient = patientRepository.findByIdAndFetchAllergiesEagerly(eRecipeDispenseDTO.getPatientId());
+        if (patient == null || patient.getId() != patientId || patient.getPenalties() >= 3) {
             return null;
         }
 
         // get pharmacy
-        Optional<Pharmacy> pharmacyOp = pharmacyRepository.getPharmacyByIdFetchPriceList(pharmacyId);
+        Optional<Pharmacy> pharmacyOp = pharmacyRepository.getPharmacyByIdFetchPriceList(eRecipeDispenseDTO.getPharmacyId());
         if (pharmacyOp.isEmpty())
             return null;
         Pharmacy pharmacy = pharmacyOp.get();
 
         // get e-prescription items
-        Optional<ERecipe> optionalERecipe = eRecipeRepository.findFirstByCode(eRecipeDTO.getCode());
+        Optional<ERecipe> optionalERecipe = eRecipeRepository.findFirstByCode(eRecipeDispenseDTO.getCode());
         if (optionalERecipe.isPresent()) {
             return null;
         }
 
-        ERecipe eRecipe = modelMapper.map(eRecipeDTO, ERecipe.class);
+        ERecipe eRecipe = modelMapper.map(eRecipeDispenseDTO, ERecipe.class);
         List<ERecipeItem> items = eRecipe.geteRecipeItems();
+
+        // get allergens
+        List<Medicine> allergens = patient.getAllergies();
+
+        for (var item : items) {
+            for (var al : allergens) {
+                if (item.getMedicineCode().equals(al.getCode())) {
+                    return null;
+                }
+            }
+        }
 
         // get items in pharmacy
         List<MedicineItem> medicineItems = pharmacy.getPriceList().getMedicineItems();
+
+        // points achieved
+        int points = 0;
 
         for (var item : items) {
             boolean found = false;
@@ -129,7 +162,10 @@ public class ERecipeServiceImpl implements ERecipeService {
                     if (mi.getAmount() < item.getQuantity()) {
                         return null;
                     }
+                    // decrease pharmacy stock
                     mi.setAmount(mi.getAmount() - item.getQuantity());
+                    // increase achieved points
+                    points += item.getQuantity() * mi.getMedicine().getPoints();
                     break;
                 }
             }
@@ -139,11 +175,24 @@ public class ERecipeServiceImpl implements ERecipeService {
         }
 
         eRecipe.setDispensingDate(System.currentTimeMillis());
-        eRecipe.setPatient(patient.get());
+        eRecipe.setPharmacy(pharmacy);
+        eRecipe.setTotalPrice(eRecipeDispenseDTO.getTotalPrice());
+        eRecipe.setPoints(points);
+
+        // calculate discount
+        RankingCategory rankingCategory = rankingCategoryService.getCategoryByPoints(patient.getPoints());
+        double discount = rankingCategory.getDiscount();
+        eRecipe.setTotalPriceWithDiscount(eRecipeDispenseDTO.getTotalPrice() * (1 - discount/100));
+
+        patient.setPoints(patient.getPoints() + points);
+        eRecipe.setPatient(patient);
+
         eRecipe.setState(ERecipeState.PROCESSED);
 
         // save pharmacy
         pharmacyRepository.save(pharmacy);
+        // save patient
+        patientRepository.save(patient);
         // save eRecipe
         eRecipeRepository.save(eRecipe);
         return eRecipe;

@@ -72,11 +72,16 @@ const ERecipeSearch = () => {
       });
   }, [parsedData, sortBy, sortOrder]);
 
-  const doBuy = (id) => {
+  const doBuy = (pharmacy) => {
+    let data = {
+      ...parsedData,
+      "pharmacyId": pharmacy.id,
+      "totalPrice": pharmacy.totalPrice
+    }
     api
       .post(
-        `http://localhost:8080/api/e-recipes/dispense-medicine/${id}`,
-        parsedData
+        `http://localhost:8080/api/e-recipes/dispense-medicine/${getIdFromToken()}`,
+        data
       )
       .then(() => {
         alert("Success");
@@ -158,8 +163,8 @@ const ERecipeSearch = () => {
         </Form>
         <PharmacyWithMedicineList
           pharmacies={pharmacies}
-          doBuy={(id) => {
-            doBuy(id);
+          doBuy={(pharmacy) => {
+            doBuy(pharmacy);
           }}
         >
           {" "}

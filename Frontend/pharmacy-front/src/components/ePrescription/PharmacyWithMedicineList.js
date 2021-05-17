@@ -8,7 +8,7 @@ const PharmacyWithMedicineList = ({ pharmacies, doBuy }) => {
 
         <Container>
             {pharmacies.map((p) => {
-                return <PharmacyWithMedicineItem pharmacy={p} doBuy={() => { doBuy(p.id) }}></PharmacyWithMedicineItem >
+                return <PharmacyWithMedicineItem pharmacy={p} doBuy={() => { doBuy(p) }}></PharmacyWithMedicineItem >
             })}
         </Container >
 

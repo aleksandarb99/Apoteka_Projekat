@@ -7,11 +7,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public class ERecipeDTO {
+public class ERecipeDispenseDTO {
     private Long id;
     @NotNull
     private Long prescriptionDate;
-    private Long dispensingDate;
     @NotNull
     private ERecipeState state;
     @NotBlank
@@ -20,18 +19,12 @@ public class ERecipeDTO {
     private List<ERecipeItem> eRecipeItems;
     @NotNull
     private Long patientId;
+    @NotNull
+    private Long pharmacyId;
+    @NotNull
+    private Double totalPrice;
 
-    public ERecipeDTO() {
-    }
-
-    public ERecipeDTO(Long id, Long prescriptionDate, Long dispensingDate, ERecipeState state, String code, List<ERecipeItem> eRecipeItems, Long patientId) {
-        this.id = id;
-        this.prescriptionDate = prescriptionDate;
-        this.dispensingDate = dispensingDate;
-        this.state = state;
-        this.code = code;
-        this.eRecipeItems = eRecipeItems;
-        this.patientId = patientId;
+    public ERecipeDispenseDTO() {
     }
 
     public Long getId() {
@@ -82,11 +75,20 @@ public class ERecipeDTO {
         this.patientId = patientId;
     }
 
-    public Long getDispensingDate() {
-        return dispensingDate;
+    public Long getPharmacyId() {
+        return pharmacyId;
     }
 
-    public void setDispensingDate(Long dispensingDate) {
-        this.dispensingDate = dispensingDate;
+    public void setPharmacyId(Long pharmacyId) {
+        this.pharmacyId = pharmacyId;
     }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
 }

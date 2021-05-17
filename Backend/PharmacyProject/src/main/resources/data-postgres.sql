@@ -61,7 +61,7 @@ insert into medicine (name, code, content, side_effects, daily_intake, recipe_re
 
 /*Medicine items*/
 insert into medicine_item (amount, medicine_id) values (18, 1);
-insert into medicine_item (amount, medicine_id) values (23, 2);
+insert into medicine_item (amount, medicine_id) values (25, 2);
 insert into medicine_item (amount, medicine_id) values (14, 3);
 insert into medicine_item (amount, medicine_id) values (55, 4);
 insert into medicine_item (amount, medicine_id) values (67, 5);
@@ -279,17 +279,6 @@ insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, '
 insert into ranking_category (name, points_required, discount) values ('Bronza', 50, 5.0);
 insert into ranking_category (name, points_required, discount) values ('Srebro', 100, 15.0);
 insert into ranking_category (name, points_required, discount) values ('Zlato', 200, 30.0);
-
-/*ERecipe Items*/
-insert into erecipe_item (medicine_code, medicine_name, quantity) values ('M01AE01', 'Brufen', 2);
-insert into erecipe_item (medicine_code, medicine_name, quantity) values ('N02BE01', 'Paracetamol', 1);
-
-/*ERecipes*/
-insert into erecipe (prescription_date, dispensing_date, state, code, patient_id) values (1616846400000, 1620812258708, 'PROCESSED', 'EP0000', 1);
-
-/*ERecipes - ERecipes Items*/
-insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 1);
-insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 2);
 
 /*Medicine Prices*/
 insert into medicine_price (price, start_date) values (449, 1618077600000);
@@ -531,6 +520,17 @@ insert into supplier_offers (supplier_id, offers_id) values (4, 2);
 insert into supplier_offers (supplier_id, offers_id) values (5, 3);
 insert into supplier_offers (supplier_id, offers_id) values (4, 4);
 insert into supplier_offers (supplier_id, offers_id) values (5, 5);
+
+/*ERecipe Items*/
+insert into erecipe_item (medicine_code, medicine_name, quantity) values ('M01AE01', 'Brufen', 2);
+insert into erecipe_item (medicine_code, medicine_name, quantity) values ('N02BE01', 'Paracetamol', 1);
+
+/*ERecipes*/
+insert into erecipe (prescription_date, dispensing_date, state, code, total_price, total_price_with_discount, patient_id, pharmacy_id) values (1616846400000, 1620812258708, 'PROCESSED', 'EP0000', 1228.0, 1228.0, 1, 1);
+
+/*ERecipes - ERecipes Items*/
+insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 1);
+insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 2);
 
 /*Advertisements*/
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id)
