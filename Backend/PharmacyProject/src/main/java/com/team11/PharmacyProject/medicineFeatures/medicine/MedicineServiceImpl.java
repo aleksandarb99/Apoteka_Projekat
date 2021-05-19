@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.eRecipe.ERecipeService;
 import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
+import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
@@ -191,13 +192,18 @@ public class MedicineServiceImpl implements MedicineService {
         List<Medicine> chosenMedicines = new ArrayList<>();
 
         for (MedicineReservation m : patient.getMedicineReservation()) {
+            if (!m.getState().equals(ReservationState.RECEIVED)) continue;
             addMedicine(chosenMedicines, m.getMedicineItem().getMedicine());
         }
 
         List<ERecipeDTO> ePrescriptions = eRecipeService.getEPrescriptionsByPatientId(id);
-        for (ERecipeDTO dto : ePrescriptions) {
-            for (ERecipeItem item: dto.geteRecipeItems()) {
-                addMedicine(chosenMedicines, medicineRepository.findByMedicineCode(item.getMedicineCode()));
+        if (ePrescriptions != null) {
+            for (ERecipeDTO dto : ePrescriptions) {
+                if (dto.geteRecipeItems() != null) {
+                    for (ERecipeItem item : dto.geteRecipeItems()) {
+                        addMedicine(chosenMedicines, medicineRepository.findByMedicineCode(item.getMedicineCode()));
+                    }
+                }
             }
         }
 
