@@ -2,6 +2,9 @@ package com.team11.PharmacyProject.medicineFeatures.medicine;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
+import com.team11.PharmacyProject.eRecipe.ERecipeService;
+import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
@@ -40,6 +43,9 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Autowired
     private PriceListService priceListService;
+
+    @Autowired
+    private ERecipeService eRecipeService;
 
     @Override
     public Medicine findOne(long id) {
@@ -187,6 +193,14 @@ public class MedicineServiceImpl implements MedicineService {
         for (MedicineReservation m : patient.getMedicineReservation()) {
             addMedicine(chosenMedicines, m.getMedicineItem().getMedicine());
         }
+
+        List<ERecipeDTO> ePrescriptions = eRecipeService.getEPrescriptionsByPatientId(id);
+        for (ERecipeDTO dto : ePrescriptions) {
+            for (ERecipeItem item: dto.geteRecipeItems()) {
+                addMedicine(chosenMedicines, medicineRepository.findByMedicineCode(item.getMedicineCode()));
+            }
+        }
+
         return chosenMedicines;
     }
 

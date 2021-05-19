@@ -19,4 +19,7 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long> {
 
     @Query("SELECT m FROM Medicine m JOIN FETCH m.medicineForm JOIN FETCH m.medicineType")
     List<Medicine> findAllFetchTypeForm();
+
+    @Query("SELECT m FROM Medicine m WHERE m.code = (:medicineCode)")
+    Medicine findByMedicineCode(String medicineCode);
 }
