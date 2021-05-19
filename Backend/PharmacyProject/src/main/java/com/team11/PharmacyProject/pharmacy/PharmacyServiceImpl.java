@@ -6,6 +6,7 @@ import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.appointment.AppointmentService;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyERecipeDTO;
+import com.team11.PharmacyProject.eRecipe.ERecipeService;
 import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.ERecipeState;
@@ -78,6 +79,9 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Autowired
     OfferService offerService;
+
+    @Autowired
+    ERecipeService eRecipeService;
 
 
     private int calculateProfitBeetwenTimestamps(long start, long end, long pharmacyId){
@@ -545,6 +549,15 @@ public class PharmacyServiceImpl implements PharmacyService {
             if (!mr.getState().equals(ReservationState.RECEIVED)) continue;
             addPharmacy(chosenPharmacies, mr.getPharmacy());
         }
+
+        // Odkomentarisati kad se u qr kod ubaci pharmacy id
+        /*
+        List<ERecipeDTO> ePrescriptions = eRecipeService.getEPrescriptionsByPatientId(id);
+        for (ERecipeDTO dto : ePrescriptions) {
+            for (ERecipeItem item: dto.geteRecipeItems()) {
+                addPharmacy(chosenPharmacies, pharmacyRepository.findById(item.getPharmacyId()));
+            }
+        }*/
 
         return chosenPharmacies;
     }
