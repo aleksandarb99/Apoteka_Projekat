@@ -1,0 +1,13 @@
+.my_content_header {
+  border-radius: 20px;
+  border: 2px solid white;
+  padding: 15px;
+  background-color: rgba(20, 87, 97, 0.897);
+  color: white;
+}
+
+.card_appt_home {
+  border-radius: 20px;
+  border: 2px solid rgba(20, 87, 97, 0.897);
+  font-size: large;
+}
