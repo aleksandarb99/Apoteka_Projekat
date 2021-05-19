@@ -591,14 +591,11 @@ insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 1)
 insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 2);
 
 /*Advertisements*/
-insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id)
-                    values ('Ne propustite priliku!', 5.0, 1619953200000, 1620817200000, 'SALE', 1);
-insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id)
-                    values ('Odlicna akcija!!!', 30.0, 1619953200000, 1620817200000, 'SALE', 2);
+insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id, medicine_item_id)
+                    values ('Ne propustite priliku!', 5.0, 1619953200000, 1620817200000, 'SALE', 1, 1);
+insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id, medicine_item_id)
+                    values ('Odlicna akcija!!!', 30.0, 1619953200000, 1620817200000, 'SALE', 2, 2);
 
-/*Advertising*/
-insert into advertising (advertisement_id, medicine_price_id) values (1, 1);
-insert into advertising (advertisement_id, medicine_price_id) values (2, 3);
 
 /*MedicineReservations*/
 insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id)
