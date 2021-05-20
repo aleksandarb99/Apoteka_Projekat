@@ -1,7 +1,5 @@
 package com.team11.PharmacyProject.pharmacy;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.appointment.AppointmentService;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
@@ -43,7 +41,6 @@ import java.lang.reflect.Field;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,6 +91,14 @@ public class PharmacyServiceImpl implements PharmacyService {
         int profitFromDrugSelling = medicineReservationService.calculateProfit(start, end, pharmacyId);
         int orderExpenses = offerService.calculateExpenses(start, end, pharmacyId);
         return profitFromAppointments + profitFromDrugSelling - orderExpenses;
+    }
+
+    @Override
+    public Pharmacy getPharmacyWithSubsribers(Long pharmacyId) {
+        Optional<Pharmacy> p = pharmacyRepository.getPharmacyWithSubribers(pharmacyId);
+        if(p.isPresent())
+            return p.get();
+        return null;
     }
 
     @Override

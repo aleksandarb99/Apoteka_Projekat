@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.email;
 
+import com.team11.PharmacyProject.advertisement.Advertisement;
+import com.team11.PharmacyProject.dto.advertisment.AdvertismentDTORequest;
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
@@ -9,6 +11,8 @@ import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayWithWor
 import com.team11.PharmacyProject.eRecipe.ERecipe;
 import com.team11.PharmacyProject.myOrder.MyOrder;
 import com.team11.PharmacyProject.orderItem.OrderItem;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.users.user.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
@@ -42,7 +46,8 @@ public class EmailService {
         mail.setText("Pozdrav " + reservationDTO.getFirstName() + " " + reservationDTO.getLastName() + ",\n\n"
         + "Samo da Vas obavestimo da smo primili rezervaciju.\nID rezervacije - " + reservationDTO.getReservationId() + "\n"
         + "Datum rezervacije: " + reservationDTO.getReservationDate() + "\nMolimo Vas da rezervaciju pokupite do " + reservationDTO.getPickupDate() + "\n"
-        + "Mesto preuzimanja " + reservationDTO.getPharmacyAddress() + ", apoteka " + reservationDTO.getPharmacyName() + "\n\n"
+        + "Mesto preuzimanja " + reservationDTO.getPharmacyAddress() + ", apoteka " + reservationDTO.getPharmacyName() + "\n"
+                + "Cena leka " + reservationDTO.getPrice() + "\n\n"
         + "Hvala Vam na poverenju, nadamo se daljoj zajednickoj saradnji!");
 
         javaMailSender.send(mail);
@@ -189,5 +194,43 @@ public class EmailService {
 
         mail.setText(sb.toString());
         javaMailSender.send(mail);
+    }
+
+    public void notifySubsribers(Advertisement advertisement, Pharmacy pharmacy) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+
+        for (MyUser user:pharmacy.getSubscribers()) {
+
+            mail.setTo("abuljevic8@gmail.com");
+            mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
+            mail.setSubject(advertisement.getType().toString());
+
+            Calendar cal1 = Calendar.getInstance();
+            cal1.setTimeInMillis(advertisement.getEndDate());
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd. M. yyyy.");
+
+            if(advertisement.getAdvertisementText().equals("")){
+                mail.setText("Pozdrav " + user.getFirstName() + ",\n\n"
+                        + "Obavestavamo Vas o ponudi koja vazi do \n" + sdf.format(cal1.getTime()) + "\n Popust je " + advertisement.getDiscountPercent() + "% na " + advertisement.getMedicineItem().getMedicine().getName() +"\n"
+
+                                + " u apoteci " + pharmacy.getName()
+                        + "\nHvala Vam na poverenju, nadamo se daljoj zajednickoj saradnji!");
+
+            } else {
+                mail.setText("Pozdrav " + user.getFirstName() + ",\n\n"
+                        + "Obavestavamo Vas o ponudi koja vazi do \n" + sdf.format(cal1.getTime()) + "\n Sadrzaj promocije je '" + advertisement.getAdvertisementText() + "' i ona je vezana za " + advertisement.getMedicineItem().getMedicine().getName() +"\n"
+                        + " u apoteci " + pharmacy.getName()
+                        + "\nHvala Vam na poverenju, nadamo se daljoj zajednickoj saradnji!");
+
+
+            }
+
+            javaMailSender.send(mail);
+
+
+        }
+
+
     }
 }

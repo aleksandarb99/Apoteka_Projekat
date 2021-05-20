@@ -18,6 +18,7 @@ import DisplayInquiries from "./DisplayInquiries";
 
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 import DisplayReports from "./DisplayReports";
+import AdvertismentTab from "./AdvertismentTab";
 
 function PharmacyAdminHomePage() {
   const [pharmacyDetails, setPharmacyDetails] = useState({});
@@ -101,6 +102,11 @@ function PharmacyAdminHomePage() {
                   Inquiries
                 </Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link className="my__nav__link" eventKey="ninth">
+                  Advertisment
+                </Nav.Link>
+              </Nav.Item>
             </Nav>
           </Col>
           <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
@@ -130,6 +136,7 @@ function PharmacyAdminHomePage() {
                 idOfPharmacy={pharmacyDetails?.id}
               />
               <DisplayReports pharmacyDetails={pharmacyDetails} />
+              <AdvertismentTab pharmacyDetails={pharmacyDetails} />
             </Tab.Content>
           </Col>
         </Row>

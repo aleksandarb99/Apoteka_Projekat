@@ -11,9 +11,19 @@ public class MedicineReservationInsertDTO {
     private long pharmacyId;
     @Min(1)
     private long userId;
+    @Min(0)
+    private double price;
 
     public MedicineReservationInsertDTO() {
 
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public long getPickupDate() {

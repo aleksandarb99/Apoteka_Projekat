@@ -76,4 +76,7 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
             "JOIN FETCH mi.medicine m " +
             "WHERE p.id = ?1")
     Optional<Pharmacy> getPharmacyByIdFetchPriceList(long pharmacyId);
+
+    @Query("SELECT p FROM Pharmacy p JOIN FETCH p.subscribers pl WHERE p.id = (:id)")
+    Optional<Pharmacy> getPharmacyWithSubribers(Long id);
 }

@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.medicineFeatures.medicineReservation;
 
+import com.team11.PharmacyProject.advertisement.Advertisement;
+import com.team11.PharmacyProject.advertisement.AdvertismentService;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationInsertDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
@@ -10,6 +12,8 @@ import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.rankingCategory.RankingCategory;
+import com.team11.PharmacyProject.rankingCategory.RankingCategoryService;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.workplace.Workplace;
@@ -37,6 +41,12 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
     @Autowired
     WorkplaceService workplaceService;
+
+    @Autowired
+    AdvertismentService advertismentService;
+
+    @Autowired
+    RankingCategoryService categoryService;
 
     @Override
     public boolean isMedicineItemReserved(Long id) {
@@ -218,7 +228,7 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
         Optional<Patient> p = patientRepository.findById(dto.getUserId());
         if(p.isPresent()) {
-            if(p.get().getPenalties() == 3) return null;
+            if(p.get().getPenalties() >= 3) return null;
         }
 
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByPharmacyAndMedicineId(dto.getPharmacyId(), dto.getMedicineId());
@@ -243,6 +253,12 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         reservation.setReservationDate(System.currentTimeMillis());
         reservation.setState(ReservationState.RESERVED);
         reservation.setMedicineItem(item);
+        reservation.setPrice(dto.getPrice());
+
+        RankingCategory c = categoryService.getCategoryByPoints(p.get().getPoints());   // Ako korisnik pripada nekoj kategoriji, lupi popust
+        if (c != null) {
+            reservation.setPriceWithDiscout(c.getDiscount());
+        }
 
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findByIdAndFetchReservationsEagerly(dto.getUserId()));
         if(patient.isEmpty()) {
