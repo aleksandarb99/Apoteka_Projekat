@@ -73,4 +73,8 @@ public class PharmacyCertainMedicineDTO {
 
         this.price = prices.get(0).getPrice();
     }
+
+    public void setPriceWithDiscout(double discountPercent) {
+        this.price = this.price * (100 - discountPercent) / 100;
+    }
 }

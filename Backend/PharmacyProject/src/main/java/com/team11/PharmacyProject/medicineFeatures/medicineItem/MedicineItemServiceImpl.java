@@ -12,6 +12,11 @@ public class MedicineItemServiceImpl implements MedicineItemService {
     MedicineItemRepository medicineItemRepository;
 
     @Override
+    public MedicineItem findByIdWithMedicine(long id) {
+        return medicineItemRepository.findByIdWithMedicine(id);
+    }
+
+    @Override
     public MedicineItem findById(long id) {
         Optional<MedicineItem> medicineItem = medicineItemRepository.findById(id);
         return medicineItem.orElse(null);
