@@ -46,7 +46,8 @@ public class EmailService {
         mail.setText("Pozdrav " + reservationDTO.getFirstName() + " " + reservationDTO.getLastName() + ",\n\n"
         + "Samo da Vas obavestimo da smo primili rezervaciju.\nID rezervacije - " + reservationDTO.getReservationId() + "\n"
         + "Datum rezervacije: " + reservationDTO.getReservationDate() + "\nMolimo Vas da rezervaciju pokupite do " + reservationDTO.getPickupDate() + "\n"
-        + "Mesto preuzimanja " + reservationDTO.getPharmacyAddress() + ", apoteka " + reservationDTO.getPharmacyName() + "\n\n"
+        + "Mesto preuzimanja " + reservationDTO.getPharmacyAddress() + ", apoteka " + reservationDTO.getPharmacyName() + "\n"
+                + "Cena leka " + reservationDTO.getPrice() + "\n\n"
         + "Hvala Vam na poverenju, nadamo se daljoj zajednickoj saradnji!");
 
         javaMailSender.send(mail);

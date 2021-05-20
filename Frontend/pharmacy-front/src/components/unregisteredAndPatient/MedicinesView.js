@@ -38,16 +38,18 @@ function MedicinesView() {
 
   useEffect(() => {
     async function fetchMedicines() {
-      const request = await axios.get(`http://localhost:8080/api/medicine?search=${searchParams}`);
+      const request = await axios.get(
+        `http://localhost:8080/api/medicine?search=${searchParams}`
+      );
       setMedicines(request.data);
 
       return request;
     }
     fetchMedicines();
-  }, [searchParams])
+  }, [searchParams]);
 
   function updateSearchParams(newParams) {
-    setSearchParams(newParams)
+    setSearchParams(newParams);
   }
 
   useEffect(() => {
@@ -79,7 +81,11 @@ function MedicinesView() {
   return (
     <Tab.Pane eventKey="third">
       <Container fluid>
-        <MedicineSearchAndFilter updateParams={(newParams) => { updateSearchParams(newParams) }}></MedicineSearchAndFilter>
+        <MedicineSearchAndFilter
+          updateParams={(newParams) => {
+            updateSearchParams(newParams);
+          }}
+        ></MedicineSearchAndFilter>
         <Row>
           {showedMedicines &&
             showedMedicines.map((medicine, index) => (
@@ -87,7 +93,7 @@ function MedicinesView() {
                 <Nav.Link
                   as={Link}
                   className="my__nav__link__card"
-                  to={`/medicine/${medicine.id}/pharmacy/-1`}
+                  to={`/medicine/${medicine.id}/pharmacy/-1/price/-1`}
                 >
                   <Card className="my__card" style={{ width: "18rem" }}>
                     <Card.Body>
@@ -124,7 +130,7 @@ function MedicinesView() {
           </Col>
         </Row>
       </Container>
-    </Tab.Pane >
+    </Tab.Pane>
   );
 }
 
