@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.advertisement;
 
 
 import com.team11.PharmacyProject.enums.AdvertisementType;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 
@@ -24,11 +25,10 @@ public class Advertisement {
     @Column(name = "advertisement_text")
     private String advertisementText;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "advertising", joinColumns = @JoinColumn(name = "advertisement_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "medicine_price_id", referencedColumnName = "id"))
-    private List<MedicinePrice> medicineList;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MedicineItem medicineItem;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "pharmacy_id")
     private Pharmacy pharmacy;
 
@@ -42,12 +42,11 @@ public class Advertisement {
     public Advertisement() {
     }
 
-    public Advertisement(Long id, Long startDate, Long endDate, String advertisementText, List<MedicinePrice> medicineList, Pharmacy pharmacy, double discountPercent, AdvertisementType type) {
-        this.id = id;
+    public Advertisement(Long startDate, Long endDate, String advertisementText, Pharmacy pharmacy, double discountPercent, AdvertisementType type, MedicineItem item) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.advertisementText = advertisementText;
-        this.medicineList = medicineList;
+        this.medicineItem = item;
         this.pharmacy = pharmacy;
         this.discountPercent = discountPercent;
         this.type = type;
@@ -85,12 +84,12 @@ public class Advertisement {
         this.advertisementText = advertisementText;
     }
 
-    public List<MedicinePrice> getMedicineList() {
-        return medicineList;
+    public MedicineItem getMedicineItem() {
+        return medicineItem;
     }
 
-    public void setMedicineList(List<MedicinePrice> medicineList) {
-        this.medicineList = medicineList;
+    public void setMedicineItem(MedicineItem medicineItem) {
+        this.medicineItem = medicineItem;
     }
 
     public Pharmacy getPharmacy() {

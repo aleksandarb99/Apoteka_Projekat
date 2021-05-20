@@ -6,6 +6,7 @@ import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayWithWor
 import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.AbsenceRequestState;
 import com.team11.PharmacyProject.enums.AbsenceType;
+import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
@@ -49,6 +50,8 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
 
         for (Workplace w: workplaces) {
             Long workerId = w.getWorker().getId();
+            if(w.getWorker().getUserType().equals(UserType.DERMATOLOGIST))
+                continue;
 
             List<RequestForHoliday> requests = requestForHolidayRepository.getUnresolvedRequestsByWorker(workerId, now.getTime());
             listOfRequests.addAll(requests);
