@@ -4,6 +4,10 @@ import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.appointment.AppointmentService;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyERecipeDTO;
+import com.team11.PharmacyProject.eRecipe.ERecipe;
+import com.team11.PharmacyProject.eRecipe.ERecipeRepository;
+import com.team11.PharmacyProject.eRecipe.ERecipeService;
+import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.ERecipeState;
 import com.team11.PharmacyProject.enums.ReservationState;
@@ -74,6 +78,12 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Autowired
     OfferService offerService;
+
+    @Autowired
+    ERecipeService eRecipeService;
+
+    @Autowired
+    ERecipeRepository eRecipeRepository;
 
 
     private int calculateProfitBeetwenTimestamps(long start, long end, long pharmacyId){
@@ -548,6 +558,13 @@ public class PharmacyServiceImpl implements PharmacyService {
         for (MedicineReservation mr : patient.getMedicineReservation()) {
             if (!mr.getState().equals(ReservationState.RECEIVED)) continue;
             addPharmacy(chosenPharmacies, mr.getPharmacy());
+        }
+
+        List<ERecipe> eRecipes = eRecipeRepository.findByPatientId(id);
+        if (eRecipes != null) {
+            for (ERecipe recipe : eRecipes) {
+                addPharmacy(chosenPharmacies, recipe.getPharmacy());
+            }
         }
 
         return chosenPharmacies;
