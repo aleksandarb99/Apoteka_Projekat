@@ -8,8 +8,7 @@ import {
   getUserTypeFromToken,
 } from "./../../app/jwtTokenUtils";
 
-import axios from "axios";
-import axios2 from "./../../app/api";
+import axios from "./../../app/api";
 
 import "../../styling/medicineProfile.css";
 import "../../styling/allergies.css";
@@ -23,7 +22,33 @@ function MedicineProfile() {
   const [penaltiesAlert, setPenaltiesAlert] = useState(false);
   const [selectedPharmacy, setSelectedPharmacy] = useState({});
 
-  let { id, pid } = useParams();
+  let { id, pid, priceid } = useParams();
+
+  const [points, setPoints] = useState({});
+  const [category, setCategory] = useState({});
+
+  useEffect(() => {
+    async function fetchPoints() {
+      const request = await axios.get(
+        "http://localhost:8080/api/patients/" + getIdFromToken() + "/points"
+      );
+      setPoints(request.data);
+      return request;
+    }
+    fetchPoints();
+  }, []);
+
+  useEffect(() => {
+    async function fetchCategory() {
+      const request = await axios.get(
+        "http://localhost:8080/api/ranking-category/points/" + points
+      );
+      setCategory(request.data);
+
+      return request;
+    }
+    fetchCategory();
+  }, [points]);
 
   useEffect(() => {
     async function fetchMedicine() {
@@ -69,9 +94,10 @@ function MedicineProfile() {
       medicineId: id,
       pharmacyId: pid == -1 ? selectedPharmacy.id : pid,
       userId: getIdFromToken(),
+      price: priceid == -1 ? selectedPharmacy.price : priceid,
     };
 
-    axios2
+    axios
       .post("http://localhost:8080/api/medicine-reservation/", forSend)
       .then(() => {
         setSuccessAlert(true);
@@ -184,6 +210,33 @@ function MedicineProfile() {
               onChange={(date) => setPickupDate(date)}
               isClearable
             />
+          </p>
+          <p
+            style={{
+              textAlign: "center",
+              display: category == "" ? "none" : "block",
+            }}
+          >
+            You have a discount of {category.discount}%
+          </p>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "1.3rem",
+              display:
+                category == "" || Object.keys(selectedPharmacy).length === 0
+                  ? "none"
+                  : "block",
+            }}
+          >
+            Total price:{" "}
+            <span style={{ textDecoration: "line-through" }}>
+              {priceid == -1 ? selectedPharmacy.price : priceid}
+            </span>
+            {"   ->   "}
+            {((priceid == -1 ? selectedPharmacy.price : priceid) *
+              (100 - category.discount)) /
+              100}
           </p>
           <Alert
             style={{

@@ -693,7 +693,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             Pharmacy pharmacy = appointment.getPharmacy();
             if(!mi.setAmountLessOne()) return false; //smanjujemo kolicinu za 1, todo kod transakcija ovo ce biti zabavno
 
-            MedicineReservation medicineReservation = new MedicineReservation(pickupDate, resDate, resID, state, mi, pharmacy);
+            MedicineReservation medicineReservation = new MedicineReservation(pickupDate, resDate, resID, state, mi, pharmacy, 0);
 
             Optional<Patient> patient = Optional.ofNullable(patientRepository.findByIdAndFetchReservationsEagerly(appointment.getPatient().getId()));
             if(patient.isEmpty()) {  //todo videti sa Jovanom sta ovo tacno radi
