@@ -34,6 +34,11 @@ public class AdvertismentServiceImpl implements AdvertismentService {
     }
 
     @Override
+    public List<Advertisement> findAllSalesWithDate(Long pharmacyId, Long medicineId, long currentTimeMillis) {
+        return advertismentRepository.findAllSalesWithDate(pharmacyId, medicineId, currentTimeMillis);
+    }
+
+    @Override
     public boolean addAdvertisment(Long pharmacyId, AdvertismentDTORequest dto) {
 
         int type2 = Integer.parseInt(dto.getType())-1;
