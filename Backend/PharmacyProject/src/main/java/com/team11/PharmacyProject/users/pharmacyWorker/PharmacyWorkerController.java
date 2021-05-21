@@ -65,19 +65,21 @@ public class PharmacyWorkerController {
     }
 
     @GetMapping(value = "/all/free-pharmacists/pharmacy", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PharmacyWorkerFreePharmacistDTO>> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date, @RequestParam(value = "id", required = false) Long id) {
-        List<PharmacyWorker> workers = pharmacyWorkerService.getFreePharmacistsByPharmacyIdAndDate(id, date, pageable.getSort());
+    public ResponseEntity<?> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date, @RequestParam(value = "id", required = false) Long id) {
 
-        if(workers == null) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        try {
+
+            List<PharmacyWorker> workers = pharmacyWorkerService.getFreePharmacistsByPharmacyIdAndDate(id, date, pageable.getSort());
+            List<PharmacyWorkerFreePharmacistDTO> retVal = new ArrayList<>();
+
+            for(PharmacyWorker pw : workers) {
+                retVal.add(new PharmacyWorkerFreePharmacistDTO(pw));
+            }
+
+            return new ResponseEntity<>(retVal, HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        List<PharmacyWorkerFreePharmacistDTO> retVal = new ArrayList<>();
-        for(PharmacyWorker pw : workers) {
-            retVal.add(new PharmacyWorkerFreePharmacistDTO(pw));
-        }
-
-        return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 
     @GetMapping(value = "/all-dermatologists/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

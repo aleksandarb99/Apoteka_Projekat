@@ -230,16 +230,13 @@ public class AppointmentController {
     @PostMapping(value = "/reserve-consultation/pharmacy/{idPh}/pharmacist/{idW}/patient/{idPa}/date/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> reserveConsultationForPatient(@PathVariable("idPa") Long patientId, @PathVariable("idW") Long workerId, @PathVariable("idPh") Long pharmacyId, @PathVariable("date") Long date) {
 
-        AppointmentReservationDTO dto = appointmentServiceImpl.reserveConsultationForPatient(workerId, patientId, pharmacyId, date);
-        if (dto != null) {
-            try {
-                emailService.notifyPatientAboutReservedAppointment(dto, "Savetovanje");
-            } catch (Exception e) {
-                e.printStackTrace();        // Verovatno moze puci zbog nedostatka interneta, ili ako nije dozvoljeno za manje bezbedne aplikacije itd.
-            }
-            return new ResponseEntity<>("reserved", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("failed", HttpStatus.OK);
+        try {
+            AppointmentReservationDTO dto = appointmentServiceImpl.reserveConsultationForPatient(workerId, patientId, pharmacyId, date);
+            emailService.notifyPatientAboutReservedAppointment(dto, "Savetovanje");
+
+            return new ResponseEntity<>("Successfully reserved the consultation!", HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
     }
 

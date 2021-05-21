@@ -311,19 +311,19 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentReservationDTO reserveConsultationForPatient(Long workerId, Long patientId, Long pharmacyId, Long requiredDate) {
 
         PharmacyWorker worker = pharmacyWorkerRepository.getPharmacyWorkerForCalendar(workerId);
-        if (worker == null) return null;
+        if (worker == null) throw new RuntimeException("Worker does not exist in the database!");
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
-        if (patient == null) return null;
-        if (patient.getPenalties() >= 3) return null;
+        if (patient == null) throw new RuntimeException("Patient does not exist in the database!");
+        if (patient.getPenalties() >= 3) throw new RuntimeException("You have achieved 3 penalties!");
 
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByIdFetchAppointments(pharmacyId);
-        if (pharmacy == null) return null;
+        if (pharmacy == null) throw new RuntimeException("Pharmacy does not exist in the database!");
 
         Date requestedDateAndTime = new Date(requiredDate);
         Date requestedDateAndTimeEnd = new Date(requiredDate + pharmacy.getConsultationDuration() * 60000L);    // Simulacija trajanja konsultacije
         Date today = new Date();
-        if (requestedDateAndTime.before(today)) return null;
+        if (requestedDateAndTime.before(today)) throw new RuntimeException("Requested date is in the past!");
 
         boolean isRequiredConsultationFree = true;
         for (Appointment a : worker.getAppointmentList()) {
@@ -347,7 +347,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             }
         }
 
-        if (!isRequiredConsultationFree) return null;
+        if (!isRequiredConsultationFree) throw new RuntimeException("Requested date and time is not free!");
 
         Appointment reservedConsultation = new Appointment();
         reservedConsultation.setPatient(patient);
