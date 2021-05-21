@@ -179,4 +179,8 @@ public class Appointment {
     public void setWorker(PharmacyWorker worker) {
         this.worker = worker;
     }
+
+    public void setPriceWithDiscout(double discount) {
+        this.price = this.price * (100 - discount) / 100;
+    }
 }

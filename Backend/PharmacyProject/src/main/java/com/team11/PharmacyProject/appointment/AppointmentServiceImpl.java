@@ -16,6 +16,7 @@ import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.priceList.PriceList;
 import com.team11.PharmacyProject.rankingCategory.RankingCategory;
+import com.team11.PharmacyProject.rankingCategory.RankingCategoryService;
 import com.team11.PharmacyProject.therapyPrescription.TherapyPrescription;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayService;
@@ -72,6 +73,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     WorkplaceService workplaceService;
+
+    @Autowired
+    RankingCategoryService categoryService;
 
     public Appointment getNextAppointment(String email, Long workerId) {
         Pageable pp = PageRequest.of(0, 1, Sort.by("startTime").ascending());
@@ -279,7 +283,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
         if(patient == null) return null;
-        if(patient.getPenalties() == 3) return null;
+        if(patient.getPenalties() >= 3) return null;
 
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(appId);
         if(appointmentOptional.isEmpty()) return null;
@@ -289,6 +293,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointment.setAppointmentState(AppointmentState.RESERVED);
         appointment.setPatient(patient);
+
+        RankingCategory c = categoryService.getCategoryByPoints(patient.getPoints());   // Ako korisnik pripada nekoj kategoriji, lupi popust
+        if (c != null) {
+            appointment.setPriceWithDiscout(c.getDiscount());
+        }
+
         patient.addAppointment(appointment);
 
         patientRepository.save(patient);
