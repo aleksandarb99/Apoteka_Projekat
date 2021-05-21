@@ -11,7 +11,7 @@ public interface RatingService {
 
     Rating getPharmacyGrade(Long pId, Long paId);
 
-    boolean addRating(RatingCreateUpdateDTO dto);
+    void addRating(RatingCreateUpdateDTO dto);
 
-    boolean editRating(RatingCreateUpdateDTO dto);
+    void editRating(RatingCreateUpdateDTO dto);
 }

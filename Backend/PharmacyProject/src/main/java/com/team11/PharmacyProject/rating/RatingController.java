@@ -66,27 +66,31 @@ public class RatingController {
     public ResponseEntity<?> addRating(@Valid @RequestBody RatingCreateUpdateDTO dto, BindingResult result){
 
         if (result.hasErrors()) {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Sent data is not valid!", HttpStatus.BAD_REQUEST);
         }
 
-        if(!ratingService.addRating(dto)){
-            return new ResponseEntity<>("not added", HttpStatus.BAD_REQUEST);
+        try {
+            ratingService.addRating(dto);
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("added", HttpStatus.OK);
+        return new ResponseEntity<>("The grade is recorded successfully!", HttpStatus.OK);
     }
 
     @PutMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editRating(@Valid @RequestBody RatingCreateUpdateDTO dto, BindingResult result){
 
         if (result.hasErrors()) {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Sent data is not valid!", HttpStatus.BAD_REQUEST);
         }
 
-        if(!ratingService.editRating(dto)){
-            return new ResponseEntity<>("not updated", HttpStatus.BAD_REQUEST);
+        try {
+            ratingService.editRating(dto);
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("updated", HttpStatus.OK);
+        return new ResponseEntity<>("The grade is updated successfully!", HttpStatus.OK);
     }
 }

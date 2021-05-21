@@ -60,19 +60,19 @@ public class RatingServiceImpl implements RatingService{
     }
 
     @Override
-    public boolean addRating(RatingCreateUpdateDTO dto) {
+    public void addRating(RatingCreateUpdateDTO dto) {
 
         Optional<Rating> rating = ratingRepository.findById(dto.getId());
-        if(rating.isPresent()) return false;
+        if(rating.isPresent()) throw new RuntimeException("The grade with sent id already exists!");
 
         Optional<Patient> patient = patientRepository.findById(dto.getPatientId());
-        if (patient.isEmpty()) return false;
+        if (patient.isEmpty()) throw new RuntimeException("You are not registered in our database!");
 
         if (dto.getType().equals(GradedType.DERMATOLOGIST)) {
             Optional<PharmacyWorker> worker = workerRepository.findById(dto.getGradedID());
-            if (worker.isEmpty()) return false;
+            if (worker.isEmpty()) throw new RuntimeException("Selected worker does not exist in database!");
             Rating existRating = ratingRepository.findIfRatingExistsDermatologist(dto.getGradedID(), dto.getPatientId());
-            if (existRating != null) return false;
+            if (existRating != null) throw new RuntimeException("Worker is already graded, you can just update the grade!");
             List<Rating> ratings = ratingRepository.findAllRatingsByDermatologistId(worker.get().getId());
             if (ratings == null) {
                 worker.get().setAvgGrade(dto.getGrade());
@@ -87,9 +87,9 @@ public class RatingServiceImpl implements RatingService{
             workerRepository.save(worker.get());
         } else if (dto.getType().equals(GradedType.PHARMACIST)) {
             Optional<PharmacyWorker> worker = workerRepository.findById(dto.getGradedID());
-            if (worker.isEmpty()) return false;
+            if (worker.isEmpty()) throw new RuntimeException("Selected worker does not exist in database!");
             Rating existRating = ratingRepository.findIfRatingExistsPharmacist(dto.getGradedID(), dto.getPatientId());
-            if (existRating != null) return false;
+            if (existRating != null) throw new RuntimeException("Worker is already graded, you can just update the grade!");
             List<Rating> ratings = ratingRepository.findAllRatingsByPharmacistId(worker.get().getId());
             if (ratings == null) {
                 worker.get().setAvgGrade(dto.getGrade());
@@ -104,9 +104,9 @@ public class RatingServiceImpl implements RatingService{
             workerRepository.save(worker.get());
         } else if (dto.getType().equals(GradedType.PHARMACY)) {
             Optional<Pharmacy> pharmacy = pharmacyRepository.findById(dto.getGradedID());
-            if (pharmacy.isEmpty()) return false;
+            if (pharmacy.isEmpty()) throw new RuntimeException("Selected pharmacy does not exist in database!");
             Rating existRating = ratingRepository.findIfRatingExistsPharmacy(dto.getGradedID(), dto.getPatientId());
-            if (existRating != null) return false;
+            if (existRating != null) throw new RuntimeException("The grade with id already exists!");
             List<Rating> ratings = ratingRepository.findAllRatingsByPharmacyId(pharmacy.get().getId());
             if (ratings == null) {
                 pharmacy.get().setAvgGrade((double) dto.getGrade());
@@ -121,9 +121,9 @@ public class RatingServiceImpl implements RatingService{
             pharmacyRepository.save(pharmacy.get());
         } else if (dto.getType().equals(GradedType.MEDICINE)) {
             Optional<Medicine> medicine = medicineRepository.findById(dto.getGradedID());
-            if (medicine.isEmpty()) return false;
+            if (medicine.isEmpty()) throw new RuntimeException("Selected medicine does not exist in database!");
             Rating existRating = ratingRepository.findIfRatingExistsMedicine(dto.getGradedID(), dto.getPatientId());
-            if (existRating != null) return false;
+            if (existRating != null) throw new RuntimeException("The grade with id already exists!");
             List<Rating> ratings = ratingRepository.findAllRatingsByMedicineId(medicine.get().getId());
             if (ratings == null) {
                 medicine.get().setAvgGrade(dto.getGrade());
@@ -137,7 +137,7 @@ public class RatingServiceImpl implements RatingService{
                 medicineRepository.save(medicine.get());
             }
         } else {
-            return  false;
+            throw new RuntimeException("Invalid type of grade!");
         }
 
         Rating newRating = new Rating();
@@ -148,24 +148,22 @@ public class RatingServiceImpl implements RatingService{
         newRating.setPatient(patient.get());
 
         ratingRepository.save(newRating);
-
-        return true;
     }
 
     @Override
-    public boolean editRating(RatingCreateUpdateDTO dto) {
+    public void editRating(RatingCreateUpdateDTO dto) {
 
         Optional<Rating> rating = ratingRepository.findById(dto.getId());
-        if(rating.isEmpty()) return false;
+        if(rating.isEmpty()) throw new RuntimeException("The grade with sent id does not exist!");
 
         Optional<Patient> patient = patientRepository.findById(dto.getPatientId());
-        if (patient.isEmpty()) return false;
+        if (patient.isEmpty()) throw new RuntimeException("You are not registered in our database!");
 
         if (dto.getType().equals(GradedType.DERMATOLOGIST)) {
             Optional<PharmacyWorker> worker = workerRepository.findById(dto.getGradedID());
-            if (worker.isEmpty()) return false;
+            if (worker.isEmpty()) throw new RuntimeException("Selected worker does not exist in database!");
             Rating existRating = ratingRepository.findIfRatingExistsDermatologist(dto.getGradedID(), dto.getPatientId());
-            if (existRating == null) return false;
+            if (existRating == null) throw new RuntimeException("There's no grade to be updated!");
             List<Rating> ratings = ratingRepository.findAllRatingsByDermatologistId(worker.get().getId());
             double sum = 0;
             for (Rating r : ratings) {
@@ -177,9 +175,9 @@ public class RatingServiceImpl implements RatingService{
             workerRepository.save(worker.get());
         } else if (dto.getType().equals(GradedType.PHARMACIST)) {
             Optional<PharmacyWorker> worker = workerRepository.findById(dto.getGradedID());
-            if (worker.isEmpty()) return false;
+            if (worker.isEmpty()) throw new RuntimeException("Selected worker does not exist in database!");
             Rating existRating = ratingRepository.findIfRatingExistsPharmacist(dto.getGradedID(), dto.getPatientId());
-            if (existRating == null) return false;
+            if (existRating == null) throw new RuntimeException("There's no grade to be updated!");
             List<Rating> ratings = ratingRepository.findAllRatingsByPharmacistId(worker.get().getId());
             double sum = 0;
             for (Rating r : ratings) {
@@ -191,9 +189,9 @@ public class RatingServiceImpl implements RatingService{
             workerRepository.save(worker.get());
         } else if (dto.getType().equals(GradedType.PHARMACY)) {
             Optional<Pharmacy> pharmacy = pharmacyRepository.findById(dto.getGradedID());
-            if (pharmacy.isEmpty()) return false;
+            if (pharmacy.isEmpty()) throw new RuntimeException("Selected pharmacy does not exist in database!");
             Rating existRating = ratingRepository.findIfRatingExistsPharmacy(dto.getGradedID(), dto.getPatientId());
-            if (existRating == null) return false;
+            if (existRating == null) throw new RuntimeException("There's no grade to be updated!");
             List<Rating> ratings = ratingRepository.findAllRatingsByPharmacyId(pharmacy.get().getId());
 
             double sum = 0;
@@ -206,9 +204,9 @@ public class RatingServiceImpl implements RatingService{
             pharmacyRepository.save(pharmacy.get());
         } else if (dto.getType().equals(GradedType.MEDICINE)) {
             Optional<Medicine> medicine = medicineRepository.findById(dto.getGradedID());
-            if (medicine.isEmpty()) return false;
+            if (medicine.isEmpty()) throw new RuntimeException("Selected medicine does not exist in database!");
             Rating existRating = ratingRepository.findIfRatingExistsMedicine(dto.getGradedID(), dto.getPatientId());
-            if (existRating == null) return false;
+            if (existRating == null) throw new RuntimeException("There's no grade to be updated!");
             List<Rating> ratings = ratingRepository.findAllRatingsByMedicineId(medicine.get().getId());
             double sum = 0;
             for (Rating r : ratings) {
@@ -219,14 +217,12 @@ public class RatingServiceImpl implements RatingService{
             medicine.get().setAvgGrade(sum / ratings.size());
             medicineRepository.save(medicine.get());
         } else {
-            return  false;
+            throw new RuntimeException("Invalid type of grade!");
         }
 
         rating.get().setDate(dto.getDate());
         rating.get().setGrade(dto.getGrade());
 
         ratingRepository.save(rating.get());
-
-        return true;
     }
 }
