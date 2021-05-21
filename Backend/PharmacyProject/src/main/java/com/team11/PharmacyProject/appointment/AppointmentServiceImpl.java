@@ -283,7 +283,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
         if(patient == null) return null;
-        if(patient.getPenalties() == 3) return null;
+        if(patient.getPenalties() >= 3) return null;
 
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(appId);
         if(appointmentOptional.isEmpty()) return null;
@@ -293,6 +293,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointment.setAppointmentState(AppointmentState.RESERVED);
         appointment.setPatient(patient);
+
+        RankingCategory c = categoryService.getCategoryByPoints(patient.getPoints());   // Ako korisnik pripada nekoj kategoriji, lupi popust
+        if (c != null) {
+            appointment.setPriceWithDiscout(c.getDiscount());
+        }
+
         patient.addAppointment(appointment);
 
         patientRepository.save(patient);
