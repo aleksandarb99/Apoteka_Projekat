@@ -190,11 +190,13 @@ public class AppointmentController {
     @PutMapping(value = "/cancel-consultation/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> cancelConsultation (@PathVariable(value="id") Long id)
     {
-        if(appointmentServiceImpl.cancelConsultation(id)){
-            return new ResponseEntity<>("canceled", HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("not canceled",HttpStatus.OK);
+        try {
+            appointmentServiceImpl.cancelConsultation(id);
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
+
+        return new ResponseEntity<>("The consultation is canceled successfully!", HttpStatus.OK);
     }
 
     @PutMapping(value = "/cancel-checkup/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

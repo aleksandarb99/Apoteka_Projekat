@@ -34,7 +34,7 @@ public interface AppointmentService {
 
     List<AppointmentPatientInsightDTO> getFinishedConsultationsByPatientId(Long id, Sort sorter);
 
-    boolean cancelConsultation(Long id);
+    void cancelConsultation(Long id);
 
     List<AppointmentPatientInsightDTO> getUpcomingConsultationsByPatientId(Long id, Sort sort);
 

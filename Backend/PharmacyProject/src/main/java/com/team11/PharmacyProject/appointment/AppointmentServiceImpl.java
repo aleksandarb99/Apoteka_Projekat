@@ -397,24 +397,23 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public boolean cancelConsultation(Long id) {
+    public void cancelConsultation(Long id) {
 
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
-        if (appointmentOptional.isEmpty()) return false;
+        if (appointmentOptional.isEmpty()) throw new RuntimeException("The consultation with sent id does not exists!");
 
         Appointment appointment =appointmentOptional.get();
 
-        if (appointment.getAppointmentState() != AppointmentState.RESERVED) return false;
-        if (appointment.getAppointmentType() == AppointmentType.CHECKUP) return false;
-        if (appointment.getStartTime() < System.currentTimeMillis()) return false; // Provera da ipak nije konsultacija iz proslosti
+        if (appointment.getAppointmentState() != AppointmentState.RESERVED) throw new RuntimeException("Only the reserved appointments can be canceled!");
+        if (appointment.getAppointmentType() == AppointmentType.CHECKUP) throw new RuntimeException("The consultation with sent id is not consultation!");
+        if (appointment.getStartTime() < System.currentTimeMillis()) throw new RuntimeException("You can not cancel the consultation from the past!"); // Provera da ipak nije konsultacija iz proslosti
 
         long differenceInMinutes = ((appointment.getStartTime() - System.currentTimeMillis()) / (1000 * 60));
-        if(differenceInMinutes < 1440) return false;
+        if(differenceInMinutes < 1440) throw new RuntimeException("You can not cancel the consultation less then 24h before it starts!");
 
         appointment.setAppointmentState(AppointmentState.CANCELLED);
 
         appointmentRepository.save(appointment);
-        return true;
     }
 
     @Override
