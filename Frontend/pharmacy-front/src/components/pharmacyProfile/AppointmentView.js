@@ -25,6 +25,31 @@ function AppointmentView({ pharmacyId }) {
   const [maxPag, setMaxPag] = useState(0);
   const [showedAppointsments, setShowedAppointsments] = useState([]);
   const [sorter, setSorter] = useState("none");
+  const [points, setPoints] = useState({});
+  const [category, setCategory] = useState({});
+
+  useEffect(() => {
+    async function fetchPoints() {
+      const request = await axios.get(
+        "http://localhost:8080/api/patients/" + getIdFromToken() + "/points"
+      );
+      setPoints(request.data);
+      return request;
+    }
+    fetchPoints();
+  }, []);
+
+  useEffect(() => {
+    async function fetchCategory() {
+      const request = await axios.get(
+        "http://localhost:8080/api/ranking-category/points/" + points
+      );
+      setCategory(request.data);
+
+      return request;
+    }
+    fetchCategory();
+  }, [points]);
 
   useEffect(() => {
     if (pharmacyId != undefined) {
@@ -179,8 +204,21 @@ function AppointmentView({ pharmacyId }) {
                     </Card.Text>
                   </Card.Body>
                   <ListGroup className="list-group-flush">
-                    <ListGroupItem className="my__flex">
+                    <ListGroupItem
+                      className="my__flex"
+                      style={{ display: category === "" ? "flex" : "none" }}
+                    >
                       {appointsment.price}
+                    </ListGroupItem>
+                    <ListGroupItem
+                      className="my__flex"
+                      style={{ display: category !== "" ? "flex" : "none" }}
+                    >
+                      <span style={{ textDecoration: "line-through" }}>
+                        {appointsment.price}
+                      </span>
+                      {"   ->   "}
+                      {(appointsment.price * (100 - category.discount)) / 100}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
                       {appointsment?.worker?.lastName}{" "}
