@@ -16,6 +16,7 @@ import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.priceList.PriceList;
 import com.team11.PharmacyProject.rankingCategory.RankingCategory;
+import com.team11.PharmacyProject.rankingCategory.RankingCategoryService;
 import com.team11.PharmacyProject.therapyPrescription.TherapyPrescription;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayService;
@@ -72,6 +73,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     WorkplaceService workplaceService;
+
+    @Autowired
+    RankingCategoryService categoryService;
 
     public Appointment getNextAppointment(String email, Long workerId) {
         Pageable pp = PageRequest.of(0, 1, Sort.by("startTime").ascending());
@@ -305,7 +309,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
         if (patient == null) return null;
-        if (patient.getPenalties() == 3) return null;
+        if (patient.getPenalties() >= 3) return null;
 
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByIdFetchAppointments(pharmacyId);
         if (pharmacy == null) return null;
@@ -349,6 +353,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         reservedConsultation.setStartTime(requiredDate);
         reservedConsultation.setEndTime(requiredDate + pharmacy.getConsultationDuration() * 60000L);
         reservedConsultation.setPrice(pharmacy.getConsultationPrice());
+
+        RankingCategory c = categoryService.getCategoryByPoints(patient.getPoints());   // Ako korisnik pripada nekoj kategoriji, lupi popust
+        if (c != null) {
+            reservedConsultation.setPriceWithDiscout(c.getDiscount());
+        }
 
         patient.addAppointment(reservedConsultation);
         worker.addAppointment(reservedConsultation);

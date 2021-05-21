@@ -38,6 +38,31 @@ function PharmaciesWithFreePharmacists() {
   const [reload, setReload] = useState(false);
   const [sorter2, setSorter2] = useState("none");
   const [reload2, setReload2] = useState(false);
+  const [points, setPoints] = useState({});
+  const [category, setCategory] = useState({});
+
+  useEffect(() => {
+    async function fetchPoints() {
+      const request = await axios.get(
+        "http://localhost:8080/api/patients/" + getIdFromToken() + "/points"
+      );
+      setPoints(request.data);
+      return request;
+    }
+    fetchPoints();
+  }, []);
+
+  useEffect(() => {
+    async function fetchCategory() {
+      const request = await axios.get(
+        "http://localhost:8080/api/ranking-category/points/" + points
+      );
+      setCategory(request.data);
+
+      return request;
+    }
+    fetchCategory();
+  }, [points]);
 
   useEffect(() => {
     if (requestedDate == null) return;
@@ -64,7 +89,7 @@ function PharmaciesWithFreePharmacists() {
     async function fetchWorkers() {
       let search_params = new URLSearchParams();
       search_params.append("date", requestedDate);
-      search_params.append("id", chosenPharmacy);
+      search_params.append("id", chosenPharmacy.id);
       const request = await axios.get(
         "http://localhost:8080/api/workers/all/free-pharmacists/pharmacy",
         { params: search_params }
@@ -110,7 +135,9 @@ function PharmaciesWithFreePharmacists() {
     // setSuccessAlert(false);
     axios
       .post(
-        `http://localhost:8080/api/appointment/reserve-consultation/pharmacy/${chosenPharmacy}/pharmacist/${
+        `http://localhost:8080/api/appointment/reserve-consultation/pharmacy/${
+          chosenPharmacy.id
+        }/pharmacist/${
           selectedWorker.id
         }/patient/${getIdFromToken()}/date/${requestedDate}/`
       )
@@ -199,7 +226,7 @@ function PharmaciesWithFreePharmacists() {
     }
 
     search_params.append("date", requestedDate);
-    search_params.append("id", chosenPharmacy);
+    search_params.append("id", chosenPharmacy.id);
     axios
       .get("http://localhost:8080/api/workers/all/free-pharmacists/pharmacy", {
         params: search_params,
@@ -328,7 +355,7 @@ function PharmaciesWithFreePharmacists() {
                     className="my__card"
                     style={{ width: "18rem" }}
                     onClick={() => {
-                      setChosenPharmacy(pharmacy.id);
+                      setChosenPharmacy(pharmacy);
                       setSelectedWorker({});
                     }}
                   >
@@ -480,6 +507,30 @@ function PharmaciesWithFreePharmacists() {
             </tbody>
           </Table>
         </Row>
+        <p
+          style={{
+            textAlign: "center",
+            display: category == "" ? "none" : "block",
+          }}
+        >
+          You have a discount of {category?.discount}%
+        </p>
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "1.3rem",
+            display:
+              category == "" || chosenPharmacy == null ? "none" : "block",
+          }}
+        >
+          Total price:{" "}
+          <span style={{ textDecoration: "line-through" }}>
+            {chosenPharmacy?.consultationPrice}
+          </span>
+          {"   ->   "}
+          {(chosenPharmacy?.consultationPrice * (100 - category.discount)) /
+            100}
+        </p>
         <Row>
           <Button
             variant="info"
