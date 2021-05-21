@@ -64,24 +64,23 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserUpdateDTO> updateUser(@Valid @RequestBody UserUpdateDTO user, BindingResult result) throws Exception {
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserUpdateDTO user, BindingResult result) {
 
         if (result.hasErrors()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Bad request!", HttpStatus.BAD_REQUEST);
         }
 
-        MyUser updatedUser = userService.updateUser(user);
-
-        if (updatedUser == null) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            MyUser updatedUser = userService.updateUser(user);
+            return new ResponseEntity<>(mapper.map(updatedUser, UserUpdateDTO.class), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(mapper.map(user, UserUpdateDTO.class), HttpStatus.OK);
     }
 
     @PutMapping(value = "/change-password/{id}")
     public ResponseEntity<String> changePassword(@PathVariable("id") Long userId, @RequestBody ChangePasswordDTO changePassword) {
-        // TODO validation
+        // TODO validation, javi Deki ako ovo budes menjao, da prilagodim na frontu
         String oldPassword = changePassword.getOldPassword();
         String newPassword = changePassword.getNewPassword();
         if (userService.changePassword(userId, oldPassword, newPassword)) {

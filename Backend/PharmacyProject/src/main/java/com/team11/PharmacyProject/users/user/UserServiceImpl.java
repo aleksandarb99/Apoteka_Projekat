@@ -32,16 +32,15 @@ public class UserServiceImpl implements UserService {
     public MyUser updateUser(UserUpdateDTO user) {
 
         Optional<MyUser> dbUser = userRepository.findById(user.getId());
-        if (dbUser.isPresent()) {
-            MyUser updatedUser = dbUser.get();
-            updatedUser.setFirstName(user.getFirstName());
-            updatedUser.setLastName(user.getLastName());
-            updatedUser.setTelephone(user.getTelephone());
-            updatedUser.setAddress(user.getAddress());
-            userRepository.save(updatedUser);
-            return updatedUser;
-        }
-        return null;
+        if(dbUser.isEmpty()) throw new RuntimeException("User is not recognized in the database!");
+
+        MyUser updatedUser = dbUser.get();
+        updatedUser.setFirstName(user.getFirstName());
+        updatedUser.setLastName(user.getLastName());
+        updatedUser.setTelephone(user.getTelephone());
+        updatedUser.setAddress(user.getAddress());
+        userRepository.save(updatedUser);
+        return updatedUser;
     }
 
     @Override
