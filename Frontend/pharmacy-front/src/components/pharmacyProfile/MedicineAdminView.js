@@ -19,7 +19,11 @@ import { StarFill } from "react-bootstrap-icons";
 
 import "../../styling/pharmaciesAndMedicines.css";
 
+import { useToasts } from "react-toast-notifications";
+
 function MedicinesView({ priceListId, pharmacyId }) {
+  const { addToast } = useToasts();
+
   const [medicines, setMedicines] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
@@ -28,11 +32,16 @@ function MedicinesView({ priceListId, pharmacyId }) {
   useEffect(() => {
     if (priceListId != undefined) {
       async function fetchPriceList() {
-        const request = await axios.get(
-          `http://localhost:8080/api/pricelist/${priceListId}`
-        );
-        setMedicines(request.data.medicineItems);
-
+        const request = await axios
+          .get(`http://localhost:8080/api/pricelist/${priceListId}`)
+          .then((res) => {
+            setMedicines(res.data.medicineItems);
+          })
+          .catch((err) => {
+            addToast(err.response.data, {
+              appearance: "error",
+            });
+          });
         return request;
       }
       fetchPriceList();

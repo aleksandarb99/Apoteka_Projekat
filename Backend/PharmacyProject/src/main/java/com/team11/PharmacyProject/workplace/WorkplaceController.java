@@ -40,29 +40,33 @@ public class WorkplaceController {
 
     @PostMapping(value = "/addworker/bypharmacyid/{id}/{workerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addWorker(@PathVariable("id") Long id,@PathVariable("workerId") Long workerId, @RequestBody RequestForWorkerDTO dto) {
-        if (checkDto(dto)) return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
-
-        boolean flag = workplaceServiseImpl.addWorker(id, workerId, dto);
-
-        if(!flag){
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        try {
+            WorkplaceController.checkDto(dto);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Successfully added", HttpStatus.OK);
+
+        try {
+            workplaceServiseImpl.addWorker(id, workerId, dto);
+            return new ResponseEntity<>("Worker added successfully", HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping(value = "/removeworker/bypharmacyid/{id}/{workerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeWorker(@PathVariable("id") Long id,@PathVariable("workerId") Long workerId) {
-        boolean flag = workplaceServiseImpl.removeWorker(id, workerId);
-
-        if(!flag){
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        try {
+            workplaceServiseImpl.removeWorker(id, workerId);
+            return new ResponseEntity<>("Worker removed successfully", HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Successfully removed", HttpStatus.OK);
     }
 
-    public static boolean checkDto(@RequestBody RequestForWorkerDTO dto) {
+    public static void checkDto(@RequestBody RequestForWorkerDTO dto) {
         if(dto.getStartHour() >= dto.getEndHour()){
-            return true;
+            throw new RuntimeException("Hours in workschedule are not correct!Start hour should be before end hour!");
         }
         boolean flag = false;
         if(dto.isEnable1()){
@@ -81,10 +85,8 @@ public class WorkplaceController {
         }else if(dto.isEnable7()){
             flag = true;
         }
-        if(!flag){
-            return true;
-        }
-        return false;
+        if(!flag)
+            throw new RuntimeException("You must select one day when he will work!");
     }
 
     @GetMapping(value = "/bypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

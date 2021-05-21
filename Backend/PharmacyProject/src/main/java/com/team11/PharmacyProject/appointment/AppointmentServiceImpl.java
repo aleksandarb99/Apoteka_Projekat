@@ -115,7 +115,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Date dateFromRequest = new Date(timestamp);
         boolean isHeOnHoliday = requestForHolidayService.isWorkerOnHoliday(id, dateFromRequest);
-        if(isHeOnHoliday) throw new Exception("he is on holiday");
+        if(isHeOnHoliday) throw new Exception("Dermatologist is on holiday!");
 
 
         for (Appointment a : appointmentRepository.findAllAppointmentsByDermatologistId(id)) {
@@ -128,16 +128,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     }
 
-    public boolean insertAppointment(Appointment a, Long pharmacyId, Long dId) {
+    public void insertAppointment(Appointment a, Long pharmacyId, Long dId) {
         Optional<Pharmacy> p = pharmacyRepository.findById(pharmacyId);
         if (p.isEmpty()) {
-            return false;
+            throw new RuntimeException("Pharmacy with id " + pharmacyId + " does not exist!");
         }
         Pharmacy pharmacy = p.get();
 
         PharmacyWorker worker = pharmacyWorkerRepository.findByIdAndFetchAWorkplaces(dId);
         if (worker == null) {
-            return false;
+            throw new RuntimeException("Dermatologist with id " + dId + " does not exist!");
         }
 
         a.setAppointmentState(AppointmentState.EMPTY);
@@ -151,7 +151,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Date today = new Date();
         if (startTime.before(today)) {
-            return false;
+            throw new RuntimeException("You cannot create appointment in the past! Only future appointments are allowed!");
+        }
+
+        if (a.getDuration() <=0 || a.getDuration() > 60) {
+            throw new RuntimeException("Duration of appointment is not valid!Duration should be beetwen 0 and 60 min!");
         }
 
         Calendar c = Calendar.getInstance();
@@ -169,11 +173,11 @@ public class AppointmentServiceImpl implements AppointmentService {
                     int hourEnd = c.get(Calendar.HOUR_OF_DAY);
 
                     if (hourStart < wd.getStartTime()) {
-                        return false;
+                        throw new RuntimeException("Selected time is not in dermatologist work schedule!");
                     }
 
                     if (hourEnd > wd.getEndTime()) {
-                        return false;
+                        throw new RuntimeException("Selected time is not in dermatologist work schedule!");
                     }
                 }
             }
@@ -181,7 +185,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
 
         if(!doesHeWorkThatDay){
-            return false;
+            throw new RuntimeException("Dermatologist does not work on that day!");
         }
 
         for (Appointment appointment : appointmentRepository.findFreeAppointmentsByPharmacyIdAndWorkerId(pharmacyId, worker.getId())) {
@@ -189,35 +193,34 @@ public class AppointmentServiceImpl implements AppointmentService {
             Date d2 = new Date(appointment.getEndTime());
 
             if (startTime.compareTo(d1) == 0) {
-                return false;
+                throw new RuntimeException("Dermatologist already have appointment in that moment!");
             }
 
             if (endTime.compareTo(d2) == 0) {
-                return false;
+                throw new RuntimeException("Dermatologist already have appointment in that moment!");
             }
 
             if (startTime.after(d1) && startTime.before(d2)) {
-                return false;
+                throw new RuntimeException("Dermatologist already have appointment in that moment!");
             }
 
             if (endTime.after(d1) && endTime.before(d2)) {
-                return false;
+                throw new RuntimeException("Dermatologist already have appointment in that moment!");
             }
 
             if (d1.after(startTime) && d1.before(endTime)) {
-                return false;
+                throw new RuntimeException("Dermatologist already have appointment in that moment!");
             }
 
             if (d2.after(startTime) && d2.before(endTime)) {
-                return false;
+                throw new RuntimeException("Dermatologist already have appointment in that moment!");
             }
         }
 
         if(requestForHolidayService.isWorkerOnHoliday(dId, startTime))
-            return false;
+            throw new RuntimeException("Dermatologist is on holiday!");
 
         appointmentRepository.save(a);
-        return true;
     }
 
     @Override

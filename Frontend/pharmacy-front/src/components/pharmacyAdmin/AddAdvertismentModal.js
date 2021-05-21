@@ -1,10 +1,13 @@
 import { React, useState, useEffect } from "react";
 import { Button, Row, Col, Container, Modal, Form } from "react-bootstrap";
 
-import moment from "moment";
 import axios from "../../app/api";
 
+import { useToasts } from "react-toast-notifications";
+
 function AddAdvertismentModal(props) {
+  const { addToast } = useToasts();
+
   const [endDate, setEndDate] = useState(null);
   const [discount, setDiscount] = useState(0);
   const [text, setText] = useState("");
@@ -13,10 +16,16 @@ function AddAdvertismentModal(props) {
   const [selectedRowId, setSelectedRowId] = useState(0);
 
   async function fetchPriceList() {
-    const request = await axios.get(
-      `http://localhost:8080/api/pricelist/${props.priceListId}`
-    );
-    setMedicineItems(request.data.medicineItems);
+    const request = await axios
+      .get(`http://localhost:8080/api/pricelist/${props.priceListId}`)
+      .then((res) => {
+        setMedicineItems(res.data.medicineItems);
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
 
     return request;
   }
@@ -39,7 +48,9 @@ function AddAdvertismentModal(props) {
     if (d.getTime() > now.getTime()) setEndDate(d);
     else {
       setEndDate(null);
-      alert("Datum mora biti u buducnosti");
+      addToast("End date should be in future!", {
+        appearance: "warning",
+      });
     }
   };
 
@@ -47,6 +58,10 @@ function AddAdvertismentModal(props) {
     <Modal
       onExited={() => {
         setEndDate(null);
+        setDiscount(0);
+        setSelectedRowId(0);
+        setText("");
+        setType("0");
       }}
       {...props}
       size="md"

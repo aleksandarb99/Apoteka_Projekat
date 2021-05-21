@@ -20,7 +20,7 @@ public interface RequestForHolidayService {
 
     boolean isWorkerOnHoliday(Long workerId, Date date);
 
-    boolean acceptRequest(String requestId);
+    void acceptRequest(String requestId);
 
-    boolean rejectRequest(String requestId, String reason);
+    void rejectRequest(String requestId, String reason);
 }

@@ -41,20 +41,22 @@ public class RequestForHolidayController {
 
     @PostMapping(value = "/acceptrequest/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> acceptRequest(@PathVariable("requestId") String requestId){
-        boolean flag = requestForHolidayService.acceptRequest(requestId);
-        if(!flag){
-            return new ResponseEntity<>("Failed to accept", HttpStatus.BAD_REQUEST);
+        try {
+            requestForHolidayService.acceptRequest(requestId);
+            return new ResponseEntity<>("Successfully accepted", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Successfully accepted", HttpStatus.OK);
     }
 
     @PostMapping(value = "/rejectrequest/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> rejectRequest(@PathVariable("requestId") String requestId, @RequestBody String reason){
-        boolean flag = requestForHolidayService.rejectRequest(requestId, reason);
-        if(!flag){
-            return new ResponseEntity<>("Failed to reject", HttpStatus.BAD_REQUEST);
+        try {
+            requestForHolidayService.rejectRequest(requestId, reason);
+            return new ResponseEntity<>("Successfully rejected", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Successfully rejected", HttpStatus.OK);
     }
 
     @GetMapping(value = "/getAcceptedVacationsFromWorker", produces = MediaType.APPLICATION_JSON_VALUE)

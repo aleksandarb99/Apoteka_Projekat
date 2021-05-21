@@ -24,7 +24,7 @@ public interface PharmacyService {
 
     boolean delete(long id);
 
-    boolean update(long id, Pharmacy pharmacy);
+    void update(long id, Pharmacy pharmacy);
 
     List<Pharmacy> getAll();
 

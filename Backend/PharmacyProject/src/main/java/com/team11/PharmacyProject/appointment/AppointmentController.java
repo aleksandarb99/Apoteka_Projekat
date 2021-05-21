@@ -42,25 +42,25 @@ public class AppointmentController {
 
     @PostMapping(value = "/{idP}/{idD}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addAppointment(@PathVariable("idP") Long pharmacyId, @PathVariable("idD") Long dId, @Valid @RequestBody AppointmentDTORequest dto) {
-
         Appointment a = convertToEntity(dto);
-        if (appointmentServiceImpl.insertAppointment(a, pharmacyId, dId)) {
+        try {
+            appointmentServiceImpl.insertAppointment(a, pharmacyId, dId);
             return new ResponseEntity<>("Appointment added successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping(value = "/all/bydermatologistid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AppointmentDTO>> getAllAppointmentsByPharmacyId(@PathVariable("id") Long id, @RequestParam(name = "date") Long date) {
+    public ResponseEntity<?> getAllAppointmentsByPharmacyId(@PathVariable("id") Long id, @RequestParam(name = "date") Long date) {
         List<AppointmentDTO> appointmentsDTO = null;
         try {
             appointmentsDTO = appointmentServiceImpl.getAllAppointmentsByPharmacyId(id, date).stream().map(m -> modelMapper.map(m, AppointmentDTO.class)).collect(Collectors.toList());
             return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(appointmentsDTO, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(value = "/bypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
