@@ -7,7 +7,7 @@ import { getIdFromToken } from "../../app/jwtTokenUtils";
 import PharmacyWithMedicineList from "./PharmacyWithMedicineList";
 import RequiredMedicineList from "./RequiredMedicineList";
 
-const ERecipeSearch = () => {
+const ERecipeSearch = (pharmacyId) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [QRImage, setQRImage] = useState({});
   const [pharmacies, setPharmacies] = useState([]);
@@ -75,9 +75,9 @@ const ERecipeSearch = () => {
   const doBuy = (pharmacy) => {
     let data = {
       ...parsedData,
-      "pharmacyId": pharmacy.id,
-      "totalPrice": pharmacy.totalPrice
-    }
+      pharmacyId: pharmacy.id,
+      totalPrice: pharmacy.totalPrice,
+    };
     api
       .post(
         `http://localhost:8080/api/e-recipes/dispense-medicine/${getIdFromToken()}`,

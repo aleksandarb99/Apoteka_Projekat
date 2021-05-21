@@ -28,7 +28,7 @@ public class PriceListController {
         }
         PriceListDTO dto = convertToDto(priceList);
         for (MedicineItemDTO item : dto.getMedicineItems()) {
-            item.setPrice(priceListService.getMedicineItemPrice(item.getId()));
+            item.setPrice(priceListService.getMedicineItemPrice(item.getId(), id));
         }
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
@@ -41,7 +41,7 @@ public class PriceListController {
             PriceListDTO dto = convertToDto(priceList);
 
             for (MedicineItemDTO item : dto.getMedicineItems()) {
-                item.setPrice(priceListService.getMedicineItemPrice(item.getId()));
+                item.setPrice(priceListService.getMedicineItemPrice(item.getId(), id));
             }
             return new ResponseEntity<>(dto, HttpStatus.OK);
         }
@@ -56,7 +56,7 @@ public class PriceListController {
             PriceListDTO dto = convertToDto(priceList);
 
             for (MedicineItemDTO item : dto.getMedicineItems()) {
-                item.setPrice(priceListService.getMedicineItemPrice(item.getId()));
+                item.setPrice(priceListService.getMedicineItemPrice(item.getId(), id));
             }
             return new ResponseEntity<>(dto, HttpStatus.OK);
         }
@@ -71,7 +71,7 @@ public class PriceListController {
             PriceListDTO dto = convertToDto(priceList);
 
             for (MedicineItemDTO item : dto.getMedicineItems()) {
-                item.setPrice(priceListService.getMedicineItemPrice(item.getId()));
+                item.setPrice(priceListService.getMedicineItemPrice(item.getId(), id));
             }
             return new ResponseEntity<>(dto, HttpStatus.OK);
         }

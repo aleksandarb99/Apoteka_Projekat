@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.priceList;
 
+import com.team11.PharmacyProject.advertisement.Advertisement;
+import com.team11.PharmacyProject.advertisement.AdvertismentService;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
@@ -29,13 +31,16 @@ public class PriceListServiceImpl implements PriceListService {
     @Autowired
     private MedicineReservationService medicineReservationService;
 
+    @Autowired
+    private AdvertismentService advertismentService;
+
     @Override
     public PriceList findById(long id) {
         Optional<PriceList> priceList = priceListRepository.findById(id);
         return priceList.orElse(null);
     }
 
-    public double getMedicineItemPrice(Long medicineItemId) {
+    public double getMedicineItemPrice(Long medicineItemId, Long pharmacyId) {
         MedicineItem mi = medicineItemService.findById(medicineItemId);
         if (mi == null) {
             return -1;
@@ -48,7 +53,18 @@ public class PriceListServiceImpl implements PriceListService {
                 priceLast = price.getPrice();
             }
         }
-        return priceLast;
+
+        MedicineItem mi2 = medicineItemService.findByIdWithMedicine(medicineItemId);
+        double discount = 0;
+
+        List<Advertisement> sales = advertismentService.findAllSalesWithDate(mi2.getMedicine().getId(), pharmacyId, System.currentTimeMillis());
+        if(sales != null) {
+            for (Advertisement a:sales) {
+                discount = a.getDiscountPercent();
+                break;
+            }
+        }
+        return priceLast * (100 - discount) / 100;
     }
 
     @Override

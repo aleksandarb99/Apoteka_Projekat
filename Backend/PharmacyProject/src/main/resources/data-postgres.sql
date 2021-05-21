@@ -592,12 +592,11 @@ insert into erecipe_e_recipe_items (erecipe_id, e_recipe_items_id) values (1, 2)
 
 /*Advertisements*/
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id, medicine_item_id)
-                    values ('Ne propustite priliku!', 5.0, 1619953200000, 1626780633000, 'SALE', 1, 1);
+values ('Ne propustite priliku!', 5.0, 1619953200000, 1626780633000, 'SALE', 1, 1);
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id, medicine_item_id)
-                    values ('Odlicna akcija!!!', 30.0, 1619953200000, 1626780633000, 'SALE', 2, 6);
+values ('Odlicna akcija!!!', 30.0, 1619953200000, 1626780633000, 'SALE', 2, 6);
 insert into advertisement (advertisement_text, discount_percent, start_date, end_date, type, pharmacy_id, medicine_item_id)
-                    values ('Brufen po najnizoj ceni!!!', 50.0, 1619953200000, 1626780633000, 'SALE', 3, 10);
-
+values ('Brufen po najnizoj ceni!!!', 50.0, 1619953200000, 1626780633000, 'SALE', 3, 10);
 
 /*MedicineReservations*/
 insert into medicine_reservation (pickup_date, reservation_date, reservationid, state, medicine_item_id, pharmacy_id, price)

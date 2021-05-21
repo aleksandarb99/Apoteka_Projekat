@@ -11,7 +11,7 @@ public interface PriceListService {
 
     PriceList removeMedicine(long id, long medicineId);
 
-    double getMedicineItemPrice(Long medicineItemId);
+    double getMedicineItemPrice(Long medicineItemId, Long id);
 
     PriceList findByIdAndFetchMedicineItems(Long id);
 }

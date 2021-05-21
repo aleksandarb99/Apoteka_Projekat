@@ -10,5 +10,6 @@ public interface AdvertismentService {
 
     boolean addAdvertisment(Long id, AdvertismentDTORequest dto);
 
-    List<Advertisement> findAllSalesWithDate(Long pharamcyId, Long medicineId, long currentTimeMillis);
+    List<Advertisement> findAllSalesWithDate(Long pharmacyId, Long medicineId, long currentTimeMillis);
+
 }

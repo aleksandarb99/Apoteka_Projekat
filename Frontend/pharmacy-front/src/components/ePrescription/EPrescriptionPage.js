@@ -15,7 +15,7 @@ function EPrescriptionPage() {
           <Col sm={3} md={3} lg={2} xs={12} className="side__bar">
             <Nav variant="pills" className="flex-column">
               <Nav.Item>
-                <Nav.Link className="my__nav__link" eventKey="first">
+                <Nav.Link className="my__nav__link" eventKey="fifth">
                   Upload
                 </Nav.Link>
               </Nav.Item>
@@ -35,8 +35,8 @@ function EPrescriptionPage() {
             style={{ backgroundColor: "rgba(228, 245, 245, 0.897)" }}
           >
             <Tab.Content>
-              <TabPane eventKey="first">
-                <EPrescriptionSearch />
+              <TabPane eventKey="fifth">
+                <EPrescriptionSearch pharmacyId={-1} />
               </TabPane>
               <TabPane eventKey="second">
                 <EPrescriptionReview />
