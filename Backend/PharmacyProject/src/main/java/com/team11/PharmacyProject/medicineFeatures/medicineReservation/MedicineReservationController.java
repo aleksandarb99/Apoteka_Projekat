@@ -48,19 +48,16 @@ public class MedicineReservationController {
     public ResponseEntity<String> insertMedicineReservation(@Valid @RequestBody MedicineReservationInsertDTO dto, BindingResult result) {
 
         if(result.hasErrors()) {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Bad request!", HttpStatus.BAD_REQUEST);
         }
 
-        MedicineReservationNotifyPatientDTO reservationDTO = service.insertMedicineReservation(dto);
-        if (reservationDTO != null) {
-            try {
-                emailService.notifyPatientAboutReservation(reservationDTO);
-            } catch (Exception e) {
-                e.printStackTrace();        // Verovatno moze puci zbog nedostatka interneta, ili ako nije dozvoljeno za manje bezbedne aplikacije itd.
-            }
-            return new ResponseEntity<>("Reserved successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        try {
+            MedicineReservationNotifyPatientDTO reservationDTO = service.insertMedicineReservation(dto);
+            emailService.notifyPatientAboutReservation(reservationDTO);
+
+            return new ResponseEntity<>("Medicine is reserved successfully!", HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
