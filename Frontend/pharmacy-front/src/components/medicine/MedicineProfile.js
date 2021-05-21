@@ -224,19 +224,29 @@ function MedicineProfile() {
               textAlign: "center",
               fontSize: "1.3rem",
               display:
-                category == "" || Object.keys(selectedPharmacy).length === 0
-                  ? "none"
-                  : "block",
+                pid == -1 && Object.keys(selectedPharmacy).length != 0
+                  ? "block"
+                  : "none",
             }}
           >
             Total price:{" "}
             <span style={{ textDecoration: "line-through" }}>
-              {priceid == -1 ? selectedPharmacy.price : priceid}
+              {selectedPharmacy.price}
             </span>
             {"   ->   "}
-            {((priceid == -1 ? selectedPharmacy.price : priceid) *
-              (100 - category.discount)) /
-              100}
+            {(selectedPharmacy.price * (100 - category.discount)) / 100}
+          </p>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "1.3rem",
+              display: pid != -1 ? "block" : "none",
+            }}
+          >
+            Total price:{" "}
+            <span style={{ textDecoration: "line-through" }}>{priceid}</span>
+            {"   ->   "}
+            {(priceid * (100 - category.discount)) / 100}
           </p>
           <Alert
             style={{
