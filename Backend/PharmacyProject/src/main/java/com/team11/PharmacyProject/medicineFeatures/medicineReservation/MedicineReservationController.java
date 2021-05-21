@@ -80,10 +80,12 @@ public class MedicineReservationController {
     @PutMapping(value = "/cancel-reservation/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> cancelReservation (@PathVariable(value="id") Long id)
     {
-        if(service.cancelReservation(id)){
-            return new ResponseEntity<>("canceled", HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("not canceled",HttpStatus.OK);
+
+        try {
+            service.cancelReservation(id);
+            return new ResponseEntity<>("Reservation is canceled successfully!", HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

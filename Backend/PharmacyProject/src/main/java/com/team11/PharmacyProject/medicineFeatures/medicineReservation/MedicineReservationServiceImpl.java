@@ -276,22 +276,21 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
     }
 
     @Override
-    public boolean cancelReservation(Long id) {
+    public void cancelReservation(Long id) {
         Optional<MedicineReservation> reservationOptional = reservationRepository.findById(id);
-        if (reservationOptional.isEmpty()) return false;
+        if (reservationOptional.isEmpty()) throw new RuntimeException("Reservation does not exist!");
 
         MedicineReservation reservation = reservationOptional.get();
 
-        if (reservation.getState() != ReservationState.RESERVED) return false;
-        if (reservation.getPickupDate() < System.currentTimeMillis()) return false; // Provera da ipak nije rezervacija iz proslosti
+        if (reservation.getState() != ReservationState.RESERVED) throw new RuntimeException("Only reserved medicines can be canceled!");
+        if (reservation.getPickupDate() < System.currentTimeMillis()) throw new RuntimeException("Reservation is in the past, can't cancel it!"); // Provera da ipak nije rezervacija iz proslosti
 
         long differenceInMinutes = ((reservation.getPickupDate() - System.currentTimeMillis()) / (1000 * 60));
-        if(differenceInMinutes < 1440) return false;
+        if(differenceInMinutes < 1440) throw new RuntimeException("There's less then 24h to picking up the reservation, can not cancel it!");
 
         reservation.setState(ReservationState.CANCELLED);
 
         reservationRepository.save(reservation);
-        return true;
     }
 
     @Override

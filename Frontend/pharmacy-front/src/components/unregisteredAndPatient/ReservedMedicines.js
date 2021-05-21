@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  Row,
-  Col,
-  Container,
-  Table,
-  Button,
-  Form,
-  Alert,
-} from "react-bootstrap";
-import Dropdown from "react-bootstrap/Dropdown";
+import { Row, Container, Table, Button } from "react-bootstrap";
 
 import axios from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
@@ -18,19 +9,18 @@ import moment from "moment";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
+import { useToasts } from "react-toast-notifications";
 
 function ReservedMedicines() {
   const [reservations, setReservations] = useState([]);
-
   const [reload, setReload] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [showBadAlert, setShowBadAlert] = useState(false);
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchReservations() {
       const request = await axios.get(
         "http://localhost:8080/api/medicine-reservation/reserved-medicines/patient/" +
-        getIdFromToken()
+          getIdFromToken()
       );
       setReservations(request.data);
 
@@ -43,20 +33,14 @@ function ReservedMedicines() {
     axios
       .put(
         "http://localhost:8080/api/medicine-reservation/cancel-reservation/" +
-        id
+          id
       )
       .then((res) => {
-        if (res.data == "canceled") {
-          setShowAlert(true);
-          setTimeout(function () {
-            setShowAlert(false);
-          }, 5000);
-        } else {
-          setShowBadAlert(true);
-          setTimeout(function () {
-            setShowBadAlert(false);
-          }, 5000);
-        }
+        addToast(res.data, { appearance: "success" });
+        setReload(!reload);
+      })
+      .catch((err) => {
+        addToast(err.response.data, { appearance: "error" });
         setReload(!reload);
       });
   };
@@ -128,20 +112,6 @@ function ReservedMedicines() {
           style={{ display: reservations.length === 0 ? "block" : "none" }}
         >
           <h3>You have no reservations made!</h3>
-        </Row>
-        <Row style={{ justifyContent: "center" }}>
-          {showAlert && (
-            <Alert transition={true} variant="success">
-              Successfully canceled reservation!
-            </Alert>
-          )}
-        </Row>
-        <Row style={{ justifyContent: "center" }}>
-          {showBadAlert && (
-            <Alert transition={true} variant="danger">
-              24 hours to reservation pickup! You can not cancel it!
-            </Alert>
-          )}
         </Row>
       </div>
     </Container>
