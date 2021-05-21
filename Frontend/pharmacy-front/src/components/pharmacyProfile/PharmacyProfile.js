@@ -8,11 +8,14 @@ import MedicinesAdminView from "./MedicineAdminView";
 import AppointmentView from "./AppointmentView";
 import WorkersView from "./WorkersView";
 
+import EPrescriptionSearch from "../ePrescription/EPrescriptionSearch";
+
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
+import TabPane from "react-bootstrap/TabPane";
 
 import "../../styling/pharmacy.css";
 import "../../styling/home_page.css";
@@ -75,6 +78,9 @@ function PharmacyProfile() {
               />
               <AppointmentView pharmacyId={id} />
               <WorkersView pharmacyId={id} />
+              <TabPane eventKey="fifth">
+                <EPrescriptionSearch pharmacyId={id} />
+              </TabPane>
             </Tab.Content>
           </Col>
         </Row>

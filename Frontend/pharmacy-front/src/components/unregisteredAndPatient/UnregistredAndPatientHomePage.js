@@ -7,6 +7,7 @@ import DisplayWorkers from "../pharmacyAdmin/DisplayWorkers";
 
 import { useSelector } from "react-redux";
 import { getUserTypeFromToken } from "../../app/jwtTokenUtils.js";
+import DisplayHolidayRequests from "../pharmacyAdmin/DisplayHolidayRequests";
 
 function UnregistredAndPatientHomePage() {
   const user = useSelector((state) => state.user);
@@ -38,6 +39,13 @@ function UnregistredAndPatientHomePage() {
                   Medicines
                 </Nav.Link>
               </Nav.Item>
+              {userType === "ADMIN" && (
+                <Nav.Item>
+                  <Nav.Link className="my__nav__link" eventKey="fifth">
+                    Holiday requests
+                  </Nav.Link>
+                </Nav.Item>
+              )}
             </Nav>
           </Col>
           <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
@@ -45,6 +53,7 @@ function UnregistredAndPatientHomePage() {
               <PharmaciesView />
               <MedicinesView />
               <DisplayWorkers idOfPharmacy={-1} />
+              <DisplayHolidayRequests idOfPharmacy={-1} />
             </Tab.Content>
           </Col>
         </Row>

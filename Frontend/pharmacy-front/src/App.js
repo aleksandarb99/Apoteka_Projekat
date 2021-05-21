@@ -68,7 +68,7 @@ function App() {
           <Route path="/login" component={LoginPage} />
           <Route path="/pharmacy/:id" component={PharmacyProfile} />
           <Route
-            path="/medicine/:id/pharmacy/:pid"
+            path="/medicine/:id/pharmacy/:pid/price/:priceid"
             component={MedicineProfile}
           />
           <Route path="/dermatologist" component={DermHomePage} />

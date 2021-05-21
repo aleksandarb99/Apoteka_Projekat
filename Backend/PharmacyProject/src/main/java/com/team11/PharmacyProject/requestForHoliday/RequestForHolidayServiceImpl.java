@@ -50,8 +50,13 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
 
         for (Workplace w: workplaces) {
             Long workerId = w.getWorker().getId();
-            if(w.getWorker().getUserType().equals(UserType.DERMATOLOGIST))
-                continue;
+            if(pharmacyId==-1){
+                if(w.getWorker().getUserType().equals(UserType.PHARMACIST))
+                    continue;
+            } else {
+                if(w.getWorker().getUserType().equals(UserType.DERMATOLOGIST))
+                    continue;
+            }
 
             List<RequestForHoliday> requests = requestForHolidayRepository.getUnresolvedRequestsByWorker(workerId, now.getTime());
             listOfRequests.addAll(requests);
