@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.pharmacy;
 
+import com.team11.PharmacyProject.advertisement.Advertisement;
+import com.team11.PharmacyProject.advertisement.AdvertismentService;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineTherapyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.*;
@@ -28,6 +30,9 @@ public class PharmacyController {
 
     @Autowired
     PharmacyService pharmacyService;
+
+    @Autowired
+    AdvertismentService advertismentService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -137,7 +142,15 @@ public class PharmacyController {
 
         List<PharmacyCertainMedicineDTO> dtos = new ArrayList<>();
         for (Pharmacy p : pharmacies) {
-            dtos.add(new PharmacyCertainMedicineDTO(p));
+            PharmacyCertainMedicineDTO pcm = new PharmacyCertainMedicineDTO(p);
+            List<Advertisement> sales = advertismentService.findAllSalesWithDate(pcm.getId(), id, System.currentTimeMillis());
+            if (sales != null) {
+                for (Advertisement a : sales) {
+                    pcm.setPriceWithDiscout(a.getDiscountPercent());        // U slucaju da ima vise akcija u datom trenutku, odradi popust za prvu i prekini
+                    break;
+                }
+            }
+            dtos.add(pcm);
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }

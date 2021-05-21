@@ -18,6 +18,7 @@ public class MedicineReservationNotifyPatientDTO {
     private String pickupDate;
     private String pharmacyName;
     private String pharmacyAddress;
+    private double price;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy.");
 
@@ -34,6 +35,15 @@ public class MedicineReservationNotifyPatientDTO {
         setPickupDate(reservation.getPickupDate());
         setPharmacyName(pharmacy.getName());
         setPharmacyAddress(pharmacy.getAddress());
+        setPrice(reservation.getPrice());
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public String getReservationId() {
