@@ -17,6 +17,7 @@ import moment from "moment";
 import { getIdFromToken, getUserTypeFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
+import { useToasts } from "react-toast-notifications";
 
 function AppointmentView({ pharmacyId }) {
   const [reload, setReload] = useState(false);
@@ -27,6 +28,7 @@ function AppointmentView({ pharmacyId }) {
   const [sorter, setSorter] = useState("none");
   const [points, setPoints] = useState({});
   const [category, setCategory] = useState({});
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchPoints() {
@@ -101,12 +103,12 @@ function AppointmentView({ pharmacyId }) {
           getIdFromToken()
       )
       .then((res) => {
-        if (res.data === "failed") {
-          alert("Failed to reserve appointment!");
-          return;
-        }
+        addToast(res.data, { appearance: "success" });
         setReload(!reload);
-        alert("Successfully reserved appointment!");
+      })
+      .catch((err) => {
+        addToast(err.response.data, { appearance: "error" });
+        setReload(!reload);
       });
   };
 
@@ -148,7 +150,10 @@ function AppointmentView({ pharmacyId }) {
   return (
     <Tab.Pane eventKey="third">
       <Container fluid>
-        <Row className="justify-content-center m-3">
+        <Row
+          className="justify-content-center m-3"
+          style={{ display: appointsments.length == 0 ? "none" : "flex" }}
+        >
           <Form onSubmit={formSearch}>
             <Form.Group as={Row} className="align-items-center">
               <Col>
@@ -244,7 +249,10 @@ function AppointmentView({ pharmacyId }) {
             ))}
         </Row>
 
-        <Row className="my__row__pagination">
+        <Row
+          className="my__row__pagination"
+          style={{ display: appointsments.length == 0 ? "none" : "flex" }}
+        >
           <Col className="my__flex">
             <Pagination size="lg">
               <Pagination.Prev
@@ -259,6 +267,15 @@ function AppointmentView({ pharmacyId }) {
             </Pagination>
           </Col>
         </Row>
+        <h3
+          style={{
+            display: appointsments.length == 0 ? "block" : "none",
+            textAlign: "center",
+            marginTop: "50px",
+          }}
+        >
+          There's no empty checkups!
+        </h3>
       </Container>
     </Tab.Pane>
   );

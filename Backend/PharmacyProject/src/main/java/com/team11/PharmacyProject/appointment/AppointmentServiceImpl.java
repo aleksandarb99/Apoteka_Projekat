@@ -282,14 +282,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentReservationDTO reserveCheckupForPatient(Long appId, Long patientId) {
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
-        if(patient == null) return null;
-        if(patient.getPenalties() >= 3) return null;
+        if(patient == null) throw new RuntimeException("Patient does not exist in the database!");
+        if(patient.getPenalties() >= 3) throw new RuntimeException("You have achieved 3 penalties!");
 
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(appId);
-        if(appointmentOptional.isEmpty()) return null;
+        if(appointmentOptional.isEmpty()) throw new RuntimeException("Checkup does not exist in the database!");
 
         Appointment appointment = appointmentOptional.get();
-        if(appointment.getAppointmentState() != AppointmentState.EMPTY) return null;
+        if(appointment.getAppointmentState() != AppointmentState.EMPTY) throw new RuntimeException("You can reserve only the empty checkup!");
 
         appointment.setAppointmentState(AppointmentState.RESERVED);
         appointment.setPatient(patient);
