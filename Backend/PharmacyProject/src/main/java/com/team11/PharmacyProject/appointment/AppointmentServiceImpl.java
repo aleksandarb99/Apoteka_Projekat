@@ -418,28 +418,27 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public boolean cancelCheckup(Long id) {
+    public void cancelCheckup(Long id) {
 
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
-        if (appointmentOptional.isEmpty()) return false;
+        if (appointmentOptional.isEmpty()) throw new RuntimeException("The checkup with sent id does not exists!");
 
         Appointment appointment = appointmentOptional.get();
 
-        if (appointment.getAppointmentState() != AppointmentState.RESERVED) return false;
-        if (appointment.getAppointmentType() == AppointmentType.CONSULTATION) return false;
+        if (appointment.getAppointmentState() != AppointmentState.RESERVED) throw new RuntimeException("Only the reserved appointments can be canceled!");
+        if (appointment.getAppointmentType() == AppointmentType.CONSULTATION) throw new RuntimeException("The checkup with sent id is not checkup!");
 
-        if (appointment.getStartTime() < System.currentTimeMillis()) return false; // Provera da ipak nije pregled iz proslosti
+        if (appointment.getStartTime() < System.currentTimeMillis()) throw new RuntimeException("You can not cancel the checkup from the past!"); // Provera da ipak nije pregled iz proslosti
 
         long differenceInMinutes = ((appointment.getStartTime() - System.currentTimeMillis()) / (1000 * 60));
-        if(differenceInMinutes < 1440) return false;
+        if(differenceInMinutes < 1440) throw new RuntimeException("You can not cancel the checkup less then 24h before it starts!");
 
         appointment.setAppointmentState(AppointmentState.EMPTY);
         Patient patient = patientRepository.findByIdAndFetchAppointments(appointment.getPatient().getId());
-        if(!patient.removeAppointment(appointment.getId())) return false;
+        if(!patient.removeAppointment(appointment.getId())) throw new RuntimeException("It was not recorded that this checkup belongs to you!");
         appointment.setPatient(null);
 
         appointmentRepository.save(appointment);
-        return true;
     }
 
     @Override
