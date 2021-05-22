@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -112,6 +113,16 @@ public class PharmacyController {
         }
         List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO, criteria, dir);
         return new ResponseEntity<>(pharmacyERecipeDTOS, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/e-recipe/{pharmacyId}")
+    public ResponseEntity<String> checkIfRecipeIsInPharmacy(@RequestBody @Valid ERecipeDTO eRecipeDTO, @PathVariable("pharmacyId") Long pharmacyId) {
+       try {
+           pharmacyService.checkIfRecipeIsInPharmacy(eRecipeDTO, pharmacyId);
+           return new ResponseEntity<>("E-Recipe is in pharmacy", HttpStatus.OK);
+       } catch (Exception e){
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
     }
 
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)

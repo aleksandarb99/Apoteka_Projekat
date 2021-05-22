@@ -7,7 +7,7 @@ import { getIdFromToken } from "../../app/jwtTokenUtils";
 import PharmacyWithMedicineList from "./PharmacyWithMedicineList";
 import RequiredMedicineList from "./RequiredMedicineList";
 
-const ERecipeSearch = (pharmacyId) => {
+const ERecipeSearch = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [QRImage, setQRImage] = useState({});
   const [pharmacies, setPharmacies] = useState([]);
