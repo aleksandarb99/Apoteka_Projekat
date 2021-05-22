@@ -9,6 +9,7 @@ import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
+import { useToasts } from "react-toast-notifications";
 
 function EPrescriptionReview() {
   const [entities, setEntitites] = useState([]);
@@ -17,6 +18,7 @@ function EPrescriptionReview() {
   const [reload2, setReload2] = useState(false);
   const [sorter, setSorter] = useState("none");
   const [filter, setFilter] = useState("none");
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchEntities() {
@@ -26,8 +28,8 @@ function EPrescriptionReview() {
           setEntitites(res.data);
           setReload2(!reload2);
         })
-        .catch(() => {
-          alert("This should not happen!");
+        .catch((err) => {
+          addToast(err.response.data, { appearance: "error" });
         });
 
       return request;
