@@ -605,6 +605,22 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
+    public void checkIfRecipeIsInPharmacy(ERecipeDTO eRecipeDTO, Long pharmacyId) {
+        List<Pharmacy> pharmaciesWithMedInStock = pharmacyRepository.findPharmacyWithMedOnStock(eRecipeDTO.geteRecipeItems());
+        boolean flag = false;
+        for (Pharmacy p:
+             pharmaciesWithMedInStock) {
+            if (pharmacyId.equals(p.getId())) {
+                flag = true;
+                break;
+            }
+        }
+        if(!flag)
+            throw new RuntimeException("E-Recipe is not in the pharmacy!");
+
+    }
+
+    @Override
     public List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order) {
         // TODO provera alergena, podataka i tako to
         if (eRecipeDTO.getState() == ERecipeState.REJECTED) {

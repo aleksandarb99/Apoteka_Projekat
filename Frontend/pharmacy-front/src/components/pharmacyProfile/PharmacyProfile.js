@@ -8,8 +8,6 @@ import MedicinesAdminView from "./MedicineAdminView";
 import AppointmentView from "./AppointmentView";
 import WorkersView from "./WorkersView";
 
-import EPrescriptionSearch from "../ePrescription/EPrescriptionSearch";
-
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
@@ -20,6 +18,9 @@ import TabPane from "react-bootstrap/TabPane";
 import "../../styling/pharmacy.css";
 import "../../styling/home_page.css";
 import { useToasts } from "react-toast-notifications";
+import ERecipeSearchInPharmacy from "./ERecipeSearchInPharmacy";
+
+import { getUserTypeFromToken } from "../../app/jwtTokenUtils.js";
 
 function PharmacyProfile() {
   const { addToast } = useToasts();
@@ -72,11 +73,13 @@ function PharmacyProfile() {
                   Pharmacists and dermatologists
                 </Nav.Link>
               </Nav.Item>
-              <Nav.Item>
-                <Nav.Link className="my__nav__link" eventKey="fifth">
-                  Check availability
-                </Nav.Link>
-              </Nav.Item>
+              {getUserTypeFromToken() === "PATIENT" && (
+                <Nav.Item>
+                  <Nav.Link className="my__nav__link" eventKey="fifth">
+                    Check availability
+                  </Nav.Link>
+                </Nav.Item>
+              )}
             </Nav>
           </Col>
           <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
@@ -89,7 +92,7 @@ function PharmacyProfile() {
               <AppointmentView pharmacyId={id} />
               <WorkersView pharmacyId={id} />
               <TabPane eventKey="fifth">
-                <EPrescriptionSearch pharmacyId={id} />
+                <ERecipeSearchInPharmacy pharmacyId={id} />
               </TabPane>
             </Tab.Content>
           </Col>

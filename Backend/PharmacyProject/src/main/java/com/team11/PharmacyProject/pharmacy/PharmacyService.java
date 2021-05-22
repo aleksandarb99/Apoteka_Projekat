@@ -59,4 +59,6 @@ public interface PharmacyService {
     Map<String, Integer> getInfoForReport(String period, Long pharmacyId, int duration);
 
     Pharmacy getPharmacyWithSubsribers(Long pharmacyId);
+
+    void checkIfRecipeIsInPharmacy(ERecipeDTO eRecipeDTO, Long pharmacyId);
 }
