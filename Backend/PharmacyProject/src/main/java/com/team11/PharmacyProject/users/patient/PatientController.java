@@ -187,19 +187,23 @@ public class PatientController {
     @DeleteMapping(value = "/allergies/{id}/{allergy_id}")
     @Validated
     public ResponseEntity<String> deleteAllergy(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
-        if (patientService.deleteAllergy(id, allergy_id)) {
+
+        try {
+            patientService.deleteAllergy(id, allergy_id);
             return new ResponseEntity<>("Allergy deleted successfully", HttpStatus.OK);
-        } else {
-            return null;
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping(value = "/allergies/{id}/{allergy_id}")
     public ResponseEntity<String> addAllergy(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
-        if (patientService.addAllergy(id, allergy_id)) {
+
+        try {
+            patientService.addAllergy(id, allergy_id);
             return new ResponseEntity<>("Allergy added successfully", HttpStatus.OK);
-        } else {
-            return null;
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -50,36 +50,33 @@ public class PatientService {
         return patientRepository.findByIdAndFetchAllergiesEagerly(id);
     }
 
-    public boolean deleteAllergy(long id, long allergy_id) {
+    public void deleteAllergy(long id, long allergy_id) {
         Patient patient = patientRepository.findByIdAndFetchAllergiesEagerly(id);
         if (patient != null) {
             if(!patient.removeAllergy(allergy_id))
-                return false;
+                throw new RuntimeException("Patient doesn't have selected allergy!");
 
             patientRepository.save(patient);
-            return true;
         } else {
-            return false;
+            throw new RuntimeException("Patient does not exist in the database!");
         }
     }
 
-    public boolean addAllergy(long id, long allergy_id) {
+    public void addAllergy(long id, long allergy_id) {
 
         Patient patient = patientRepository.findByIdAndFetchAllergiesEagerly(id);
         if (patient == null)
-            return false;
+            throw new RuntimeException("Patient does not exist in the database!");
 
         Optional<Medicine> medicine = medicineRepository.findById(allergy_id);
         if(medicine.isEmpty())
-            return false;
+            throw new RuntimeException("Medicine does not exist in the database!");
         Medicine allergy = medicine.get();
 
         if(!patient.addAllergy(allergy))
-            return false;
+            throw new RuntimeException("You already have this medicine recorded as allergy!");
 
         patientRepository.save(patient);
-        return true;
-
 
     }
 

@@ -228,11 +228,11 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
         Optional<Patient> p = patientRepository.findById(dto.getUserId());
         if(p.isPresent()) {
-            if(p.get().getPenalties() >= 3) return null;
+            if(p.get().getPenalties() >= 3) throw new RuntimeException("This functionality is not available, you've got 3 penalties!");
         }
 
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByPharmacyAndMedicineId(dto.getPharmacyId(), dto.getMedicineId());
-        if (pharmacy == null) return null;
+        if (pharmacy == null) throw new RuntimeException("Selected pharmacy doesn't have required medicine!");
 
         MedicineItem item = null;
 
@@ -243,8 +243,8 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
             }
         }
 
-        if(item == null) return null;
-        if(!item.setAmountLessOne()) return null;
+        if(item == null) throw new RuntimeException("Selected pharmacy doesn't have required medicine!");
+        if(!item.setAmountLessOne()) throw new RuntimeException("There's no required medicine right now in the stock!");
 
         MedicineReservation reservation = new MedicineReservation();
         reservation.setReservationID(UUID.randomUUID().toString());
@@ -263,11 +263,11 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         Optional<Patient> patient = Optional.ofNullable(patientRepository.findByIdAndFetchReservationsEagerly(dto.getUserId()));
         if(patient.isEmpty()) {
             patient = patientRepository.findById(dto.getUserId());
-            if(patient.isEmpty()) return null;
+            if(patient.isEmpty()) throw new RuntimeException("You are not registered in the database!");
             patient.get().setMedicineReservation(new ArrayList<>());
         }
 
-        if(!patient.get().addReservation(reservation)) return null;
+        if(!patient.get().addReservation(reservation)) throw new RuntimeException("You have already reservation with that id!");
 
         pharmacyRepository.save(pharmacy);
         patientRepository.save(patient.get());
@@ -276,22 +276,21 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
     }
 
     @Override
-    public boolean cancelReservation(Long id) {
+    public void cancelReservation(Long id) {
         Optional<MedicineReservation> reservationOptional = reservationRepository.findById(id);
-        if (reservationOptional.isEmpty()) return false;
+        if (reservationOptional.isEmpty()) throw new RuntimeException("Reservation does not exist!");
 
         MedicineReservation reservation = reservationOptional.get();
 
-        if (reservation.getState() != ReservationState.RESERVED) return false;
-        if (reservation.getPickupDate() < System.currentTimeMillis()) return false; // Provera da ipak nije rezervacija iz proslosti
+        if (reservation.getState() != ReservationState.RESERVED) throw new RuntimeException("Only reserved medicines can be canceled!");
+        if (reservation.getPickupDate() < System.currentTimeMillis()) throw new RuntimeException("Reservation is in the past, can't cancel it!"); // Provera da ipak nije rezervacija iz proslosti
 
         long differenceInMinutes = ((reservation.getPickupDate() - System.currentTimeMillis()) / (1000 * 60));
-        if(differenceInMinutes < 1440) return false;
+        if(differenceInMinutes < 1440) throw new RuntimeException("There's less then 24h to picking up the reservation, can not cancel it!");
 
         reservation.setState(ReservationState.CANCELLED);
 
         reservationRepository.save(reservation);
-        return true;
     }
 
     @Override

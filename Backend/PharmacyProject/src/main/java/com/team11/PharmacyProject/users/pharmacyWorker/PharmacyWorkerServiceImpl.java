@@ -134,12 +134,12 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
     public List<PharmacyWorker> getFreePharmacistsByPharmacyIdAndDate(Long id, long date, Sort sorter) {
 
         Pharmacy pharmacy = pharmacyRepository.getPharmacyByIdAndFetchWorkplaces(id);
-        if (pharmacy == null) return  null;
+        if (pharmacy == null) throw new RuntimeException("There's no pharmacies in database!");
 
         Date requestedDateAndTime = new Date(date);
         Date requestedDateAndTimeEnd = new Date(date);
         Date today = new Date();
-        if (requestedDateAndTime.before(today)) return null;
+        if (requestedDateAndTime.before(today)) throw new RuntimeException("Requested date is in the past!");
 
         Calendar c = Calendar.getInstance();
         c.setTime(requestedDateAndTime);

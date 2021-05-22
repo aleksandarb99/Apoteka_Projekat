@@ -285,14 +285,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentReservationDTO reserveCheckupForPatient(Long appId, Long patientId) {
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
-        if(patient == null) return null;
-        if(patient.getPenalties() >= 3) return null;
+        if(patient == null) throw new RuntimeException("Patient does not exist in the database!");
+        if(patient.getPenalties() >= 3) throw new RuntimeException("You have achieved 3 penalties!");
 
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(appId);
-        if(appointmentOptional.isEmpty()) return null;
+        if(appointmentOptional.isEmpty()) throw new RuntimeException("Checkup does not exist in the database!");
 
         Appointment appointment = appointmentOptional.get();
-        if(appointment.getAppointmentState() != AppointmentState.EMPTY) return null;
+        if(appointment.getAppointmentState() != AppointmentState.EMPTY) throw new RuntimeException("You can reserve only the empty checkup!");
 
         appointment.setAppointmentState(AppointmentState.RESERVED);
         appointment.setPatient(patient);
@@ -314,19 +314,19 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentReservationDTO reserveConsultationForPatient(Long workerId, Long patientId, Long pharmacyId, Long requiredDate) {
 
         PharmacyWorker worker = pharmacyWorkerRepository.getPharmacyWorkerForCalendar(workerId);
-        if (worker == null) return null;
+        if (worker == null) throw new RuntimeException("Worker does not exist in the database!");
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
-        if (patient == null) return null;
-        if (patient.getPenalties() >= 3) return null;
+        if (patient == null) throw new RuntimeException("Patient does not exist in the database!");
+        if (patient.getPenalties() >= 3) throw new RuntimeException("You have achieved 3 penalties!");
 
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByIdFetchAppointments(pharmacyId);
-        if (pharmacy == null) return null;
+        if (pharmacy == null) throw new RuntimeException("Pharmacy does not exist in the database!");
 
         Date requestedDateAndTime = new Date(requiredDate);
         Date requestedDateAndTimeEnd = new Date(requiredDate + pharmacy.getConsultationDuration() * 60000L);    // Simulacija trajanja konsultacije
         Date today = new Date();
-        if (requestedDateAndTime.before(today)) return null;
+        if (requestedDateAndTime.before(today)) throw new RuntimeException("Requested date is in the past!");
 
         boolean isRequiredConsultationFree = true;
         for (Appointment a : worker.getAppointmentList()) {
@@ -350,7 +350,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             }
         }
 
-        if (!isRequiredConsultationFree) return null;
+        if (!isRequiredConsultationFree) throw new RuntimeException("Requested date and time is not free!");
 
         Appointment reservedConsultation = new Appointment();
         reservedConsultation.setPatient(patient);
@@ -400,49 +400,47 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public boolean cancelConsultation(Long id) {
+    public void cancelConsultation(Long id) {
 
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
-        if (appointmentOptional.isEmpty()) return false;
+        if (appointmentOptional.isEmpty()) throw new RuntimeException("The consultation with sent id does not exists!");
 
         Appointment appointment =appointmentOptional.get();
 
-        if (appointment.getAppointmentState() != AppointmentState.RESERVED) return false;
-        if (appointment.getAppointmentType() == AppointmentType.CHECKUP) return false;
-        if (appointment.getStartTime() < System.currentTimeMillis()) return false; // Provera da ipak nije konsultacija iz proslosti
+        if (appointment.getAppointmentState() != AppointmentState.RESERVED) throw new RuntimeException("Only the reserved appointments can be canceled!");
+        if (appointment.getAppointmentType() == AppointmentType.CHECKUP) throw new RuntimeException("The consultation with sent id is not consultation!");
+        if (appointment.getStartTime() < System.currentTimeMillis()) throw new RuntimeException("You can not cancel the consultation from the past!"); // Provera da ipak nije konsultacija iz proslosti
 
         long differenceInMinutes = ((appointment.getStartTime() - System.currentTimeMillis()) / (1000 * 60));
-        if(differenceInMinutes < 1440) return false;
+        if(differenceInMinutes < 1440) throw new RuntimeException("You can not cancel the consultation less then 24h before it starts!");
 
         appointment.setAppointmentState(AppointmentState.CANCELLED);
 
         appointmentRepository.save(appointment);
-        return true;
     }
 
     @Override
-    public boolean cancelCheckup(Long id) {
+    public void cancelCheckup(Long id) {
 
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
-        if (appointmentOptional.isEmpty()) return false;
+        if (appointmentOptional.isEmpty()) throw new RuntimeException("The checkup with sent id does not exists!");
 
         Appointment appointment = appointmentOptional.get();
 
-        if (appointment.getAppointmentState() != AppointmentState.RESERVED) return false;
-        if (appointment.getAppointmentType() == AppointmentType.CONSULTATION) return false;
+        if (appointment.getAppointmentState() != AppointmentState.RESERVED) throw new RuntimeException("Only the reserved appointments can be canceled!");
+        if (appointment.getAppointmentType() == AppointmentType.CONSULTATION) throw new RuntimeException("The checkup with sent id is not checkup!");
 
-        if (appointment.getStartTime() < System.currentTimeMillis()) return false; // Provera da ipak nije pregled iz proslosti
+        if (appointment.getStartTime() < System.currentTimeMillis()) throw new RuntimeException("You can not cancel the checkup from the past!"); // Provera da ipak nije pregled iz proslosti
 
         long differenceInMinutes = ((appointment.getStartTime() - System.currentTimeMillis()) / (1000 * 60));
-        if(differenceInMinutes < 1440) return false;
+        if(differenceInMinutes < 1440) throw new RuntimeException("You can not cancel the checkup less then 24h before it starts!");
 
         appointment.setAppointmentState(AppointmentState.EMPTY);
         Patient patient = patientRepository.findByIdAndFetchAppointments(appointment.getPatient().getId());
-        if(!patient.removeAppointment(appointment.getId())) return false;
+        if(!patient.removeAppointment(appointment.getId())) throw new RuntimeException("It was not recorded that this checkup belongs to you!");
         appointment.setPatient(null);
 
         appointmentRepository.save(appointment);
-        return true;
     }
 
     @Override

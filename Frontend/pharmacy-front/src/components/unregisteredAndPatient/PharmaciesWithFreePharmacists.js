@@ -11,7 +11,6 @@ import {
   Table,
   Button,
   Form,
-  Alert,
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
@@ -20,6 +19,8 @@ import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
+
+import { useToasts } from "react-toast-notifications";
 
 function PharmaciesWithFreePharmacists() {
   const [startDate, setStartDate] = useState(new Date());
@@ -33,13 +34,13 @@ function PharmaciesWithFreePharmacists() {
   const [showedPharmacies, setShowedPharmacies] = useState([]);
   const [selectedWorker, setSelectedWorker] = useState({});
   const [reloadPharmacies, setReloadPharmacies] = useState(false);
-  const [dateInPastAlert, setDateInPastAlert] = useState(false);
   const [sorter, setSorter] = useState("none");
   const [reload, setReload] = useState(false);
   const [sorter2, setSorter2] = useState("none");
   const [reload2, setReload2] = useState(false);
   const [points, setPoints] = useState({});
   const [category, setCategory] = useState({});
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchPoints() {
@@ -74,7 +75,18 @@ function PharmaciesWithFreePharmacists() {
         "http://localhost:8080/api/pharmacy/all/free-pharmacists/",
         { params: search_params }
       );
-      setPharmacies(request.data);
+      if (request.status == 404) {
+        addToast(request.data, { appearance: "error" });
+        setPharmacies([]);
+      }
+      if (request.status == 200) {
+        if (request.data.length == 0) {
+          addToast("There's no available pharmacists!", {
+            appearance: "warning",
+          });
+        }
+        setPharmacies(request.data);
+      }
       setChosenPharmacy(null);
       setSelectedWorker({});
       setWorkers([]);
@@ -94,7 +106,18 @@ function PharmaciesWithFreePharmacists() {
         "http://localhost:8080/api/workers/all/free-pharmacists/pharmacy",
         { params: search_params }
       );
-      setWorkers(request.data);
+      if (request.status == 404) {
+        addToast(request.data, { appearance: "error" });
+        setWorkers([]);
+      }
+      if (request.status == 200) {
+        if (request.data.length == 0) {
+          addToast("There's no available pharmacists!", {
+            appearance: "warning",
+          });
+        }
+        setWorkers(request.data);
+      }
 
       return request;
     }
@@ -132,7 +155,6 @@ function PharmaciesWithFreePharmacists() {
   };
 
   const createReservation = () => {
-    // setSuccessAlert(false);
     axios
       .post(
         `http://localhost:8080/api/appointment/reserve-consultation/pharmacy/${
@@ -142,8 +164,13 @@ function PharmaciesWithFreePharmacists() {
         }/patient/${getIdFromToken()}/date/${requestedDate}/`
       )
       .then((res) => {
-        if (res.data === "reserved") alert("success");
-        else alert("fail");
+        addToast(res.data, { appearance: "success" });
+        setRequestedDate(null);
+        setPharmacies([]);
+        setReloadPharmacies(!reloadPharmacies);
+      })
+      .catch((err) => {
+        addToast(err.response.data, { appearance: "error" });
         setReloadPharmacies(!reloadPharmacies);
       });
     setChosenPharmacy(null);
@@ -166,13 +193,11 @@ function PharmaciesWithFreePharmacists() {
     let hour = startHour;
     let array = hour.split(":");
     date.setHours(Number.parseInt(array[0]), Number.parseInt(array[1]), 0);
-    setRequestedDate(date.getTime());
     if (date.getTime()) {
-      if (date.getTime() > new Date()) {
-        setDateInPastAlert(false);
+      if (date.getTime() < new Date()) {
+        addToast("Choose a date from the future!", { appearance: "warning" });
       } else {
-        setDateInPastAlert(true);
-        return;
+        setRequestedDate(date.getTime());
       }
     }
   };
@@ -240,16 +265,7 @@ function PharmaciesWithFreePharmacists() {
   };
 
   return (
-    <Container
-      fluid
-      // style={{
-      //   backgroundColor: "rgba(162, 211, 218, 0.897)",
-      //   minHeight: "100vh",
-      //   paddingTop: "30px",
-      //   paddingBottom: "30px",
-      // }}
-      className="reserve__consultation__container"
-    >
+    <Container fluid className="reserve__consultation__container">
       <div className="reserve__consultation__content">
         <Row>
           <Col className="my__flex">
@@ -282,16 +298,9 @@ function PharmaciesWithFreePharmacists() {
             </Button>
           </Col>
         </Row>
-        <Row className="my__flex">
-          <Col md={4} lg={4}>
-            {dateInPastAlert && (
-              <Alert variant="danger">Choose a day from the future</Alert>
-            )}
-          </Col>
-        </Row>
         <Row
           className="justify-content-center mt-5"
-          style={{ display: pharmacies.length === 0 ? "none" : "flex" }}
+          style={{ display: pharmacies.length == 0 ? "none" : "flex" }}
         >
           <Form onSubmit={formSearch}>
             <Form.Group as={Row} className="align-items-center">
@@ -331,16 +340,6 @@ function PharmaciesWithFreePharmacists() {
           </Form>
         </Row>
         <Row>
-          <Col md={12} lg={12} className="my__flex">
-            {requestedDate != null &&
-              showedPharmacies.length === 0 &&
-              dateInPastAlert == false && (
-                <Alert variant="danger">
-                  There's no available pharmacies/pharmacists at required date
-                  and time!
-                </Alert>
-              )}
-          </Col>
           {showedPharmacies &&
             showedPharmacies.map((pharmacy) => {
               return (
@@ -381,7 +380,7 @@ function PharmaciesWithFreePharmacists() {
             })}
         </Row>
 
-        {showedPharmacies.length > 0 && dateInPastAlert == false && (
+        {showedPharmacies.length > 0 && (
           <Row className="my__row__pagination">
             <Col className="my__flex">
               <Pagination size="lg">
@@ -398,30 +397,11 @@ function PharmaciesWithFreePharmacists() {
             </Col>
           </Row>
         )}
-
-        <Row>
-          <h4
-            style={{
-              display:
-                workers.length == 0 &&
-                chosenPharmacy !== null &&
-                !dateInPastAlert
-                  ? "block"
-                  : "none",
-              textAlign: "center",
-              width: "100%",
-            }}
-          >
-            No available pharmacists at selected date and pharmacy!
-          </h4>
-        </Row>
         <Row
           className="justify-content-center mt-5"
           style={{
             display:
-              requestedDate != null &&
-              showedPharmacies.length === 0 &&
-              dateInPastAlert == false
+              requestedDate != null && showedPharmacies.length === 0
                 ? "none"
                 : "flex",
           }}
@@ -473,9 +453,7 @@ function PharmaciesWithFreePharmacists() {
             variant="light"
             style={{
               display:
-                chosenPharmacy !== null &&
-                workers.length > 0 &&
-                !dateInPastAlert
+                chosenPharmacy !== null && workers.length > 0
                   ? "table"
                   : "none",
               width: "50%",
@@ -538,8 +516,7 @@ function PharmaciesWithFreePharmacists() {
             style={{
               display:
                 Object.keys(selectedWorker).length === 0 ||
-                chosenPharmacy == null ||
-                dateInPastAlert
+                chosenPharmacy == null
                   ? "none"
                   : "inline-block",
               margin: "auto",

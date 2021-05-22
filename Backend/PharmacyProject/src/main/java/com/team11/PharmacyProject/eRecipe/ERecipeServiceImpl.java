@@ -202,8 +202,12 @@ public class ERecipeServiceImpl implements ERecipeService {
     public List<ERecipeDTO> getEPrescriptionsByPatientId(Long id) {
 
         Optional<Patient> patient = patientRepository.findById(id);
-        if (patient.isEmpty() || patient.get().getPenalties() == 3)
-            return null;
+        if (patient.isEmpty())
+            throw new RuntimeException("Patient is not recognized in the database!");
+
+        if(patient.get().getPenalties() >= 3) {
+            throw new RuntimeException("You have achieved 3 penalties, this functionality is not available!");
+        }
 
         List<ERecipeDTO> retVal = new ArrayList<>();
         File qr_folder;
@@ -220,7 +224,7 @@ public class ERecipeServiceImpl implements ERecipeService {
                 }
             }
         } catch (IOException e) {
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
 
         return retVal;

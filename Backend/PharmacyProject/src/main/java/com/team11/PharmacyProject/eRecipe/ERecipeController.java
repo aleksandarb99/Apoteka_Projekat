@@ -49,13 +49,12 @@ public class ERecipeController {
     @GetMapping(value = "/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getEPrescriptionsByPatientId(@PathVariable("id") Long id) {
 
-        List<ERecipeDTO> retVal = eRecipeService.getEPrescriptionsByPatientId(id);
-
-        if (retVal == null) {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        try {
+            List<ERecipeDTO> retVal = eRecipeService.getEPrescriptionsByPatientId(id);
+            return new ResponseEntity<>(retVal, HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 
 }

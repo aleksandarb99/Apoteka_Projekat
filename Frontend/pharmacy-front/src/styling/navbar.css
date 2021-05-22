@@ -1,6 +1,7 @@
 .my__navbar {
   height: 8vh;
   background: linear-gradient(#475058, #343a40);
+  z-index: 11;
 }
 
 .my__navbar__house {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Table, Button, Alert } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 
 import {
@@ -12,15 +12,14 @@ import axios from "./../../app/api";
 
 import "../../styling/medicineProfile.css";
 import "../../styling/allergies.css";
+import { useToasts } from "react-toast-notifications";
 
 function MedicineProfile() {
   const [medicine, setMedicine] = useState({});
   const [pharmacies, setPharmacies] = useState([]);
   const [pickupDate, setPickupDate] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
-  const [successAlert, setSuccessAlert] = useState(false);
-  const [penaltiesAlert, setPenaltiesAlert] = useState(false);
   const [selectedPharmacy, setSelectedPharmacy] = useState({});
+  const { addToast } = useToasts();
 
   let { id, pid, priceid } = useParams();
 
@@ -79,12 +78,9 @@ function MedicineProfile() {
   };
 
   const createReservation = () => {
-    setSuccessAlert(false);
-    setPenaltiesAlert(false);
-    setShowAlert(false);
     if (pickupDate) {
       if (pickupDate < new Date()) {
-        setShowAlert(true);
+        addToast("Choose date from the future!", { appearance: "warning" });
         return;
       }
     }
@@ -99,14 +95,11 @@ function MedicineProfile() {
 
     axios
       .post("http://localhost:8080/api/medicine-reservation/", forSend)
-      .then(() => {
-        setSuccessAlert(true);
-        setShowAlert(false);
-        setPenaltiesAlert(false);
+      .then((res) => {
+        addToast(res.data, { appearance: "success" });
       })
-      .catch(() => {
-        setSuccessAlert(false);
-        setPenaltiesAlert(true);
+      .catch((err) => {
+        addToast(err.response.data, { appearance: "error" });
       });
 
     setSelectedPharmacy({});
@@ -248,36 +241,6 @@ function MedicineProfile() {
             {"   ->   "}
             {(priceid * (100 - category.discount)) / 100}
           </p>
-          <Alert
-            style={{
-              display: showAlert ? "block" : "none",
-              width: "80%",
-              margin: "35px auto",
-            }}
-            variant="danger"
-          >
-            Choose a day from the future!
-          </Alert>
-          <Alert
-            style={{
-              display: successAlert ? "block" : "none",
-              width: "80%",
-              margin: "35px auto",
-            }}
-            variant="success"
-          >
-            Successfully reserved the medicine!
-          </Alert>
-          <Alert
-            style={{
-              display: penaltiesAlert ? "block" : "none",
-              width: "80%",
-              margin: "35px auto",
-            }}
-            variant="danger"
-          >
-            You have reached 3/3 penalties! Can not reserve the medicine!
-          </Alert>
           <Button
             variant="info"
             onClick={createReservation}

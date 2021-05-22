@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  Row,
-  Col,
-  Container,
-  Table,
-  Button,
-  Form,
-  Alert,
-} from "react-bootstrap";
+import { Row, Col, Container, Table, Button, Form } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 
 import axios from "../../app/api";
@@ -18,6 +10,7 @@ import moment from "moment";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
+import { useToasts } from "react-toast-notifications";
 
 function CheckupsInsight() {
   const [checkups, setCheckups] = useState([]);
@@ -25,8 +18,7 @@ function CheckupsInsight() {
   const [sorter, setSorter] = useState("none");
   const [ascDesc, setAscDesc] = useState("none");
   const [reload, setReload] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [showBadAlert, setShowBadAlert] = useState(false);
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchCheckups() {
@@ -67,17 +59,11 @@ function CheckupsInsight() {
     axios
       .put("http://localhost:8080/api/appointment/cancel-checkup/" + id)
       .then((res) => {
-        if (res.data == "canceled") {
-          setShowAlert(true);
-          setTimeout(function () {
-            setShowAlert(false);
-          }, 5000);
-        } else {
-          setShowBadAlert(true);
-          setTimeout(function () {
-            setShowBadAlert(false);
-          }, 5000);
-        }
+        addToast(res.data, { appearance: "success" });
+        setReload(!reload);
+      })
+      .catch((err) => {
+        addToast(err.response.data, { appearance: "error" });
         setReload(!reload);
       });
   };
@@ -239,20 +225,6 @@ function CheckupsInsight() {
                 ))}
             </tbody>
           </Table>
-        </Row>
-        <Row style={{ justifyContent: "center" }}>
-          {showAlert && (
-            <Alert transition={true} variant="success">
-              Successfully canceled checkup!
-            </Alert>
-          )}
-        </Row>
-        <Row style={{ justifyContent: "center" }}>
-          {showBadAlert && (
-            <Alert transition={true} variant="danger">
-              24 hours to checkup! You can not cancel it!
-            </Alert>
-          )}
         </Row>
       </div>
     </Container>

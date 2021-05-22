@@ -449,12 +449,12 @@ public class PharmacyServiceImpl implements PharmacyService {
 
         List<Pharmacy> pharmacies = pharmacyRepository.findPharmaciesFetchWorkplaces(sorter);
 
-        if (pharmacies.size() == 0) return null;
+        if (pharmacies.size() == 0) throw new RuntimeException("There's no pharamcies in database!");
 
         Date requestedDateAndTime = new Date(date);
         Date requestedDateAndTimeEnd = new Date(date + 15 * 60000L);
         Date today = new Date();
-        if (requestedDateAndTime.before(today)) return null;
+        if (requestedDateAndTime.before(today)) throw new RuntimeException("Requested date is in the past!");
 
         Calendar c = Calendar.getInstance();
         c.setTime(requestedDateAndTime);

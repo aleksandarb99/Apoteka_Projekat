@@ -190,52 +190,50 @@ public class AppointmentController {
     @PutMapping(value = "/cancel-consultation/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> cancelConsultation (@PathVariable(value="id") Long id)
     {
-        if(appointmentServiceImpl.cancelConsultation(id)){
-            return new ResponseEntity<>("canceled", HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("not canceled",HttpStatus.OK);
+        try {
+            appointmentServiceImpl.cancelConsultation(id);
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
+
+        return new ResponseEntity<>("The consultation is canceled successfully!", HttpStatus.OK);
     }
 
     @PutMapping(value = "/cancel-checkup/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> cancelCheckup (@PathVariable(value="id") Long id)
     {
-        if(appointmentServiceImpl.cancelCheckup(id)){
-            return new ResponseEntity<>("canceled", HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("not canceled",HttpStatus.OK);
+        try {
+            appointmentServiceImpl.cancelCheckup(id);
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
+
+        return new ResponseEntity<>("The checkup is canceled successfully!", HttpStatus.OK);
     }
 
     @PostMapping(value = "/reserve/{idA}/patient/{idP}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> reserveCheckupForPatient(@PathVariable("idP") Long patientId, @PathVariable("idA") Long appId) {
 
-        AppointmentReservationDTO dto = appointmentServiceImpl.reserveCheckupForPatient(appId, patientId);
-        if (dto != null) {
-            try {
-                emailService.notifyPatientAboutReservedAppointment(dto, "Pregled");
-            } catch (Exception e) {
-                e.printStackTrace();        // Verovatno moze puci zbog nedostatka interneta, ili ako nije dozvoljeno za manje bezbedne aplikacije itd.
-            }
-            return new ResponseEntity<>("reserved", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("failed", HttpStatus.OK);
+        try {
+            AppointmentReservationDTO dto = appointmentServiceImpl.reserveCheckupForPatient(appId, patientId);
+            emailService.notifyPatientAboutReservedAppointment(dto, "Pregled");
+
+            return new ResponseEntity<>("Successfully reserved the checkup!", HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
     }
 
     @PostMapping(value = "/reserve-consultation/pharmacy/{idPh}/pharmacist/{idW}/patient/{idPa}/date/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> reserveConsultationForPatient(@PathVariable("idPa") Long patientId, @PathVariable("idW") Long workerId, @PathVariable("idPh") Long pharmacyId, @PathVariable("date") Long date) {
 
-        AppointmentReservationDTO dto = appointmentServiceImpl.reserveConsultationForPatient(workerId, patientId, pharmacyId, date);
-        if (dto != null) {
-            try {
-                emailService.notifyPatientAboutReservedAppointment(dto, "Savetovanje");
-            } catch (Exception e) {
-                e.printStackTrace();        // Verovatno moze puci zbog nedostatka interneta, ili ako nije dozvoljeno za manje bezbedne aplikacije itd.
-            }
-            return new ResponseEntity<>("reserved", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("failed", HttpStatus.OK);
+        try {
+            AppointmentReservationDTO dto = appointmentServiceImpl.reserveConsultationForPatient(workerId, patientId, pharmacyId, date);
+            emailService.notifyPatientAboutReservedAppointment(dto, "Savetovanje");
+
+            return new ResponseEntity<>("Successfully reserved the consultation!", HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
     }
 

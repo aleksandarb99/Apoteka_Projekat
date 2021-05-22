@@ -44,11 +44,7 @@ import { ToastProvider } from "react-toast-notifications";
 
 function App() {
   return (
-    <ToastProvider
-      placement="bottom-center"
-      autoDismiss="true"
-      autoDismissTimeout="4000"
-    >
+    <ToastProvider autoDismiss="true" autoDismissTimeout="4000">
       <Router>
         <div style={{ minHeight: "100vh" }}>
           <CommonHeader />

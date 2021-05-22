@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  Row,
-  Col,
-  Container,
-  Table,
-  Button,
-  Form,
-  Alert,
-} from "react-bootstrap";
+import { Row, Container, Table, Button, Alert } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import ReactStars from "react-rating-stars-component";
 import { StarFill } from "react-bootstrap-icons";
@@ -19,7 +11,7 @@ import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
-import { reset } from "ol/transform";
+import { useToasts } from "react-toast-notifications";
 
 function Rating() {
   const [dropdownLabel, setDropdownLabel] = useState("Dermatologist");
@@ -27,8 +19,8 @@ function Rating() {
   const [selectedEntity, setSelectedEntity] = useState(null);
   const [rating, setRating] = useState(null);
   const [enabledRating, setEnabledRating] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
   const [reload, setReload] = useState(false);
+  const { addToast } = useToasts();
   var spans = document.querySelectorAll("span");
 
   useEffect(() => {
@@ -77,7 +69,6 @@ function Rating() {
   };
 
   const ratingChanged = (newRating) => {
-    console.log(newRating);
     for (let span of spans) {
       span.classList.remove("my__color__star");
     }
@@ -95,44 +86,31 @@ function Rating() {
       axios
         .post("http://localhost:8080/api/rating/", forSend)
         .then((res) => {
-          if (res.data === "added") {
-            setShowAlert(true);
-            setTimeout(function () {
-              setShowAlert(false);
-            }, 5000);
-            setEnabledRating(false);
-            updateSelectedEntity(selectedEntity);
-            setReload(!reload);
-          }
+          addToast(res.data, { appearance: "success" });
+          setEnabledRating(false);
+          updateSelectedEntity(selectedEntity);
+          setReload(!reload);
         })
         .catch((err) => {
-          setShowAlert(false);
-          alert("failed!" + err.data);
+          addToast(err.response.data, { appearance: "error" });
         });
     } else {
       forSend.id = rating.id;
       axios
         .put("http://localhost:8080/api/rating/", forSend)
         .then((res) => {
-          if (res.data === "updated") {
-            setShowAlert(true);
-            setTimeout(function () {
-              setShowAlert(false);
-            }, 5000);
-            setEnabledRating(false);
-            updateSelectedEntity(selectedEntity);
-            setReload(!reload);
-          }
+          addToast(res.data, { appearance: "success" });
+          setEnabledRating(false);
+          updateSelectedEntity(selectedEntity);
+          setReload(!reload);
         })
         .catch((err) => {
-          setShowAlert(false);
-          alert("failed!" + err.data);
+          addToast(err.response.data, { appearance: "error" });
         });
     }
   };
 
   const reset = () => {
-    //let spans = document.querySelectorAll("span");
     for (let span of spans) {
       span.classList.add("my__color__star");
     }
@@ -359,14 +337,6 @@ function Rating() {
             activeColor="green"
           />
         </Row>
-        <Row style={{ justifyContent: "center" }}>
-          {showAlert && (
-            <Alert transition={true} variant="success">
-              Successfully graded!
-            </Alert>
-          )}
-        </Row>
-
         <Row
           style={{
             justifyContent: "center",

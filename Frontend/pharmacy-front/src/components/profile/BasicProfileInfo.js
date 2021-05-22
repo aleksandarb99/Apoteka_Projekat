@@ -1,18 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Col,
-  Container,
-  Form,
-  Row,
-  Modal,
-} from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Modal } from "react-bootstrap";
 import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
-import SuccessModal from "./../utilComponents/modals/SuccessModal";
-import WarningModal from "./../utilComponents/modals/WarningModal";
 import { Eye } from "react-bootstrap-icons";
+import { useToasts } from "react-toast-notifications";
 
 const BasicProfileInfo = (props) => {
   const [user, setUser] = useState({});
@@ -23,14 +14,9 @@ const BasicProfileInfo = (props) => {
     repeatPassword: "",
   });
   const [isEdit, setEdit] = useState(false);
-  const [isSaved, setSaved] = useState(false);
-  const [isFailed, setFailed] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [showPasswordSuccess, setShowPasswordSuccess] = useState(false);
-  const [showPasswordWarningMatch, setShowPasswordWarningMatch] =
-    useState(false);
-  const [showPasswordWarning, setShowPasswordWarning] = useState(false);
   const [inputType, setInputType] = useState("password");
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchUser() {
@@ -54,8 +40,6 @@ const BasicProfileInfo = (props) => {
 
   const enableEdit = () => {
     setEdit(!isEdit);
-    setSaved(false);
-    setFailed(false);
   };
 
   const cancelData = () => {
@@ -107,13 +91,11 @@ const BasicProfileInfo = (props) => {
     api
       .put("http://localhost:8080/api/users/" + getIdFromToken(), user)
       .then((res) => {
-        res.data === null ? setFailed(true) : setSaved(true);
+        addToast("User changed successfully!", { appearance: "success" });
         setUser(res.data);
-        // ovde format nije dobar i on postavi user-u adresu sa undefined poljima
-        // setShowUser(res.data);
       })
-      .catch(() => {
-        alert("Editing has failed!");
+      .catch((err) => {
+        addToast(err.response.data, { appearance: "error" });
       });
   };
 
@@ -121,10 +103,7 @@ const BasicProfileInfo = (props) => {
     event.preventDefault();
 
     if (passwordDTO.newPassword !== passwordDTO.repeatPassword) {
-      setShowPasswordWarningMatch(true);
-      setTimeout(function () {
-        setShowPasswordWarningMatch(false);
-      }, 3000);
+      addToast("Passwords not matches!", { appearance: "warning" });
       return;
     }
 
@@ -136,17 +115,14 @@ const BasicProfileInfo = (props) => {
         forSend
       )
       .then(() => {
-        setShowPasswordSuccess(true);
+        addToast("Successfully changed password!", { appearance: "success" });
         passwordDTO.oldPassword = "";
         passwordDTO.newPassword = "";
         passwordDTO.repeatPassword = "";
         setShowPasswordModal(false);
       })
-      .catch(() => {
-        setShowPasswordWarning(true);
-        setTimeout(function () {
-          setShowPasswordWarning(false);
-        }, 3000);
+      .catch((err) => {
+        addToast(err.response.data, { appearance: "error" });
       });
   };
 
@@ -191,28 +167,6 @@ const BasicProfileInfo = (props) => {
                 onChange={handleClick2}
                 maxLength={30}
               />
-
-              <Alert
-                style={
-                  showPasswordWarningMatch
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-                variant="warning"
-              >
-                Passwords not matches!
-              </Alert>
-
-              <Alert
-                style={
-                  showPasswordWarning
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-                variant="warning"
-              >
-                Old password is not correct!
-              </Alert>
             </Modal.Body>
             <Modal.Footer>
               <Button
@@ -322,30 +276,6 @@ const BasicProfileInfo = (props) => {
                 Change password
               </Button>
             </Row>
-
-            <SuccessModal
-              show={isSaved}
-              onHide={() => setSaved(false)}
-              message="User changed successfully!"
-            >
-              {" "}
-            </SuccessModal>
-
-            <WarningModal
-              show={isFailed}
-              onHide={() => setFailed(false)}
-              message="User data not changed!!"
-            >
-              {" "}
-            </WarningModal>
-
-            <SuccessModal
-              show={showPasswordSuccess}
-              onHide={() => setShowPasswordSuccess(false)}
-              message="Successfully changed password."
-            >
-              {" "}
-            </SuccessModal>
 
             <Form.Group className="form__buttons mt-5" controlId="buttons">
               <Button disabled={!isEdit} variant="secondary" type="submit">

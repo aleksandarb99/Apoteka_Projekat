@@ -115,20 +115,20 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PharmacyConsultationDTO>> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date) {
+    public ResponseEntity<?> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date) {
 
-        List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByFreePharmacists(date, pageable.getSort());
+        try {
+            List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByFreePharmacists(date, pageable.getSort());
+            List<PharmacyConsultationDTO> retVal = new ArrayList<>();
 
-        if (pharmacies == null) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            for (Pharmacy p : pharmacies) {
+                retVal.add(new PharmacyConsultationDTO(p));
+            }
+
+            return new ResponseEntity<>(retVal, HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        List<PharmacyConsultationDTO> retVal = new ArrayList<>();
-        for (Pharmacy p : pharmacies) {
-            retVal.add(new PharmacyConsultationDTO(p));
-        }
-
-        return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 
     @GetMapping(value = "/medicine/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

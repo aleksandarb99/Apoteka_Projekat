@@ -19,7 +19,7 @@ public interface MedicineReservationService {
 
     MedicineReservationWorkerDTO issueMedicine(Long workerID, String resID);
 
-    boolean cancelReservation(Long id);
+    void cancelReservation(Long id);
 
     Map<String, Integer> getInfoForReport(String period, Long pharmacyId);
 
