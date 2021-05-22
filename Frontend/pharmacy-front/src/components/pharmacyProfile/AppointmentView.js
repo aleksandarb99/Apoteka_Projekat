@@ -32,6 +32,7 @@ function AppointmentView({ pharmacyId }) {
 
   useEffect(() => {
     async function fetchPoints() {
+      if (getIdFromToken() == null) return;
       const request = await axios.get(
         "http://localhost:8080/api/patients/" + getIdFromToken() + "/points"
       );
@@ -43,6 +44,7 @@ function AppointmentView({ pharmacyId }) {
 
   useEffect(() => {
     async function fetchCategory() {
+      if (getIdFromToken() == null) return;
       const request = await axios.get(
         "http://localhost:8080/api/ranking-category/points/" + points
       );
@@ -211,13 +213,23 @@ function AppointmentView({ pharmacyId }) {
                   <ListGroup className="list-group-flush">
                     <ListGroupItem
                       className="my__flex"
-                      style={{ display: category === "" ? "flex" : "none" }}
+                      style={{
+                        display:
+                          category === "" || Object.keys(category).length === 0
+                            ? "flex"
+                            : "none",
+                      }}
                     >
                       {appointsment.price}
                     </ListGroupItem>
                     <ListGroupItem
                       className="my__flex"
-                      style={{ display: category !== "" ? "flex" : "none" }}
+                      style={{
+                        display:
+                          category !== "" && Object.keys(category).length !== 0
+                            ? "flex"
+                            : "none",
+                      }}
                     >
                       <span style={{ textDecoration: "line-through" }}>
                         {appointsment.price}
