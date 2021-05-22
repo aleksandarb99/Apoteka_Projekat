@@ -77,38 +77,36 @@ public class MyOrderServiceImpl implements MyOrderService {
     }
 
     @Override
-    public boolean removeOrder(long orderId) {
+    public void removeOrder(long orderId) {
         Optional<MyOrder> order = myOrderRepository.findById(orderId);
         if(order.isEmpty())
-            return false;
+            throw new RuntimeException("Order with id "+orderId+" does not exist!");
         List<Offer> offers = offerService.findOffersByOrderId(orderId);
         if(offers.isEmpty()) {
             myOrderRepository.delete(order.get());
-            return true;
+        } else {
+            throw new RuntimeException("Order already have offers, and cannot be deleted!");
         }
-        return false;
-
     }
 
     @Override
-    public boolean editOrder(long orderId, long date) {
+    public void editOrder(long orderId, long date) {
         Optional<MyOrder> order = myOrderRepository.findById(orderId);
         if(order.isEmpty())
-            return false;
+            throw new RuntimeException("Order with id "+orderId+" does not exist!");
 
         Date now = new Date();
         if(now.getTime() > date)
-            return false;
+            throw new RuntimeException("New deadline must be in the future!");
 
         List<Offer> offers = offerService.findOffersByOrderId(orderId);
         if(!offers.isEmpty()) {
-            return false;
+            throw new RuntimeException("Order already has offers, and cannot be edited!");
         }
 
         MyOrder order1 = order.get();
         order1.setDeadline(date);
         myOrderRepository.save(order1);
-        return true;
     }
 
     @Override
@@ -122,37 +120,36 @@ public class MyOrderServiceImpl implements MyOrderService {
         }
     }
 
-    public boolean addOrder(MyOrderAddingDTO dto) {
+    public void addOrder(MyOrderAddingDTO dto) {
         Pharmacy pharmacy = pharmacyService.getPharmacyById(dto.getPharmacyId());
         if(pharmacy==null){
-            return false;
+            throw new RuntimeException("Pharmacy with id "+dto.getPharmacyId()+" does not exist!");
         }
         List<OrderItem> items = new ArrayList<>();
         for (OrderItemAddingDTO item:dto.getItems()) {
             Medicine m = medicineService.getMedicineById(item.getMedicineId());
             if(m==null){
-                return false;
+                throw new RuntimeException("Medicine with id "+item.getMedicineId()+" does not exist!");
             }
             if(item.getAmount()<1){
-                return false;
+                throw new RuntimeException("Amount must be greater than 0!");
             }
             OrderItem order = new OrderItem(item.getAmount(), m);
             items.add(order);
         }
         if(items.size() < 1){
-            return false;
+            throw new RuntimeException("Order must have order items! Cannot be empty!");
         }
 
         Date now = new Date();
         if(dto.getDeadline() <= now.getTime()){
-            return false;
+            throw new RuntimeException("Deadline must be in the future!");
         }
 
         MyUser admin = userService.findOne(dto.getAdminId());
 
         MyOrder order = new MyOrder(dto.getDeadline(), pharmacy, items, admin);
         myOrderRepository.save(order);
-        return true;
     }
 
     @Override

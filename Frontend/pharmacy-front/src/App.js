@@ -40,71 +40,79 @@ import CategotyList from "./components/loyaltyProgram/CategoryList";
 
 import "./styling/navbar.css";
 
+import { ToastProvider } from "react-toast-notifications";
+
 function App() {
   return (
-    <Router>
-      <div style={{ minHeight: "100vh" }}>
-        <CommonHeader />
-        <Switch>
-          <Route path="/" exact component={HomePage} />
-          <Route path="/profile" exact component={UserProfile} />
-          <Route path="/infoProfile" exact component={BasicProfileInfo} />
-          <Route
-            path="/reserve-consultation/pharmacies"
-            component={PharmaciesWithFreePharmacists}
-          />
-          <Route
-            path="/consultations-insight"
-            component={ConsultationsInsight}
-          />
-          <Route
-            path="/subscribed-pharmacies"
-            component={SubscribedPharmacies}
-          />
-          <Route path="/rating" component={Rating} />
-          <Route path="/reserved-medicines" component={ReservedMedicines} />
-          <Route path="/checkups-insight" component={CheckupsInsight} />
-          <Route path="/registration" component={Registration} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/pharmacy/:id" component={PharmacyProfile} />
-          <Route
-            path="/medicine/:id/pharmacy/:pid/price/:priceid"
-            component={MedicineProfile}
-          />
-          <Route path="/dermatologist" component={DermHomePage} />
-          <Route path="/pharmacist" component={PharmHomePage} />
-          <Route path="/pharmacyAdmin" component={PharmacyAdminHomePage} />
-          <Route path="/admin/pharmacies" component={PharmacyCrud} />
-          <Route path="/admin/medicine" component={MedicineCrud} />
-          <Route path="/worker/search-patients" component={SearchPatPage} />
-          <Route
-            path="/worker/dermatologist_profile"
-            component={DermatologistProfile}
-          />
-          <Route
-            path="/worker/pharmacist_profile"
-            component={PharmacistProfile}
-          />
-          <Route path="/admin/users" component={UserCrud} />
-          <Route path="/worker/examined" component={SearchExaminedPatPage} />
-          <Route path="/worker/calendar" component={WorkCalendar} />
-          <Route
-            path="/worker/appointment_report"
-            component={AppointmentReport}
-          />
-          <Route path="/worker/vacation" component={VacationRequest} />
-          <Route path="/worker/issue_medicine" component={IssueMedicine} />
-          <Route path="/user/complaints" component={ComplaintsPage} />
-          <Route
-            path="/admin/complaint-responses"
-            component={ComplaintResponsesPage}
-          />
-          <Route path="/e-prescription" component={EPrescriptionPage} />
-          <Route path="/admin/loyalty" component={CategotyList} />
-        </Switch>
-      </div>
-      <Footer />
-    </Router>
+    <ToastProvider
+      placement="bottom-center"
+      autoDismiss="true"
+      autoDismissTimeout="4000"
+    >
+      <Router>
+        <div style={{ minHeight: "100vh" }}>
+          <CommonHeader />
+          <Switch>
+            <Route path="/" exact component={HomePage} />
+            <Route path="/profile" exact component={UserProfile} />
+            <Route path="/infoProfile" exact component={BasicProfileInfo} />
+            <Route
+              path="/reserve-consultation/pharmacies"
+              component={PharmaciesWithFreePharmacists}
+            />
+            <Route
+              path="/consultations-insight"
+              component={ConsultationsInsight}
+            />
+            <Route
+              path="/subscribed-pharmacies"
+              component={SubscribedPharmacies}
+            />
+            <Route path="/rating" component={Rating} />
+            <Route path="/reserved-medicines" component={ReservedMedicines} />
+            <Route path="/checkups-insight" component={CheckupsInsight} />
+            <Route path="/registration" component={Registration} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/pharmacy/:id" component={PharmacyProfile} />
+            <Route
+              path="/medicine/:id/pharmacy/:pid/price/:priceid"
+              component={MedicineProfile}
+            />
+            <Route path="/dermatologist" component={DermHomePage} />
+            <Route path="/pharmacist" component={PharmHomePage} />
+            <Route path="/pharmacyAdmin" component={PharmacyAdminHomePage} />
+            <Route path="/admin/pharmacies" component={PharmacyCrud} />
+            <Route path="/admin/medicine" component={MedicineCrud} />
+            <Route path="/worker/search-patients" component={SearchPatPage} />
+            <Route
+              path="/worker/dermatologist_profile"
+              component={DermatologistProfile}
+            />
+            <Route
+              path="/worker/pharmacist_profile"
+              component={PharmacistProfile}
+            />
+            <Route path="/admin/users" component={UserCrud} />
+            <Route path="/worker/examined" component={SearchExaminedPatPage} />
+            <Route path="/worker/calendar" component={WorkCalendar} />
+            <Route
+              path="/worker/appointment_report"
+              component={AppointmentReport}
+            />
+            <Route path="/worker/vacation" component={VacationRequest} />
+            <Route path="/worker/issue_medicine" component={IssueMedicine} />
+            <Route path="/user/complaints" component={ComplaintsPage} />
+            <Route
+              path="/admin/complaint-responses"
+              component={ComplaintResponsesPage}
+            />
+            <Route path="/e-prescription" component={EPrescriptionPage} />
+            <Route path="/admin/loyalty" component={CategotyList} />
+          </Switch>
+        </div>
+        <Footer />
+      </Router>
+    </ToastProvider>
   );
 }
 

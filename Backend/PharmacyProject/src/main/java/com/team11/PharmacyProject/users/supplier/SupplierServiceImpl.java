@@ -116,12 +116,12 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public boolean acceptOffer(Long selectedOfferId, Long orderId) {
+    public void acceptOffer(Long selectedOfferId, Long orderId) {
         Map<String, List<Offer>> offersForOrder = getOffersByOrderId(orderId);
 
         Optional<MyOrder> order = myOrderRepository.getMyOrderById(orderId);
         if(order.isEmpty())
-            return false;
+            throw new RuntimeException("Order with id "+orderId+" does not exist!");
 
         boolean flag = true;
 
@@ -136,8 +136,7 @@ public class SupplierServiceImpl implements SupplierService {
                     try {
                         emailService.notifySupplierThatHisOfferIsAccepted(email, order.get(), key);
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        return false;
+                        throw new RuntimeException("Sending email failed");
                     }
                     offerService.save(o);
                 }
@@ -146,8 +145,7 @@ public class SupplierServiceImpl implements SupplierService {
                     try {
                         emailService.notifySupplierThatHisOfferIsRefused(email, order.get(), key);
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        return false;
+                        throw new RuntimeException("Sending email failed");
                     }
                     offerService.save(o);
                 }
@@ -159,10 +157,6 @@ public class SupplierServiceImpl implements SupplierService {
         myOrderRepository.save(order1);
 
         pharmacyService.addMedicineToStock(order1);
-
-//        TODO proveri da li se trebaju deaktivirati inquries
-
-        return true;
     }
 
     @Override
@@ -182,7 +176,6 @@ public class SupplierServiceImpl implements SupplierService {
                 }
             }
         }
-
         return offerMap;
     }
 

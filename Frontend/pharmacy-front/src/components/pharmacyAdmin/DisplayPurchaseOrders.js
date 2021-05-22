@@ -22,6 +22,7 @@ import moment from "moment";
 import AddPurchaseOrderModal from "./AddPurchaseOrderModal";
 import SelectOfferModal from "./SelectOfferModal";
 import EditOrderModal from "./EditOrderModal";
+import { useToasts } from "react-toast-notifications";
 
 function DisplayPurchaseOrders({
   idOfPharmacy,
@@ -30,6 +31,7 @@ function DisplayPurchaseOrders({
   refreshInq,
   setRefreshInq,
 }) {
+  const { addToast } = useToasts();
   const [orders, setOrders] = useState([]);
   const [filterValue, setFilterValue] = useState("All");
   const [showedOrders, setShowedOrders] = useState([]);
@@ -47,10 +49,16 @@ function DisplayPurchaseOrders({
   const [medicineItems, setMedicineItems] = useState([]);
 
   async function fetchPriceList() {
-    const request = await axios.get(
-      `http://localhost:8080/api/pricelist/${priceListId}`
-    );
-    setMedicineItems(request.data.medicineItems);
+    const request = await axios
+      .get(`http://localhost:8080/api/pricelist/${priceListId}`)
+      .then((res) => {
+        setMedicineItems(res.data.medicineItems);
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
 
     return request;
   }
@@ -106,11 +114,16 @@ function DisplayPurchaseOrders({
 
     const request = await axios
       .post(`http://localhost:8080/api/orders/addorder`, dto)
-      .then(() => {
+      .then((res) => {
         fetchOrders();
+        addToast(res.data, {
+          appearance: "success",
+        });
       })
-      .catch(() => {
-        alert("Failed");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
     return request;
   }
@@ -127,7 +140,7 @@ function DisplayPurchaseOrders({
     }
   };
 
-  let handleAddModalSave = (selectedMedicineId, orders) => {
+  let handleAddModalSave = (orders) => {
     setAddModalShow(false);
     addPurchaseOrder(orders);
   };
@@ -139,11 +152,16 @@ function DisplayPurchaseOrders({
   async function deletePOrder() {
     const request = await axios
       .delete(`http://localhost:8080/api/orders/${showedOrder.id}`)
-      .then(() => {
+      .then((res) => {
         fetchOrders();
+        addToast(res.data, {
+          appearance: "success",
+        });
       })
-      .catch(() => {
-        alert("Failed to delete order");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
     return request;
   }
@@ -160,15 +178,19 @@ function DisplayPurchaseOrders({
     setShowSpinner(true);
     const request = await axios
       .post(`http://localhost:8080/api/suppliers/offers/accept/`, dto)
-      .then(() => {
+      .then((res) => {
         setShowSpinner(false);
         filterOrders("All");
         setDropdownLabel("All");
-        alert("Successfully accepted offer!");
         setRefreshInq(!refreshInq);
+        addToast(res.data, {
+          appearance: "success",
+        });
       })
-      .catch(() => {
-        alert("Failed");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
     return request;
   }
@@ -187,11 +209,16 @@ function DisplayPurchaseOrders({
       .put(
         `http://localhost:8080/api/orders/${showedOrder.id}/${date.getTime()}/`
       )
-      .then(() => {
+      .then((res) => {
         fetchOrders();
+        addToast(res.data, {
+          appearance: "success",
+        });
       })
-      .catch(() => {
-        alert("Failed to edit deadline");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
     return request;
   }
@@ -361,6 +388,7 @@ function DisplayPurchaseOrders({
         </Row>
       )}
       <Row>
+        <Col></Col>
         <Col className="center">
           {" "}
           <Spinner
@@ -369,6 +397,7 @@ function DisplayPurchaseOrders({
           />
           <hr></hr>
         </Col>
+        <Col></Col>
       </Row>
       <Row>
         <Col>

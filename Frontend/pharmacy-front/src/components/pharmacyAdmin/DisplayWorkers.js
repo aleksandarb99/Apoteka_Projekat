@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { StarFill, Search, Reply } from "react-bootstrap-icons";
+import { Search, Reply } from "react-bootstrap-icons";
 
 import { Tab, Row, Col, Button, Table, Form } from "react-bootstrap";
 
@@ -10,11 +10,10 @@ import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/pharmacy.css";
 import AddingWorkerModal from "./AddingWorkerModal";
 import DetailsOfWorkerModal from "./DetailsOfWorkerModal";
-
-// Ako je idOfPharmacy -1, onda se prikazuju svi i skrivaju akcije dodavanja i brisanja, iz razloga sto je onda prikazano registrovanom kupcu
-// U suprotnom se prikazuju samo radnici te specificne apoteke i admin ima pravo da manipulise tom listom
+import { useToasts } from "react-toast-notifications";
 
 function DisplayWorkers({ idOfPharmacy }) {
+  const { addToast } = useToasts();
   const [pharmacies, setPharmacies] = useState([]);
   const [pharamcyNameMap, setPharamcyNameMap] = useState([]);
 
@@ -62,11 +61,23 @@ function DisplayWorkers({ idOfPharmacy }) {
   }
 
   async function addWorker(id, dto) {
-    const request = await axios.post(
-      `http://localhost:8080/api/workplace/addworker/bypharmacyid/${idOfPharmacy}/${id}`,
-      dto
-    );
-    fetchWorkers();
+    const request = await axios
+      .post(
+        `http://localhost:8080/api/workplace/addworker/bypharmacyid/${idOfPharmacy}/${id}`,
+        dto
+      )
+      .then((res) => {
+        fetchWorkers();
+        addToast(res.data, {
+          appearance: "success",
+        });
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
+
     return request;
   }
 
@@ -75,10 +86,17 @@ function DisplayWorkers({ idOfPharmacy }) {
       .delete(
         `http://localhost:8080/api/workplace/removeworker/bypharmacyid/${idOfPharmacy}/${selectedRowId}`
       )
-      .catch(() => {
-        alert("Cannot delete it");
+      .then((res) => {
+        fetchWorkers();
+        addToast(res.data, {
+          appearance: "success",
+        });
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
-    fetchWorkers();
     return request;
   }
 
@@ -108,8 +126,6 @@ function DisplayWorkers({ idOfPharmacy }) {
   let handleInfo = () => {
     setDetailsModalShow(true);
   };
-
-  // -------------------------------
 
   const formSearch = (event) => {
     event.preventDefault();

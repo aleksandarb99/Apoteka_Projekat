@@ -9,27 +9,34 @@ import "../../styling/pharmacy.css";
 import AddingMedicineModal from "./AddingMedicineModal";
 import ChangePriceModal from "./ChangePriceModal";
 
+import { useToasts } from "react-toast-notifications";
+
 function DisplayMedicine({
   idOfPharmacy,
   priceListId,
   refreshPriceList,
   setRefreshPriceList,
 }) {
+  const { addToast } = useToasts();
+
   const [medicineItems, setMedicineItems] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(-1);
   const [selectedRowPrice, setSelectedRowPrice] = useState(-1);
   const [addModalShow, setAddModalShow] = useState(false);
   const [changePriceModalShow, setChangePriceModalShow] = useState(false);
   const [removeModalShow, setRemoveModalShow] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertText, setAlertText] = useState("");
-  const [isAlertGood, SetIsAlertGood] = useState(false);
 
   async function fetchPriceList() {
-    const request = await axios.get(
-      `http://localhost:8080/api/pricelist/${priceListId}`
-    );
-    setMedicineItems(request.data.medicineItems);
+    const request = await axios
+      .get(`http://localhost:8080/api/pricelist/${priceListId}`)
+      .then((res) => {
+        setMedicineItems(res.data.medicineItems);
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
 
     return request;
   }
@@ -50,19 +57,17 @@ function DisplayMedicine({
       .post(
         `http://localhost:8080/api/pricelist/${priceListId}/addmedicine/${selectedMedicineId}/${price}`
       )
-      .then(() => {
+      .then((res) => {
         fetchPriceList();
         setRefreshPriceList(!refreshPriceList);
-        displayAlert(
-          true,
-          "You have successfully added the medicine to the pharmacy."
-        );
+        addToast(res.data, {
+          appearance: "success",
+        });
       })
-      .catch(() => {
-        displayAlert(
-          false,
-          "Error! You failed to add the medicine to the pharmacy."
-        );
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
     return request;
   }
@@ -72,19 +77,17 @@ function DisplayMedicine({
       .delete(
         `http://localhost:8080/api/pricelist/${priceListId}/removemedicine/${selectedRowId}`
       )
-      .then(() => {
+      .then((res) => {
         fetchPriceList();
         setRefreshPriceList(!refreshPriceList);
-        displayAlert(
-          true,
-          "You have successfully removed the medicine from the pharmacy."
-        );
+        addToast(res.data, {
+          appearance: "success",
+        });
       })
-      .catch(() => {
-        displayAlert(
-          false,
-          "Error! You failed to remove the medicine from the pharmacy."
-        );
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
     return request;
   }
@@ -94,31 +97,19 @@ function DisplayMedicine({
       .post(
         `http://localhost:8080/api/pricelist/${priceListId}/changeprice/${selectedRowId}/${price}`
       )
-      .then(() => {
+      .then((res) => {
         fetchPriceList();
-        displayAlert(
-          true,
-          "You have successfully changed price of the medicine from the pharmacy."
-        );
+        addToast(res.data, {
+          appearance: "success",
+        });
       })
-      .catch(() => {
-        displayAlert(
-          false,
-          "Error! You failed to change price of the medicine from the pharmacy."
-        );
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
     return request;
   }
-
-  let displayAlert = (isGood, text) => {
-    SetIsAlertGood(isGood);
-    setShowAlert(true);
-    setAlertText(text);
-    setTimeout(function () {
-      setShowAlert(false);
-      setAlertText("");
-    }, 3000);
-  };
 
   let handleAddModalSave = (selectedMedicineId, price) => {
     setAddModalShow(false);
@@ -213,13 +204,6 @@ function DisplayMedicine({
               Remove
             </Button>
           </div>
-
-          <Alert show={showAlert} variant={isAlertGood ? "success" : "danger"}>
-            <Alert.Heading>
-              {isAlertGood ? "Congratulations!" : "You got an error!"}
-            </Alert.Heading>
-            <p>{alertText}</p>
-          </Alert>
 
           <AddingMedicineModal
             medicineItemsLength={medicineItems?.length}

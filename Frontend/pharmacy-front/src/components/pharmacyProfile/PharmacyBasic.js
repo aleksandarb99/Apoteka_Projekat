@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import api from '../../app/api'
-import { getIdFromToken, getUserTypeFromToken } from '../../app/jwtTokenUtils'
+import api from "../../app/api";
+import { getIdFromToken, getUserTypeFromToken } from "../../app/jwtTokenUtils";
 
 import { StarFill } from "react-bootstrap-icons";
 
@@ -17,7 +17,7 @@ import Button from "react-bootstrap/Button";
 import Tab from "react-bootstrap/Tab";
 
 function PharmacyBasic({ details }) {
-  const [isUserSubscribed, setIsUserSubscribed] = useState(false)
+  const [isUserSubscribed, setIsUserSubscribed] = useState(false);
 
   useEffect(() => {
     checkIfUserIsSubscribed();
@@ -42,31 +42,52 @@ function PharmacyBasic({ details }) {
     });
   }, [details]);
 
+  // CHECK nije moje
   const subscribe = () => {
     if (isUserSubscribed) {
-      api.post(`http://localhost:8080/api/pharmacy/${details.id}/unsubscribe/${getIdFromToken()}`)
+      api
+        .post(
+          `http://localhost:8080/api/pharmacy/${
+            details.id
+          }/unsubscribe/${getIdFromToken()}`
+        )
         .then(() => {
-          alert("Success")
-          checkIfUserIsSubscribed()
+          alert("Success");
+          checkIfUserIsSubscribed();
         })
-        .catch(() => { alert("Error") })
+        .catch(() => {
+          alert("Error");
+        });
     } else {
-      api.post(`http://localhost:8080/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
+      api
+        .post(
+          `http://localhost:8080/api/pharmacy/${
+            details.id
+          }/subscribe/${getIdFromToken()}`
+        )
         .then(() => {
-          alert("Success")
-          checkIfUserIsSubscribed()
+          alert("Success");
+          checkIfUserIsSubscribed();
         })
-        .catch(() => { alert("Error") })
+        .catch(() => {
+          alert("Error");
+        });
     }
-  }
+  };
 
+  // CHECK nije moje
   const checkIfUserIsSubscribed = () => {
-    api.get(`http://localhost:8080/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
+    api
+      .get(
+        `http://localhost:8080/api/pharmacy/${
+          details.id
+        }/subscribe/${getIdFromToken()}`
+      )
       .then((res) => {
-        console.log(res.data)
-        setIsUserSubscribed(res.data)
-      })
-  }
+        console.log(res.data);
+        setIsUserSubscribed(res.data);
+      });
+  };
 
   return (
     <Tab.Pane eventKey="first">
@@ -88,7 +109,9 @@ function PharmacyBasic({ details }) {
             <Button
               variant="primary"
               hidden={getUserTypeFromToken() !== "PATIENT"}
-              onClick={subscribe}>{isUserSubscribed ? "Unsubscribe" : "Subscribe"}
+              onClick={subscribe}
+            >
+              {isUserSubscribed ? "Unsubscribe" : "Subscribe"}
             </Button>
           </Col>
           <Col lg={6} md={6} sm={12} id="mapCol" className="center"></Col>

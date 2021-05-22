@@ -415,7 +415,7 @@ public class PharmacyServiceImpl implements PharmacyService {
         }
     }
 
-    public boolean update(long id, Pharmacy pharmacy) {
+    public void update(long id, Pharmacy pharmacy) {
         Optional<Pharmacy> p = pharmacyRepository.findById(id);
         if (p.isPresent()) {
             Pharmacy p2 = p.get();
@@ -425,9 +425,8 @@ public class PharmacyServiceImpl implements PharmacyService {
             p2.setAddress(pharmacy.getAddress());
             p2.setPointsForAppointment(pharmacy.getPointsForAppointment());
             pharmacyRepository.save(p2);
-            return true;
         } else {
-            return false;
+            throw new RuntimeException("Pharmacy with id " + id + " does not exist!");
         }
     }
 

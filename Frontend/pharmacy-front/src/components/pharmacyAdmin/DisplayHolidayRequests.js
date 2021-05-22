@@ -9,7 +9,9 @@ import axios from "../../app/api";
 import "../../styling/pharmacy.css";
 import RejectRequestModal from "./RejectRequestModal";
 
+import { useToasts } from "react-toast-notifications";
 function DisplayHolidayRequests({ idOfPharmacy }) {
+  const { addToast } = useToasts();
   const [requests, setRequests] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(-1);
   const [showAlert, setShowAlert] = useState(false);
@@ -29,11 +31,16 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
         `http://localhost:8080/api/vacation/rejectrequest/${selectedRowId}`,
         reason
       )
-      .then(() => {
+      .then((res) => {
         fetchRequests();
+        addToast(res.data, {
+          appearance: "success",
+        });
       })
-      .catch(() => {
-        alert("Failed");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
     return request;
   }
@@ -41,11 +48,16 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
   async function acceptRequest() {
     const request = await axios
       .post(`http://localhost:8080/api/vacation/acceptrequest/${selectedRowId}`)
-      .then(() => {
+      .then((res) => {
         fetchRequests();
+        addToast(res.data, {
+          appearance: "success",
+        });
       })
-      .catch(() => {
-        alert("Failed");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
     return request;
   }

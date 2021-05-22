@@ -108,7 +108,11 @@ public class PharmacyWorkerController {
 
     @PostMapping(value = "/notexistingworkplacebypharmacyid/{pharmacyId}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getNotWorkingWorkersByPharmacyId(@PathVariable("pharmacyId") Long pharmacyId, @RequestBody RequestForWorkerDTO dto) {
-        if (WorkplaceController.checkDto(dto)) return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        try {
+            WorkplaceController.checkDto(dto);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
         List<PharmacyWorker> workers = pharmacyWorkerService.getNotWorkingWorkersByPharmacyId(pharmacyId, dto);
 

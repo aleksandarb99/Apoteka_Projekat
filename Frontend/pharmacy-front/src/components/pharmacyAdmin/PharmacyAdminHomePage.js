@@ -19,8 +19,10 @@ import DisplayInquiries from "./DisplayInquiries";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 import DisplayReports from "./DisplayReports";
 import AdvertismentTab from "./AdvertismentTab";
+import { useToasts } from "react-toast-notifications";
 
 function PharmacyAdminHomePage() {
+  const { addToast } = useToasts();
   const [pharmacyDetails, setPharmacyDetails] = useState({});
   const [refreshPriceList, setRefreshPriceList] = useState(false);
 
@@ -29,18 +31,32 @@ function PharmacyAdminHomePage() {
   const [refreshInq, setRefreshInq] = useState(false);
 
   async function fetchPharmacyid() {
-    const request = await axios.get(
-      `http://localhost:8080/api/pharmacy/getpharmacyidbyadmin/${getIdFromToken()}`
-    );
-    setPharmacyId(request.data);
+    const request = await axios
+      .get(
+        `http://localhost:8080/api/pharmacy/getpharmacyidbyadmin/${getIdFromToken()}`
+      )
+      .then((res) => {
+        setPharmacyId(res.data);
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
     return request;
   }
 
   async function fetchPharmacy() {
-    const request = await axios.get(
-      `http://localhost:8080/api/pharmacy/${pharmacyId}`
-    );
-    setPharmacyDetails(request.data);
+    const request = await axios
+      .get(`http://localhost:8080/api/pharmacy/${pharmacyId}`)
+      .then((res) => {
+        setPharmacyDetails(res.data);
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
     return request;
   }
 

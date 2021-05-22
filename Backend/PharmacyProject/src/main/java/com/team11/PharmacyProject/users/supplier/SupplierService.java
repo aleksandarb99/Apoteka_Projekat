@@ -24,5 +24,5 @@ public interface SupplierService {
 
     Map<String, List<Offer>> getOffersByOrderId(long orderId);
 
-    boolean acceptOffer(Long selectedOfferId, Long orderId);
+    void acceptOffer(Long selectedOfferId, Long orderId);
 }

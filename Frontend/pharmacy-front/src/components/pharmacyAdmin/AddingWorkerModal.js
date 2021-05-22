@@ -3,7 +3,10 @@ import { Button, Table, Modal, Form, Row, Col } from "react-bootstrap";
 
 import axios from "../../app/api";
 
+import { useToasts } from "react-toast-notifications";
+
 function AddingWorkerModal(props) {
+  const { addToast } = useToasts();
   const [workerList, setWorkerList] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(-1);
 
@@ -35,11 +38,20 @@ function AddingWorkerModal(props) {
       enable6,
       enable7,
     };
-    const request = await axios.post(
-      `http://localhost:8080/api/workers/notexistingworkplacebypharmacyid/${props.idOfPharmacy}`,
-      dto
-    );
-    setWorkerList(request.data);
+    const request = await axios
+      .post(
+        `http://localhost:8080/api/workers/notexistingworkplacebypharmacyid/${props.idOfPharmacy}`,
+        dto
+      )
+      .then((res) => {
+        setWorkerList(res.data);
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
+
     return request;
   }
 

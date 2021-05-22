@@ -72,73 +72,63 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
     }
 
     @Override
-    public boolean rejectRequest(String requestId, String reason) {
+    public void rejectRequest(String requestId, String reason) {
         long id;
         try {
             String substring = requestId.substring(7);
             id = Long.parseLong(substring);
         } catch (Exception e){
-            return false;
+            throw new RuntimeException("Cannot parse id!");
         }
 
         if(reason.equals("")){
-            return false;
+            throw new RuntimeException("You must write a reason for rejecting request!");
         }
 
         RequestForHoliday r = requestForHolidayRepository.findOneWithWorker(id);
-        if(r != null){
+        if(r==null)
+            throw new RuntimeException("Request with id "+id+" does not exist!");
 
-            r.setDeclineText(reason);
-            r.setRequestState(AbsenceRequestState.CANCELLED);
-            requestForHolidayRepository.save(r);
+        r.setDeclineText(reason);
+        r.setRequestState(AbsenceRequestState.CANCELLED);
+        requestForHolidayRepository.save(r);
 
-//          String email = r.getPharmacyWorker().getEmail()
-            String email = "abuljevic8@gmail.com";
-            RequestForHolidayWithWorkerDetailsDTO dto = new RequestForHolidayWithWorkerDetailsDTO(r);
+        String email = "abuljevic8@gmail.com";
+        RequestForHolidayWithWorkerDetailsDTO dto = new RequestForHolidayWithWorkerDetailsDTO(r);
 
-            try {
-                emailService.notifyWorkerAboutRequestForHoliday(email, dto, reason);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return true;
+        try {
+            emailService.notifyWorkerAboutRequestForHoliday(email, dto, reason);
+        } catch (Exception e) {
+            throw new RuntimeException("Problem with sending mail!");
         }
-        return false;
     }
 
     @Override
-    public boolean acceptRequest(String requestId) {
+    public void acceptRequest(String requestId) {
         long id;
         try {
             String substring = requestId.substring(7);
             id = Long.parseLong(substring);
         } catch (Exception e){
-            return false;
+            throw new RuntimeException("Cannot parse id!");
         }
 
         RequestForHoliday r = requestForHolidayRepository.findOneWithWorker(id);
-        if(r != null){
 
-            r.setRequestState(AbsenceRequestState.ACCEPTED);
-            requestForHolidayRepository.save(r);
+        if(r==null)
+            throw new RuntimeException("Request with id "+id+" does not exist!");
 
-//          String email = r.getPharmacyWorker().getEmail()
-            String email = "abuljevic8@gmail.com";
-            RequestForHolidayWithWorkerDetailsDTO dto = new RequestForHolidayWithWorkerDetailsDTO(r);
+        r.setRequestState(AbsenceRequestState.ACCEPTED);
+        requestForHolidayRepository.save(r);
 
+        String email = "abuljevic8@gmail.com";
+        RequestForHolidayWithWorkerDetailsDTO dto = new RequestForHolidayWithWorkerDetailsDTO(r);
 
-            try {
-                emailService.notifyWorkerAboutRequestForHoliday(email, dto, "");
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return true;
+        try {
+            emailService.notifyWorkerAboutRequestForHoliday(email, dto, "");
+        } catch (Exception e) {
+            throw new RuntimeException("Problem with sending mail!");
         }
-        return false;
     }
 
     @Override

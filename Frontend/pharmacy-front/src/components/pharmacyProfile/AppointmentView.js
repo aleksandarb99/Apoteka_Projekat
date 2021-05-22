@@ -28,6 +28,7 @@ function AppointmentView({ pharmacyId }) {
   const [points, setPoints] = useState({});
   const [category, setCategory] = useState({});
 
+  // CHECK nije moje
   useEffect(() => {
     async function fetchPoints() {
       const request = await axios.get(
@@ -39,6 +40,7 @@ function AppointmentView({ pharmacyId }) {
     fetchPoints();
   }, []);
 
+  // CHECK nije moje
   useEffect(() => {
     async function fetchCategory() {
       const request = await axios.get(
@@ -92,6 +94,7 @@ function AppointmentView({ pharmacyId }) {
     }
   };
 
+  // CHECK nije moje
   const reserveAppointment = (a) => {
     axios
       .post(
@@ -130,6 +133,7 @@ function AppointmentView({ pharmacyId }) {
       search_params.append("sort", "worker.avgGrade,desc");
     }
 
+    // CHECK nije moje
     axios
       .get(
         `http://localhost:8080/api/appointment/bypharmacyid/${pharmacyId}/sort`,
