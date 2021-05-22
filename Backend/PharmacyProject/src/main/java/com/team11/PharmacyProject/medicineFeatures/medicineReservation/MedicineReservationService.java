@@ -23,5 +23,5 @@ public interface MedicineReservationService {
 
     Map<String, Integer> getInfoForReport(String period, Long pharmacyId);
 
-    int calculateProfit(long start, long end, long pharmacyId);
+    double calculateProfit(long start, long end, long pharmacyId);
 }

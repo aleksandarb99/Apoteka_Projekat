@@ -68,8 +68,8 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
     }
 
     @Override
-    public int calculateProfit(long start, long end, long pharmacyId) {
-        int sum = 0;
+    public double calculateProfit(long start, long end, long pharmacyId) {
+        double sum = 0;
         List<MedicineReservation> list = reservationRepository.getReservationsBeetwenTwoTimestamps(start, end, pharmacyId);
         for (MedicineReservation a:list) {
             List<MedicinePrice> prices =  a.getMedicineItem().getMedicinePrices();

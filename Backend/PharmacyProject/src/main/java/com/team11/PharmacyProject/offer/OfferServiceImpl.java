@@ -23,8 +23,8 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public int calculateExpenses(long start, long end, long pharmacyId) {
-        int sum = 0;
+    public double calculateExpenses(long start, long end, long pharmacyId) {
+        double sum = 0;
         List<Offer> list = offerRepository.getOffersBeetwenTwoTimestamps(start, end, pharmacyId);
         for (Offer a:list) {
             sum += a.getPrice();

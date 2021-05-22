@@ -17,7 +17,7 @@ public interface MedicineReservationRepository extends JpaRepository<MedicineRes
             "AND m.reservationID = ?2 AND m.state ='RESERVED'")
     MedicineReservation getMedicineReservationFromPharmacy(Long pharmID, String resID);
 
-    @Query("SELECT m FROM MedicineReservation  m JOIN FETCH m.medicineItem mi JOIN FETCH mi.medicinePrices where m.reservationDate > ?1 and m.reservationDate < ?2 and m.pharmacy.id = ?3 and m.state = 'RESERVED' order by m.reservationDate asc")
+    @Query("SELECT m FROM MedicineReservation  m JOIN FETCH m.medicineItem mi JOIN FETCH mi.medicinePrices where m.reservationDate > ?1 and m.reservationDate < ?2 and m.pharmacy.id = ?3 and m.state = 'RECEIVED' order by m.reservationDate asc")
     List<MedicineReservation> getReservationsBeetwenTwoTimestamps(long yearAgo, long currTime, Long pharmacyId);
 
 }

@@ -56,7 +56,7 @@ public interface PharmacyService {
 
     List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order);
 
-    Map<String, Integer> getInfoForReport(String period, Long pharmacyId, int duration);
+    Map<String, Double> getInfoForReport(String period, Long pharmacyId, int duration);
 
     Pharmacy getPharmacyWithSubsribers(Long pharmacyId);
 
