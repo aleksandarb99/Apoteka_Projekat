@@ -86,10 +86,10 @@ public class PharmacyServiceImpl implements PharmacyService {
     ERecipeRepository eRecipeRepository;
 
 
-    private int calculateProfitBeetwenTimestamps(long start, long end, long pharmacyId){
-        int profitFromAppointments = appointmentService.calculateProfit(start, end, pharmacyId);
-        int profitFromDrugSelling = medicineReservationService.calculateProfit(start, end, pharmacyId);
-        int orderExpenses = offerService.calculateExpenses(start, end, pharmacyId);
+    private double calculateProfitBeetwenTimestamps(long start, long end, long pharmacyId){
+        double profitFromAppointments = appointmentService.calculateProfit(start, end, pharmacyId);
+        double profitFromDrugSelling = medicineReservationService.calculateProfit(start, end, pharmacyId);
+        double orderExpenses = offerService.calculateExpenses(start, end, pharmacyId);
         return profitFromAppointments + profitFromDrugSelling - orderExpenses;
     }
 
@@ -102,11 +102,11 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
-    public Map<String, Integer> getInfoForReport(String period, Long pharmacyId, int duration) {
+    public Map<String, Double> getInfoForReport(String period, Long pharmacyId, int duration) {
         String[] monthNames = {"January", "February", "March", "April", "May",
                 "June", "July", "August", "September", "October", "November", "December"};
 
-        Map<String, Integer> data = new LinkedHashMap<>();
+        Map<String, Double> data = new LinkedHashMap<>();
         Calendar calendar = Calendar.getInstance();
 
         long currTime = Instant.now().toEpochMilli();
@@ -118,12 +118,12 @@ public class PharmacyServiceImpl implements PharmacyService {
             int count = 0;
             for(int i = calendar.get(Calendar.MONTH) + 1; i<12; i++) {
                 String key = monthNames[i]+"-"+calendar.get(Calendar.YEAR);
-                data.put(key, 0);
+                data.put(key, 0.0);
                 count++;
             }
             for(int i = 0; i<12-count; i++) {
                 String key = monthNames[i]+"-"+(calendar.get(Calendar.YEAR)+1);
-                data.put(key, 0);
+                data.put(key, 0.0);
             }
 
             calendar.setTime(new Date(currTime));
@@ -147,7 +147,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 
                 calendar.setTime(new Date(startOfMonth));
 
-                int profitOfThisMonth = calculateProfitBeetwenTimestamps(startOfMonth, endOfMonth, pharmacyId);
+                double profitOfThisMonth = calculateProfitBeetwenTimestamps(startOfMonth, endOfMonth, pharmacyId);
 
                 int month = calendar.get(Calendar.MONTH);
                 int year = calendar.get(Calendar.YEAR);
@@ -166,25 +166,25 @@ public class PharmacyServiceImpl implements PharmacyService {
         }
         else if(period.equals("Quarterly")) {
             if(calendar.get(Calendar.MONTH)<=2) {
-                data.put(2+"-"+calendar.get(Calendar.YEAR),0);
-                data.put(3+"-"+calendar.get(Calendar.YEAR),0);
-                data.put(4+"-"+calendar.get(Calendar.YEAR),0);
-                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(2+"-"+calendar.get(Calendar.YEAR),0.0);
+                data.put(3+"-"+calendar.get(Calendar.YEAR),0.0);
+                data.put(4+"-"+calendar.get(Calendar.YEAR),0.0);
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0.0);
             } else if(calendar.get(Calendar.MONTH)<=5) {
-                data.put(3+"-"+calendar.get(Calendar.YEAR),0);
-                data.put(4+"-"+calendar.get(Calendar.YEAR),0);
-                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
-                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(3+"-"+calendar.get(Calendar.YEAR),0.0);
+                data.put(4+"-"+calendar.get(Calendar.YEAR),0.0);
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0.0);
+                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0.0);
             } else if(calendar.get(Calendar.MONTH)<=8) {
-                data.put(4+"-"+calendar.get(Calendar.YEAR),0);
-                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
-                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0);
-                data.put(3+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(4+"-"+calendar.get(Calendar.YEAR),0.0);
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0.0);
+                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0.0);
+                data.put(3+"-"+(calendar.get(Calendar.YEAR)+1),0.0);
             } else {
-                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0);
-                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0);
-                data.put(3+"-"+(calendar.get(Calendar.YEAR)+1),0);
-                data.put(4+"-"+(calendar.get(Calendar.YEAR)+1),0);
+                data.put(1+"-"+(calendar.get(Calendar.YEAR)+1),0.0);
+                data.put(2+"-"+(calendar.get(Calendar.YEAR)+1),0.0);
+                data.put(3+"-"+(calendar.get(Calendar.YEAR)+1),0.0);
+                data.put(4+"-"+(calendar.get(Calendar.YEAR)+1),0.0);
             }
 
 
@@ -214,7 +214,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 
                 calendar.setTime(new Date(startOfQ));
 
-                int profitOfThisMonth = calculateProfitBeetwenTimestamps(startOfQ, endOfQ, pharmacyId);
+                double profitOfThisMonth = calculateProfitBeetwenTimestamps(startOfQ, endOfQ, pharmacyId);
 
                 int month = calendar.get(Calendar.MONTH);
                 int year = calendar.get(Calendar.YEAR);
@@ -245,16 +245,16 @@ public class PharmacyServiceImpl implements PharmacyService {
             calendar.setTime(new Date(currTime));
             calendar.set(calendar.get(Calendar.YEAR)-9, Calendar.JANUARY, 1, 0, 0, 0);
 
-            data.put(calendar.get(Calendar.YEAR)+"",0);
-            data.put((calendar.get(Calendar.YEAR)+1)+"",0);
-            data.put((calendar.get(Calendar.YEAR)+2)+"",0);
-            data.put((calendar.get(Calendar.YEAR)+3)+"",0);
-            data.put((calendar.get(Calendar.YEAR)+4)+"",0);
-            data.put((calendar.get(Calendar.YEAR)+5)+"",0);
-            data.put((calendar.get(Calendar.YEAR)+6)+"",0);
-            data.put((calendar.get(Calendar.YEAR)+7)+"",0);
-            data.put((calendar.get(Calendar.YEAR)+8)+"",0);
-            data.put((calendar.get(Calendar.YEAR)+9)+"",0);
+            data.put(calendar.get(Calendar.YEAR)+"",0.0);
+            data.put((calendar.get(Calendar.YEAR)+1)+"",0.0);
+            data.put((calendar.get(Calendar.YEAR)+2)+"",0.0);
+            data.put((calendar.get(Calendar.YEAR)+3)+"",0.0);
+            data.put((calendar.get(Calendar.YEAR)+4)+"",0.0);
+            data.put((calendar.get(Calendar.YEAR)+5)+"",0.0);
+            data.put((calendar.get(Calendar.YEAR)+6)+"",0.0);
+            data.put((calendar.get(Calendar.YEAR)+7)+"",0.0);
+            data.put((calendar.get(Calendar.YEAR)+8)+"",0.0);
+            data.put((calendar.get(Calendar.YEAR)+9)+"",0.0);
 
             calendar.setTime(new Date(currTime));
             calendar.set(calendar.get(Calendar.YEAR), Calendar.JANUARY, 1, 0, 0, 0);
@@ -265,7 +265,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 
                 calendar.setTime(new Date(startOfYear));
 
-                int profitOfThisMonth = calculateProfitBeetwenTimestamps(startOfYear, endOfYear, pharmacyId);
+                double profitOfThisMonth = calculateProfitBeetwenTimestamps(startOfYear, endOfYear, pharmacyId);
                 int year = calendar.get(Calendar.YEAR);
 
                 String key = year+"";

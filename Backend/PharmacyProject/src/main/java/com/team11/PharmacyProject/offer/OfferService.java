@@ -8,5 +8,5 @@ public interface OfferService {
 
     List<Offer> findOffersByOrderId(long orderId);
 
-    int calculateExpenses(long start, long end, long pharmacyId);
+    double calculateExpenses(long start, long end, long pharmacyId);
 }

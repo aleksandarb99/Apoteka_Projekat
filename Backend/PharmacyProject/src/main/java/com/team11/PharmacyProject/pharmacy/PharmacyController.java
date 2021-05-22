@@ -39,8 +39,8 @@ public class PharmacyController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/report/{id}/{period}/{duration}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Integer>> getInfoForReport(@PathVariable("period") String period, @PathVariable("id") Long pharmacyId, @PathVariable("duration") int duration) {
-        Map<String, Integer> data = pharmacyService.getInfoForReport(period, pharmacyId, duration);
+    public ResponseEntity<Map<String, Double>> getInfoForReport(@PathVariable("period") String period, @PathVariable("id") Long pharmacyId, @PathVariable("duration") int duration) {
+        Map<String, Double> data = pharmacyService.getInfoForReport(period, pharmacyId, duration);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 

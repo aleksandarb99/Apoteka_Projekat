@@ -20,6 +20,7 @@ import { getIdFromToken } from "../../app/jwtTokenUtils";
 import DisplayReports from "./DisplayReports";
 import AdvertismentTab from "./AdvertismentTab";
 import { useToasts } from "react-toast-notifications";
+import SetPasswordModal from "../utilComponents/modals/SetPasswordModal";
 
 function PharmacyAdminHomePage() {
   const { addToast } = useToasts();
@@ -29,6 +30,9 @@ function PharmacyAdminHomePage() {
   const [pharmacyId, setPharmacyId] = useState(null);
 
   const [refreshInq, setRefreshInq] = useState(false);
+
+  const [loadingPWChanged, setLoadingPWChanged] = useState(true);
+  const [showModalPWChange, setShowModalPWChange] = useState(false);
 
   async function fetchPharmacyid() {
     const request = await axios
@@ -70,6 +74,18 @@ function PharmacyAdminHomePage() {
 
   useEffect(() => {
     fetchPharmacyid();
+
+    axios
+      .get("http://localhost:8080/api/users/" + getIdFromToken())
+      .then((res) => {
+        if (!res.data.passwordChanged) {
+          setShowModalPWChange(true);
+          setLoadingPWChanged(false);
+        } else {
+          setShowModalPWChange(false);
+          setLoadingPWChanged(false);
+        }
+      });
   }, []);
 
   return (
@@ -157,6 +173,12 @@ function PharmacyAdminHomePage() {
           </Col>
         </Row>
       </Tab.Container>
+      <SetPasswordModal
+        show={showModalPWChange}
+        onPasswordSet={() => {
+          setShowModalPWChange(false);
+        }}
+      ></SetPasswordModal>
     </div>
   );
 }
