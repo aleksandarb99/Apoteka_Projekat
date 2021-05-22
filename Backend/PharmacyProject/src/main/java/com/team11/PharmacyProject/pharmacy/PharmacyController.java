@@ -44,12 +44,11 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PharmacyDTO> getPharmacyById(@PathVariable("id") Long id) {
-//        Pharmacy pharmacy = pharmacyService.getPharmacyById(id);
+    public ResponseEntity<?> getPharmacyById(@PathVariable("id") Long id) {
         Pharmacy pharmacy = pharmacyService.getPharmacyByIdAndPriceList(id);
 
         if (pharmacy == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Pharmacy with id " + id + " does not exist!", HttpStatus.NOT_FOUND);
         }
 
         PharmacyDTO dto = convertToDto(pharmacy);
@@ -58,11 +57,11 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/getpharmacyidbyadmin/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> getPharmacyIdByAdminId(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getPharmacyIdByAdminId(@PathVariable("id") Long id) {
         Pharmacy pharmacy = pharmacyService.getPharmacyIdByAdminId(id);
 
         if (pharmacy == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Pharmacy is not found!", HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(pharmacy.getId(), HttpStatus.OK);
@@ -177,11 +176,13 @@ public class PharmacyController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<String> updatePharmacy(@PathVariable("id") long id, @Valid @RequestBody PharmacyDTO pharmacyDTO) {
         Pharmacy pharmacy = convertToEntity(pharmacyDTO);
-        if (pharmacyService.update(id, pharmacy)) {
+        try {
+            pharmacyService.update(id, pharmacy);
             return new ResponseEntity<>("Pharmacy updated successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+
     }
 
     @GetMapping(value = "/crud", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -193,9 +194,7 @@ public class PharmacyController {
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyDTO>> getAllPharmacies() {
         List<PharmacyDTO> list = new ArrayList<>();
-        List<Pharmacy> listFromService = pharmacyService.getAll();
-        for (Pharmacy p :
-                listFromService) {
+        for (Pharmacy p : pharmacyService.getAll()) {
             list.add(convertToDto(p));
         }
         return new ResponseEntity<>(list, HttpStatus.OK);

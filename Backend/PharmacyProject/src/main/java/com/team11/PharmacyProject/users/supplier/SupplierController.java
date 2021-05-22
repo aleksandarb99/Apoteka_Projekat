@@ -73,27 +73,27 @@ public class SupplierController {
         List<OfferWithWorkerDTO> offersOfferListDTOS = new ArrayList<>();
         List<OfferWithWorkerDTO> offersList;
 
-        if (map != null) {
-            for (String s:map.keySet()) {
-                List<Offer> list = map.get(s);
-                offersList = list.stream().map(m -> modelMapper.map(m, OfferWithWorkerDTO.class)).collect(Collectors.toList());
-                for (OfferWithWorkerDTO item:offersList) {
-                    item.setWorker(s);
-                    offersOfferListDTOS.add(item);
-                }
+        for (String s:map.keySet()) {
+            List<Offer> list = map.get(s);
+            offersList = list.stream().map(m -> modelMapper.map(m, OfferWithWorkerDTO.class)).collect(Collectors.toList());
+            for (OfferWithWorkerDTO item:offersList) {
+                item.setWorker(s);
+                offersOfferListDTOS.add(item);
             }
-            return new ResponseEntity<>(offersOfferListDTOS, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(offersOfferListDTOS, HttpStatus.OK);
+
     }
 
     @PostMapping(value="/offers/accept/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> acceptOffer(@RequestBody OfferAcceptDTO dto) {
-        boolean flag = supplierService.acceptOffer(dto.getSelectedOfferId(), dto.getOrderId());
+        try {
+            supplierService.acceptOffer(dto.getSelectedOfferId(), dto.getOrderId());
+            return new ResponseEntity<>("Offer is successfully accepted!", HttpStatus.OK);
 
-        if(flag)
-            return new ResponseEntity<>("Successfully accepted offer", HttpStatus.OK);
-        return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping(value="/offers/{id}")

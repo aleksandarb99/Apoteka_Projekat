@@ -20,7 +20,7 @@ public interface AppointmentService {
 
     List<Appointment> getAllAppointmentsByPharmacyId(Long id, Long timestamp) throws Exception;
 
-    boolean insertAppointment(Appointment a, Long pharmacyId, Long dId);
+    void insertAppointment(Appointment a, Long pharmacyId, Long dId);
 
     List<Appointment> getUpcomingAppointmentsForWorker(Long id, int page, int size);
 

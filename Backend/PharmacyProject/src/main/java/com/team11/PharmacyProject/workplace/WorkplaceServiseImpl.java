@@ -15,6 +15,8 @@ import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerService;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -36,27 +38,32 @@ public class WorkplaceServiseImpl implements WorkplaceService {
     private AppointmentService appointmentService;
 
     @Override
-    public boolean removeWorker(Long pharmacyId, Long workplaceId) {
+    public void removeWorker(Long pharmacyId, Long workplaceId) {
         Pharmacy pharmacy = pharmacyService.getPharmacyByIdWithWorkplaces(pharmacyId);
         Workplace workplace = workplaceRepository.findByIdWithWorker(workplaceId);
-        if(pharmacy == null || workplace == null)
-            return false;
+        if(pharmacy == null)
+            throw new RuntimeException("Pharmacy with id "+pharmacyId+" does not exist!");
+
+        if(workplace == null)
+            throw new RuntimeException("Workplace with id "+workplaceId+" does not exist!");
 
         List<Appointment> appointments = appointmentService.getUpcomingAppointmentsForWorkerByWorkerIdAndPharmacyId(workplace.getWorker().getId(), pharmacyId);
         if(!appointments.isEmpty()){
-            return false;
+            throw new RuntimeException("Worker has reserved appointments and he cannot be deleted!");
         }
 
         workplaceRepository.delete(workplace);
-        return true;
     }
 
     @Override
-    public boolean addWorker(Long pharmacyId, Long workerId, RequestForWorkerDTO dto) {
+    public void addWorker(Long pharmacyId, Long workerId, RequestForWorkerDTO dto) {
         Pharmacy pharmacy = pharmacyService.getPharmacyByIdWithWorkplaces(pharmacyId);
         PharmacyWorker worker = pharmacyWorkerService.getOne(workerId);
-        if(pharmacy == null || worker == null)
-            return false;
+        if(pharmacy == null)
+            throw new RuntimeException("Pharmacy with id "+pharmacyId+" does not exist!");
+
+        if(worker == null)
+            throw new RuntimeException("Worker with id "+workerId+" does not exist!");
 
         boolean flag = false;
         List<PharmacyWorker> list = pharmacyWorkerService.getNotWorkingWorkersByPharmacyId(pharmacyId, dto);
@@ -68,9 +75,7 @@ public class WorkplaceServiseImpl implements WorkplaceService {
             }
         }
         if(!flag)
-            return false;
-
-//      data is validated
+            throw new RuntimeException("That worker already work at pharamcy!");
 
         List<WorkDay> workDays = new ArrayList<>();
         if(dto.isEnable1()){
@@ -106,9 +111,7 @@ public class WorkplaceServiseImpl implements WorkplaceService {
         pharmacy.addWorkplace(workplace);
         worker.getWorkplaces().add(workplace);
 
-//        pharmacyService.save(pharmacy);
         pharmacyWorkerService.save(worker);
-        return true;
     }
 
     @Override

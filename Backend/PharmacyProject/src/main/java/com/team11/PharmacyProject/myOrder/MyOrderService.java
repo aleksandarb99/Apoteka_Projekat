@@ -10,7 +10,8 @@ public interface MyOrderService {
 
     List<MyOrder> getOrdersByPharmacyId(Long id, String filterValue);
     List<MyOrderDTO> getAvailableOrders();
-    boolean addOrder(MyOrderAddingDTO dto);
+
+    void addOrder(MyOrderAddingDTO dto);
 
     MyOrderDTO getOrder(long id);
 
@@ -18,9 +19,9 @@ public interface MyOrderService {
 
     Long getAdminIdOfOrderId(Long id);
 
-    boolean removeOrder(long orderId);
+    void removeOrder(long orderId);
 
-    boolean editOrder(long orderId, long date);
+    void editOrder(long orderId, long date);
 
     void checkIfOrderIsOver();
 }

@@ -8,18 +8,17 @@ import {
   Modal,
   Form,
   ListGroup,
-  Alert,
 } from "react-bootstrap";
+import { useToasts } from "react-toast-notifications";
 
 function AddPurchaseOrderModal(props) {
+  const { addToast } = useToasts();
   const [selectedRowId, setSelectedRowId] = useState(-1);
   const [selectedName, setSelectedName] = useState("");
   const [amount, setAmount] = useState(100);
   const [orders, setOrders] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [startDate, setStartDate] = useState(null);
-
-  const [showAlert, setShowAlert] = useState(false);
 
   let handleClick = (medicineId, name) => {
     setSelectedRowId(medicineId);
@@ -53,10 +52,9 @@ function AddPurchaseOrderModal(props) {
     if (d.getTime() > now.getTime()) setStartDate(d);
     else {
       setStartDate(null);
-      setShowAlert(true);
-      setTimeout(function () {
-        setShowAlert(false);
-      }, 3000);
+      addToast("End date should be in future!", {
+        appearance: "warning",
+      });
     }
   };
 
@@ -164,13 +162,6 @@ function AddPurchaseOrderModal(props) {
                 />
               </Form.Group>
             </Col>
-            <Col>
-              {showAlert && (
-                <Alert transition={true} variant="danger">
-                  The date must be in the future.
-                </Alert>
-              )}
-            </Col>
           </Row>
         </Container>
       </Modal.Body>
@@ -182,7 +173,7 @@ function AddPurchaseOrderModal(props) {
           disabled={orders?.length == 0 || startDate === null}
           variant="primary"
           onClick={() => {
-            props.handleAdd(selectedRowId, { orders, startDate });
+            props.handleAdd({ orders, startDate });
           }}
         >
           Save Changes

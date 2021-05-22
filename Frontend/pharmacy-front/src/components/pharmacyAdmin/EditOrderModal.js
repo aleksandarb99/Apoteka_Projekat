@@ -10,10 +10,11 @@ import {
 } from "react-bootstrap";
 
 import moment from "moment";
+import { useToasts } from "react-toast-notifications";
 
 function EditOrderModal(props) {
+  const { addToast } = useToasts();
   const [startDate, setStartDate] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
 
   let changeDate = (date) => {
     let array = date.split("-");
@@ -27,10 +28,9 @@ function EditOrderModal(props) {
     if (d.getTime() > now.getTime()) setStartDate(d);
     else {
       setStartDate(null);
-      setShowAlert(true);
-      setTimeout(function () {
-        setShowAlert(false);
-      }, 3000);
+      addToast("The date must be in the future.", {
+        appearance: "warning",
+      });
     }
   };
 
@@ -68,13 +68,6 @@ function EditOrderModal(props) {
                   onChange={(event) => changeDate(event.target.value)}
                 />
               </Form.Group>
-            </Col>
-            <Col>
-              {showAlert && (
-                <Alert transition={true} variant="danger">
-                  The date must be in the future.
-                </Alert>
-              )}
             </Col>
           </Row>
         </Container>

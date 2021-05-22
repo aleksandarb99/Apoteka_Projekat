@@ -5,8 +5,10 @@ import { Tab, Row, Col, Dropdown, InputGroup, Form } from "react-bootstrap";
 import axios from "../../app/api";
 
 import { Line, Bar, Radar, Doughnut, PolarArea, Pie } from "react-chartjs-2";
+import { useToasts } from "react-toast-notifications";
 
 function DisplayReports({ pharmacyDetails }) {
+  const { addToast } = useToasts();
   const [chartData, setChartData] = useState(null);
 
   const [selectedChart, setSelectedChart] = useState("Bar");
@@ -229,7 +231,12 @@ function DisplayReports({ pharmacyDetails }) {
                   active={profitDisplay == item}
                   onClick={() => {
                     if (duration == 0 && profitDisplay == "HiddenProfit")
-                      alert("Change duration first!");
+                      addToast(
+                        "Duration cannot be 0! Change it if u want to see profit!",
+                        {
+                          appearance: "warning",
+                        }
+                      );
                     else setProfitDisplay(item);
                   }}
                 >

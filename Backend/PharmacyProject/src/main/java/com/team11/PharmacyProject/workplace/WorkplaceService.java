@@ -8,9 +8,9 @@ import java.util.Map;
 
 public interface WorkplaceService {
 
-    boolean addWorker(Long pharmacyId, Long workerId, RequestForWorkerDTO dto);
+    void addWorker(Long pharmacyId, Long workerId, RequestForWorkerDTO dto);
 
-    boolean removeWorker(Long pharmacyId, Long workerId);
+    void removeWorker(Long pharmacyId, Long workerId);
 
     List<Workplace> getWorkplacesByPharmacyId(Long pharmacyId);
 

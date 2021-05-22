@@ -23,7 +23,7 @@ public class AdvertismentController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AdvertismentDTO>> findAll(@PathVariable("id") Long id) {
+    public ResponseEntity<?> findAll(@PathVariable("id") Long id) {
         List<AdvertismentDTO> advertisementDTOS = null;
         try {
             advertisementDTOS = advertismentService.findAll(id).stream().map(m -> modelMapper.map(m, AdvertismentDTO.class)).collect(Collectors.toList());
@@ -31,16 +31,17 @@ public class AdvertismentController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<>(advertisementDTOS, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Failed to load advertisment!", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<String> addAdvertisment(@PathVariable("id") Long id, @RequestBody AdvertismentDTORequest dto) {
-        boolean flag = advertismentService.addAdvertisment(id, dto);
-       if(flag){
-           return new ResponseEntity<>("Success", HttpStatus.OK);
-       }
-        return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        try {
+            advertismentService.addAdvertisment(id, dto);
+            return new ResponseEntity<>("Successully added advertisment", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 

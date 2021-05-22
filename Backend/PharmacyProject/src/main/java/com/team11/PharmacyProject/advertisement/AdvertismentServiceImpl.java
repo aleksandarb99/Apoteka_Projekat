@@ -39,7 +39,7 @@ public class AdvertismentServiceImpl implements AdvertismentService {
     }
 
     @Override
-    public boolean addAdvertisment(Long pharmacyId, AdvertismentDTORequest dto) {
+    public void addAdvertisment(Long pharmacyId, AdvertismentDTORequest dto) {
 
         int type2 = Integer.parseInt(dto.getType())-1;
         AdvertisementType type;
@@ -47,23 +47,23 @@ public class AdvertismentServiceImpl implements AdvertismentService {
             type = AdvertisementType.PROMOTION;
             dto.setDiscount(0);
             if(dto.getText().equals(""))
-                return false;
+                throw new RuntimeException("Promotion should have content!");
         }
         else {
             type = AdvertisementType.SALE;
             dto.setText("");
             if(dto.getDiscount() <= 0 || dto.getDiscount() > 100)
-                return false;
+                throw new RuntimeException("Discount range is beetwen 0 ad 100!");
         }
 
         Pharmacy pharmacy = pharmacyService.getPharmacyWithSubsribers(pharmacyId);
         if(pharmacy == null)
-            return false;
+            throw new RuntimeException("Pharmacy with id " + pharmacyId + " does not exist!");
 
 
         MedicineItem item = medicineItemService.findByIdWithMedicine(dto.getSelectedRowId());
         if(item == null)
-            return false;
+            throw new RuntimeException("Medicine item with id " + dto.getSelectedRowId() + " does not exist!");
 
         Advertisement advertisement = new Advertisement(System.currentTimeMillis(), dto.getEndDate(), dto.getText(), pharmacy, dto.getDiscount(), type, item);
         advertismentRepository.save(advertisement);
@@ -71,9 +71,8 @@ public class AdvertismentServiceImpl implements AdvertismentService {
         try {
             emailService.notifySubsribers(advertisement, pharmacy);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error with mail sending!");
         }
 
-        return true;
     }
 }

@@ -6,8 +6,10 @@ import axios from "../../app/api";
 import AddAdvertismentModal from "./AddAdvertismentModal";
 
 import moment from "moment";
+import { useToasts } from "react-toast-notifications";
 
 function AdvertismentTab({ pharmacyDetails }) {
+  const { addToast } = useToasts();
   const [list, setList] = useState([]);
   const [addModalShow, setAddModalShow] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -18,8 +20,10 @@ function AdvertismentTab({ pharmacyDetails }) {
       .then((res) => {
         setList(res.data);
       })
-      .catch(() => {
-        alert("Greska");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
 
     return request;
@@ -34,11 +38,16 @@ function AdvertismentTab({ pharmacyDetails }) {
   async function addAdverb(data) {
     const request = await axios
       .post(`http://localhost:8080/api/sales/${pharmacyDetails.id}`, data)
-      .then(() => {
+      .then((res) => {
+        addToast(res.data, {
+          appearance: "success",
+        });
         setRefresh(!refresh);
       })
-      .catch(() => {
-        alert("Failed to add");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
 
     return request;

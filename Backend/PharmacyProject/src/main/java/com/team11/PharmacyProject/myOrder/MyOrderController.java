@@ -58,32 +58,35 @@ public class MyOrderController {
 
     @PostMapping(value = "/addorder", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addOrder(@RequestBody MyOrderAddingDTO data) {
-        boolean flag = orderService.addOrder(data);
-        if(flag)
-          return new ResponseEntity<>("Succesfully added", HttpStatus.OK);
-        else
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        try {
+            orderService.addOrder(data);
+            return new ResponseEntity<>("Successfully added!", HttpStatus.OK);
 
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping(value = "/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeOrder(@PathVariable("orderId") long orderId) {
-        boolean flag = orderService.removeOrder(orderId);
-        if(flag)
-            return new ResponseEntity<>("Succesfully removed", HttpStatus.OK);
-        else
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        try {
+            orderService.removeOrder(orderId);
+            return new ResponseEntity<>("Successfully removed!", HttpStatus.OK);
 
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping(value = "/{orderId}/{date}/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editOrder(@PathVariable("orderId") long orderId, @PathVariable("date") Long date) {
-        boolean flag = orderService.editOrder(orderId, date);
-        if(flag)
-            return new ResponseEntity<>("Succesfully edited", HttpStatus.OK);
-        else
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        try {
+            orderService.editOrder(orderId, date);
+            return new ResponseEntity<>("Successfully edited!", HttpStatus.OK);
 
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Scheduled(cron = "${greeting.cron}")

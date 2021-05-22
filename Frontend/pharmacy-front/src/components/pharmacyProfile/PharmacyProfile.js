@@ -19,18 +19,28 @@ import TabPane from "react-bootstrap/TabPane";
 
 import "../../styling/pharmacy.css";
 import "../../styling/home_page.css";
+import { useToasts } from "react-toast-notifications";
 
 function PharmacyProfile() {
+  const { addToast } = useToasts();
+
   const [details, setPharmacyDetails] = useState({});
 
   let { id } = useParams();
 
   useEffect(() => {
     async function fetchPharmacy() {
-      const request = await axios.get(
-        `http://localhost:8080/api/pharmacy/${id}`
-      );
-      setPharmacyDetails(request.data);
+      const request = await axios
+        .get(`http://localhost:8080/api/pharmacy/${id}`)
+        .then((res) => {
+          setPharmacyDetails(res.data);
+        })
+        .catch((err) => {
+          addToast(err.response.data, {
+            appearance: "error",
+          });
+        });
+
       return request;
     }
     fetchPharmacy();
