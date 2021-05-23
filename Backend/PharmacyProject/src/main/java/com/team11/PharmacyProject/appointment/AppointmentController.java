@@ -78,24 +78,28 @@ public class AppointmentController {
     }
 
     @GetMapping(value = "/history/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<List<AppointmentPatientInsightDTO>> getFinishedConsultationsByPatientId(Pageable pageable, @PathVariable("id") Long id) {
         List<AppointmentPatientInsightDTO> appointmentsDTO = appointmentServiceImpl.getFinishedConsultationsByPatientId(id, pageable.getSort());
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/upcoming/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<List<AppointmentPatientInsightDTO>> getUpcomingConsultationsByPatientId(Pageable pageable, @PathVariable("id") Long id) {
         List<AppointmentPatientInsightDTO> appointmentsDTO = appointmentServiceImpl.getUpcomingConsultationsByPatientId(id, pageable.getSort());
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/checkups/history/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<List<AppointmentPatientInsightDTO>> getFinishedCheckupsByPatientId(Pageable pageable, @PathVariable("id") Long id) {
         List<AppointmentPatientInsightDTO> appointmentsDTO = appointmentServiceImpl.getFinishedCheckupsByPatientId(id, pageable.getSort());
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/checkups/upcoming/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<List<AppointmentPatientInsightDTO>> getUpcomingCheckupsByPatientId(Pageable pageable, @PathVariable("id") Long id) {
         List<AppointmentPatientInsightDTO> appointmentsDTO = appointmentServiceImpl.getUpcomingCheckupsByPatientId(id, pageable.getSort());
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
@@ -189,6 +193,7 @@ public class AppointmentController {
     }
 
     @PutMapping(value = "/cancel-consultation/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> cancelConsultation (@PathVariable(value="id") Long id)
     {
         try {
@@ -201,6 +206,7 @@ public class AppointmentController {
     }
 
     @PutMapping(value = "/cancel-checkup/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> cancelCheckup (@PathVariable(value="id") Long id)
     {
         try {
@@ -227,6 +233,7 @@ public class AppointmentController {
     }
 
     @PostMapping(value = "/reserve-consultation/pharmacy/{idPh}/pharmacist/{idW}/patient/{idPa}/date/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> reserveConsultationForPatient(@PathVariable("idPa") Long patientId, @PathVariable("idW") Long workerId, @PathVariable("idPh") Long pharmacyId, @PathVariable("date") Long date) {
 
         try {

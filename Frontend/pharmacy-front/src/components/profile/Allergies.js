@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "./../../app/api";
 import { Table, Button, Modal } from "react-bootstrap";
 import AllergyRow from "./AllergyRow";
 import { Plus } from "react-bootstrap-icons";
