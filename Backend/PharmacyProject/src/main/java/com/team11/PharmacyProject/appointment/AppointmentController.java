@@ -213,7 +213,7 @@ public class AppointmentController {
     }
 
     @PostMapping(value = "/reserve/{idA}/patient/{idP}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('PATIENT')")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> reserveCheckupForPatient(@PathVariable("idP") Long patientId, @PathVariable("idA") Long appId) {
 
         try {
@@ -222,7 +222,7 @@ public class AppointmentController {
 
             return new ResponseEntity<>("Successfully reserved the checkup!", HttpStatus.OK);
         }catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -235,7 +235,7 @@ public class AppointmentController {
 
             return new ResponseEntity<>("Successfully reserved the consultation!", HttpStatus.OK);
         }catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
