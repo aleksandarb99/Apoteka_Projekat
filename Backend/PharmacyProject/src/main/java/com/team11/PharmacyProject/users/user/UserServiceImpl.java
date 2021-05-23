@@ -1,7 +1,6 @@
 package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
-import com.team11.PharmacyProject.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -56,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<MyUser> getUsersByUserType(UserType type) {
+    public List<MyUser> getUsersByUserType(String type) {
         return userRepository.findAllByUserType(type);
     }
 

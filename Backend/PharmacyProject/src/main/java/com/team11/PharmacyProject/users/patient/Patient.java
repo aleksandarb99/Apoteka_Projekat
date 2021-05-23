@@ -2,10 +2,10 @@ package com.team11.PharmacyProject.users.patient;
 
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.users.user.MyUser;
+import com.team11.PharmacyProject.users.user.Role;
 
 import javax.persistence.*;
 import java.util.List;
@@ -32,7 +32,7 @@ public class Patient extends MyUser {
    }
 
    public Patient(Long id, String password, String firstName, String lastName, String email, String telephone,
-                  UserType userType, Address address, int points, int penalties,
+                  Role userType, Address address, int points, int penalties,
                   List<MedicineReservation> medicineReservation, List<Medicine> allergies, boolean isPasswordChanged,
                   List<Appointment> appointments) {
       super(id, password, firstName, lastName, email, telephone, userType, address, isPasswordChanged);

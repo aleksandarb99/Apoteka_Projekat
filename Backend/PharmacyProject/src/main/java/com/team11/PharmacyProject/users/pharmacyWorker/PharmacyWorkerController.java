@@ -170,6 +170,7 @@ public class PharmacyWorkerController {
 
     private PharmacyWorkerDTO convertToDto(PharmacyWorker worker) {
         return modelMapper.map(worker, PharmacyWorkerDTO.class);
+
     }
 
 

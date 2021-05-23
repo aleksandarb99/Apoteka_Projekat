@@ -7,11 +7,9 @@ import com.team11.PharmacyProject.dto.pharmacy.PharmacyERecipeDTO;
 import com.team11.PharmacyProject.eRecipe.ERecipe;
 import com.team11.PharmacyProject.eRecipe.ERecipeRepository;
 import com.team11.PharmacyProject.eRecipe.ERecipeService;
-import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.ERecipeState;
 import com.team11.PharmacyProject.enums.ReservationState;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.inquiry.Inquiry;
 import com.team11.PharmacyProject.inquiry.InquiryRepository;
 import com.team11.PharmacyProject.inquiry.InquiryService;
@@ -465,7 +463,7 @@ public class PharmacyServiceImpl implements PharmacyService {
             boolean pharmacyIsChosen = false;
             for (Workplace wp : p.getWorkplaces()) {
                 if (pharmacyIsChosen) break;
-                if (wp.getWorker().getUserType() != UserType.PHARMACIST) continue;
+                if (!wp.getWorker().getRole().getName().equals("PHARMACIST")) continue;
 
                 for (WorkDay wd : wp.getWorkDays()) {
                     if (wd.getWeekday().ordinal() + 1 == dayOfWeek) {

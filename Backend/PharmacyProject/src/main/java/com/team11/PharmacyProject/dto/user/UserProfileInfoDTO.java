@@ -1,7 +1,7 @@
 package com.team11.PharmacyProject.dto.user;
 
 import com.team11.PharmacyProject.address.Address;
-import com.team11.PharmacyProject.enums.UserType;
+import com.team11.PharmacyProject.users.user.Role;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -25,7 +25,7 @@ public class UserProfileInfoDTO {
     @NotNull
     private Address address;
 
-    private UserType userType;
+    private RoleDTO role;
 
     private boolean isPasswordChanged;
 
@@ -77,12 +77,12 @@ public class UserProfileInfoDTO {
         this.address = address;
     }
 
-    public UserType getUserType() {
-        return userType;
+    public RoleDTO getUserType() {
+        return role;
     }
 
-    public void setUserType(UserType userType) {
-        this.userType = userType;
+    public void setUserType(RoleDTO role) {
+        this.role = role;
     }
 
     public boolean isPasswordChanged() {

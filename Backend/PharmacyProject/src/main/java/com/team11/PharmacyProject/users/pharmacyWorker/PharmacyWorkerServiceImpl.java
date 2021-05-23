@@ -3,7 +3,6 @@ package com.team11.PharmacyProject.users.pharmacyWorker;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
@@ -66,7 +65,7 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
                 workers.add(worker);
                 continue;
             }
-            if(worker.getUserType().equals(UserType.DERMATOLOGIST)){
+            if(worker.getRole().getName().equals("DERMATOLOGIST")){
                 boolean flag = false;
                 boolean heIsFree = true;
                 for (Workplace workplace: worker.getWorkplaces()) {
@@ -147,7 +146,7 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
 
         List<PharmacyWorker> chosenWorkers = new ArrayList<>();
         for (Workplace wp : pharmacy.getWorkplaces()) {
-            if (wp.getWorker().getUserType() != UserType.PHARMACIST) continue;
+            if (!wp.getWorker().getRole().getName().equals("PHARMACIST")) continue;
 
             for (WorkDay wd : wp.getWorkDays()) {
                 if (wd.getWeekday().ordinal() + 1 == dayOfWeek) {

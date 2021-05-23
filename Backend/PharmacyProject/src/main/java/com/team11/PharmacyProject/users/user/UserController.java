@@ -2,7 +2,6 @@ package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.user.*;
 import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
-import com.team11.PharmacyProject.enums.UserType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/")
-    public ResponseEntity<List<UserCrudDTO>> getUsers(@RequestParam UserType type) {
+    public ResponseEntity<List<UserCrudDTO>> getUsers(@RequestParam String type) {
         List<UserCrudDTO> users = userService.getUsersByUserType(type).stream().map(this::convertToCrudDto).collect(Collectors.toList());
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

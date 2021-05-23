@@ -1,4 +1,12 @@
 
+-- Roles
+INSERT INTO ROLE (name) VALUES ('PATIENT');
+INSERT INTO ROLE (name) VALUES ('ADMIN');
+INSERT INTO ROLE (name) VALUES ('DERMATOLOGIST');
+INSERT INTO ROLE (name) VALUES ('PHARMACIST');
+INSERT INTO ROLE (name) VALUES ('PHARMACY_ADMIN');
+INSERT INTO ROLE (name) VALUES ('SUPPLIER');
+
 /*Locations*/
 insert into location (longitude, latitude) values (19.833549, 45.267136);       /*Novi Sad*/
 insert into location (longitude, latitude) values (20.43157, 44.80886);       /*Beograd*/
@@ -179,60 +187,60 @@ insert into work_day (weekday, start_time, end_time) values ('TUE', 7, 15);
 insert into work_day (weekday, start_time, end_time) values ('WED', 7, 15);
 
 /*MyUsers*/
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$qPMQwhqxS29Pn4bdnxtVROQXoFAHvLHpXfcWN70Ib8TASAzyN3nfq',
-                            'Petar', 'Markovic', 'perazdera@gmail.com', '0642312343', 'PATIENT', 4, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Petar', 'Markovic', 'perazdera@gmail.com', '0642312343', 1, 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$rjq.xA4OJ1hVOuaOEYhm2ugrUnh2a0Z/SW4fxBAE4/7PKrjWnDeOG',
-                            'Mitar', 'Zivkovic', 'mitazita87@gmail.com', '06433332343', 'PATIENT', 4, false, false);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Mitar', 'Zivkovic', 'mitazita87@gmail.com', '06433332343', 1, 4, false, false);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
-                            'Djura', 'Djuric', 'djule@gmail.com', '06433332341', 'PATIENT', 4, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Djura', 'Djuric', 'djule@gmail.com', '06433332341', 1, 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$2qGKnufjF6BUB8JssWuxZe5V3yhnhThDNG8ojyvzqNYnzFmzx1kzK',
-                            'Zdravko', 'Mitic', 'zlegenda78@gmail.com', '06233552343', 'SUPPLIER', 3, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Zdravko', 'Mitic', 'zlegenda78@gmail.com', '06233552343', 6, 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$Oh4n4xXU5.2JykOL1DqK9uynsiTlFQgT2S54In0bRL4311R/zhoBq',
-                            'Slavko', 'Vasic', 'slavisa@gmail.com', '0632232343', 'SUPPLIER', 3, true, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Slavko', 'Vasic', 'slavisa@gmail.com', '0632232343', 6, 3, true, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2a$10$wBkTScEG1SWqwMp2..OmeOquvud4bQo0/MawPyXgWoUu6cHmpyc1i',
-                            'Nebojsa', 'Radovanovic', 'nebojsa@gmail.com', '0637732343', 'PHARMACIST', 3, true, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Nebojsa', 'Radovanovic', 'nebojsa@gmail.com', '0637732343', 4, 3, true, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$.9pfXfmpWsXqxlBiaxVs7e8zu2i4C.qTzDClIov4KcPaxRBEwSrt2',
-                            'Marko', 'Maric', 'marcius@gmail.com', '0634632343', 'DERMATOLOGIST', 3, true, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Marko', 'Maric', 'marcius@gmail.com', '0634632343', 3, 3, true, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$tPT/EHBxszNtPA17Hu9p4OgHuZwJZMsrhT5.jYuBB6arrpaPG5gx6',
-                            'Dusko', 'Dragic', 'duskousko@gmail.com', '0628832343', 'ADMIN', 3, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Dusko', 'Dragic', 'duskousko@gmail.com', '0628832343', 2, 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$zMWFTm7cC3JYZkCn35bG8.pr9jHaF4Yzz5vftYC7Ggnl.qFuep0uW',
-                            'Branko', 'Krasic', 'branimirko@gmail.com', '0658852343', 'PHARMACY_ADMIN', 3, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Branko', 'Krasic', 'branimirko@gmail.com', '0658852343', 5, 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
-                            'Djura', 'Markovic', 'djule22@gmail.com', '06430032341', 'PATIENT', 4, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Djura', 'Markovic', 'djule22@gmail.com', '06430032341', 1, 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
-                            'Marko', 'Markovic', 'djule00@gmail.com', '06930032341', 'PATIENT', 4, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Marko', 'Markovic', 'djule00@gmail.com', '06930032341', 1, 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
-                            'Petar', 'Peric', 'djule1@gmail.com', '02430032341', 'PATIENT', 4, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Petar', 'Peric', 'djule1@gmail.com', '02430032341', 1, 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
-                            'Carli', 'Sin', 'djule009@gmail.com', '08430032341', 'PATIENT', 4, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Carli', 'Sin', 'djule009@gmail.com', '08430032341', 1, 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$RQzDkiUka7F5Ao1J14ATE.yWIbM6/JDHz0wAoRVbP0f0IfvmZFf0m',
-                            'Carli', 'Barli', 'carli@gmail.com', '08435555341', 'DERMATOLOGIST', 4, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Carli', 'Barli', 'carli@gmail.com', '08435555341', 3, 4, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$QUxaJq2WEdqSwPxT.BePtuD9xI1S74agszK6CR.rN20BpZhbhleAG',
-                            'Pavle', 'Majstorovic', 'pavle@gmail.com', '0631111111', 'PHARMACIST', 3, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Pavle', 'Majstorovic', 'pavle@gmail.com', '0631111111', 4, 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$QUxaJq2WEdqSwPxT.BePtuD9xI1S74agszK6CR.rN20BpZhbhleAG',
-                            'Milica', 'Golubovic', 'milicag@gmail.com', '0632222222', 'PHARMACIST', 3, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Milica', 'Golubovic', 'milicag@gmail.com', '0632222222', 4, 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$QUxaJq2WEdqSwPxT.BePtuD9xI1S74agszK6CR.rN20BpZhbhleAG',
-                            'Tatjana', 'Lukic', 'tatjanal@gmail.com', '0633333333', 'PHARMACIST', 3, false, true);
-insert into my_user (password, first_name, last_name, email, telephone, user_type, address_id, is_password_changed, is_email_verified)
+                            'Tatjana', 'Lukic', 'tatjanal@gmail.com', '0633333333', 4, 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$QUxaJq2WEdqSwPxT.BePtuD9xI1S74agszK6CR.rN20BpZhbhleAG',
-                            'Lea', 'Savic', 'leas@gmail.com', '0634444444', 'PHARMACIST', 3, false, true);
+                            'Lea', 'Savic', 'leas@gmail.com', '0634444444', 4, 3, false, true);
 
 /*Pharmacy Workers*/
 insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 2, 6);
@@ -272,8 +280,8 @@ insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 
 /*Ratings*/
 insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, 'MEDICINE', 1, 1616510769000, 1);
 insert into rating (grade, graded_type, gradedId, date, patient_id) values (5, 'MEDICINE', 3, 1616586369000, 2);
-insert into rating (grade, graded_type, gradedId, date, patient_id) values (5, 'DERMATOLOGIST', 6, 1616586369000, 1);
-insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, 'DERMATOLOGIST', 7, 1616586369000, 1);
+insert into rating (grade, graded_type, gradedId, date, patient_id) values (5, 3, 6, 1616586369000, 1);
+insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, 3, 7, 1616586369000, 1);
 
 /*RankingCategory*/
 insert into ranking_category (name, points_required, discount) values ('Bronza', 50, 5.0);
@@ -321,9 +329,9 @@ insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id)
 
 /*Complaints*/
 insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
-                    values ('Nije ispostovan dogovor, trazim da bude sankcionisan.', 'Nebojsa Radovanovic', 5, 'PHARMACIST', 'RESOLVED', 1616587200000, 1);
+                    values ('Nije ispostovan dogovor, trazim da bude sankcionisan.', 'Nebojsa Radovanovic', 5, 4, 'RESOLVED', 1616587200000, 1);
 insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
-                    values ('Neprikladno ponasanje.', 'Marko Maric', 6, 'DERMATOLOGIST', 'RESOLVED', 1616587203000, 2);
+                    values ('Neprikladno ponasanje.', 'Marko Maric', 6, 3, 'RESOLVED', 1616587203000, 2);
 
 /*Complaint Response*/
 insert into complaint_response (response_text, date, complaint_id, user_id)
