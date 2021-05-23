@@ -3,8 +3,8 @@ import  {Row, Form, Button, Container, Col, Card, ButtonGroup} from "react-boots
 import AppointmentsModal from "./appointments_modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from "../../app/api";
-import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
+import { useToasts } from "react-toast-notifications";
 
 function SearchPatPage() {
   const [patients, setPatients] = useState([]);
@@ -13,13 +13,13 @@ function SearchPatPage() {
   const [patient, setPatient] = useState({});  //appointments of currently picked patient
   const [showModal, setShowModal] = useState(false);
   const [currFetchState, setCurrFetchState] = useState('Loading...');
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchPatients() {
-      const request = await api.get("http://localhost:8080/api/patients/all");
-      setPatients(request.data);
-
-      return request;
+      await api.get("http://localhost:8080/api/patients/all")
+                    .then((resp) => setPatients(resp.data))
+                    .catch(()=> setPatients([]));
     }
     fetchPatients();
   }, []);
@@ -27,8 +27,6 @@ function SearchPatPage() {
   const formSearch = event => {
     event.preventDefault();
     setCurrFetchState('Loading...');
-    console.log("fn" + fName);
-    console.log("fn" + lName);
     if (fName.length === 0 &&  lName.length === 0 ){
       api.get("http://localhost:8080/api/patients/all").then((resp)=> 
         {
@@ -36,7 +34,8 @@ function SearchPatPage() {
           if (resp.data.length === 0){
             setCurrFetchState('No result!');
           }
-        });
+        })
+        .catch(() => {setPatients([]); setCurrFetchState('No result!');});
     }else{
       api.get("http://localhost:8080/api/patients/search", { params: {firstName:fName, lastName:lName}})
           .then((resp)=> 
@@ -45,7 +44,8 @@ function SearchPatPage() {
               if (resp.data.length === 0){
                 setCurrFetchState('No result!');
               }
-            });
+            })
+          .catch(() => {setPatients([]); setCurrFetchState('No result!');});
     } 
   }
 
@@ -57,7 +57,7 @@ function SearchPatPage() {
         if (resp.data.length === 0){
           setCurrFetchState('No result!');
         }
-      }).catch((resp) => setPatients([]));
+      }).catch(() => setPatients([]));
     setFName("");
     setLName("");
   }
@@ -65,7 +65,7 @@ function SearchPatPage() {
   const onShowAppointmentsButton = function(pat_to_show){
     let id = getIdFromToken();
     if (!id){
-        alert("invalid user!")
+        addToast("Token error!", { appearance: "error" });
         setPatients([]);
         return;
     }
@@ -74,7 +74,6 @@ function SearchPatPage() {
       "worker": id, 
       "patientName": pat_to_show?.firstName + " " + pat_to_show?.lastName
     });
-    console.log(pat_to_show);
     setShowModal(true);
   }
 

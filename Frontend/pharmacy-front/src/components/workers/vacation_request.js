@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
-import  {Row, Form, Button, Container, Col, Card, Modal, ButtonGroup} from "react-bootstrap";
+import  {Row, Button,  Col, Card} from "react-bootstrap";
 import VacationModal from "./vacation_modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from "../../app/api";
 import moment from "moment";
-import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
+import { useToasts } from "react-toast-notifications";
 
 function VacationRequest() {
     const [requests, setRequests] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const { addToast } = useToasts();
 
     useEffect(() => {
         let userID = getIdFromToken();
         if (!userID){
-            alert("No user id in token! error");
+            addToast("No user id in token! error", { appearance: "error" });
             return;
         }
-        api.get("http://localhost:8080/api/vacation/getVacationsFromWorker?id=" + userID).then((resp)=> setRequests(resp.data));
+        api.get("http://localhost:8080/api/vacation/getVacationsFromWorker?id=" + userID)
+            .then((resp)=> setRequests(resp.data))
+            .catch(()=> setRequests([]));
     }, [])
 
     const onBtnClick = ()=>{
@@ -27,11 +30,12 @@ function VacationRequest() {
     const onCreateRequest = ()=>{
         let userID = getIdFromToken();
         if (!userID){
-            alert("No user id in token! error");
+            addToast("No user id in token! error", { appearance: "error" });
             return;
         }
-        console.log('summoned');
-        api.get("http://localhost:8080/api/vacation/getVacationsFromWorker?id=" + userID).then((resp)=> setRequests(resp.data));
+        api.get("http://localhost:8080/api/vacation/getVacationsFromWorker?id=" + userID)
+            .then((resp)=> setRequests(resp.data))
+            .catch(()=> setRequests([])); //todo da se stavi da se dodaje u listu, a ne novi zahtev
         setShowModal(false);
     }
 

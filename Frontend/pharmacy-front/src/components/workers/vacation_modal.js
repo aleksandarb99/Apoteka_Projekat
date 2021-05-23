@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Form, Modal, Card, Row, Col, Container, InputGroup } from 'react-bootstrap'
-import PropTypes from 'prop-types'
+import React, { useState, useEffect } from 'react';
+import { Button, Form, Modal, Row, Col, InputGroup } from 'react-bootstrap';
 import api from '../../app/api';
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import { getIdFromToken } from '../../app/jwtTokenUtils';
+import { useToasts } from "react-toast-notifications";
 
 function VacationModal(props) {
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
     const [typeVac, setTypeVac] = useState('none');
-    const [errorMessage, setErrorMessage] = useState('');
+    const { addToast } = useToasts();
 
     useEffect(() => {
         setToDate(null);
@@ -20,24 +20,24 @@ function VacationModal(props) {
 
     const onStart = () => {
         if (!fromDate){
-            setErrorMessage('Starting date is empty!');
+            addToast('Starting date is empty!', { appearance: "error" });
             return;
         }else if (!toDate){
-            setErrorMessage('Ending date is empty!');
+            addToast('Ending date is empty!', { appearance: "error" });
             return;
         }else if (typeVac === 'none'){
-            setErrorMessage('Vacation type is none!');
+            addToast('Vacation type is none!', { appearance: "error" });
             return;
         }
 
         if (fromDate.getTime() >= toDate.getTime()){
-            setErrorMessage('Invalid start/end date!');
+            addToast('Invalid start/end date!', { appearance: "error" });
             return;
         }
 
         let userID = getIdFromToken();
         if (!userID){
-            alert("No user id in token! error");
+            addToast("No user id in token! error", { appearance: "error" });
             return;
         }
         
@@ -45,7 +45,7 @@ function VacationModal(props) {
         let endDate = Math.floor(toDate.getTime());
 
         if (moment(Date.now()) > moment(startDate)){
-            setErrorMessage('Start date of vacation has to be in future!');
+            addToast('Start date of vacation has to be in future!', { appearance: "error" });
             return;
         }
 
@@ -56,7 +56,7 @@ function VacationModal(props) {
         search_params.append('type', typeVac);
 
         api.get("http://localhost:8080/api/vacation/request_vacation", 
-                { params: search_params}).then(()=>props.onCreateMethod()).catch((error) =>setErrorMessage(error.response.data));
+                { params: search_params}).then(()=>props.onCreateMethod()).catch((error) =>addToast(error.response.data, { appearance: "error" }));
     }
     
     return (
@@ -113,13 +113,6 @@ function VacationModal(props) {
                             </Form.Control>
                         </InputGroup>
                     </Row>
-
-                    
-                    {errorMessage.length > 0 &&
-                        <Row className="justify-content-center m-3">
-                            <p className="text-danger">{errorMessage}</p>
-                        </Row>
-                    }
                 </Col>
             </Modal.Body>
             <Modal.Footer>

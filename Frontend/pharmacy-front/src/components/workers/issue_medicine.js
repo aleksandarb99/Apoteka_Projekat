@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
-import  {Row, Form, Button, Container, Col, Card, Modal, ButtonGroup, InputGroup} from "react-bootstrap";
-import DatePicker from "react-datepicker";
-import AppointmentsModal from "./appointments_modal";
+import React, { useState } from "react";
+import  {Row, Form, Button, Col, Card,} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from "../../app/api";
 import moment from "moment";
-import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
 
 import "react-datepicker/dist/react-datepicker.css";
 
+import { useToasts } from "react-toast-notifications";
+
 function IssueMedicine() {
     const [reservedMedicine, setReservedMedicine] = useState(null);
     const [resID, setResID] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(null);
+    const { addToast } = useToasts();
 
     const searchRes = () => {
         let bodyFormData = new FormData();
@@ -28,9 +27,8 @@ function IssueMedicine() {
             .then(
                 (resp) => {
                     setReservedMedicine(resp.data);
-                    setErrorMessage(null);
                 })
-            .catch((resp) => { setErrorMessage(resp.response.data.message); setReservedMedicine(null); });
+            .catch((resp) => { addToast(resp.response.data.message, { appearance: "error" }); setReservedMedicine(null); });
     }
 
     const issueMed = () => {
@@ -45,11 +43,11 @@ function IssueMedicine() {
         api.post("http://localhost:8080/api/medicine-reservation/issueMedicine", bodyFormData)
             .then(
                 (resp) => {
-                    alert(resp.data);
+                    addToast(resp.data, { appearance: "success" });
                     setReservedMedicine(null);
                     setResID('');
                 })
-            .catch((resp) => { alert(resp.response.data.message); setReservedMedicine(null); });
+            .catch((resp) => { addToast(resp.response.data.message, { appearance: "error" }); setReservedMedicine(null); });
     }
     
     return (
@@ -73,7 +71,7 @@ function IssueMedicine() {
                 </div>
 
                 <Row className="justify-content-center m-3">
-                    {(reservedMedicine && !errorMessage) &&
+                    {reservedMedicine &&
                         <Col md={6}>
                             <Card fluid>
                                 <Card.Body>
@@ -85,12 +83,6 @@ function IssueMedicine() {
                                 </Card.Body>
                                 <Button onClick={() => issueMed()}>Issue medicine</Button>
                             </Card>
-                        </Col>
-                    }
-
-                    {(!reservedMedicine && errorMessage) &&
-                        <Col md={4}>
-                            <h4>{errorMessage}</h4>
                         </Col>
                     }
 

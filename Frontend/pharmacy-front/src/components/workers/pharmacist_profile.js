@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "../../styling/profile.css";
-import { Button, Form, Alert, Container, Row, Col, InputGroup } from "react-bootstrap";
-import axios from "axios";
+import { Row, Col} from "react-bootstrap";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 import BasicProfileInfo from "../profile/BasicProfileInfo";
 import api from "../../app/api";
+import { useToasts } from "react-toast-notifications";
 
 function PharmacistProfile() {
   const [workplace, setWorkplace] = useState({});
+  const { addToast } = useToasts();
 
   useEffect(() => {
       let id = getIdFromToken();
       if (!id){
-          alert("no token! erorr");
+          addToast("Token error!", { appearance: "error" });
           return;
       }
-      api.get("http://localhost:8080/api/workplace/pharmacist/get_workplace/" + id).then((resp)=>{
-          setWorkplace(resp.data);
-      }).catch(()=>setWorkplace({}));
+      api.get("http://localhost:8080/api/workplace/pharmacist/get_workplace/" + id)
+        .then((resp)=>{
+              setWorkplace(resp.data);})
+        .catch(()=>setWorkplace({}));
   }, [])
 
   return (

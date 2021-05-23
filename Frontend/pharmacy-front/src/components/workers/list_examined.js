@@ -10,6 +10,8 @@ import { getIdFromToken } from '../../app/jwtTokenUtils';
 
 import "react-datepicker/dist/react-datepicker.css";
 
+import { useToasts } from "react-toast-notifications";
+
 function SearchExaminedPatPage() {
     const [patients, setPatients] = useState([]);
     const [fName, setFName] = useState("");
@@ -29,22 +31,25 @@ function SearchExaminedPatPage() {
 
     const [currUserType, setCurrUserType] = useState('PHARMACIST');
 
+    const { addToast } = useToasts();
+
     useEffect(() => {
         async function fetchPatients() {
             let id = getIdFromToken();
             if (!id){
-                alert("invalid user!")
+                addToast("Token error!", { appearance: "error" });
                 setPatients([]);
                 return;
             }
             let user_type= getUserTypeFromToken().trim();
             if (user_type !== 'DERMATOLOGIST' && user_type !== 'PHARMACIST'){
-                alert("invalid user_type!")
+                addToast("Invalid user type!", { appearance: "error" });
                 return;
             }
             setCurrUserType(user_type);
             const request = await api.get("http://localhost:8080/api/patients/getAllExaminedPatients?workerID=" + id)
-                .then((resp)=>setPatients(resp.data)).catch(setPatients([]));
+                .then((resp)=>setPatients(resp.data))
+                .catch(setPatients([]));
             return request;
         }
         fetchPatients();
@@ -54,7 +59,7 @@ function SearchExaminedPatPage() {
         event.preventDefault();
         let id = getIdFromToken();
         if (!id){
-            alert("invalid user!")
+            addToast("Token error!", { appearance: "error" });
             setPatients([]);
             return;
         }
@@ -71,7 +76,7 @@ function SearchExaminedPatPage() {
         if (endDate){
             if (startDate){
                 if (startDate.getTime() >= endDate.getTime()){
-                    alert("Invalid date params!");
+                    addToast("Invalid date params!", { appearance: "error" });
                     return;
                 }
             }
@@ -79,10 +84,10 @@ function SearchExaminedPatPage() {
         }
 
         if (sort1 !== 'none' && (sort1 === sort2 || sort1 === sort3)){
-            alert("Invalid sort params!");
+            addToast("Invalid sort params!", { appearance: "error" });
             return;
         }else if (sort2 !== 'none' && (sort2 === sort1 || sort2 == sort3)){
-            alert("Invalid sort params!");
+            addToast("Invalid sort params!", { appearance: "error" });
             return;
         }
 
@@ -108,7 +113,7 @@ function SearchExaminedPatPage() {
     const resetSearch = function() {
         let id = getIdFromToken();
         if (!id){
-            alert("invalid user!")
+            addToast("Token error!", { appearance: "error" });
             setPatients([]);
             return;
         }
@@ -124,22 +129,6 @@ function SearchExaminedPatPage() {
         setSort3('none');
         setSortWay3('asc');
     }
-
-    // const onShowAppointmentsButton = function(pat_to_show){
-    //     let id = getIdFromToken();
-    //         if (!id){
-    //             alert("invalid user!")
-    //             setPatients([]);
-    //             return;
-    //         }
-    //     setPatient({
-    //     "patient": pat_to_show?.email,
-    //     "worker": id, 
-    //     "patientName": pat_to_show?.firstName + " " + pat_to_show?.lastName
-    //     });
-    //     setShowModal(true);
-    // }
-
 
     return (
             <Col>

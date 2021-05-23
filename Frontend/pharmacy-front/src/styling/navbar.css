@@ -12,3 +12,7 @@
   margin-left: 3rem;
   margin-right: 3rem;
 }
+
+.react-toast-notifications__container {
+  z-index: 10000 !important;
+}
