@@ -9,6 +9,8 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { useToasts } from "react-toast-notifications";
 
+import "../../styling/worker.css";
+
 function IssueMedicine() {
     const [reservedMedicine, setReservedMedicine] = useState(null);
     const [resID, setResID] = useState(null);
@@ -51,29 +53,31 @@ function IssueMedicine() {
     }
     
     return (
-            <Col>
-                <div style={{backgroundColor: '#83CEC2'}}>
-                    <Row className="justify-content-center" >
-                        <h4 style={{marginTop: '30px'}}>Issue medicine</h4>
+            <div className="my__container" style={{minHeight: "100vh"}}>
+                <div>
+                    <Row className="justify-content-center pt-5" >
+                        <h4 className="my_content_header">Issue medicine</h4>
                     </Row>
 
-                    <Row className="justify-content-center align-items-center"  >
-                        <Form onSubmit={(event)=> event.preventDefault()}>
+                    <Row className="justify-content-center align-items-center" >
+                        <Form onSubmit={(event)=> event.preventDefault()} className="search_field">
                             <Form.Group as={Row} className="justify-content-center m-3 align-items-center">
                                 
                                 <Form.Label>Search reservation:</Form.Label>
+                                
                                 <Form.Control type="text" placeholder="Reservation ID" value={resID} onChange={(event) => setResID(event.target.value)}/>
+                                <Row className="mt-3">
                                 <Button onClick={()=> searchRes() }>Search</Button>
-                                    
+                                </Row> 
                             </Form.Group>
                         </Form>
                     </Row>
                 </div>
 
-                <Row className="justify-content-center m-3">
+                <Row className="justify-content-center p-3">
                     {reservedMedicine &&
                         <Col md={6}>
-                            <Card fluid>
+                            <Card fluid className="card_appt_home">
                                 <Card.Body>
                                     <Card.Title>Reservation ID: {reservedMedicine.reservationID}</Card.Title>
                                     <Card.Text>Reservation date: {moment(reservedMedicine.reservationDate).format("DD MMM YYYY")}</Card.Text>
@@ -81,13 +85,15 @@ function IssueMedicine() {
                                     <Card.Text>Medicine name: {reservedMedicine.medicineName}</Card.Text>
                                     <Card.Text>Medicine ID: {reservedMedicine.medicineID}</Card.Text>
                                 </Card.Body>
-                                <Button onClick={() => issueMed()}>Issue medicine</Button>
+                                <Row className="justify-content-center align-items-center m-3">
+                                    <Button onClick={() => issueMed()}>Issue medicine</Button>
+                                </Row>
                             </Card>
                         </Col>
                     }
 
                 </Row>
-            </Col>
+            </div>
         
     );
 }
