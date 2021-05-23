@@ -42,6 +42,8 @@ import "./styling/navbar.css";
 
 import { ToastProvider } from "react-toast-notifications";
 
+import GuardedRoute from "./components/utilComponents/GuardedRoute";
+
 function App() {
   return (
     <ToastProvider
@@ -54,60 +56,167 @@ function App() {
           <CommonHeader />
           <Switch>
             <Route path="/" exact component={HomePage} />
-            <Route path="/profile" exact component={UserProfile} />
-            <Route path="/infoProfile" exact component={BasicProfileInfo} />
-            <Route
-              path="/reserve-consultation/pharmacies"
-              component={PharmaciesWithFreePharmacists}
+
+            {/* null znaci da moze i neregistrovani korisnik */}
+            <GuardedRoute
+              path="/registration"
+              component={Registration}
+              userType={[null]}
             />
-            <Route
-              path="/consultations-insight"
-              component={ConsultationsInsight}
+
+            <GuardedRoute
+              path="/login"
+              component={LoginPage}
+              userType={[null]}
             />
-            <Route
-              path="/subscribed-pharmacies"
-              component={SubscribedPharmacies}
+            <GuardedRoute
+              path="/pharmacy/:id"
+              component={PharmacyProfile}
+              userType={[null, "PATIENT"]}
             />
-            <Route path="/rating" component={Rating} />
-            <Route path="/reserved-medicines" component={ReservedMedicines} />
-            <Route path="/checkups-insight" component={CheckupsInsight} />
-            <Route path="/registration" component={Registration} />
-            <Route path="/login" component={LoginPage} />
-            <Route path="/pharmacy/:id" component={PharmacyProfile} />
-            <Route
+            <GuardedRoute
               path="/medicine/:id/pharmacy/:pid/price/:priceid"
               component={MedicineProfile}
+              userType={[null, "PATIENT"]}
             />
-            <Route path="/dermatologist" component={DermHomePage} />
+
+            <GuardedRoute
+              path="/profile"
+              exact
+              component={UserProfile}
+              userType={["PATIENT"]}
+            />
+
+            <GuardedRoute
+              path="/infoProfile"
+              exact
+              component={BasicProfileInfo}
+              userType={[
+                "ADMIN",
+                "PHARMACIST",
+                "DERMATOLOGIST",
+                "SUPPLIER",
+                "PHARMACY_ADMIN",
+              ]}
+            />
+
+            <GuardedRoute
+              path="/reserve-consultation/pharmacies"
+              component={PharmaciesWithFreePharmacists}
+              userType={["PATIENT"]}
+            />
+
+            <GuardedRoute
+              path="/consultations-insight"
+              component={ConsultationsInsight}
+              userType={["PATIENT"]}
+            />
+
+            <GuardedRoute
+              path="/subscribed-pharmacies"
+              component={SubscribedPharmacies}
+              userType={["PATIENT"]}
+            />
+
+            <GuardedRoute
+              path="/rating"
+              component={Rating}
+              userType={["PATIENT"]}
+            />
+
+            <GuardedRoute
+              path="/reserved-medicines"
+              component={ReservedMedicines}
+              userType={["PATIENT"]}
+            />
+
+            <GuardedRoute
+              path="/checkups-insight"
+              component={CheckupsInsight}
+              userType={["PATIENT"]}
+            />
+
+            {/* Ne treba nam ovo jer gore imamo home page koji koristi sve ove */}
+            {/* <Route path="/dermatologist" component={DermHomePage} />
             <Route path="/pharmacist" component={PharmHomePage} />
-            <Route path="/pharmacyAdmin" component={PharmacyAdminHomePage} />
-            <Route path="/admin/pharmacies" component={PharmacyCrud} />
-            <Route path="/admin/medicine" component={MedicineCrud} />
-            <Route path="/worker/search-patients" component={SearchPatPage} />
-            <Route
+            <Route path="/pharmacyAdmin" component={PharmacyAdminHomePage} /> */}
+
+            <GuardedRoute
+              path="/admin/pharmacies"
+              component={PharmacyCrud}
+              userType={["ADMIN"]}
+            />
+            <GuardedRoute
+              path="/admin/medicine"
+              component={MedicineCrud}
+              userType={["ADMIN"]}
+            />
+
+            <GuardedRoute
+              path="/worker/search-patients"
+              component={SearchPatPage}
+              userType={["DERMATOLOGIST", "PHARMACIST"]}
+            />
+            <GuardedRoute
               path="/worker/dermatologist_profile"
               component={DermatologistProfile}
+              userType={["DERMATOLOGIST"]}
             />
-            <Route
+            <GuardedRoute
               path="/worker/pharmacist_profile"
               component={PharmacistProfile}
+              userType={["PHARMACIST"]}
             />
-            <Route path="/admin/users" component={UserCrud} />
-            <Route path="/worker/examined" component={SearchExaminedPatPage} />
-            <Route path="/worker/calendar" component={WorkCalendar} />
-            <Route
+            <GuardedRoute
+              path="/admin/users"
+              component={UserCrud}
+              userType={["ADMIN"]}
+            />
+            <GuardedRoute
+              path="/worker/examined"
+              component={SearchExaminedPatPage}
+              userType={["DERMATOLOGIST", "PHARMACIST"]}
+            />
+            <GuardedRoute
+              path="/worker/calendar"
+              component={WorkCalendar}
+              userType={["DERMATOLOGIST", "PHARMACIST"]}
+            />
+            <GuardedRoute
               path="/worker/appointment_report"
               component={AppointmentReport}
+              userType={["DERMATOLOGIST", "PHARMACIST"]}
             />
-            <Route path="/worker/vacation" component={VacationRequest} />
-            <Route path="/worker/issue_medicine" component={IssueMedicine} />
-            <Route path="/user/complaints" component={ComplaintsPage} />
-            <Route
+            <GuardedRoute
+              path="/worker/vacation"
+              component={VacationRequest}
+              userType={["DERMATOLOGIST", "PHARMACIST"]}
+            />
+            <GuardedRoute
+              path="/worker/issue_medicine"
+              component={IssueMedicine}
+              userType={["DERMATOLOGIST", "PHARMACIST"]}
+            />
+            <GuardedRoute
+              path="/user/complaints"
+              component={ComplaintsPage}
+              userType={["PATIENT"]}
+            />
+            <GuardedRoute
               path="/admin/complaint-responses"
               component={ComplaintResponsesPage}
+              userType={["ADMIN"]}
             />
-            <Route path="/e-prescription" component={EPrescriptionPage} />
-            <Route path="/admin/loyalty" component={CategotyList} />
+            <GuardedRoute
+              path="/e-prescription"
+              component={EPrescriptionPage}
+              userType={["PATIENT"]}
+            />
+            <GuardedRoute
+              path="/admin/loyalty"
+              component={CategotyList}
+              userType={["ADMIN"]}
+            />
           </Switch>
         </div>
         <Footer />
