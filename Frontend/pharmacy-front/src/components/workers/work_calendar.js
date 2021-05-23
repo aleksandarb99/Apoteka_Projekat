@@ -12,6 +12,7 @@ import 'tippy.js/dist/tippy.css';
 import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
 import { useToasts } from "react-toast-notifications";
+import "../../styling/worker.css";
 
 function WorkCalendar() {
     const [eventi, setEventi] = useState([]);
@@ -93,7 +94,7 @@ function WorkCalendar() {
     }
 
     return (
-        <div>
+        <div className="my__container p-5" style={{minHeight: "100vh"}}>
             <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, resourceTimelinePlugin]}
                     headerToolbar={{
@@ -131,7 +132,7 @@ function WorkCalendar() {
                                         '<p>' + propi.patient + '<br/>' + (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>') + propi.appointmentState + '</i></p></div>'
                                     });
                                 }else{
-                                    info.event.setProp('backgroundColor', '#83CEC2');
+                                    info.event.setProp('backgroundColor', 'rgba(20, 87, 97, 0.897)');
                                     tippy(info.el, {
                                         allowHTML: true,
                                         content: '<div><p>'+  moment(info.event.start).format('DD MMM') + "-" + moment(info.event.end).format('DD MMM')   + '</p>'+
@@ -145,7 +146,7 @@ function WorkCalendar() {
                             buttonText: 'Month View',
                             duration: {months: 1},
                             slotDuration: { days: 1 },
-                            dayMaxEvents: 4,
+                            dayMaxEvents: 2,
                             eventContent: function(info){
                                 let propi = info.event.extendedProps;
                                 // return {html: moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm') 
@@ -162,7 +163,7 @@ function WorkCalendar() {
                             },
                             eventDidMount: function(info){
                                 if (info.event.extendedProps.calendarType !== 'appointment'){
-                                    info.event.setProp('backgroundColor', '#83CEC2');
+                                    info.event.setProp('backgroundColor', 'rgba(20, 87, 97, 0.897)');
                                 }
                             }
                         },
@@ -188,7 +189,7 @@ function WorkCalendar() {
                             },
                             eventDidMount: function(info){
                                 if (info.event.extendedProps.calendarType !== 'appointment'){
-                                    info.event.setProp('backgroundColor', '#83CEC2');
+                                    info.event.setProp('backgroundColor', 'rgba(20, 87, 97, 0.897)');
                                 }
                             }
                         }

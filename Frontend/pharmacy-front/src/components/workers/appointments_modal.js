@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Modal, Card, Row, Col, Container, ButtonGroup } from 'react-bootstrap';
 import axios from 'axios'
 import Moment from "react-moment";
@@ -78,9 +78,8 @@ function AppointmentsModal(props) { // id usera, id workera, bool farmaceut, nam
                 }).catch(() => addToast("You can't cancel this appointment yet!", { appearance: "error" }));
     }
 
-
     return (
-        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered onShow={showHandler}>
+        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered onShow={showHandler} onHide={()=>{props.onCloseModal(); setAppointments([]);}}>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Your upcomming appointments for {props.info.patientName}

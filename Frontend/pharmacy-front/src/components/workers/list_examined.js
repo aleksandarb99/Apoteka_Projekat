@@ -8,6 +8,8 @@ import moment from "moment";
 import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
 
+import "../../styling/worker.css";
+
 import "react-datepicker/dist/react-datepicker.css";
 
 import { useToasts } from "react-toast-notifications";
@@ -131,150 +133,148 @@ function SearchExaminedPatPage() {
     }
 
     return (
-            <Col>
+        //todo mozda hide dugme
+        <div className="my__container" style={{minHeight: "100vh"}}>
+            <Row className="pt-5 justify-content-center" >
+                <h4 className="my_content_header">Search examined patients</h4>
+            </Row>
 
-            <div style={{backgroundColor: '#83CEC2'}}>
-                <Row className="justify-content-center" >
-                    <h4 style={{marginTop: '30px'}}>Search examined patients</h4>
-                </Row>
-
-                <Row className="justify-content-center align-items-center"  >
-                    <Form onSubmit={formSearch}>
-                        <Form.Group as={Row} className="justify-content-center m-3 align-items-center">
-                            
+            <Row className="justify-content-center align-items-center" >
+                <Form onSubmit={formSearch} className="search_field">
+                    <Form.Group as={Row} className="justify-content-center mt-3 pl-3 pr-3 mb-3 align-items-center">
                         
-                                <Col>
-                                    <Form.Label>First name:</Form.Label>
-                                    <Form.Control type="text" name="firstName" value={fName} onChange={(e)=>setFName(e.target.value)}
-                                        placeholder="Enter first name..." />
-                                </Col>
-                                
-                                
-
-                                <Col>
-                                    <Form.Label>Last name:</Form.Label>
-                                    <Form.Control type="text" name="lastName" value={lName} onChange={(e)=>setLName(e.target.value)}
-                                        placeholder="Enter last name..." />
-                                </Col>
-
-                                <Col>
-                                    <Form.Label>Date from:</Form.Label>
-                                    <Form.Control
-                                        as={DatePicker} 
-                                        closeOnScroll={true}
-                                        selected={startDate} 
-                                        dateFormat="dd/MM/yyyy" 
-                                        onChange={date => setStartDate(date)}
-                                        isClearable
-                                        />
-                                </Col>
-
-                                
-                                <Col>
-                                    <Form.Label>Date to:</Form.Label>
-                                    <Form.Control 
-                                        as={DatePicker} 
-                                        closeOnScroll={true}
-                                        selected={endDate} 
-                                        dateFormat="dd/MM/yyyy" 
-                                        onChange={date => setEndDate(date)}
-                                        isClearable
-                                        />
-                                </Col>
-                            
-                        </Form.Group>
-
-                        <Form.Group as={Row} className="justify-content-center m-3">
-                            <Col>
-                            <InputGroup>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Sort by:</InputGroup.Text>
-                                </InputGroup.Prepend>
-                                <Form.Control as="select" 
-                                    value={sort1} 
-                                    onChange={(event)=> setSort1(event.target.value)}
-                                    name="sort1">
-                                    <option value="none">none</option>
-                                    <option value="firstName">first name</option>
-                                    <option value="lastName">last name</option>
-                                    <option value="startTime">date</option>
-                                </Form.Control>
-                                <Form.Control as="select" 
-                                    value={sortWay1} 
-                                    onChange={(event)=> setSortWay1(event.target.value)}
-                                    name="sortWay1"
-                                    selected='asc'>
-                                    <option value="asc">ascending</option>
-                                    <option value="desc">descending</option>
-                                </Form.Control>
-                            </InputGroup>
-                            </Col>
-
-                            <Col>
-                            <InputGroup>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>then by:</InputGroup.Text>
-                                </InputGroup.Prepend>
-                                <Form.Control as="select" 
-                                    value={sort2} 
-                                    onChange={(event)=> setSort2(event.target.value)}
-                                    name="sort1">
-                                    <option value="none">none</option>
-                                    <option value="firstName">first name</option>
-                                    <option value="lastName">last name</option>
-                                    <option value="startTime">date</option>
-                                </Form.Control>
-                                <Form.Control as="select" 
-                                    value={sortWay2} 
-                                    onChange={(event)=> setSortWay2(event.target.value)}
-                                    name="sortWay2"
-                                    selected='asc'>
-                                    <option value="asc">ascending</option>
-                                    <option value="desc">descending</option>
-                                </Form.Control>
-                            </InputGroup>
-                            </Col>
-
-                            <Col>
-                            <InputGroup>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>then by:</InputGroup.Text>
-                                </InputGroup.Prepend>
-                                <Form.Control as="select" 
-                                    value={sort3} 
-                                    onChange={(event)=> setSort3(event.target.value)}
-                                    name="sort1">
-                                    <option value="none">none</option>
-                                    <option value="firstName">first name</option>
-                                    <option value="lastName">last name</option>
-                                    <option value="startTime">date</option>
-                                </Form.Control>
-                                <Form.Control as="select" 
-                                    value={sortWay3} 
-                                    onChange={(event)=> setSortWay3(event.target.value)}
-                                    name="sortWay2"
-                                    selected='asc'>
-                                    <option value="asc">ascending</option>
-                                    <option value="desc">descending</option>
-                                </Form.Control>
-                            </InputGroup>
-                            </Col>
-                        </Form.Group>
-
-                        <Form.Group as={Row} className="justify-content-center m-3">
-                            <Col md="auto">
-                                <ButtonGroup>
-                                    <Button type="submit" variant="primary" > Search </Button>
-                                    <Button variant="primary" onClick={resetSearch}> Reset search </Button>
-                                </ButtonGroup>
-                            </Col>
-                        </Form.Group>
                     
-                    </Form>
-                </Row>
-            </div>
+                            <Col>
+                                <Form.Label>First name:</Form.Label>
+                                <Form.Control type="text" name="firstName" value={fName} onChange={(e)=>setFName(e.target.value)}
+                                    placeholder="Enter first name..." />
+                            </Col>
+                            
+                            
 
-            <Row className="justify-content-center m-3">
+                            <Col>
+                                <Form.Label>Last name:</Form.Label>
+                                <Form.Control type="text" name="lastName" value={lName} onChange={(e)=>setLName(e.target.value)}
+                                    placeholder="Enter last name..." />
+                            </Col>
+
+                            <Col>
+                                <Form.Label>Date from:</Form.Label>
+                                <Form.Control
+                                    as={DatePicker} 
+                                    closeOnScroll={true}
+                                    selected={startDate} 
+                                    dateFormat="dd/MM/yyyy" 
+                                    onChange={date => setStartDate(date)}
+                                    isClearable
+                                    />
+                            </Col>
+
+                            
+                            <Col>
+                                <Form.Label>Date to:</Form.Label>
+                                <Form.Control 
+                                    as={DatePicker} 
+                                    closeOnScroll={true}
+                                    selected={endDate} 
+                                    dateFormat="dd/MM/yyyy" 
+                                    onChange={date => setEndDate(date)}
+                                    isClearable
+                                    />
+                            </Col>
+                        
+                    </Form.Group>
+
+                    <Form.Group as={Row} className="justify-content-center mt-3 pl-3 pr-3 mb-3">
+                        <Col>
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>Sort by:</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <Form.Control as="select" 
+                                value={sort1} 
+                                onChange={(event)=> setSort1(event.target.value)}
+                                name="sort1">
+                                <option value="none">none</option>
+                                <option value="firstName">first name</option>
+                                <option value="lastName">last name</option>
+                                <option value="startTime">date</option>
+                            </Form.Control>
+                            <Form.Control as="select" 
+                                value={sortWay1} 
+                                onChange={(event)=> setSortWay1(event.target.value)}
+                                name="sortWay1"
+                                selected='asc'>
+                                <option value="asc">ascending</option>
+                                <option value="desc">descending</option>
+                            </Form.Control>
+                        </InputGroup>
+                        </Col>
+
+                        <Col>
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>then by:</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <Form.Control as="select" 
+                                value={sort2} 
+                                onChange={(event)=> setSort2(event.target.value)}
+                                name="sort1">
+                                <option value="none">none</option>
+                                <option value="firstName">first name</option>
+                                <option value="lastName">last name</option>
+                                <option value="startTime">date</option>
+                            </Form.Control>
+                            <Form.Control as="select" 
+                                value={sortWay2} 
+                                onChange={(event)=> setSortWay2(event.target.value)}
+                                name="sortWay2"
+                                selected='asc'>
+                                <option value="asc">ascending</option>
+                                <option value="desc">descending</option>
+                            </Form.Control>
+                        </InputGroup>
+                        </Col>
+
+                        <Col>
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>then by:</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <Form.Control as="select" 
+                                value={sort3} 
+                                onChange={(event)=> setSort3(event.target.value)}
+                                name="sort1">
+                                <option value="none">none</option>
+                                <option value="firstName">first name</option>
+                                <option value="lastName">last name</option>
+                                <option value="startTime">date</option>
+                            </Form.Control>
+                            <Form.Control as="select" 
+                                value={sortWay3} 
+                                onChange={(event)=> setSortWay3(event.target.value)}
+                                name="sortWay2"
+                                selected='asc'>
+                                <option value="asc">ascending</option>
+                                <option value="desc">descending</option>
+                            </Form.Control>
+                        </InputGroup>
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} className="justify-content-center mt-3 pl-3 pr-3 mb-3">
+                        <Col md="auto">
+                            <ButtonGroup>
+                                <Button type="submit" variant="primary" > Search </Button>
+                                <Button variant="primary" onClick={resetSearch}> Reset search </Button>
+                            </ButtonGroup>
+                        </Col>
+                    </Form.Group>
+                
+                </Form>
+            </Row>
+
+            <Row className="justify-content-center mt-3 ml-3 mr-3 pb-3">
             <Col md={8}>
                 {patients.length === 0 &&
                 <Row className="justify-content-center m-3 align-items-center"><h3>No result!</h3></Row>
@@ -283,12 +283,12 @@ function SearchExaminedPatPage() {
                 {patients.map((value, index) => {
                 return (<Row className="justify-content-center m-5 align-items-center" key={index}>
                     <Col>
-                    <Card fluid>
+                    <Card fluid className="card_appt_home">
                     <Card.Body>
                         <Card.Title>{value.firstName + " " + value.lastName} </Card.Title>
                         <Card.Text>{"Last appointment: " + moment(value.appointmentStart).format("DD MMM YYYY hh:mm a")} </Card.Text>
                         {currUserType === 'DERMATOLOGIST' &&
-                            <Card.Text>{value.pharmacy} </Card.Text>
+                            <Card.Text>At pharmacy: {value.pharmacy} </Card.Text>
                         }
                         {/*izmeni ovaj deo da kasnije bude da se prikazu svi sastanci*/}
                         {/* <Button variant="secondary" onClick={() => onShowAppointmentsButton(value)}> Upcomming appointments </Button> */}
@@ -300,7 +300,7 @@ function SearchExaminedPatPage() {
             </Col>
             </Row>
             <AppointmentsModal show={showModal} info={patient} onHide={() => {setShowModal(false); setPatient({})}}></AppointmentsModal>
-            </Col>
+            </div>
         
     );
 }
