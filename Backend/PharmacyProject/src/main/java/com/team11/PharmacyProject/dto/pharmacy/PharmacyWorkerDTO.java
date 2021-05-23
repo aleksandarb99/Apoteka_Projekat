@@ -17,27 +17,18 @@ public class PharmacyWorkerDTO {
 
     private String telephone;
 
-    private RoleDTO role;
+    private String roleName;
 
     public PharmacyWorkerDTO() {
     }
 
-    public PharmacyWorkerDTO(Long id, String firstName, String lastName, double avgGrade, String email, String telephone, RoleDTO role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.avgGrade = avgGrade;
-        this.email = email;
-        this.telephone = telephone;
-        this.role = role;
+
+    public String getRoleName() {
+        return roleName;
     }
 
-    public RoleDTO getUserType() {
-        return role;
-    }
-
-    public void setUserType(RoleDTO role) {
-        this.role = role;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     public double getAvgGrade() {

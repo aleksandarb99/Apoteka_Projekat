@@ -65,7 +65,7 @@ function AddUserModal(props) {
     let newForm = {
       ...form,
       address: address,
-      role: { name: props.usertype },
+      roleName: props.usertype,
     };
 
     delete newForm["city"];

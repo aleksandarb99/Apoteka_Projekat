@@ -287,7 +287,7 @@ function DisplayWorkers({ idOfPharmacy }) {
                     } `}
                   >
                     <td>{index + 1}</td>
-                    <td>{item?.worker?.role?.name}</td>
+                    <td>{item?.worker?.roleName}</td>
                     <td>{item?.worker?.firstName}</td>
                     <td>{item?.worker?.lastName}</td>
                     <td>{item?.worker?.email}</td>

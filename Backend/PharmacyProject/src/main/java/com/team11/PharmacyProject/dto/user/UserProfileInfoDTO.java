@@ -25,7 +25,7 @@ public class UserProfileInfoDTO {
     @NotNull
     private Address address;
 
-    private RoleDTO role;
+    private String roleName;
 
     private boolean isPasswordChanged;
 
@@ -77,12 +77,12 @@ public class UserProfileInfoDTO {
         this.address = address;
     }
 
-    public RoleDTO getUserType() {
-        return role;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setUserType(RoleDTO role) {
-        this.role = role;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     public boolean isPasswordChanged() {

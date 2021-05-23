@@ -67,7 +67,7 @@ function Registration() {
     let newForm = {
       ...form,
       address: address,
-      role: { name: "PATIENT" },
+      roleName: "PATIENT",
     };
 
     delete newForm["city"];

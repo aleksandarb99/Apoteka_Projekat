@@ -30,20 +30,9 @@ public class UserDTO {
     @NotNull
     private Address address;
 
-    private RoleDTO role;
+    private String roleName;
 
     public UserDTO() {
-    }
-
-    public UserDTO(Long id, @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^*_=+-]).{8,12}$") String password, @NotEmpty String firstName, @NotEmpty String lastName, @NotEmpty String email, @NotEmpty @Pattern(regexp = "(^$|[0-9]{10})") String telephone, @NotNull Address address, RoleDTO role) {
-        this.id = id;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.telephone = telephone;
-        this.address = address;
-        this.role = role;
     }
 
     public Long getId() {
@@ -102,11 +91,12 @@ public class UserDTO {
         this.address = address;
     }
 
-    public RoleDTO getUserType() {
-        return role;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setUserType(RoleDTO userType) {
-        this.role = userType;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
+
 }

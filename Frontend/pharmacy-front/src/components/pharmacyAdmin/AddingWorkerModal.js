@@ -208,7 +208,7 @@ function AddingWorkerModal(props) {
                       }`}
                     >
                       <td>{index + 1}</td>
-                      <td>{item.role.name}</td>
+                      <td>{item?.roleName}</td>
                       <td>{item.firstName}</td>
                       <td>{item.lastName}</td>
                       <td>{item.avgGrade}</td>

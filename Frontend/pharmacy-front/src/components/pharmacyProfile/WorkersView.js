@@ -78,7 +78,7 @@ function WorkersView({ pharmacyId }) {
                   </Card.Body>
                   <ListGroup className="list-group-flush">
                     <ListGroupItem className="my__flex">
-                      {worker?.worker?.role.name}
+                      {worker?.worker?.roleName}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
                       {worker &&
