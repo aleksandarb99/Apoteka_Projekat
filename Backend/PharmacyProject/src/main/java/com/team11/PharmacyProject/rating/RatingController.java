@@ -1,11 +1,11 @@
 package com.team11.PharmacyProject.rating;
 
-import com.team11.PharmacyProject.dto.medicine.MedicineCrudDTO;
 import com.team11.PharmacyProject.dto.rating.RatingCreateUpdateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +19,7 @@ public class RatingController {
     RatingService ratingService;
 
     @GetMapping(value = "/dermatologist/{dId}/patient/{pId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getDermatologistGrade(@PathVariable("dId") Long dId, @PathVariable("pId") Long pId){
         Rating grade = ratingService.getDermatologistGrade(dId, pId);
 
@@ -30,6 +31,7 @@ public class RatingController {
     }
 
     @GetMapping(value = "/pharmacist/{pId}/patient/{paId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getPharmacistGrade(@PathVariable("pId") Long pId, @PathVariable("paId") Long paId){
         Rating grade = ratingService.getPharmacistGrade(pId, paId);
 
@@ -41,6 +43,7 @@ public class RatingController {
     }
 
     @GetMapping(value = "/medicine/{mId}/patient/{paId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getMedicineGrade(@PathVariable("mId") Long mId, @PathVariable("paId") Long paId){
         Rating grade = ratingService.getMedicineGrade(mId, paId);
 
@@ -52,6 +55,7 @@ public class RatingController {
     }
 
     @GetMapping(value = "/pharmacy/{pId}/patient/{paId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getPharmacyGrade(@PathVariable("pId") Long pId, @PathVariable("paId") Long paId){
         Rating grade = ratingService.getPharmacyGrade(pId, paId);
 
@@ -63,6 +67,7 @@ public class RatingController {
     }
 
     @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> addRating(@Valid @RequestBody RatingCreateUpdateDTO dto, BindingResult result){
 
         if (result.hasErrors()) {
@@ -79,6 +84,7 @@ public class RatingController {
     }
 
     @PutMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> editRating(@Valid @RequestBody RatingCreateUpdateDTO dto, BindingResult result){
 
         if (result.hasErrors()) {

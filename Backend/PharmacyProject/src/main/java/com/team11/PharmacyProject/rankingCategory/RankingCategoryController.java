@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ public class RankingCategoryController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/points/{points}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<RankingCategory> getCategoryByPoints(@PathVariable("points") int points) {
         RankingCategory category = rankingService.getCategoryByPoints(points);
 

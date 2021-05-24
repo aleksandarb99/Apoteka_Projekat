@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.dto.pharmacy;
 
-import com.team11.PharmacyProject.enums.UserType;
+import com.team11.PharmacyProject.dto.user.RoleDTO;
+import com.team11.PharmacyProject.users.user.Role;
 
 public class PharmacyWorkerDTO {
 
@@ -16,27 +17,18 @@ public class PharmacyWorkerDTO {
 
     private String telephone;
 
-    private UserType userType;
+    private String roleName;
 
     public PharmacyWorkerDTO() {
     }
 
-    public PharmacyWorkerDTO(Long id, String firstName, String lastName, double avgGrade, String email, String telephone, UserType userType) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.avgGrade = avgGrade;
-        this.email = email;
-        this.telephone = telephone;
-        this.userType = userType;
+
+    public String getRoleName() {
+        return roleName;
     }
 
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     public double getAvgGrade() {
