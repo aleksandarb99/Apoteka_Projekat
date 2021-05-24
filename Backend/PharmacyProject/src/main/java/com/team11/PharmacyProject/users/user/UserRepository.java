@@ -16,8 +16,8 @@ public interface UserRepository extends JpaRepository<MyUser, Long> {
     List<MyUser> findAllByUserType(UserType userType);
 
     @Query("select user from MyUser user join fetch user.address where user.id = ?1")
-    Slice<MyUser> findByIdFetchAdderss(long id, Pageable pg);
+    Slice<MyUser> findByIdFetchAddress(long id, Pageable pg);
 
-    MyUser findByEmail(String username);
+    Optional<MyUser> findByEmail(String email);
     MyUser findFirstById(Long id);
 }

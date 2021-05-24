@@ -28,9 +28,10 @@ public class UserController {
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addUser(@Valid @RequestBody UserDTO userDto) {
         MyUser user = convertToEntity(userDto);
-        if (userService.insertUser(user)) {
+        try {
+            userService.insertUser(user);
             return new ResponseEntity<>("User added successfully", HttpStatus.OK);
-        } else {
+        } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
         }
     }

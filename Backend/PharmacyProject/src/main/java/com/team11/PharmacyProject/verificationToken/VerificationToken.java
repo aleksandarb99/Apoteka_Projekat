@@ -7,7 +7,9 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+@Entity
 public class VerificationToken {
+    // expiration time in minutes
     private static final int EXPIRATION = 60 * 24;
 
     @Id
@@ -23,12 +25,13 @@ public class VerificationToken {
     private Date expiryDate;
 
     public VerificationToken() {
+        expiryDate = calculateExpiryDate();
     }
 
-    private Date calculateExpiryDate(int expiryTimeInMinutes) {
+    private Date calculateExpiryDate() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Timestamp(cal.getTime().getTime()));
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+        cal.add(Calendar.MINUTE, VerificationToken.EXPIRATION);
         return new Date(cal.getTime().getTime());
     }
 

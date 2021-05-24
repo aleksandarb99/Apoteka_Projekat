@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class JWTUserDetailsService implements UserDetailsService {
 
@@ -16,11 +18,11 @@ public class JWTUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        MyUser user = userRepository.findByEmail(email);
-        if (user == null) {
+        Optional<MyUser> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         } else {
-            return new JWTUserDetails(user);
+            return new JWTUserDetails(user.get());
         }
     }
 }

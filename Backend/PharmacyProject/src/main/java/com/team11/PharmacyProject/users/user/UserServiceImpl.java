@@ -1,7 +1,9 @@
 package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
+import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.UserType;
+import com.team11.PharmacyProject.verificationToken.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,10 +21,14 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public MyUser findOne(Long id) {
-        Slice<MyUser> user = userRepository.findByIdFetchAdderss(id, PageRequest.of(0, 1));
+        Slice<MyUser> user = userRepository.findByIdFetchAddress(id, PageRequest.of(0, 1));
         if (user.hasContent()) {
             return user.getContent().get(0);
         }
@@ -44,15 +51,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean insertUser(MyUser user) {
-        if (user != null) {
-            String encoded = passwordEncoder.encode(user.getPassword());
-            user.setPassword(encoded);
-            userRepository.save(user);
-            return true;
-        } else {
-            return false;
+    public void insertUser(MyUser user) throws Exception {
+        if (user == null) {
+            throw new Exception("Oops");
         }
+        if (user.getFirstName().isBlank()) {
+            throw new Exception("First name cannot be blank");
+        }
+
+        if (user.getLastName().isBlank()) {
+            throw new Exception("Last name cannot be blank");
+        }
+
+        Optional<MyUser> userOptional = userRepository.findByEmail(user.getEmail());
+        if (userOptional.isPresent()) {
+            throw new Exception("An account with this email already exists");
+        }
+
+        String encoded = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encoded);
+
+        String token = UUID.randomUUID().toString();
+
+        userRepository.save(user);
+        verificationTokenService.createVerificationToken(user, token);
+        emailService.sendVerificationEmail(user, token);
     }
 
     @Override
