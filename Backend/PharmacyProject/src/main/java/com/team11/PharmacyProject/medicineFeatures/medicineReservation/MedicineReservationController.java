@@ -91,6 +91,7 @@ public class MedicineReservationController {
     }
 
     @PostMapping(value = "/getReservedIssue", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACIST')")
     public ResponseEntity<MedicineReservationWorkerDTO> getReservedMedicine(@RequestParam("workerID") Long workerdID, @RequestParam("resID") String resID) {
         MedicineReservation medicineReservation = service.getMedicineReservationFromPharmacy(workerdID, resID);
         if (medicineReservation == null) {
@@ -108,6 +109,7 @@ public class MedicineReservationController {
     }
 
     @PostMapping(value = "/issueMedicine", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACIST')")
     public ResponseEntity<String> issueMedicine(@RequestParam("workerID") Long workerdID, @RequestParam("resID") String resID) {
         MedicineReservationWorkerDTO dto = service.issueMedicine(workerdID, resID);
         if (dto != null){

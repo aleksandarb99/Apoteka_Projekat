@@ -119,6 +119,7 @@ public class WorkplaceController {
     }
 
     @GetMapping(value = "/dermatologist/get_workplaces/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('DERMATOLOGIST')")
     public ResponseEntity<List<WorkplaceForWorkerProfileDTO>> getWorkplacesOfDermatologist(@PathVariable("id") Long id) {
         List<Workplace> workplaceList = workplaceServiseImpl.getWorkplacesOfDermatologist(id);
         List<WorkplaceForWorkerProfileDTO> dtos = new ArrayList<>(workplaceList.size());
@@ -129,6 +130,7 @@ public class WorkplaceController {
     }
 
     @GetMapping(value = "/pharmacist/get_workplace/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACIST')")
     public ResponseEntity<WorkplaceForWorkerProfileDTO> getWorkplaceOfPharmacist(@PathVariable("id") Long id) {
         Workplace workplace = workplaceServiseImpl.getWorkplaceOfPharmacist(id);
         if (workplace == null){

@@ -10,7 +10,7 @@ import CityFormGroup from "./utilComponents/formGroups/CityFormGroup";
 import CountryFormGroup from "./utilComponents/formGroups/CountryFormGroup";
 import StreetFormGroup from "./utilComponents/formGroups/StreetFormGroup";
 
-import axios from "axios";
+import axios from "../app/api";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router";
 import ErrorModal from "./utilComponents/modals/ErrorModal";

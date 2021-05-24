@@ -1,12 +1,12 @@
-import axios from "axios";
+import axios from "../../app/api";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Row, Table } from "react-bootstrap";
 import MedicineRow from "./MedicineRow";
 import AddMedicineModal from "./AddMedicineModal";
 import EditMedicineModal from "./EditMedicineModal";
 import DeleteModal from "../utilComponents/modals/DeleteModal";
-import ErrorModal from '../utilComponents/modals/ErrorModal'
-import SuccessModal from '../utilComponents/modals/SuccessModal'
+import ErrorModal from "../utilComponents/modals/ErrorModal";
+import SuccessModal from "../utilComponents/modals/SuccessModal";
 
 function MedicineTable() {
   const [reload, setReload] = useState(false);
@@ -49,7 +49,7 @@ function MedicineTable() {
       })
       .catch(() => {
         setShowErrorModal(true);
-      })
+      });
   };
 
   return (
@@ -101,8 +101,16 @@ function MedicineTable() {
         onHide={() => setShowEditModal(false)}
         onSuccess={reloadTable}
       />
-      <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
-      <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Medicine deleted successfully."></SuccessModal>
+      <ErrorModal
+        show={showErrorModal}
+        onHide={() => setShowErrorModal(false)}
+        message="Something went wrong."
+      ></ErrorModal>
+      <SuccessModal
+        show={showSuccessModal}
+        onHide={() => setShowSuccessModal(false)}
+        message="Medicine deleted successfully."
+      ></SuccessModal>
     </Container>
   );
 }

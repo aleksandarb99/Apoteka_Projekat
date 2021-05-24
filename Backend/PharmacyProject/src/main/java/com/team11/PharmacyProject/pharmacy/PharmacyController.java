@@ -235,6 +235,7 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/getMedicineFromPharmWithoutAllergies", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<MedicineTherapyDTO>> getPharmacyMedicine
             (@RequestParam(value = "pharm_id", required = true) Long pharmID,
              @RequestParam(value = "patient_id", required = true) Long patientID) {
@@ -251,6 +252,7 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/getAlternativeFromPharmacy", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<MedicineTherapyDTO>> getPharmacyAlternativeMedicine
             (@RequestParam(value="worker_id", required = true) Long workerID,
              @RequestParam(value = "pharm_id", required = true) Long pharmID,

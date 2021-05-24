@@ -105,10 +105,6 @@ insert into order_item (amount, medicine_id) values (130, 4);
 insert into order_item (amount, medicine_id) values (110, 1);
 insert into order_item (amount, medicine_id) values (130, 5);
 
-/*WorkCalendars*/
-insert into work_calendar (id) values (1);
-insert into work_calendar (id) values (2);
-insert into work_calendar (id) values (3);
 
 /*Price Lists*/
 insert into price_list (id) values (1);
@@ -243,13 +239,13 @@ insert into my_user (password, first_name, last_name, email, telephone, role_id,
                             'Lea', 'Savic', 'leas@gmail.com', '0634444444', 4, 3, false, true);
 
 /*Pharmacy Workers*/
-insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 2, 6);
-insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.8, 1, 7);
-insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (3.3, 1, 14);
-insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (3.7, 1, 15);
-insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (4.5, 1, 16);
-insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (1.2, 1, 17);
-insert into pharmacy_worker (avg_grade, workcalendar_id, id) values (5.0, 1, 18);
+insert into pharmacy_worker (avg_grade, id) values (4.8, 6);
+insert into pharmacy_worker (avg_grade, id) values (4.8, 7);
+insert into pharmacy_worker (avg_grade, id) values (3.3, 14);
+insert into pharmacy_worker (avg_grade, id) values (3.7, 15);
+insert into pharmacy_worker (avg_grade, id) values (4.5, 16);
+insert into pharmacy_worker (avg_grade, id) values (1.2, 17);
+insert into pharmacy_worker (avg_grade, id) values (5.0, 18);
 
 /*Patients*/
 insert into patient (points, penalties, id) values (50, 2, 1);
@@ -525,9 +521,6 @@ insert into appointment (appointment_state, appointment_type, duration, start_ti
 insert into appointment (appointment_state, appointment_type, duration, start_time, end_time, info, price, patient_id, pharmacy_id, worker_id, reservation_discount)
                 values ('FINISHED', 'CONSULTATION', 2, 1617654000000, 1617654500000, 'Placanje u unapred.', 1800, 11, 1, 6, 0);
 
-/*WorkCalendar - Appointments*/
-insert into work_calendar_appointments (work_calendar_id, appointments_id) values (1, 1);
-insert into work_calendar_appointments (work_calendar_id, appointments_id) values (2, 2);
 
 /*RequestForHoliday*/
 insert into request_for_holiday (absence_type, decline_text, start_date, end_date, request_state, pharmacy_worker_id)
