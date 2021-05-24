@@ -42,18 +42,20 @@ public class SupplierController {
 
     @PostMapping(value="/stock/{id}")
     public ResponseEntity<String> addItemToStock(@PathVariable("id") long id, @RequestBody SupplierStockItemDTO stockItemDTO) {
-        if (supplierService.insertStockItem(id, stockItemDTO)) {
+        try {
+            supplierService.insertStockItem(id, stockItemDTO);
             return new ResponseEntity<>("Stock added successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error. Stock item not added", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping(value="/stock/{id}")
     public ResponseEntity<String> updateStockAmount(@PathVariable("id") long id, @RequestBody SupplierStockItemDTO stockItemDTO) {
-        if (supplierService.updateStockItem(id, stockItemDTO)) {
+        try {
+            supplierService.updateStockItem(id, stockItemDTO);
             return new ResponseEntity<>("Stock updated successfully", HttpStatus.OK);
-        } else {
+        } catch (Exception e) {
             return new ResponseEntity<>("Error. Stock item not updated", HttpStatus.BAD_REQUEST);
         }
     }

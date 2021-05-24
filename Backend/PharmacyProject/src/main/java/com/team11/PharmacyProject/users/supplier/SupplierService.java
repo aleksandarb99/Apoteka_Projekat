@@ -12,9 +12,9 @@ import java.util.Map;
 public interface SupplierService {
     List<SupplierItem> getStockForId(long id);
 
-    boolean insertStockItem(long supplierId, SupplierStockItemDTO stockItemDTO);
+    void insertStockItem(long supplierId, SupplierStockItemDTO stockItemDTO) throws Exception;
 
-    boolean updateStockItem(long id, SupplierStockItemDTO stockItemDTO);
+    void updateStockItem(long id, SupplierStockItemDTO stockItemDTO) throws Exception;
 
     List<OfferListDTO> getOffersForId(long supplierId);
 
