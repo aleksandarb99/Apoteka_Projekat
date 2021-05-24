@@ -285,9 +285,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAppointmentState(AppointmentState.RESERVED);
         appointment.setPatient(patient);
 
-        RankingCategory c = categoryService.getCategoryByPoints(patient.getPoints());   // Ako korisnik pripada nekoj kategoriji, lupi popust
+        RankingCategory c = categoryService.getCategoryByPoints(patient.getPoints());   // Ako korisnik pripada nekoj kategoriji, lupi popust i  zapamti taj popust kasnije zbog otkazivanja
         if (c != null) {
+            appointment.setReservationDiscount(c.getDiscount());
             appointment.setPriceWithDiscout(c.getDiscount());
+        }else {
+            appointment.setReservationDiscount(0);
         }
 
         patient.addAppointment(appointment);
@@ -427,6 +430,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         Patient patient = patientRepository.findByIdAndFetchAppointments(appointment.getPatient().getId());
         if(!patient.removeAppointment(appointment.getId())) throw new RuntimeException("It was not recorded that this checkup belongs to you!");
         appointment.setPatient(null);
+
+        appointment.resetOriginalPrice();
 
         appointmentRepository.save(appointment);
     }
