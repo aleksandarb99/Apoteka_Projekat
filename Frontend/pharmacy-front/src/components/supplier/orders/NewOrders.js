@@ -29,7 +29,7 @@ const NewOrders = () => {
     return (
         <div>
             {orders && orders.map((o) => {
-                return <OrderItem key={o.id} order={o} onChange={() => reloadTable()}></OrderItem>
+                return <OrderItem key={o.id} order={o} onSuccess={() => reloadTable()}></OrderItem>
             })}
             <p>{message}</p>
         </div>
