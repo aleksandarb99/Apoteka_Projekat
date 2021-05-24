@@ -39,21 +39,13 @@ function UnregistredAndPatientHomePage() {
                   Medicines
                 </Nav.Link>
               </Nav.Item>
-              {userType === "ADMIN" && (
-                <Nav.Item>
-                  <Nav.Link className="my__nav__link" eventKey="fifth">
-                    Holiday requests
-                  </Nav.Link>
-                </Nav.Item>
-              )}
             </Nav>
           </Col>
           <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
             <Tab.Content>
               <PharmaciesView />
               <MedicinesView />
-              <DisplayWorkers idOfPharmacy={-1} />
-              <DisplayHolidayRequests idOfPharmacy={-1} />
+              {userType === "PATIENT" && <DisplayWorkers idOfPharmacy={-1} />}
             </Tab.Content>
           </Col>
         </Row>

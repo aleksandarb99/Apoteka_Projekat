@@ -17,7 +17,7 @@ import {
 import { StarFill, Search, Reply } from "react-bootstrap-icons";
 import Dropdown from "react-bootstrap/Dropdown";
 
-import axios from "axios";
+import axios from "../../app/api";
 
 import "../../styling/pharmaciesAndMedicines.css";
 

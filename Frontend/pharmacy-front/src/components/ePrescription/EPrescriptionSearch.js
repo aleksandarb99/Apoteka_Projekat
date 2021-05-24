@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../app/api";
 import { data } from "jquery";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
