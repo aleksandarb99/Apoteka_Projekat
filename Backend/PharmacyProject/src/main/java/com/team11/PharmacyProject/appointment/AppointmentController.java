@@ -36,12 +36,14 @@ public class AppointmentController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/report/{id}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<Map<String, Integer>> getInfoForReport(@PathVariable("period") String period, @PathVariable("id") Long pharmacyId) {
         Map<String, Integer> data = appointmentServiceImpl.getInfoForReport(period, pharmacyId);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{idP}/{idD}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<String> addAppointment(@PathVariable("idP") Long pharmacyId, @PathVariable("idD") Long dId, @Valid @RequestBody AppointmentDTORequest dto) {
         Appointment a = convertToEntity(dto);
         try {
@@ -53,6 +55,7 @@ public class AppointmentController {
     }
 
     @GetMapping(value = "/all/bydermatologistid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<?> getAllAppointmentsByPharmacyId(@PathVariable("id") Long id, @RequestParam(name = "date") Long date) {
         List<AppointmentDTO> appointmentsDTO = null;
         try {

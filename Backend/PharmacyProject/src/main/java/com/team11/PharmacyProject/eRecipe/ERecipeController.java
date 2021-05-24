@@ -29,6 +29,7 @@ public class ERecipeController {
     EmailService emailService;
 
     @PostMapping(value = "/upload-qr/{patientId}")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> parseQRCode(@PathVariable("patientId") Long patientId, @RequestParam("file") MultipartFile file) {
 
         ERecipeDTO eRecipeDTO = eRecipeService.getERecipe(patientId, file);

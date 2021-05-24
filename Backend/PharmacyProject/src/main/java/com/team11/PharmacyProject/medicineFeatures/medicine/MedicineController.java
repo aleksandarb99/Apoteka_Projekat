@@ -42,6 +42,7 @@ public class MedicineController {
     }
 
     @GetMapping(value = "/notexistingmedicinebypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<List<MedicineDTO>> getNotExistingMedicineFromPharmacy(@PathVariable("id") long id) {
         List<MedicineDTO> medicineDTOs = medicineService.getNotExistingMedicineFromPharmacy(id).stream().map(m -> mapper.map(m, MedicineDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(medicineDTOs, HttpStatus.OK);
