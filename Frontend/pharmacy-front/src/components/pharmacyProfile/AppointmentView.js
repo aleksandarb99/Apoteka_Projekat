@@ -12,7 +12,7 @@ import {
   Form,
 } from "react-bootstrap";
 
-import axios from "../../app/api";
+import axios from "./../../app/api";
 import moment from "moment";
 import { getIdFromToken, getUserTypeFromToken } from "../../app/jwtTokenUtils";
 
@@ -109,7 +109,14 @@ function AppointmentView({ pharmacyId }) {
         setReload(!reload);
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(
+          err.response.data.message == undefined
+            ? err.response.data
+            : err.response.data.message,
+          {
+            appearance: "error",
+          }
+        );
         setReload(!reload);
       });
   };

@@ -287,12 +287,12 @@ function DisplayWorkers({ idOfPharmacy }) {
                     } `}
                   >
                     <td>{index + 1}</td>
-                    <td>{item.worker.userType}</td>
-                    <td>{item.worker.firstName}</td>
-                    <td>{item.worker.lastName}</td>
-                    <td>{item.worker.email}</td>
-                    <td>{item.worker.telephone}</td>
-                    <td>{item.worker.avgGrade}</td>
+                    <td>{item?.worker?.roleName}</td>
+                    <td>{item?.worker?.firstName}</td>
+                    <td>{item?.worker?.lastName}</td>
+                    <td>{item?.worker?.email}</td>
+                    <td>{item?.worker?.telephone}</td>
+                    <td>{item?.worker?.avgGrade}</td>
                   </tr>
                 ))}
             </tbody>

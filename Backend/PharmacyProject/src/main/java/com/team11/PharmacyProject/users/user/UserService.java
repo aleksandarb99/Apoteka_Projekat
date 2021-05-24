@@ -1,7 +1,6 @@
 package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
-import com.team11.PharmacyProject.enums.UserType;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ public interface UserService {
     MyUser updateUser(UserUpdateDTO user);
     boolean insertUser(MyUser user);
 
-    List<MyUser> getUsersByUserType(UserType type);
+    List<MyUser> getUsersByUserType(String type);
 
     boolean delete(long id);
 

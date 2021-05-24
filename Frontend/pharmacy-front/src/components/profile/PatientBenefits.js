@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "./../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 function PatientBenefits() {

@@ -78,13 +78,13 @@ function WorkersView({ pharmacyId }) {
                   </Card.Body>
                   <ListGroup className="list-group-flush">
                     <ListGroupItem className="my__flex">
-                      {worker?.worker?.userType}
+                      {worker?.worker?.roleName}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
                       {worker &&
-                        [
-                          ...Array(Math.ceil(worker?.worker?.avgGrade)),
-                        ].map(() => <StarFill className="my__star" />)}
+                        [...Array(Math.ceil(worker?.worker?.avgGrade))].map(
+                          () => <StarFill className="my__star" />
+                        )}
                     </ListGroupItem>
                   </ListGroup>
                 </Card>

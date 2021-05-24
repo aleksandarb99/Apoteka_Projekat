@@ -11,10 +11,10 @@ import java.util.Optional;
 @Repository
 public interface WorkplaceRepository extends CrudRepository<Workplace, Long> {
 
-    @Query("SELECT u FROM Workplace u WHERE u.pharmacy.id = ?1 AND (u.worker.userType = 'DERMATOLOGIST' OR u.worker.userType = 'PHARMACIST')")
+    @Query("SELECT u FROM Workplace u WHERE u.pharmacy.id = ?1 AND (u.worker.role.name = 'DERMATOLOGIST' OR u.worker.role.name = 'PHARMACIST')")
     Iterable<Workplace> getWorkplacesByPharmacyId(Long pharmacyId);
 
-    @Query("SELECT u FROM Workplace u WHERE u.worker.userType = 'DERMATOLOGIST' OR u.worker.userType = 'PHARMACIST'")
+    @Query("SELECT u FROM Workplace u WHERE u.worker.role.name = 'DERMATOLOGIST' OR u.worker.role.name = 'PHARMACIST'")
     Iterable<Workplace> getWorkplacesWhichAreWorkers();
 
     @Query("SELECT u FROM Workplace u WHERE u.pharmacy.id = ?1 AND u.worker.id= ?2")

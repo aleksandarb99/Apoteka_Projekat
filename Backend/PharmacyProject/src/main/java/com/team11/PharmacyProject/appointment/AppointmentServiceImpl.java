@@ -3,28 +3,22 @@ package com.team11.PharmacyProject.appointment;
 import com.team11.PharmacyProject.dto.appointment.AppointmentPatientInsightDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import com.team11.PharmacyProject.dto.therapyPrescription.TherapyPresriptionDTO;
-import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.enums.ReservationState;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemService;
-import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
-import com.team11.PharmacyProject.priceList.PriceList;
 import com.team11.PharmacyProject.rankingCategory.RankingCategory;
 import com.team11.PharmacyProject.rankingCategory.RankingCategoryService;
 import com.team11.PharmacyProject.therapyPrescription.TherapyPrescription;
-import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayService;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
-import com.team11.PharmacyProject.users.user.MyUser;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceRepository;
@@ -34,16 +28,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.Period;
-import java.time.ZoneId;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -752,7 +740,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         PharmacyWorker pw = worker.get();
 
         //kog je tipa - farmaceut ili derm
-        boolean isPharmacist = pw.getUserType() == UserType.PHARMACIST;
+        boolean isPharmacist = pw.getRole().getName().equals("PHARMACIST");
 
         //da li je validno vreme pocetka
         if (apptStart < Instant.now().toEpochMilli()){

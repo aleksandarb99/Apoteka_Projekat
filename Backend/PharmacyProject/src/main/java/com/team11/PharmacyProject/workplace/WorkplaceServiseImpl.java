@@ -1,26 +1,18 @@
 package com.team11.PharmacyProject.workplace;
 
-import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.appointment.AppointmentService;
 import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.enums.Weekday;
-import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
-import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerService;
 import com.team11.PharmacyProject.workDay.WorkDay;
-import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class WorkplaceServiseImpl implements WorkplaceService {
@@ -189,7 +181,7 @@ public class WorkplaceServiseImpl implements WorkplaceService {
         workplaceRepository.getWorkplacesByPharmacyId(pharmacyId).forEach(workplaces::add);
 
         for (int i = 0; i < workplaces.size(); i++) {
-            if (!workplaces.get(i).getWorker().getUserType().equals(UserType.DERMATOLOGIST)) workplaces.remove(i);
+            if (!workplaces.get(i).getWorker().getRole().getName().equals("DERMATOLOGIST")) workplaces.remove(i);
         }
 
         return workplaces;

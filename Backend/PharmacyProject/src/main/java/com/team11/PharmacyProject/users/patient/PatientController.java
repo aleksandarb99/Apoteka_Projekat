@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,6 +63,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/{id}/points", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> getPatientPoints(@PathVariable("id") Long id) {
         Patient patient = patientService.getPatient(id);
 
@@ -73,6 +75,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/{id}/penalties", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> getPenalties(@PathVariable("id") Long id) {
         Patient patient = patientService.getPatient(id);
 
@@ -147,6 +150,7 @@ public class PatientController {
     }
 
     @GetMapping(value="/allergies/all/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<List<MedicineDTO>> getAllAllergiesOfPatient(@PathVariable("id") Long id){
 
         Patient patient = patientService.findOne(id);
@@ -186,6 +190,7 @@ public class PatientController {
 
     @DeleteMapping(value = "/allergies/{id}/{allergy_id}")
     @Validated
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> deleteAllergy(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
 
         try {
@@ -197,6 +202,7 @@ public class PatientController {
     }
 
     @PostMapping(value = "/allergies/{id}/{allergy_id}")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> addAllergy(@PathVariable("id") long id, @PathVariable("allergy_id") long allergy_id) {
 
         try {
