@@ -105,19 +105,23 @@ public class SupplierController {
     public ResponseEntity<String> addOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
         // Uvek ce biti pending kada treba da se doda
         offerDTO.setOfferState(OfferState.PENDING);
-        if (supplierService.insertOffer(id, offerDTO)) {
+        try {
+            supplierService.insertOffer(id, offerDTO);
             return new ResponseEntity<>("Offer added successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error. Offer not added", HttpStatus.BAD_REQUEST);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
         }
     }
 
     @PutMapping(value="/offers/{id}")
     public ResponseEntity<String> updateOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
-        if (supplierService.updateOffer(id, offerDTO)) {
-            return new ResponseEntity<>("Offer updted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error. Offer not updated", HttpStatus.BAD_REQUEST);
+        try {
+            supplierService.updateOffer(id, offerDTO);
+            return new ResponseEntity<>("Offer updated successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -18,9 +18,9 @@ public interface SupplierService {
 
     List<OfferListDTO> getOffersForId(long supplierId);
 
-    boolean insertOffer(long id, OfferListDTO offerDTO);
+    void insertOffer(long id, OfferListDTO offerDTO) throws Exception;
 
-    boolean updateOffer(long id, OfferListDTO offerDTO);
+    void updateOffer(long id, OfferListDTO offerDTO) throws Exception;
 
     Map<String, List<Offer>> getOffersByOrderId(long orderId);
 
