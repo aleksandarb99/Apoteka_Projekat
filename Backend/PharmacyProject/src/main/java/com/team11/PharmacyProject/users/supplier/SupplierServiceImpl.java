@@ -218,10 +218,11 @@ public class SupplierServiceImpl implements SupplierService {
         // Ako je prosao, onda ne moze da se doda (150s ogranicenja)
         if (order.get().getDeadline() < (System.currentTimeMillis() + 150000))
             throw new Exception("You are past the deadline");
-        // Da li je na stanju sve
+        // Da li je na stanju sve, ako jeste smanji
         if (!onStock(suppId, order.get())) {
             throw new Exception("Medicine not in stock");
         }
+
         Offer offer = new Offer();
         offer.setOfferState(offerDTO.getOfferState());
         offer.setDeliveryDate(offerDTO.getDeliveryDate());
@@ -279,12 +280,25 @@ public class SupplierServiceImpl implements SupplierService {
         }
         List<SupplierItem> sil = s.get().getSupplierItems();
         // Da li je svaka stavka iz ordera prisutna kod suppliera
-        for (OrderItem oi: order.getOrderItem()) {
-            boolean onStock = sil.stream()
-                    .anyMatch(si -> si.getMedicine().getId().equals(oi.getMedicine().getId()) &&
-                                    si.getAmount() >= oi.getAmount());
-            if (!onStock) return false;
+        for (OrderItem oi : order.getOrderItem()) {
+            for (var suppItem : sil) {
+                if (!oi.getMedicine().getCode().equals(suppItem.getMedicine().getCode()))
+                    continue;
+                boolean onStock = suppItem.getAmount() >= oi.getAmount();
+                if (onStock) {
+                    suppItem.setAmount(suppItem.getAmount() - oi.getAmount());
+                } else {
+                    return false;
+                }
+            }
         }
+//        for (OrderItem oi: order.getOrderItem()) {
+//            boolean onStock = sil.stream()
+//                    .anyMatch(si -> si.getMedicine().getId().equals(oi.getMedicine().getId()) &&
+//                                    si.getAmount() >= oi.getAmount());
+//            if (!onStock) return false;
+//        }
+        supplierRepository.save(s.get());
         return true;
     }
 }
