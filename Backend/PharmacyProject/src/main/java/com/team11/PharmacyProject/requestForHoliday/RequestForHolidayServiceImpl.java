@@ -7,7 +7,6 @@ import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.AbsenceRequestState;
 import com.team11.PharmacyProject.enums.AbsenceType;
 import com.team11.PharmacyProject.enums.AppointmentState;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;

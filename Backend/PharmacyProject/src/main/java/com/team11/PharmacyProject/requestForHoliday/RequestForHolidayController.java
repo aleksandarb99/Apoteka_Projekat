@@ -22,6 +22,7 @@ public class RequestForHolidayController {
     RequestForHolidayServiceImpl requestForHolidayService;
 
     @GetMapping(value = "/getVacationsFromWorker", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<RequestForHolidayDTO>> getVacationsFromWorker(@RequestParam("id") Long id){
         List<RequestForHoliday> requestForHolidays = requestForHolidayService.getWorkerHolidays(id);
         List<RequestForHolidayDTO> dtos = new ArrayList<>(requestForHolidays.size());
@@ -65,6 +66,7 @@ public class RequestForHolidayController {
     }
 
     @GetMapping(value = "/getAcceptedVacationsFromWorker", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<RequestForHolidayDTO>> getAcceptedVacationsFromWorker(@RequestParam("id") Long id){
         List<RequestForHoliday> requestForHolidays = requestForHolidayService.getAcceptedWorkerHolidays(id);
         List<RequestForHolidayDTO> dtos = new ArrayList<>(requestForHolidays.size());
@@ -75,6 +77,7 @@ public class RequestForHolidayController {
     }
 
     @GetMapping(value = "/request_vacation", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<String> requestVacation(@RequestParam("id") Long id, @RequestParam("start") Long start,
                                                     @RequestParam("end") Long end, @RequestParam("type") String type){
         //todo provera za datum da ne bude u proslosti, i za ono vece manje

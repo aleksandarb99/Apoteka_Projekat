@@ -49,6 +49,7 @@ public class PharmacyWorkerController {
     RequestForHolidayService requestForHolidayService;
 
     @GetMapping(value = "/calendarAppointments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<AppointmentCalendarDTO>> getWorkerCalendar(@PathVariable("id") Long id){
         //todo dodati mozda i radno vreme u kalendar
         PharmacyWorker worker = pharmacyWorkerService.getWorkerForCalendar(id);
@@ -132,6 +133,7 @@ public class PharmacyWorkerController {
     }
 
     @PostMapping(value = "/getWorkTimeForReport", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACIST')")
     public ResponseEntity<WorktimeDTO> getWorkTimeForPharmacist(@RequestParam("workerID") Long workerID) {
         WorktimeDTO wt = pharmacyWorkerService.getWorktime(workerID);
         if (wt == null){
@@ -141,6 +143,7 @@ public class PharmacyWorkerController {
     }
 
     @PostMapping(value = "/getWorkTimeForReportDerm", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('DERMATOLOGIST')")
     public ResponseEntity<WorktimeDTO> getWorkTimeForDermatologist(@RequestParam("workerID") Long workerID,
                                                                    @RequestParam("pharmacyID") Long pharmID) {
         WorktimeDTO wt = pharmacyWorkerService.getWorktime(workerID, pharmID);

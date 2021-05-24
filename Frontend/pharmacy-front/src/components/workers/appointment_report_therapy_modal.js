@@ -41,7 +41,6 @@ const TherapyMedicineModal = (props) => {
             }
             let pharm_id = props.appt.pharmacyID;
             let pat_id = props.appt.patientID;
-            //todo ako nema lekova - pogledaj da roknes samo exitmodal
             const response = await api.get('http://localhost:8080/api/pharmacy/getMedicineFromPharmWithoutAllergies?pharm_id=' + pharm_id + '&patient_id=' + pat_id)
                                     .catch(() => { 
                                         addToast("No medicine to add to therapy!", { appearance: "error" });
