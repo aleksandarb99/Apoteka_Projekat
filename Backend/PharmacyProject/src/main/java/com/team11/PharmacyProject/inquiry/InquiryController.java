@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class InquiryController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/bypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<List<InquiryDTO>> getInquiriesByPharmacyId(@PathVariable("id") Long id) {
         List<InquiryDTO> inquiryListDTOS = inquiryService.getInquiriesByPharmacyId(id).stream().map(m -> modelMapper.map(m, InquiryDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(inquiryListDTOS, HttpStatus.OK);

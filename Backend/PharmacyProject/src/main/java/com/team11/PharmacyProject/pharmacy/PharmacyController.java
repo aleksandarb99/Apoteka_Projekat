@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,6 +40,7 @@ public class PharmacyController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/report/{id}/{period}/{duration}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<Map<String, Double>> getInfoForReport(@PathVariable("period") String period, @PathVariable("id") Long pharmacyId, @PathVariable("duration") int duration) {
         Map<String, Double> data = pharmacyService.getInfoForReport(period, pharmacyId, duration);
         return new ResponseEntity<>(data, HttpStatus.OK);
@@ -58,6 +60,7 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/getpharmacyidbyadmin/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<?> getPharmacyIdByAdminId(@PathVariable("id") Long id) {
         Pharmacy pharmacy = pharmacyService.getPharmacyIdByAdminId(id);
 
@@ -69,12 +72,14 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/subscribed/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<List<PharmacySubscribedDTO>> getSubscribedPharmaciesByPatientId(@PathVariable("id") Long id) {
         List<PharmacySubscribedDTO> pharmacyCrudDTOs = pharmacyService.getSubscribedPharmaciesByPatientId(id).stream().map(p -> modelMapper.map(p, PharmacySubscribedDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(pharmacyCrudDTOs, HttpStatus.OK);
     }
 
     @PostMapping(value="/{pharmacyId}/subscribe/{patientId}")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> subscribe(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
         boolean b = pharmacyService.subscribe(pharmacyId, patientId);
         if (b) {
@@ -85,6 +90,7 @@ public class PharmacyController {
     }
 
     @PostMapping(value="/{pharmacyId}/unsubscribe/{patientId}")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> unsubscribe(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
         boolean b = pharmacyService.unsubscribe(pharmacyId, patientId);
         if (b) {
@@ -116,6 +122,7 @@ public class PharmacyController {
     }
 
     @PostMapping(value = "/e-recipe/{pharmacyId}")
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> checkIfRecipeIsInPharmacy(@RequestBody @Valid ERecipeDTO eRecipeDTO, @PathVariable("pharmacyId") Long pharmacyId) {
        try {
            pharmacyService.checkIfRecipeIsInPharmacy(eRecipeDTO, pharmacyId);
@@ -126,6 +133,7 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date) {
 
         try {
@@ -185,6 +193,7 @@ public class PharmacyController {
     }
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<String> updatePharmacy(@PathVariable("id") long id, @Valid @RequestBody PharmacyDTO pharmacyDTO) {
         Pharmacy pharmacy = convertToEntity(pharmacyDTO);
         try {
@@ -269,6 +278,7 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/all-pharmacies/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getPharmaciesByPatientId(@PathVariable("id") Long id) {
 
         List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByPatientId(id);

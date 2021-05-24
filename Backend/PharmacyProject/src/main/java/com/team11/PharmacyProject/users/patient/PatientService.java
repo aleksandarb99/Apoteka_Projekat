@@ -3,7 +3,6 @@ package com.team11.PharmacyProject.users.patient;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.ReservationState;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
@@ -95,14 +94,14 @@ public class PatientService {
     }
 
     public List<PharmacyWorker> getMyPharmacists(long patientId) {
-        return getMyPharmacyWorkers(patientId, UserType.PHARMACIST);
+        return getMyPharmacyWorkers(patientId, "PHARMACIST");
     }
 
     public List<PharmacyWorker> getMyDermatologists(long patientId) {
-        return getMyPharmacyWorkers(patientId, UserType.DERMATOLOGIST);
+        return getMyPharmacyWorkers(patientId, "DERMATOLOGIST");
     }
 
-    private List<PharmacyWorker> getMyPharmacyWorkers(long patientId, UserType pharmacyWorkerType) {
+    private List<PharmacyWorker> getMyPharmacyWorkers(long patientId, String pharmacyWorkerType) {
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
         List<Appointment> apps = patient.getAppointments();
         return apps
@@ -110,7 +109,7 @@ public class PatientService {
                 .filter(appointment -> appointment.getEndTime() < System.currentTimeMillis()
                         && appointment.getAppointmentState() == AppointmentState.FINISHED)
                 .map(Appointment::getWorker)
-                .filter(pharmacyWorker -> pharmacyWorker.getUserType() == pharmacyWorkerType)
+                .filter(pharmacyWorker -> pharmacyWorker.getRole().getName().equals(pharmacyWorkerType))
                 .distinct()
                 .collect(Collectors.toList());
     }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,6 +35,7 @@ public class PriceListController {
     }
 
     @PostMapping(value = "/{id}/addmedicine/{medicineId}/{price}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<?> insertMedicine(@PathVariable("id") Long id, @PathVariable("medicineId") Long medicineId, @PathVariable("price") int price) {
         try {
             priceListService.insertMedicine(id, medicineId, price);
@@ -45,6 +47,7 @@ public class PriceListController {
     }
 
     @PostMapping(value = "/{id}/changeprice/{medicineId}/{price}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<?> changePrice(@PathVariable("id") Long id, @PathVariable("medicineId") Long medicineId, @PathVariable("price") int price) {
         try {
             priceListService.changePrice(id, medicineId, price);
@@ -56,6 +59,7 @@ public class PriceListController {
     }
 
     @DeleteMapping(value = "/{id}/removemedicine/{medicineId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<?> removeMedicine(@PathVariable("id") Long id, @PathVariable("medicineId") Long medicineId) {
         try {
             priceListService.removeMedicine(id, medicineId);

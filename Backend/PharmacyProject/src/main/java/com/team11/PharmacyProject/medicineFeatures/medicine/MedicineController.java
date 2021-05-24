@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
@@ -41,6 +42,7 @@ public class MedicineController {
     }
 
     @GetMapping(value = "/notexistingmedicinebypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<List<MedicineDTO>> getNotExistingMedicineFromPharmacy(@PathVariable("id") long id) {
         List<MedicineDTO> medicineDTOs = medicineService.getNotExistingMedicineFromPharmacy(id).stream().map(m -> mapper.map(m, MedicineDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(medicineDTOs, HttpStatus.OK);
@@ -112,6 +114,7 @@ public class MedicineController {
     }
 
     @GetMapping(value = "/all-medicines/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getReceivedMedicinesByPatientId(@PathVariable("id") Long id) {
 
         List<Medicine> medicines = medicineService.getReceivedMedicinesByPatientId(id);

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,6 +40,7 @@ public class MedicineReservationController {
     EmailService emailService;
 
     @GetMapping(value = "/report/{id}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<Map<String, Integer>> getInfoForReport(@PathVariable("period") String period, @PathVariable("id") Long pharmacyId) {
         Map<String, Integer> data = service.getInfoForReport(period, pharmacyId);
         return new ResponseEntity<>(data, HttpStatus.OK);
@@ -62,6 +64,7 @@ public class MedicineReservationController {
     }
 
     @GetMapping(value = "/reserved-medicines/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<List<MedicineReservationInfoDTO>> getReservedMedicinesByPatientId(@PathVariable("id") Long id) {
         List<MedicineReservation> medicines = service.getReservedMedicinesByPatientId(id);
 
@@ -75,6 +78,7 @@ public class MedicineReservationController {
     }
 
     @PutMapping(value = "/cancel-reservation/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> cancelReservation (@PathVariable(value="id") Long id)
     {
 

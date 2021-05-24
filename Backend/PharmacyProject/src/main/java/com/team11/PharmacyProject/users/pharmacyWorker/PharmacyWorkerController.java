@@ -24,6 +24,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -65,6 +66,7 @@ public class PharmacyWorkerController {
     }
 
     @GetMapping(value = "/all/free-pharmacists/pharmacy", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getPharmaciesByFreePharmacists(Pageable pageable, @RequestParam(value = "date", required = false) long date, @RequestParam(value = "id", required = false) Long id) {
 
         try {
@@ -83,6 +85,7 @@ public class PharmacyWorkerController {
     }
 
     @GetMapping(value = "/all-dermatologists/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getDermatologistsByPatientId(@PathVariable("id") Long id) {
 
         List<PharmacyWorker> workers = pharmacyWorkerService.getDermatologistsByPatientId(id);
@@ -96,6 +99,7 @@ public class PharmacyWorkerController {
     }
 
     @GetMapping(value = "/all-pharmacists/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<?> getPharmacistsByPatientId(@PathVariable("id") Long id) {
 
         List<PharmacyWorker> workers = pharmacyWorkerService.getPharmacistsByPatientId(id);
@@ -109,6 +113,7 @@ public class PharmacyWorkerController {
     }
 
     @PostMapping(value = "/notexistingworkplacebypharmacyid/{pharmacyId}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<?> getNotWorkingWorkersByPharmacyId(@PathVariable("pharmacyId") Long pharmacyId, @RequestBody RequestForWorkerDTO dto) {
         try {
             WorkplaceController.checkDto(dto);
@@ -147,6 +152,7 @@ public class PharmacyWorkerController {
 
     private PharmacyWorkerDTO convertToDto(PharmacyWorker worker) {
         return modelMapper.map(worker, PharmacyWorkerDTO.class);
+
     }
 
 

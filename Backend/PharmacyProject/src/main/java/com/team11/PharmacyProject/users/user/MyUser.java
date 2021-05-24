@@ -1,7 +1,6 @@
 package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.address.Address;
-import com.team11.PharmacyProject.enums.UserType;
 
 import javax.persistence.*;
 
@@ -28,9 +27,8 @@ public class MyUser {
    @Column(name = "telephone", unique = true, nullable = false)
    private String telephone;
 
-   @Column(name = "user_type", nullable = false)
-   @Enumerated(EnumType.STRING)
-   private UserType userType;
+   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   private Role role;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) //Prebacio sam address u lazy ispraviti, ako treba negde address pacijentu
    @JoinColumn(name = "address_id")
@@ -45,14 +43,14 @@ public class MyUser {
    public MyUser() {
    }
 
-   public MyUser(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, boolean isPasswordChanged) {
+   public MyUser(Long id, String password, String firstName, String lastName, String email, String telephone, Role role, Address address, boolean isPasswordChanged) {
       this.id = id;
       this.password = password;
       this.firstName = firstName;
       this.lastName = lastName;
       this.email = email;
+      this.role = role;
       this.telephone = telephone;
-      this.userType = userType;
       this.address = address;
       this.isPasswordChanged = isPasswordChanged;
    }
@@ -105,12 +103,12 @@ public class MyUser {
       this.telephone = telephone;
    }
 
-   public UserType getUserType() {
-      return userType;
+   public Role getRole() {
+      return role;
    }
 
-   public void setUserType(UserType userType) {
-      this.userType = userType;
+   public void setRole(Role role) {
+      this.role = role;
    }
 
    public Address getAddress() {

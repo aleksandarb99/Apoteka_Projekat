@@ -233,4 +233,17 @@ public class EmailService {
 
 
     }
+
+    public void sendVerificationEmail(MyUser user, String token) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(user.getEmail());
+        //mail.setTo("deja99@live.com");
+        mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
+        mail.setSubject("Potvrda naloga");
+        String sb = "Poštovani, kako biste izvršili potvrdu naloga, kliknite na link ispod\n\n" +
+                // todo change
+                "http://localhost:8080/verification?token=" + token;
+        mail.setText(sb);
+        javaMailSender.send(mail);
+    }
 }

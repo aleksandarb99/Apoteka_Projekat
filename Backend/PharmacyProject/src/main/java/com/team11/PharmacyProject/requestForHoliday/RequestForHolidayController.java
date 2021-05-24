@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -31,6 +32,7 @@ public class RequestForHolidayController {
     }
 
     @GetMapping(value = "/getunresolvedrequestsbypharmacyid/{pharmacyId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACY_ADMIN', 'ADMIN')")
     public ResponseEntity<List<RequestForHolidayWithWorkerDetailsDTO>> getUnresolvedRequestsByPharmacy(@PathVariable("pharmacyId") Long pharmacyId){
         List<RequestForHoliday> requestForHolidays = requestForHolidayService.getUnresolvedRequestsByPharmacy(pharmacyId);
         List<RequestForHolidayWithWorkerDetailsDTO> dtos = new ArrayList<>(requestForHolidays.size());
@@ -41,6 +43,7 @@ public class RequestForHolidayController {
     }
 
     @PostMapping(value = "/acceptrequest/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACY_ADMIN', 'ADMIN')")
     public ResponseEntity<String> acceptRequest(@PathVariable("requestId") String requestId){
         try {
             requestForHolidayService.acceptRequest(requestId);
@@ -51,6 +54,7 @@ public class RequestForHolidayController {
     }
 
     @PostMapping(value = "/rejectrequest/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACY_ADMIN', 'ADMIN')")
     public ResponseEntity<String> rejectRequest(@PathVariable("requestId") String requestId, @RequestBody String reason){
         try {
             requestForHolidayService.rejectRequest(requestId, reason);

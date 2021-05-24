@@ -1,12 +1,9 @@
 package com.team11.PharmacyProject.myOrder;
 
 import com.team11.PharmacyProject.enums.OrderState;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.orderItem.OrderItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
-import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.user.MyUser;
-import org.hibernate.criterion.Order;
 
 import javax.persistence.*;
 import java.util.List;

@@ -2,12 +2,12 @@ package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.user.*;
 import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
-import com.team11.PharmacyProject.enums.UserType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,15 +28,16 @@ public class UserController {
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addUser(@Valid @RequestBody UserDTO userDto) {
         MyUser user = convertToEntity(userDto);
-        if (userService.insertUser(user)) {
+        try {
+            userService.insertUser(user);
             return new ResponseEntity<>("User added successfully", HttpStatus.OK);
-        } else {
+        } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping(value = "/")
-    public ResponseEntity<List<UserCrudDTO>> getUsers(@RequestParam UserType type) {
+    public ResponseEntity<List<UserCrudDTO>> getUsers(@RequestParam String type) {
         List<UserCrudDTO> users = userService.getUsersByUserType(type).stream().map(this::convertToCrudDto).collect(Collectors.toList());
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
@@ -64,6 +65,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'PHARMACY_ADMIN', 'SUPPLIER', 'ADMIN', 'DERMATOLOGIST', 'PHARMACIST')")
     public ResponseEntity<?> updateUser(@Valid @RequestBody UserUpdateDTO user, BindingResult result) {
 
         if (result.hasErrors()) {

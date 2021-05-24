@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class SupplierController {
     }
 
     @GetMapping(value="/offers/byorderid/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<?> getOffersByOrderId(@PathVariable("orderId") long orderId) {
         Map<String, List<Offer>> map = supplierService.getOffersByOrderId(orderId);
 
@@ -86,6 +88,7 @@ public class SupplierController {
     }
 
     @PostMapping(value="/offers/accept/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<String> acceptOffer(@RequestBody OfferAcceptDTO dto) {
         try {
             supplierService.acceptOffer(dto.getSelectedOfferId(), dto.getOrderId());

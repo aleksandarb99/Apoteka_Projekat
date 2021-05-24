@@ -2,8 +2,8 @@ package com.team11.PharmacyProject.users.pharmacyWorker;
 
 import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.users.user.MyUser;
+import com.team11.PharmacyProject.users.user.Role;
 import com.team11.PharmacyProject.workCalendar.WorkCalendar;
 import com.team11.PharmacyProject.workplace.Workplace;
 
@@ -29,7 +29,7 @@ public class PharmacyWorker extends MyUser {
     public PharmacyWorker() {
     }
 
-    public PharmacyWorker(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, double avgGrade, WorkCalendar workCalendar, List<Appointment> appointmentList, List<Workplace> workplaces, boolean isPasswordChanged) {
+    public PharmacyWorker(Long id, String password, String firstName, String lastName, String email, String telephone, Role userType, Address address, double avgGrade, WorkCalendar workCalendar, List<Appointment> appointmentList, List<Workplace> workplaces, boolean isPasswordChanged) {
         super(id, password, firstName, lastName, email, telephone, userType, address, isPasswordChanged);
         this.avgGrade = avgGrade;
         this.workCalendar = workCalendar;

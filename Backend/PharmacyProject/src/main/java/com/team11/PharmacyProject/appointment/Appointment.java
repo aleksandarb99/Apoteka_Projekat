@@ -37,6 +37,9 @@ public class Appointment {
     @Column(name = "price", nullable = false)
     private double price;
 
+    @Column(name = "reservation_discount", nullable = false)
+    private double reservationDiscount;
+
     @Column(name = "appointment_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private AppointmentType appointmentType;
@@ -54,7 +57,7 @@ public class Appointment {
     private List<TherapyPrescription> therapyPrescriptionList;
 
     public Appointment(Long id, Long startTime, Long endTime, int duration, AppointmentState appointmentState,
-                       String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker) {
+                       String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker, double reservationDiscount) {
         this.id = id;
         this.pharmacy = null;
         this.startTime = startTime;
@@ -66,8 +69,10 @@ public class Appointment {
         this.appointmentType = appointmentType;
         this.patient = patient;
         this.worker = worker;
+        this.reservationDiscount = reservationDiscount;
     }
 
+    // TODO proveriti, mislim da ovo ne treba
     public Appointment(Long pharmacyId, Long dId, AppointmentDTORequest dto) {
         this.pharmacy = null;
         this.startTime = startTime;
@@ -180,7 +185,19 @@ public class Appointment {
         this.worker = worker;
     }
 
+    public double getReservationDiscount() {
+        return reservationDiscount;
+    }
+
+    public void setReservationDiscount(double reservationDiscount) {
+        this.reservationDiscount = reservationDiscount;
+    }
+
     public void setPriceWithDiscout(double discount) {
         this.price = this.price * (100 - discount) / 100;
+    }
+
+    public void resetOriginalPrice() {
+        this.price = this.price * 100 / (100 - reservationDiscount);
     }
 }
