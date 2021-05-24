@@ -40,7 +40,7 @@ const SupplierOffers = () => {
       </Form.Group>
       {offers &&
         offers.map((o) => {
-          return <OfferItem key={o.id} offer={o}></OfferItem>;
+          return <OfferItem key={o.id} offer={o} onSuccess={() => { reloadTable() }}></OfferItem>;
         })}
     </div>
   );

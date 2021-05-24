@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
 import api from '../../../app/api';
 import { getIdFromToken } from '../../../app/jwtTokenUtils';
+import { useToasts } from "react-toast-notifications";
 
 const AddEditOfferModal = (props) => {
-    const [totalPrice, setTotalPrice] = useState(0);
-    // TODO fix initial date
-    const [selectedDate, setSelectedDate] = useState(Date.now());
+    const [totalPrice, setTotalPrice] = useState(!props.offer ? 0 : props.offer.price);
+    const [selectedDate, setSelectedDate] = useState(!props.offer ? Date.now() : new Date(props.offer.deliveryDate).getTime());
+    const { addToast } = useToasts();
 
     const setDateTimestamp = (dateString) => {
         setSelectedDate(new Date(dateString).getTime())
@@ -31,12 +32,12 @@ const AddEditOfferModal = (props) => {
     const addOffer = (data) => {
         api.post(`http://localhost:8080/api/suppliers/offers/${getIdFromToken()}`, data)
             .then(() => {
-                alert("Uspesno dodato")
+                addToast("Successfully added", { appearance: "success" })
                 props.onSuccess()
                 props.onHide()
             })
-            .catch(() => {
-                alert("Nije proslo validaciju")
+            .catch((err) => {
+                addToast(err.response.data.message, { appearance: "error" });
             })
     }
 
@@ -44,11 +45,12 @@ const AddEditOfferModal = (props) => {
         data.id = props.offer.id;
         api.put(`http://localhost:8080/api/suppliers/offers/${getIdFromToken()}`, data)
             .then(() => {
-                alert("Uspesno azuriran")
+                addToast("Successfully updated", { appearance: "success" })
+                props.onSuccess()
                 props.onHide()
             })
-            .catch(() => {
-                alert("Nije proslo validaciju")
+            .catch((err) => {
+                addToast(err.response.data.message, { appearance: "error" });
             })
     }
 
@@ -64,8 +66,6 @@ const AddEditOfferModal = (props) => {
 
     let itemsToRender;
     if (!!props.order && !!props.order.orderItem) {
-        console.log(!!props.order.orderItem)
-        console.log(props.order.orderItem)
         itemsToRender = props.order.orderItem.map((oi) => {
             return <div key={oi.id}>
                 <p>{`${oi.medicine.code} -- ${oi.medicine.name} -- Amount: ${oi.amount}`}</p>

@@ -2,7 +2,7 @@ import StockItem from "./StockItem"
 import api from '../../../app/api'
 import { getIdFromToken } from '../../../app/jwtTokenUtils'
 import React, { useEffect, useState } from 'react'
-import { Button } from "react-bootstrap"
+import { Button, ListGroup } from "react-bootstrap"
 import AddEditStockItemModal from '../stock/AddEditStockItemModal'
 
 const SupplierStock = () => {
@@ -23,13 +23,13 @@ const SupplierStock = () => {
     }
 
     return (
-        <div>
-            {stock && stock.map((s) => {
-                return <StockItem key={s.medicineId} stockItem={s}></StockItem>
+        <ListGroup style={{ margin: '20px' }}>
+            {stock && stock.map((stockItem) => {
+                return <ListGroup.Item style={{ margin: '10px' }} key={stockItem.medicineId} > {`${stockItem.medicineName}  --  ${stockItem.amount}`}</ListGroup.Item>
             })}
             <Button onClick={() => setShowAddEditModal(true)}>Add</Button>
             <AddEditStockItemModal show={showAddEditModal} onHide={() => setShowAddEditModal(false)} onSuccess={reloadTable} />
-        </div>
+        </ListGroup >
     )
 }
 
