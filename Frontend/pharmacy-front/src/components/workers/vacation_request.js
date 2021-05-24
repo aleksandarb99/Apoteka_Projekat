@@ -42,7 +42,7 @@ function VacationRequest() {
 
     return (
         <div className="my__container" style={{minHeight: "100vh"}}>
-            <Row className="justify-content-center ml-5 mb-4 pt-5 align-items-center">
+            <Row className="justify-content-center ml-5 pb-4 pt-5 align-items-center">
                 <Col md={6}>
                     <Row className="justify-content-center ml-5 mb-2 align-items-center">
                         <h2 className="my_content_header">Requests for vacations</h2>

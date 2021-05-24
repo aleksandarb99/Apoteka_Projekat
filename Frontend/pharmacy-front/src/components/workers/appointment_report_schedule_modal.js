@@ -16,7 +16,6 @@ const ScheduleAnotherApp = (props) => {
     const [startHours, setStartHours] = useState('');
     const [startMinutes, setStartMinutes] = useState('');
     const [duration, setDuration] = useState('');
-    const [price, setPrice] = useState('');
 
     const { addToast } = useToasts();
 
@@ -36,9 +35,7 @@ const ScheduleAnotherApp = (props) => {
                     })
                 .catch(() => addToast("Couldn't get worktime!", { appearance: "error" }));
         }else{
-            console.log("trebalo bi");
             if (props.appt){
-                console.log("trebalo bi 2");
                 bodyFormData.append('pharmacyID', props.appt.pharmacyID);
                 api.post("http://localhost:8080/api/workers/getWorkTimeForReportDerm", bodyFormData)
                     .then(
@@ -81,33 +78,19 @@ const ScheduleAnotherApp = (props) => {
         }else if (isNaN(startMinutes)){
             addToast('Invalid start time!', { appearance: "error" });
             return;
-        }else if (getUserTypeFromToken().trim() === 'DERMATOLOGIST'){
-            if (isNaN(price)){
-                addToast('Invalid price!', { appearance: "error" });
-                return;
-            }
         }else if (isNaN(duration)){
             addToast('Invalid duration!', { appearance: "error" });
             return;
         }
-
-        if (getUserTypeFromToken().trim() === 'PHARMACIST'){ //stavljamo price na default 0, ako je farmaceut u pitanju
-            setPrice('0');
-        }
         let hours = parseInt(startHours);
         let minutes = parseInt(startMinutes);
         let durationI = parseInt(duration);
-        let priceF = parseFloat(price);
         if (hours < 0 || hours > 24 || minutes < 0 || minutes > 60){
             addToast('Invalid start time!', { appearance: "error" });
             return;
         }
         if (durationI < 0 || durationI > 180){
             addToast('Invalid duration!', { appearance: "error" });
-            return;
-        }
-        if (priceF < 0 || priceF > 10000){
-            addToast('Invalid price!', { appearance: "error" });
             return;
         }
         let totalMillisHourMin = hours * 60 * 60 *1000 + minutes*60*1000;
@@ -120,7 +103,6 @@ const ScheduleAnotherApp = (props) => {
         bodyFormData.append('workerID', workerID);
         bodyFormData.append('patientID', props.appt.patientID);
         bodyFormData.append('pharmacyID', props.appt.pharmacyID);
-        bodyFormData.append('price', priceF);
         bodyFormData.append('date', moment(selectedDate).valueOf() + totalMillisHourMin);
         bodyFormData.append('duration', durationI);
         api.post("http://localhost:8080/api/appointment/scheduleAppointment", bodyFormData)
@@ -227,19 +209,7 @@ const ScheduleAnotherApp = (props) => {
                             <Form.Control type="text" value={duration} onChange={(e)=>setDuration(e.target.value)}/>
                         </InputGroup>
                     </Col>
-                </Row>
-                {getUserTypeFromToken().trim() === 'DERMATOLOGIST' &&
-                    <Row className="ml-1 mt-4 mb-5">
-                        <Col md={8}>
-                            <InputGroup>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Price:</InputGroup.Text>
-                                </InputGroup.Prepend>
-                                <Form.Control type="text" value={price} onChange={(e)=>setPrice(e.target.value)}/>
-                            </InputGroup>
-                        </Col>
-                    </Row>
-                }  
+                </Row>  
 
                 <Row className="justify-content-center m-3 align-items-center">
                     <Button onClick={() => scheduleAndFinish()}>Schedule</Button>

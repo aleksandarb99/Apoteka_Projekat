@@ -718,10 +718,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             MedicineReservation medicineReservation = new MedicineReservation(pickupDate, resDate, resID, state, mi, pharmacy, price);
 
-            Patient patient = appointment.getPatient();
-            patient.getMedicineReservation().add(medicineReservation);
+            Optional<Patient> patient = Optional.ofNullable(patientRepository
+                    .findByIdAndFetchReservationsEagerly(appointment.getPatient().getId())); //fetchujemo pacijentove rezervacije
+            if(patient.isEmpty()) {
+                patient = patientRepository.findById(appointment.getPatient().getId());
+                if(patient.isEmpty()) return false;
+                patient.get().setMedicineReservation(new ArrayList<>());
+            }
+            patient.get().getMedicineReservation().add(medicineReservation);
             //todo mozda malo srediti notif ako bude vremena
-            MedicineReservationNotifyPatientDTO resDTO = new MedicineReservationNotifyPatientDTO(patient, pharmacy, medicineReservation);
+            MedicineReservationNotifyPatientDTO resDTO = new MedicineReservationNotifyPatientDTO(patient.get(), pharmacy, medicineReservation);
             try {
                 emailService.notifyPatientAboutReservation(resDTO);
             }catch (Exception e) {

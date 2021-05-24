@@ -18,7 +18,7 @@ const PharmacistHeader = () => {
         as={Link}
         style={{ color: "white" }}
         className="my__navbar__house"
-        to="/pharmacist"
+        to="/"
       >
         <House />
         Home
