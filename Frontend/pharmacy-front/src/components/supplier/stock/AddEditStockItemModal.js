@@ -3,11 +3,13 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import api from '../../../app/api';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { getIdFromToken } from '../../../app/jwtTokenUtils';
+import { useToasts } from 'react-toast-notifications';
 
 const AddEditStockItemModal = (props) => {
     const [singleSelection, setSingleSelection] = useState([]);
     const [amount, setAmount] = useState(1);
     const [options, setOptions] = useState([])
+    const { addToast } = useToasts();
 
     useEffect(() => {
         async function fetchMedicine() {
@@ -22,11 +24,16 @@ const AddEditStockItemModal = (props) => {
         e.stopPropagation();
 
         let data = {}
+        if (!singleSelection[0]) {
+            addToast("Medicine not selected", { appearance: "warning" })
+            return;
+        }
         data.medicineId = singleSelection[0].id;
         data.medicineName = singleSelection[0].name;
         data.amount = amount;
         api.post(`http://localhost:8080/api/suppliers/stock/${getIdFromToken()}`, data)
             .then(() => {
+                addToast("Medicine added successfully", { appearance: "success" })
                 props.onSuccess()
                 props.onHide()
             });

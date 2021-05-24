@@ -3,6 +3,7 @@ import { Button, Form, Modal } from 'react-bootstrap'
 import api from '../../../app/api';
 import { getIdFromToken } from '../../../app/jwtTokenUtils';
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from '../../../app/errorHandler';
 
 const AddEditOfferModal = (props) => {
     const [totalPrice, setTotalPrice] = useState(!props.offer ? 0 : props.offer.price);
@@ -32,12 +33,12 @@ const AddEditOfferModal = (props) => {
     const addOffer = (data) => {
         api.post(`http://localhost:8080/api/suppliers/offers/${getIdFromToken()}`, data)
             .then(() => {
-                addToast("Successfully added", { appearance: "success" })
                 props.onSuccess()
                 props.onHide()
+                addToast("Successfully added", { appearance: "success" })
             })
             .catch((err) => {
-                addToast(err.response.data.message, { appearance: "error" });
+                addToast(getErrorMessage(err), { appearance: "error" });
             })
     }
 
