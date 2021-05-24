@@ -52,6 +52,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
         List<Patient> patientsResult = patientService.getAllAndFetchAddress();
         List<PatientDTO> patientDTOS = new ArrayList<>();
@@ -88,6 +89,7 @@ public class PatientController {
 
 
     @GetMapping(value = "/getExaminedPatients", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<PatientWorkerSearchDTO>> getExaminedPatients(
             Pageable pageable,
             @RequestParam(value = "workerID") Long workerID,
@@ -138,6 +140,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/getAllExaminedPatients", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<PatientWorkerSearchDTO>> getAllExaminedPatients( @RequestParam(value = "workerID") Long workerID)
     {
         //TODO promeniti workerID kad se doda login i jwt
@@ -166,13 +169,11 @@ public class PatientController {
     }
 
     @GetMapping(value="/search", produces=MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<PatientWorkerSearchDTO>> searchPatientsByFirstAndLastName
             (@RequestParam(value = "firstName", required = false) String firstName,
              @RequestParam(value = "lastName", required = false) String lastName) {
         List<Patient> patientsResult;
-//        if (firstName == null && lastName == null){
-//            // TODO da vrati sve pacijente
-//        }
         if (firstName == null) {
             firstName = "";
         }

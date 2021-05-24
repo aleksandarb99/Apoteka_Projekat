@@ -144,6 +144,7 @@ public class AppointmentController {
     }
 
     @GetMapping(value = "/workers_upcoming", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<AppointmentCalendarDTO>> getUpcommingAppointments(
             @RequestParam(value="id") Long id, @RequestParam(value="page") int page, @RequestParam(value="size") int size)
     {
@@ -163,6 +164,7 @@ public class AppointmentController {
     }
 
     @PostMapping(value = "/start_appointment", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<String> startAppointment (@RequestParam(value="id") Long id)
     {
         boolean started = appointmentServiceImpl.startAppointment(id);
@@ -174,6 +176,7 @@ public class AppointmentController {
     }
 
     @PostMapping(value = "/cancel_appointment", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<String> cancelAppointment (@RequestParam(value="id") Long id)
     {
         boolean started = appointmentServiceImpl.cancelAppointment(id);
@@ -239,6 +242,7 @@ public class AppointmentController {
     }
 
     @PostMapping(value="/finalizeAppointment", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<String> finalizeAppointment (@RequestBody TherapyDTO therapyDTO)
     {
         //TODO trebace kasnije - ako je neko u medjuvremenu uzeo te lekove, javi frontu! i resetuj terapiju
@@ -249,6 +253,7 @@ public class AppointmentController {
     }
 
     @PostMapping(value = "/getApptForReport", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<AppointmentReportDTO> getAppointmentForReport (@RequestParam(value="id") Long id)
     {
         Appointment appt = appointmentServiceImpl.getAppointmentForReport(id);
@@ -261,6 +266,7 @@ public class AppointmentController {
     }
 
     @PostMapping(value = "/appointmentsOnThatDate", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<AppointmentTimeRangeDTO>> getAppointmentsOnDate(@RequestParam("workerID") Long workerID,
                                                                       @RequestParam("patientID") Long patientID,
                                                                       @RequestParam("date") Long date)
@@ -277,6 +283,7 @@ public class AppointmentController {
     }
 
     @PostMapping(value = "/scheduleAppointment", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<String> scheduleAppointment(@RequestParam("patientID") Long patientId,
                                                       @RequestParam("workerID") Long workerId,
                                                       @RequestParam("pharmacyID") Long pharmacyId,
