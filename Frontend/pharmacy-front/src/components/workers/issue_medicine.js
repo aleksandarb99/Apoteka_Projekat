@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from "react";
-import  {Row, Form, Button, Container, Col, Card, Modal, ButtonGroup, InputGroup} from "react-bootstrap";
-import DatePicker from "react-datepicker";
-import AppointmentsModal from "./appointments_modal";
+import React, { useState } from "react";
+import  {Row, Form, Button, Col, Card,} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from "../../app/api";
 import moment from "moment";
-import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
 
 import "react-datepicker/dist/react-datepicker.css";
 
+import { useToasts } from "react-toast-notifications";
+
+import "../../styling/worker.css";
+
 function IssueMedicine() {
     const [reservedMedicine, setReservedMedicine] = useState(null);
     const [resID, setResID] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(null);
+    const { addToast } = useToasts();
 
     const searchRes = () => {
         let bodyFormData = new FormData();
@@ -28,9 +29,8 @@ function IssueMedicine() {
             .then(
                 (resp) => {
                     setReservedMedicine(resp.data);
-                    setErrorMessage(null);
                 })
-            .catch((resp) => { setErrorMessage(resp.response.data.message); setReservedMedicine(null); });
+            .catch((resp) => { addToast(resp.response.data.message, { appearance: "error" }); setReservedMedicine(null); });
     }
 
     const issueMed = () => {
@@ -45,37 +45,39 @@ function IssueMedicine() {
         api.post("http://localhost:8080/api/medicine-reservation/issueMedicine", bodyFormData)
             .then(
                 (resp) => {
-                    alert(resp.data);
+                    addToast(resp.data, { appearance: "success" });
                     setReservedMedicine(null);
                     setResID('');
                 })
-            .catch((resp) => { alert(resp.response.data.message); setReservedMedicine(null); });
+            .catch((resp) => { addToast(resp.response.data.message, { appearance: "error" }); setReservedMedicine(null); });
     }
     
     return (
-            <Col>
-                <div style={{backgroundColor: '#83CEC2'}}>
-                    <Row className="justify-content-center" >
-                        <h4 style={{marginTop: '30px'}}>Issue medicine</h4>
+            <div className="my__container" style={{minHeight: "100vh"}}>
+                <div>
+                    <Row className="justify-content-center pt-5" >
+                        <h4 className="my_content_header">Issue medicine</h4>
                     </Row>
 
-                    <Row className="justify-content-center align-items-center"  >
-                        <Form onSubmit={(event)=> event.preventDefault()}>
+                    <Row className="justify-content-center align-items-center" >
+                        <Form onSubmit={(event)=> event.preventDefault()} className="search_field">
                             <Form.Group as={Row} className="justify-content-center m-3 align-items-center">
                                 
                                 <Form.Label>Search reservation:</Form.Label>
+                                
                                 <Form.Control type="text" placeholder="Reservation ID" value={resID} onChange={(event) => setResID(event.target.value)}/>
+                                <Row className="mt-3">
                                 <Button onClick={()=> searchRes() }>Search</Button>
-                                    
+                                </Row> 
                             </Form.Group>
                         </Form>
                     </Row>
                 </div>
 
-                <Row className="justify-content-center m-3">
-                    {(reservedMedicine && !errorMessage) &&
+                <Row className="justify-content-center p-3">
+                    {reservedMedicine &&
                         <Col md={6}>
-                            <Card fluid>
+                            <Card fluid className="card_appt_home">
                                 <Card.Body>
                                     <Card.Title>Reservation ID: {reservedMedicine.reservationID}</Card.Title>
                                     <Card.Text>Reservation date: {moment(reservedMedicine.reservationDate).format("DD MMM YYYY")}</Card.Text>
@@ -83,19 +85,15 @@ function IssueMedicine() {
                                     <Card.Text>Medicine name: {reservedMedicine.medicineName}</Card.Text>
                                     <Card.Text>Medicine ID: {reservedMedicine.medicineID}</Card.Text>
                                 </Card.Body>
-                                <Button onClick={() => issueMed()}>Issue medicine</Button>
+                                <Row className="justify-content-center align-items-center m-3">
+                                    <Button onClick={() => issueMed()}>Issue medicine</Button>
+                                </Row>
                             </Card>
                         </Col>
                     }
 
-                    {(!reservedMedicine && errorMessage) &&
-                        <Col md={4}>
-                            <h4>{errorMessage}</h4>
-                        </Col>
-                    }
-
                 </Row>
-            </Col>
+            </div>
         
     );
 }

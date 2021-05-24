@@ -5,6 +5,7 @@ import { getIdFromToken } from '../../app/jwtTokenUtils';
 import DatePicker from "react-datepicker";
 import moment from "moment";
 import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
+import { useToasts } from "react-toast-notifications";
 
 const ScheduleAnotherApp = (props) => {
     const [selectedDate, setSelectedDate] = useState(null);
@@ -16,6 +17,8 @@ const ScheduleAnotherApp = (props) => {
     const [startMinutes, setStartMinutes] = useState('');
     const [duration, setDuration] = useState('');
     const [price, setPrice] = useState('');
+
+    const { addToast } = useToasts();
 
     useEffect(() => {
         let bodyFormData = new FormData();
@@ -31,7 +34,7 @@ const ScheduleAnotherApp = (props) => {
                     (resp) => {
                         setWorkersWorktime(resp.data);
                     })
-                .catch(() => alert("Couldn't get worktime!"));
+                .catch(() => addToast("Couldn't get worktime!", { appearance: "error" }));
         }else{
             console.log("trebalo bi");
             if (props.appt){
@@ -42,7 +45,7 @@ const ScheduleAnotherApp = (props) => {
                         (resp) => {
                             setWorkersWorktime(resp.data);
                         })
-                    .catch(() => alert("Couldn't get worktime!"));
+                    .catch(() => addToast("Couldn't get worktime!", { appearance: "error" }));
             }
         }
     }, [props.appt])
@@ -63,28 +66,28 @@ const ScheduleAnotherApp = (props) => {
                 (resp) => {
                     setApptsOnSelectedDate(resp.data);
                 })
-            .catch(() => alert("Couldn't get appts on selected date!"));
+            .catch(() => addToast("Couldn't get appts on selected date!", { appearance: "error" }));
 
     }, [selectedDate])
 
     const scheduleAndFinish = () => {
         if (!selectedDate){
-            alert("invalid date");
+            addToast("Invalid date", { appearance: "error" });
             return;
         }
         if (isNaN(startHours)){
-            alert('Invalid start time!');
+            addToast('Invalid start time!', { appearance: "error" });
             return;
         }else if (isNaN(startMinutes)){
-            alert('Invalid start time!');
+            addToast('Invalid start time!', { appearance: "error" });
             return;
         }else if (getUserTypeFromToken().trim() === 'DERMATOLOGIST'){
             if (isNaN(price)){
-                alert('Invalid price!');
+                addToast('Invalid price!', { appearance: "error" });
                 return;
             }
         }else if (isNaN(duration)){
-            alert('Invalid duration!');
+            addToast('Invalid duration!', { appearance: "error" });
             return;
         }
 
@@ -96,15 +99,15 @@ const ScheduleAnotherApp = (props) => {
         let durationI = parseInt(duration);
         let priceF = parseFloat(price);
         if (hours < 0 || hours > 24 || minutes < 0 || minutes > 60){
-            alert('Invalid start time!');
+            addToast('Invalid start time!', { appearance: "error" });
             return;
         }
         if (durationI < 0 || durationI > 180){
-            alert('Invalid duration!');
+            addToast('Invalid duration!', { appearance: "error" });
             return;
         }
         if (priceF < 0 || priceF > 10000){
-            alert('Invalid price!');
+            addToast('Invalid price!', { appearance: "error" });
             return;
         }
         let totalMillisHourMin = hours * 60 * 60 *1000 + minutes*60*1000;
@@ -122,11 +125,11 @@ const ScheduleAnotherApp = (props) => {
         bodyFormData.append('duration', durationI);
         api.post("http://localhost:8080/api/appointment/scheduleAppointment", bodyFormData)
             .then(
-                (resp) => {
-                    alert("Appointment scheduled!");
+                () => {
+                    addToast("Appointment scheduled!", { appearance: "success" });
                     props.onSchedule();
                 })
-            .catch((resp) => {console.log(resp); alert(resp.response.data)});
+            .catch((resp) => {addToast(resp.response.data, { appearance: "error" })});
     }
 
     return (

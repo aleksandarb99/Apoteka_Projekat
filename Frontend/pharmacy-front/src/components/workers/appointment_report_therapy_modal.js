@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Form, Modal, Row, Col } from 'react-bootstrap';
 import api from '../../app/api';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { useToasts } from "react-toast-notifications";
 import { getIdFromToken } from '../../app/jwtTokenUtils';
 
 const TherapyMedicineModal = (props) => {
@@ -18,6 +19,8 @@ const TherapyMedicineModal = (props) => {
     const [alternativeError, setAlternativeError] = useState(false); //todo
 
     const [amount, setAmount] = useState('');
+
+    const { addToast } = useToasts();
 
     const reset = () => {
         setSingleSelection([]);
@@ -38,7 +41,12 @@ const TherapyMedicineModal = (props) => {
             }
             let pharm_id = props.appt.pharmacyID;
             let pat_id = props.appt.patientID;
-            const response = await api.get('http://localhost:8080/api/pharmacy/getMedicineFromPharmWithoutAllergies?pharm_id=' + pharm_id + '&patient_id=' + pat_id);
+            //todo ako nema lekova - pogledaj da roknes samo exitmodal
+            const response = await api.get('http://localhost:8080/api/pharmacy/getMedicineFromPharmWithoutAllergies?pharm_id=' + pharm_id + '&patient_id=' + pat_id)
+                                    .catch(() => { 
+                                        addToast("No medicine to add to therapy!", { appearance: "error" });
+                                        exitModal();
+                                    });
             setPrimaryOptions(response.data);
         }
         fetchMedicine();
@@ -77,21 +85,21 @@ const TherapyMedicineModal = (props) => {
             return;
         }
         if (!selectedMedicine){
-            alert('No medicine is selected!');
+            addToast('No medicine is selected!', { appearance: "error" });
             return;
         }
         if (!amount){
-            alert('Therapy length not defined!');
+            addToast('Therapy length not defined!', { appearance: "error" });
             return;
         }
         if (isNaN(amount)){
-            alert('Invalid therapy duration!');
+            addToast('Invalid therapy duration!', { appearance: "error" });
             return;
         }
         let th = '' + amount;
         let therapyLen = parseInt(th);
         if (therapyLen <= 0){
-            alert('Invalid therapy duration!');
+            addToast('Invalid therapy duration!', { appearance: "error" });
             return;
         }
         selectedMedicine.duration = therapyLen;

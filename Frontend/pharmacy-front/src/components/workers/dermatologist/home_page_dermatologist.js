@@ -7,6 +7,7 @@ import { getUserTypeFromToken } from '../../../app/jwtTokenUtils'
 import { getIdFromToken } from '../../../app/jwtTokenUtils'
 import SetPasswordModal from "../../utilComponents/modals/SetPasswordModal";
 import "../../../styling/worker.css";
+import { useToasts } from "react-toast-notifications";
 
 import { Card } from "react-bootstrap";
 import moment from "moment";
@@ -22,11 +23,13 @@ function DermHomePage() {
 
   const [loadingAppts, setLoadingAppts] = useState(true);
 
+  const { addToast } = useToasts();
+
   useEffect(() => {
     async function fetchAppointments() {
       let id = getIdFromToken();
       if (!id){
-        alert("invalid user!")
+        addToast("Invalid user!", { appearance: "error" });
         setAppointments([]);
         return;
       }
@@ -57,7 +60,7 @@ function DermHomePage() {
       !(moment(Date.now()) > moment(appointment.start).subtract(15, "minutes"))
     ) {
       // nikako ga ne mozemo zapoceti vise od 15 minuta ranije
-      alert("You can't initiate this appointment yet!");
+      addToast("You can't initiate appointment until at least 15 minutes before!", { appearance: "error" });
       return;
     }
     setStartAppt(appointment);
@@ -68,7 +71,7 @@ function DermHomePage() {
     setShowModal(false);
     let id_derm = getIdFromToken();
     if (!id_derm){
-      alert("invalid user!");
+      addToast("Invalid user!", { appearance: "error" });
       return;
     }
     api

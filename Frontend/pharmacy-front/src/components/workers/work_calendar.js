@@ -1,6 +1,4 @@
 import React, {useState, useEffect} from "react";
-import {Row, Container} from "react-bootstrap";
-
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -13,6 +11,8 @@ import tippy from "tippy.js";
 import 'tippy.js/dist/tippy.css';
 import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
+import { useToasts } from "react-toast-notifications";
+import "../../styling/worker.css";
 
 function WorkCalendar() {
     const [eventi, setEventi] = useState([]);
@@ -20,31 +20,32 @@ function WorkCalendar() {
     const [startAppt, setStartAppt] = useState({});
     const [currUser, setCurrUser] = useState({});
 
+    const { addToast } = useToasts();
+
     useEffect(() => {
         async function fetchAppointments() {
             let user_id = getIdFromToken();
             let user_type= getUserTypeFromToken().trim();
             console.log(user_type);
             if (!user_id){
-                alert("invalid user!")
+                addToast("No user id in token! error", { appearance: "error" });
                 setEventi([]);
                 return;
             }else if (user_type !== 'DERMATOLOGIST' && user_type !== 'PHARMACIST'){
-                alert("invalid user_type!")
+                addToast("Invalid user type", { appearance: "error" });
                 setEventi([]);
                 return;
             }
             setCurrUser({id: user_id, type: user_type})
-            const request = await api.get("http://localhost:8080/api/workers/calendarAppointments/" + user_id)
-                                        .then((resp) => {
-                                            let appts = resp.data;
-                                            api.get("http://localhost:8080/api/vacation/getAcceptedVacationsFromWorker?id=" + user_id)
-                                                .then((resp) => {
-                                                    let reqVac = resp.data
-                                                    setEventi(appts.concat(reqVac));
-                                                }).catch(()=> setEventi(appts));
-                                        }).catch(()=> setEventi([]));
-            console.log(eventi)
+            await api.get("http://localhost:8080/api/workers/calendarAppointments/" + user_id)
+                        .then((resp) => {
+                            let appts = resp.data;
+                            api.get("http://localhost:8080/api/vacation/getAcceptedVacationsFromWorker?id=" + user_id)
+                                .then((resp) => {
+                                    let reqVac = resp.data
+                                    setEventi(appts.concat(reqVac));
+                                }).catch(()=> { setEventi(appts); addToast("Error while getting vacations from server!", { appearance: "error" });});
+                        }).catch(()=> {setEventi([]); addToast("Error while getting events!", { appearance: "error" });});
         }
         fetchAppointments();
       }, []);
@@ -60,7 +61,7 @@ function WorkCalendar() {
 
         if (!(moment(Date.now()) > moment(info.event.extendedProps.start).subtract(15, 'minutes'))){
             // nikako ga ne mozemo zapoceti vise od 15 minuta ranije
-            alert("You can't initiate this appointment yet!");
+            addToast("You can't initiate this appointment yet!", { appearance: "error" });
             return;
         }
         let appt = {} //uga buga zbog id-a
@@ -76,11 +77,11 @@ function WorkCalendar() {
         setShowModal(false);
         let id = getIdFromToken();
         if (!id){
-            alert("invalid user!")
+            addToast("Invalid user!", { appearance: "error" });
             setEventi([]);
             return;
         }
-        //api.get("http://localhost:8080/api/workers/calendarAppointments/" + id).then((resp) => setEventi(resp.data)); 
+        //todo ovde probaj samo da promenis atribut bez opet gettovanja
         api.get("http://localhost:8080/api/workers/calendarAppointments/" + id)
             .then((resp) => {
                 let appts = resp.data;
@@ -93,7 +94,7 @@ function WorkCalendar() {
     }
 
     return (
-        <div>
+        <div className="my__container p-5" style={{minHeight: "100vh"}}>
             <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, resourceTimelinePlugin]}
                     headerToolbar={{
@@ -131,7 +132,7 @@ function WorkCalendar() {
                                         '<p>' + propi.patient + '<br/>' + (currUser.type==="DERMATOLOGIST" ? propi.pharmacy + '<br/><i>' : '<i>') + propi.appointmentState + '</i></p></div>'
                                     });
                                 }else{
-                                    info.event.setProp('backgroundColor', '#83CEC2');
+                                    info.event.setProp('backgroundColor', 'rgba(20, 87, 97, 0.897)');
                                     tippy(info.el, {
                                         allowHTML: true,
                                         content: '<div><p>'+  moment(info.event.start).format('DD MMM') + "-" + moment(info.event.end).format('DD MMM')   + '</p>'+
@@ -145,7 +146,7 @@ function WorkCalendar() {
                             buttonText: 'Month View',
                             duration: {months: 1},
                             slotDuration: { days: 1 },
-                            dayMaxEvents: 4,
+                            dayMaxEvents: 2,
                             eventContent: function(info){
                                 let propi = info.event.extendedProps;
                                 // return {html: moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm') 
@@ -162,7 +163,7 @@ function WorkCalendar() {
                             },
                             eventDidMount: function(info){
                                 if (info.event.extendedProps.calendarType !== 'appointment'){
-                                    info.event.setProp('backgroundColor', '#83CEC2');
+                                    info.event.setProp('backgroundColor', 'rgba(20, 87, 97, 0.897)');
                                 }
                             }
                         },
@@ -188,7 +189,7 @@ function WorkCalendar() {
                             },
                             eventDidMount: function(info){
                                 if (info.event.extendedProps.calendarType !== 'appointment'){
-                                    info.event.setProp('backgroundColor', '#83CEC2');
+                                    info.event.setProp('backgroundColor', 'rgba(20, 87, 97, 0.897)');
                                 }
                             }
                         }
