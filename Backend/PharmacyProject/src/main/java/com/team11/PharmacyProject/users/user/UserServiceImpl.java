@@ -2,7 +2,6 @@ package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
 import com.team11.PharmacyProject.email.EmailService;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.verificationToken.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
