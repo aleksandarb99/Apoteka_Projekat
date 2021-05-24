@@ -7,6 +7,7 @@ import api from '../../app/api';
 import { useLocation, useHistory } from 'react-router-dom';
 import moment from "moment";
 import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
+import { useToasts } from "react-toast-notifications";
 
 function AppointmentReport() {
     const [selectedMedicine, setSelectedMedicine] = useState([]);
@@ -19,6 +20,8 @@ function AppointmentReport() {
 
     const location = useLocation();
     const history = useHistory();
+
+    const { addToast } = useToasts();
 
     useEffect(() => {
         if (getUserTypeFromToken().trim() === 'DERMATOLOGIST'){
@@ -37,13 +40,13 @@ function AppointmentReport() {
                 (resp) => {
                     setCurrAppt(resp.data);
                 })
-            .catch(() => alert("Couldn't get ids!"));
+            .catch(() => addToast("Couldn't get ids!", { appearance: "error" })); //todo sta koji djavo ovo znaci
     }, [])
 
     const onAdd = (medItem) => {
         for (let i = 0; i < selectedMedicine.length; i++){
             if (selectedMedicine[i].medicineID === medItem.medicineID){
-                alert('That medicine is already added to therapy!');
+                addToast('That medicine is already added to therapy!', { appearance: "error" });
                 return;
             }
         }
@@ -58,8 +61,8 @@ function AppointmentReport() {
     const finishAppt = () => {
         let appointment_id = currAppt.id; 
         api.post('http://localhost:8080/api/appointment/finalizeAppointment', { apptId: appointment_id, medicineList: selectedMedicine, info: apptInfo})
-            .then(()=> { alert("Appointment finished!"); setShowScheduleAnother(false); history.push('/'); })  
-            .catch(() => alert("Couldn't add therapy, no appointment with sent id!")); 
+            .then(()=> { addToast("Appointment finished!", { appearance: "success" }); setShowScheduleAnother(false); history.push('/'); })  
+            .catch(() => addToast("Couldn't add therapy, no appointment with sent id!", { appearance: "error" }) ); 
     }
   
     return (
@@ -106,7 +109,7 @@ function AppointmentReport() {
             <Col md={8}>
                 <Row className="justify-content-center align-items-center">
                     <div style={{color: 'white'}}>Therapy medicine</div>
-                    <Button size="sm" onClick={(event) => { setShowModal(true); setShowClicked(!showClicked); }}>Add new</Button>
+                    <Button size="sm" onClick={() => { setShowModal(true); setShowClicked(!showClicked); }}>Add new</Button>
                 </Row>
                 {(selectedMedicine ? selectedMedicine : []).map((value, index) => {
                     return (

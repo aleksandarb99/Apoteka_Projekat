@@ -3,8 +3,9 @@ import  {Row, Form, Button, Container, Col, Card, ButtonGroup} from "react-boots
 import AppointmentsModal from "./appointments_modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from "../../app/api";
-import { getUserTypeFromToken } from '../../app/jwtTokenUtils';
 import { getIdFromToken } from '../../app/jwtTokenUtils';
+import { useToasts } from "react-toast-notifications";
+import "../../styling/worker.css";
 
 function SearchPatPage() {
   const [patients, setPatients] = useState([]);
@@ -13,13 +14,13 @@ function SearchPatPage() {
   const [patient, setPatient] = useState({});  //appointments of currently picked patient
   const [showModal, setShowModal] = useState(false);
   const [currFetchState, setCurrFetchState] = useState('Loading...');
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchPatients() {
-      const request = await api.get("http://localhost:8080/api/patients/all");
-      setPatients(request.data);
-
-      return request;
+      await api.get("http://localhost:8080/api/patients/all")
+                    .then((resp) => setPatients(resp.data))
+                    .catch(()=> setPatients([]));
     }
     fetchPatients();
   }, []);
@@ -27,8 +28,6 @@ function SearchPatPage() {
   const formSearch = event => {
     event.preventDefault();
     setCurrFetchState('Loading...');
-    console.log("fn" + fName);
-    console.log("fn" + lName);
     if (fName.length === 0 &&  lName.length === 0 ){
       api.get("http://localhost:8080/api/patients/all").then((resp)=> 
         {
@@ -36,7 +35,8 @@ function SearchPatPage() {
           if (resp.data.length === 0){
             setCurrFetchState('No result!');
           }
-        });
+        })
+        .catch(() => {setPatients([]); setCurrFetchState('No result!');});
     }else{
       api.get("http://localhost:8080/api/patients/search", { params: {firstName:fName, lastName:lName}})
           .then((resp)=> 
@@ -45,7 +45,8 @@ function SearchPatPage() {
               if (resp.data.length === 0){
                 setCurrFetchState('No result!');
               }
-            });
+            })
+          .catch(() => {setPatients([]); setCurrFetchState('No result!');});
     } 
   }
 
@@ -57,7 +58,7 @@ function SearchPatPage() {
         if (resp.data.length === 0){
           setCurrFetchState('No result!');
         }
-      }).catch((resp) => setPatients([]));
+      }).catch(() => setPatients([]));
     setFName("");
     setLName("");
   }
@@ -65,7 +66,7 @@ function SearchPatPage() {
   const onShowAppointmentsButton = function(pat_to_show){
     let id = getIdFromToken();
     if (!id){
-        alert("invalid user!")
+        addToast("Token error!", { appearance: "error" });
         setPatients([]);
         return;
     }
@@ -74,20 +75,24 @@ function SearchPatPage() {
       "worker": id, 
       "patientName": pat_to_show?.firstName + " " + pat_to_show?.lastName
     });
-    console.log(pat_to_show);
     setShowModal(true);
+  }
+
+  const closeModal = () => {
+    setShowModal(false); 
+    setPatient({});
   }
 
   return (
     
-      <Container>
-        <Row className="justify-content-center m-3">
-          <h4>Search patients</h4>
+      <div className="my__container" style={{minHeight: "100vh"}}>
+        <Row className="justify-content-center pt-5 pb-3 pl-3 pr-3 align-items-center">
+          <h4 className="my_content_header">Search for registered patients</h4>
         </Row>
 
         <Row className="justify-content-center m-3">
           <Form onSubmit={formSearch}>
-              <Form.Group as={Row} className="align-items-center">
+              <Form.Group as={Row} className="align-items-center search_field">
                   <Form.Label> First name: </Form.Label>
                   <Col>
                   <Form.Control type="text" name="firstName" value={fName} onChange={(e)=>setFName(e.target.value)}
@@ -110,8 +115,8 @@ function SearchPatPage() {
               
             </Form>
         </Row>
-        <Row className="justify-content-center m-3">
-          <Col md={8}>
+        <Row className="justify-content-center mt-3 ml-3 mr-3 pb-3">
+          <Col md={6}>
             {patients.length === 0 &&
               <Row className="justify-content-center m-3 align-items-center"><h3>{currFetchState}</h3></Row>
             }
@@ -120,10 +125,14 @@ function SearchPatPage() {
               console.log(value);
               return (<Row className="justify-content-center m-5 align-items-center" key={index}>
                 <Col>
-                <Card fluid>
+                <Card fluid className="card_appt_home">
                   <Card.Body>
                     <Card.Title>{value.firstName + " " + value.lastName} </Card.Title>
-                    <Button variant="secondary" onClick={() => onShowAppointmentsButton(value)}> Upcomming appointments with {value.firstName + ' ' + value.lastName}</Button>
+                    <Card.Footer className="justify-content-right">
+                      <Row className="justify-content-center align-items-center">
+                        <Button variant="secondary" onClick={() => onShowAppointmentsButton(value)}>Upcomming appointments with {value.firstName + ' ' + value.lastName}</Button>
+                      </Row>
+                    </Card.Footer>
                   </Card.Body>
                 </Card>
                 </Col>
@@ -131,9 +140,9 @@ function SearchPatPage() {
             })}
           </Col>
          </Row>
-         <AppointmentsModal show={showModal} info={patient} onHide={() => {setShowModal(false); setPatient({})}}></AppointmentsModal>
+         <AppointmentsModal show={showModal} info={patient} onCloseModal={closeModal}></AppointmentsModal>
          
-      </Container>
+      </div>
     
   );
 }
