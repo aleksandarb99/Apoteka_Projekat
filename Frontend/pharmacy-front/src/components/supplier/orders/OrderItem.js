@@ -3,7 +3,7 @@ import { Button, Col, Container, FormGroup, FormLabel, Row } from 'react-bootstr
 import AddEditOfferModal from '../offers/AddEditOfferModal'
 import OrderMedicineList from './OrderMedicineList';
 
-const OrderItem = ({ order, onChange }) => {
+const OrderItem = ({ order, onSuccess }) => {
     const [showAddOfferModal, setShowAddOfferModal] = useState(false);
 
     return (
@@ -34,7 +34,7 @@ const OrderItem = ({ order, onChange }) => {
                     <Button onClick={() => { setShowAddOfferModal(true) }} style={{ width: '100%' }}>Create Offer</Button>
                 </Col>
             </Row>
-            <AddEditOfferModal show={showAddOfferModal} order={order} onHide={() => setShowAddOfferModal(false)} onSuccess={() => { onChange() }}></AddEditOfferModal>
+            <AddEditOfferModal show={showAddOfferModal} order={order} onHide={() => setShowAddOfferModal(false)} onSuccess={() => { onSuccess() }}></AddEditOfferModal>
         </Container>
 
     )
