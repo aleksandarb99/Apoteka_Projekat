@@ -55,7 +55,7 @@ public class EmailService {
 
     @Async
     public void notifyPatientAboutReservedAppointment(AppointmentReservationDTO reservationDTO, String type) throws MailException {
-
+        //todo ovde da se ubaci u kojoj apoteci mozda, koji radnik itd
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(reservationDTO.getEmail());
         mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));

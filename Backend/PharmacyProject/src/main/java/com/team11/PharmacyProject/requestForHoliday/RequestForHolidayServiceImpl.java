@@ -1,11 +1,13 @@
 package com.team11.PharmacyProject.requestForHoliday;
 
+import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.appointment.AppointmentRepository;
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayDTO;
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayWithWorkerDetailsDTO;
 import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.AbsenceRequestState;
 import com.team11.PharmacyProject.enums.AbsenceType;
+import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -169,6 +172,16 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
     @Override
     public boolean hasVacationInThatDateRange(Long workerID, Long start, Long end){
         return requestForHolidayRepository.hasVacationInThatDateRange(workerID, start, end);
+    }
+
+    public void cancelExpiredVacRequests(){
+        Long time = Instant.now().toEpochMilli();
+        //znaci da je proslo 15 min od pocetka appt
+        List<RequestForHoliday> requestForHolidays = requestForHolidayRepository.getExpiredHolidays(time);
+        for (RequestForHoliday request : requestForHolidays){
+            request.setRequestState(AbsenceRequestState.CANCELLED);
+            requestForHolidayRepository.save(request);
+        }
     }
 
 }

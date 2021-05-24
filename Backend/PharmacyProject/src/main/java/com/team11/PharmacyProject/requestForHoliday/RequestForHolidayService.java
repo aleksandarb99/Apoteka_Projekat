@@ -23,4 +23,6 @@ public interface RequestForHolidayService {
     void acceptRequest(String requestId);
 
     void rejectRequest(String requestId, String reason);
+
+    void cancelExpiredVacRequests();
 }

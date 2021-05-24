@@ -34,4 +34,7 @@ public interface RequestForHolidayRepository  extends JpaRepository<RequestForHo
     @Query("select r from RequestForHoliday r where r.pharmacyWorker.id = ?1 and (r.requestState='ACCEPTED' or r.requestState='PENDING') " +
             "and (r.startDate > ?2 or (r.startDate < ?2 and r.endDate > ?2))")
     List<RequestForHoliday> getRequestForHolidayAcceptedOrPendingInFuture(Long workerID, Long currentTime);
+
+    @Query("select r from RequestForHoliday r where r.startDate < ?1 and r.requestState='PENDING'")
+    List<RequestForHoliday> getExpiredHolidays(Long currentTime);
 }

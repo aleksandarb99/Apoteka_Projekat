@@ -2,8 +2,10 @@ package com.team11.PharmacyProject.appointment;
 
 import com.team11.PharmacyProject.dto.appointment.AppointmentPatientInsightDTO;
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
+import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
 import com.team11.PharmacyProject.dto.therapyPrescription.TherapyPresriptionDTO;
 import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
+import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.enums.ReservationState;
@@ -76,6 +78,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     RankingCategoryService categoryService;
+
+    @Autowired
+    EmailService emailService;
 
     public Appointment getNextAppointment(String email, Long workerId) {
         Pageable pp = PageRequest.of(0, 1, Sort.by("startTime").ascending());
@@ -698,7 +703,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         for (TherapyPresriptionDTO tpDTO : therapyDTOList){
             medicineItemsOfTherapy.add(medicineItemService.findById(tpDTO.getMedicineItemID()));
         }
-
+        double pat_disc = categoryService.getCategoryByPoints(appointment.getPatient().getPoints()).getDiscount() * 0.01;
         for (int i = 0; i < therapyDTOList.size(); i++){
             //dajemo nedelju dana da pacijent pokupi rezervaciju terapije
             Long pickupDate = Instant.now().plus(7, ChronoUnit.DAYS).toEpochMilli();
@@ -707,20 +712,26 @@ public class AppointmentServiceImpl implements AppointmentService {
             ReservationState state = ReservationState.RESERVED;
             MedicineItem mi = medicineItemsOfTherapy.get(i);
             Pharmacy pharmacy = appointment.getPharmacy();
-            if(!mi.setAmountLessOne()) return false; //smanjujemo kolicinu za 1, todo kod transakcija ovo ce biti zabavno
+            if(!mi.setAmountLessOne()) return false; //smanjujemo kolicinu za 1
+            double price = mi.getMedicinePrices().get(mi.getMedicinePrices().size() - 1).getPrice(); // TODO ovo videti, taj get je sumnjiv
+            price -= price*pat_disc;
 
-            MedicineReservation medicineReservation = new MedicineReservation(pickupDate, resDate, resID, state, mi, pharmacy, 0);
+            MedicineReservation medicineReservation = new MedicineReservation(pickupDate, resDate, resID, state, mi, pharmacy, price);
 
-            Optional<Patient> patient = Optional.ofNullable(patientRepository.findByIdAndFetchReservationsEagerly(appointment.getPatient().getId()));
-            if(patient.isEmpty()) {  //todo videti sa Jovanom sta ovo tacno radi
-                patient = patientRepository.findById(appointment.getPatient().getId());
-                if(patient.isEmpty()) return false;
-                patient.get().setMedicineReservation(new ArrayList<>());
+            Patient patient = appointment.getPatient();
+            patient.getMedicineReservation().add(medicineReservation);
+            //todo mozda malo srediti notif ako bude vremena
+            MedicineReservationNotifyPatientDTO resDTO = new MedicineReservationNotifyPatientDTO(patient, pharmacy, medicineReservation);
+            try {
+                emailService.notifyPatientAboutReservation(resDTO);
+            }catch (Exception e) {
+                System.out.println("Couldn't send mail to patient!");
             }
-            patient.get().getMedicineReservation().add(medicineReservation);
-            //todo notif za pacijenta
             therapyPrescriptionList.add(new TherapyPrescription(medicineReservation, therapyDTOList.get(i).getDuration()));
         }
+        int points = appointment.getPatient().getPoints();
+        appointment.getPatient().setPoints(points + appointment.getPharmacy().getPointsForAppointment());
+
         appointment.setTherapyPrescriptionList(therapyPrescriptionList);
         appointment.setAppointmentState(AppointmentState.FINISHED);
         appointmentRepository.save(appointment);
@@ -728,7 +739,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     public Appointment getAppointmentForReport(Long appointmentID){
-        //todo pazi ovde zezne ako se stavi lazy loading
         Optional<Appointment> appt = appointmentRepository.findById(appointmentID);
         Appointment appointment = appt.orElse(null);
         if (appointment == null){
@@ -745,7 +755,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Appointment scheduleAppointmentInRange(Long workerID, Long patientID, Long pharmID, Long apptStart,
-                                                  Long apptEnd, double price, int duration) throws Exception{
+                                                  Long apptEnd, int duration) throws Exception{
         // provera da li postji radnik uopste
         Optional<PharmacyWorker> worker = pharmacyWorkerRepository.findById(workerID);
         if (worker.isEmpty()) throw new Exception("Invalid worker");
@@ -819,20 +829,35 @@ public class AppointmentServiceImpl implements AppointmentService {
         cosultation.setPatient(pat);
         cosultation.setWorker(pw);
         cosultation.setAppointmentState(AppointmentState.RESERVED);
-        cosultation.setAppointmentType(AppointmentType.CONSULTATION);
+        cosultation.setAppointmentType((isPharmacist) ? AppointmentType.CONSULTATION : AppointmentType.CHECKUP);
         cosultation.setPharmacy(pharm);
         cosultation.setDuration(duration);
         cosultation.setStartTime(apptStart);
         cosultation.setEndTime(apptEnd);
 
-        if (!isPharmacist) {
-            cosultation.setPrice(price);
-        }else{
-            cosultation.setPrice(pharm.getConsultationPrice());
-        }
+        double price = pharm.getConsultationPrice();
+        RankingCategory category = categoryService.getCategoryByPoints(pat.getPoints());
+        double disc = category.getDiscount();
+        price = price - price*disc*0.01;
+        cosultation.setPrice(price);
 
         appointmentRepository.save(cosultation);
 
         return cosultation;
+    }
+
+    public void finishUnfinishedAppointments(){
+        Long time = Instant.now().minus(16, ChronoUnit.MINUTES).toEpochMilli();
+        Long time2 = Instant.now().minus(1, ChronoUnit.HALF_DAYS).toEpochMilli();
+        //znaci da je proslo 15 min od pocetka appt
+        List<Appointment> appointments = appointmentRepository.getNotFinishedAppointments(time, time2);
+        for (Appointment appt : appointments){
+            if (appt.getPatient() != null && appt.getAppointmentState() == AppointmentState.RESERVED){
+                //provera za svaki slucaj da li je paciejnt null
+                appt.getPatient().setPenalties(appt.getPatient().getPenalties() + 1);
+            }
+            appt.setAppointmentState(AppointmentState.CANCELLED);
+            appointmentRepository.save(appt);
+        }
     }
 }

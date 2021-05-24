@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.appointment;
 import com.team11.PharmacyProject.dto.appointment.*;
 import com.team11.PharmacyProject.dto.therapyPrescription.TherapyDTO;
 import com.team11.PharmacyProject.email.EmailService;
+import com.team11.PharmacyProject.enums.AppointmentType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -132,19 +134,6 @@ public class AppointmentController {
     private Appointment convertToEntity(AppointmentDTORequest dto) {
         return modelMapper.map(dto, Appointment.class);
     }
-//    @PostMapping(value = "/byPatWorker", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<AppointmentDTO> getNextAppointment(
-//            @RequestBody HashMap<String, Long> mapica){
-//
-////        Appointment app = appointmentService.getNextAppointment(patId, workerID);
-////        if (app != null) {
-////            AppointmentDTO dto = modelMapper.map(app, AppointmentDTO.class);
-////            return new ResponseEntity<>(dto, HttpStatus.OK);
-////        }else{
-////            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-////        }
-//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//    }
 
     @GetMapping(value = "/workers_upcoming", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AppointmentCalendarDTO>> getUpcommingAppointments(
@@ -270,7 +259,7 @@ public class AppointmentController {
                     .stream().map(m -> modelMapper.map(m, AppointmentTimeRangeDTO.class)).collect(Collectors.toList());
             return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
         } catch (Exception e){
-            e.printStackTrace();
+        e.printStackTrace();
         }
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.BAD_REQUEST);
     }
@@ -280,8 +269,7 @@ public class AppointmentController {
                                                       @RequestParam("workerID") Long workerId,
                                                       @RequestParam("pharmacyID") Long pharmacyId,
                                                       @RequestParam("date") Long date,
-                                                      @RequestParam("duration") int duration,
-                                                      @RequestParam(value = "price", required = false) double price)
+                                                      @RequestParam("duration") int duration)
     {
         if (duration < 0){
             return new ResponseEntity<>("Duration less than 0!", HttpStatus.BAD_REQUEST);
@@ -297,13 +285,21 @@ public class AppointmentController {
         }
 
         try{
-            Appointment appt = appointmentServiceImpl.scheduleAppointmentInRange(workerId, patientId, pharmacyId, date, endTime, price, duration);
+            Appointment appt = appointmentServiceImpl.scheduleAppointmentInRange(workerId, patientId, pharmacyId, date, endTime, duration);
             if (appt != null){
+                emailService.notifyPatientAboutReservedAppointment(new AppointmentReservationDTO(appt),
+                        (appt.getAppointmentType() == AppointmentType.CHECKUP) ? "Pregled" : "Savetovanje");
                 return new ResponseEntity<>("All good", HttpStatus.OK);
             }
+
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Invalid appt date!", HttpStatus.BAD_REQUEST);
+    }
+
+    @Scheduled(cron = "${greeting.cron}")
+    public void endAppointments() {
+        appointmentServiceImpl.finishUnfinishedAppointments();
     }
 }
