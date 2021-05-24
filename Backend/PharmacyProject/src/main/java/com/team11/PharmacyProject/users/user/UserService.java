@@ -8,7 +8,7 @@ public interface UserService {
 
     MyUser findOne(Long id);
     MyUser updateUser(UserUpdateDTO user);
-    boolean insertUser(MyUser user);
+    void insertUser(MyUser user) throws Exception;
 
     List<MyUser> getUsersByUserType(String type);
 

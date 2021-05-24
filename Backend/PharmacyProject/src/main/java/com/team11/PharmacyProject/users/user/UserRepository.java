@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<MyUser, Long> {
@@ -14,8 +15,8 @@ public interface UserRepository extends JpaRepository<MyUser, Long> {
     List<MyUser> findAllByUserType(String userType);
 
     @Query("select user from MyUser user join fetch user.address where user.id = ?1")
-    Slice<MyUser> findByIdFetchAdderss(long id, Pageable pg);
+    Slice<MyUser> findByIdFetchAddress(long id, Pageable pg);
 
-    MyUser findByEmail(String username);
+    Optional<MyUser> findByEmail(String email);
     MyUser findFirstById(Long id);
 }

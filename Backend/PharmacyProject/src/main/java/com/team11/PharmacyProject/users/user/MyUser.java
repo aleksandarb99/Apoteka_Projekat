@@ -27,7 +27,7 @@ public class MyUser {
    @Column(name = "telephone", unique = true, nullable = false)
    private String telephone;
 
-   @ManyToOne(fetch = FetchType.EAGER)
+   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
    private Role role;
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) //Prebacio sam address u lazy ispraviti, ako treba negde address pacijentu
