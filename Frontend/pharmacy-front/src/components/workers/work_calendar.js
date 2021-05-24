@@ -113,8 +113,6 @@ function WorkCalendar() {
                             duration: {weeks: 1},
                             eventContent: function(info){
                                 let propi = info.event.extendedProps;
-                                // return {html: moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm') 
-                                //     +  "<p>" + propi.patient + "</p><p><i> " + propi.appointmentState + "</i></p>"};
                                 if (propi.calendarType === 'appointment'){
                                     return {html:
                                         '<div>' + propi.patient + '</div>'};
@@ -149,8 +147,6 @@ function WorkCalendar() {
                             dayMaxEvents: 2,
                             eventContent: function(info){
                                 let propi = info.event.extendedProps;
-                                // return {html: moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm') 
-                                //     +  "<p>" + propi.patient + "</p><p><i> " + propi.appointmentState + "</i></p>"};
                                 if (propi.calendarType === 'appointment'){
                                     return {html:
                                         '<div><p>'+  moment(info.event.start).format('HH:mm') + "-" + moment(info.event.end).format('HH:mm')   + '</p>'+

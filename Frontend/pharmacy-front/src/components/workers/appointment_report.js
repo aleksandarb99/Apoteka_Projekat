@@ -32,6 +32,11 @@ function AppointmentReport() {
             setApptType('appointment');
         }
         let bodyFormData = new FormData();
+        if (!location.state.appointmentID){
+            addToast("No appointment id! Couldn't start appointment!", { appearance: "error" });
+            history.push('/');
+            return;
+        }
         let appt_id = location.state.appointmentID;
         bodyFormData.append('id', appt_id);
 
@@ -40,7 +45,7 @@ function AppointmentReport() {
                 (resp) => {
                     setCurrAppt(resp.data);
                 })
-            .catch(() => addToast("Couldn't get ids!", { appearance: "error" })); //todo sta koji djavo ovo znaci
+            .catch(() => { addToast("Couldn't get ids!", { appearance: "error" }); history.push('/');} ); //todo sta koji djavo ovo znaci
     }, [])
 
     const onAdd = (medItem) => {

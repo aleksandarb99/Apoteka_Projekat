@@ -53,4 +53,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT a FROM Appointment  a JOIN FETCH a.pharmacy p where a.startTime > ?1 and a.startTime < ?2 and p.id = ?3 and a.appointmentState = 'FINISHED' order by a.startTime asc")
     List<Appointment> getAppointmentBeetwenTwoTimestamps(Long yearAgo, Long currTime, Long pharmacyId);
+
+    @Query("SELECT a FROM Appointment  a where (a.startTime > ?1 and a.appointmentState = 'RESERVED') or " +
+            "(a.startTime > ?2 and a.appointmentState='IN_PROGRESS')")
+    List<Appointment> getNotFinishedAppointments(Long time, Long time2);
 }

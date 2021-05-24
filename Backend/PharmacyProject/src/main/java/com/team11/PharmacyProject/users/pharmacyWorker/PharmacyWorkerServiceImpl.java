@@ -2,9 +2,13 @@ package com.team11.PharmacyProject.users.pharmacyWorker;
 
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
+import com.team11.PharmacyProject.dto.worker.HolidayStartEndDTO;
+import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
+import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayService;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
@@ -12,6 +16,8 @@ import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -31,6 +37,9 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
 
     @Autowired
     WorkplaceService workplaceService;
+
+    @Autowired
+    RequestForHolidayService requestForHolidayService;
 
     @Override
     public PharmacyWorker getOne(Long id) {
@@ -230,5 +239,35 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
             }
         }
         return chosenWorkers;
+    }
+
+    private WorktimeDTO getWorktimeFromWorkplace(Workplace wp, Long workerID){
+        if (wp == null){
+            return null;
+        }
+        WorktimeDTO worktimeDTO = new WorktimeDTO();
+        worktimeDTO.setWorkDayList(wp.getWorkDays());
+
+        List<RequestForHoliday> holidays = requestForHolidayService.getRequestForHolidayAcceptedOrPendingInFuture(workerID);
+        if (holidays != null && !holidays.isEmpty()){
+            List<HolidayStartEndDTO> holidayStartEndDTOS = new ArrayList<>(holidays.size());
+            for (RequestForHoliday req : holidays){
+                holidayStartEndDTOS.add(new HolidayStartEndDTO(req));
+            }
+            worktimeDTO.setHolidays(holidayStartEndDTOS);
+        }
+        return worktimeDTO;
+    }
+
+    @Override
+    public WorktimeDTO getWorktime(Long workerID){
+        Workplace wp = workplaceService.getWorkplaceOfPharmacist(workerID);
+        return getWorktimeFromWorkplace(wp, workerID);
+    }
+
+    @Override
+    public WorktimeDTO getWorktime(Long workerID, Long pharmID){
+        Workplace wp = workplaceService.getWorkplaceOfDermatologist(workerID, pharmID);
+        return getWorktimeFromWorkplace(wp, workerID);
     }
 }

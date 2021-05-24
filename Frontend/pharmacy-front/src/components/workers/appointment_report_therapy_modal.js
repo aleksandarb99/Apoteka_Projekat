@@ -47,6 +47,10 @@ const TherapyMedicineModal = (props) => {
                                         addToast("No medicine to add to therapy!", { appearance: "error" });
                                         exitModal();
                                     });
+            if (response.data.length === 0){
+                addToast("No medicine to add to therapy!", { appearance: "error" });
+                exitModal();
+            }
             setPrimaryOptions(response.data);
         }
         fetchMedicine();

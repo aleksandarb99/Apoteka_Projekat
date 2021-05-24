@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,5 +95,10 @@ public class RequestForHolidayController {
         }else{
             return new ResponseEntity<>(resp, HttpStatus.OK);
         }
+    }
+
+    @Scheduled(cron = "${greeting.cron}")
+    public void endVacRequests() {
+        requestForHolidayService.cancelExpiredVacRequests();
     }
 }

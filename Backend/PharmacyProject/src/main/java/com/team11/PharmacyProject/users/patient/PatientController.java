@@ -179,7 +179,7 @@ public class PatientController {
         if (lastName == null) {
             lastName = "";
         }
-        patientsResult = patientService.searchPatientsByFirstAndLastName(firstName, lastName);
+        patientsResult = patientService.searchPatientsByFirstAndLastName(firstName.toLowerCase(), lastName.toLowerCase());
         List<PatientWorkerSearchDTO> patientDTOS = new ArrayList<>();
         for (Patient p :
                 patientsResult) {

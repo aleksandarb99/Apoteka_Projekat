@@ -36,6 +36,7 @@ public class MedicineTherapyDTO {
         this.medicineType = medicineItem.getMedicine().getMedicineType().getName();
         this.medicineForm = medicineItem.getMedicine().getMedicineForm().getName();
         this.manufacturer = medicineItem.getMedicine().getManufacturer().getName();
+        //todo ovo
         this.price = medicineItem.getMedicinePrices().get(medicineItem.getMedicinePrices().size()-1).getPrice();
         this.amount = medicineItem.getAmount();
 

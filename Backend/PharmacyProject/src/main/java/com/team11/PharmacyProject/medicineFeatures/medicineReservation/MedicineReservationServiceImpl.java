@@ -304,7 +304,6 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
     @Override
     public MedicineReservationWorkerDTO issueMedicine(Long workerID, String resID){
-        //todo srediti da ima i cenu mozda
         MedicineReservation medicineReservation = getMedicineReservationFromPharmacy(workerID, resID);
         if (medicineReservation == null) {
             return null;
@@ -313,14 +312,13 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         Long currTime = Instant.now().toEpochMilli();
         if (dueDate - currTime <= 0){
             return null;
-        }else if (TimeUnit.MILLISECONDS.toHours(dueDate-currTime) < 24){  //manje od 24 h do izdavanja
-            return null;
         }
+
         Patient pat = patientRepository.findByReservationID(medicineReservation.getId());
         if (pat == null){
             return null;
         }
-
+        pat.setPoints(pat.getPoints() + medicineReservation.getMedicineItem().getMedicine().getPoints());
         medicineReservation.setState(ReservationState.RECEIVED);
         reservationRepository.save(medicineReservation);
 

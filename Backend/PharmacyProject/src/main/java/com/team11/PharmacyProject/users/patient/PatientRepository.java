@@ -17,7 +17,7 @@ import java.util.Optional;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 
-    @Query("select p from Patient p where p.firstName like %?1% and p.lastName like %?2%")
+    @Query("select p from Patient p where lower(p.firstName) like %?1% and lower(p.lastName) like %?2%")
     List<Patient> searchPatientsByFirstAndLastName(String firstName, String lastName);
 
 
