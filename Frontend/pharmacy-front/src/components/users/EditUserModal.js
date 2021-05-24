@@ -10,7 +10,8 @@ import StreetFormGroup from "../utilComponents/formGroups/StreetFormGroup";
 import CountryFormGroup from "../utilComponents/formGroups/CountryFormGroup";
 import ErrorModal from "../utilComponents/modals/ErrorModal";
 import SuccessModal from "../utilComponents/modals/SuccessModal";
-import axios from "axios";
+
+import axios from "../../app/api";
 
 function EditUserModal(props) {
   const [form, setForm] = useState({});
