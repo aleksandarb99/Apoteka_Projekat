@@ -40,6 +40,7 @@ public class MedicineReservationController {
     EmailService emailService;
 
     @GetMapping(value = "/report/{id}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<Map<String, Integer>> getInfoForReport(@PathVariable("period") String period, @PathVariable("id") Long pharmacyId) {
         Map<String, Integer> data = service.getInfoForReport(period, pharmacyId);
         return new ResponseEntity<>(data, HttpStatus.OK);

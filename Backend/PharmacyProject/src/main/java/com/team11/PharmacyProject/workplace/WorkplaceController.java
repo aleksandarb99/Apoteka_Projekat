@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ public class WorkplaceController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "dermatologists/bypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<List<WorkplaceDTOWithWorkdays>> getDermatologistWorkplacesByPharmacyId(@PathVariable("id") Long id) {
         List<Workplace> workplaceList = workplaceServiseImpl.getDermatologistWorkplacesByPharmacyId(id);
 
@@ -39,6 +41,7 @@ public class WorkplaceController {
     }
 
     @PostMapping(value = "/addworker/bypharmacyid/{id}/{workerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<String> addWorker(@PathVariable("id") Long id,@PathVariable("workerId") Long workerId, @RequestBody RequestForWorkerDTO dto) {
         try {
             WorkplaceController.checkDto(dto);
@@ -55,6 +58,7 @@ public class WorkplaceController {
     }
 
     @DeleteMapping(value = "/removeworker/bypharmacyid/{id}/{workerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<String> removeWorker(@PathVariable("id") Long id,@PathVariable("workerId") Long workerId) {
         try {
             workplaceServiseImpl.removeWorker(id, workerId);
@@ -98,6 +102,7 @@ public class WorkplaceController {
     }
 
     @GetMapping(value = "/search/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<List<WorkplaceDTO>> searchWorkplaces(@PathVariable("id") Long pharmacyId, @Valid @RequestParam(value = "searchValue", required = false) String searchValue) throws Exception {
         List<Workplace> workplaceList = workplaceServiseImpl.searchWorkplacesByNameOrSurnameOfWorker(searchValue, pharmacyId);
 
@@ -106,6 +111,7 @@ public class WorkplaceController {
     }
 
     @GetMapping(value = "/pharmacies/all/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<Map<Long, List<String>>> getAllPharmacyNames() {
         Map<Long, List<String>> pharmacies = workplaceServiseImpl.getAllPharmacyNames();
 
