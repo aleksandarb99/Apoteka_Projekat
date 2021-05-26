@@ -2,13 +2,13 @@ package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +36,8 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
     @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.workplaces")
     List<Pharmacy> findPharmaciesFetchWorkplaces(Sort sorter);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @QueryHints({@QueryHint(name="javax.persistence.lock.timeout", value = "4000")})
     @Query("SELECT p FROM Pharmacy p LEFT JOIN FETCH p.appointments WHERE p.id = (:id)")
     Pharmacy findPharmacyByIdFetchAppointments(@Param("id") Long id);
 

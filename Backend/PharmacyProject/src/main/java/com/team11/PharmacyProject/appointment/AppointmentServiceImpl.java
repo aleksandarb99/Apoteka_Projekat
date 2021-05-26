@@ -32,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -40,6 +41,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     AppointmentRepository appointmentRepository;
@@ -276,6 +278,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public AppointmentReservationDTO reserveCheckupForPatient(Long appId, Long patientId) {
 
         Patient patient = patientRepository.findByIdAndFetchAppointments(patientId);
@@ -301,13 +304,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         patient.addAppointment(appointment);
 
+        AppointmentReservationDTO dto = new AppointmentReservationDTO(patient, appointment);
         patientRepository.save(patient);
-
-        return new AppointmentReservationDTO(patient, appointment);
-
+        return dto;
     }
 
     @Override
+    @Transactional(readOnly = false)
     public AppointmentReservationDTO reserveConsultationForPatient(Long workerId, Long patientId, Long pharmacyId, Long requiredDate) {
 
         PharmacyWorker worker = pharmacyWorkerRepository.getPharmacyWorkerForCalendar(workerId);
@@ -317,7 +320,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (patient == null) throw new RuntimeException("Patient does not exist in the database!");
         if (patient.getPenalties() >= 3) throw new RuntimeException("You have achieved 3 penalties!");
 
+//        Nadam se da ce ovde da stane :D
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByIdFetchAppointments(pharmacyId);
+
         if (pharmacy == null) throw new RuntimeException("Pharmacy does not exist in the database!");
 
         Date requestedDateAndTime = new Date(requiredDate);
@@ -369,9 +374,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         worker.addAppointment(reservedConsultation);
         pharmacy.addAppointment(reservedConsultation);
 
-        appointmentRepository.save(reservedConsultation);
 
-        return new AppointmentReservationDTO(reservedConsultation);
+        AppointmentReservationDTO dto = new AppointmentReservationDTO(reservedConsultation);
+        appointmentRepository.save(reservedConsultation);
+        return dto;
 
     }
 

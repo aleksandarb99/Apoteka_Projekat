@@ -43,9 +43,14 @@ function PharmacyAdminHomePage() {
         setPharmacyId(res.data);
       })
       .catch((err) => {
-        addToast(err.response.data, {
-          appearance: "error",
-        });
+        addToast(
+          err.response.data.message == undefined
+            ? err.response.data
+            : err.response.data.message,
+          {
+            appearance: "error",
+          }
+        );
       });
     return request;
   }

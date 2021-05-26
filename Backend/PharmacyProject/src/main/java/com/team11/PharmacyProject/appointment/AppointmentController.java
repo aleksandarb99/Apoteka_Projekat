@@ -4,13 +4,16 @@ import com.team11.PharmacyProject.dto.appointment.*;
 import com.team11.PharmacyProject.dto.therapyPrescription.TherapyDTO;
 import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.AppointmentType;
+import org.hibernate.dialect.lock.PessimisticEntityLockException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -222,8 +225,10 @@ public class AppointmentController {
             emailService.notifyPatientAboutReservedAppointment(dto, "Pregled");
 
             return new ResponseEntity<>("Successfully reserved the checkup!", HttpStatus.OK);
-        }catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (ObjectOptimisticLockingFailureException e) {
+            return new ResponseEntity<>("Failure happened! Try again!", HttpStatus.BAD_REQUEST);
+        } catch (Exception e2) {
+            return new ResponseEntity<>(e2.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -236,8 +241,10 @@ public class AppointmentController {
             emailService.notifyPatientAboutReservedAppointment(dto, "Savetovanje");
 
             return new ResponseEntity<>("Successfully reserved the consultation!", HttpStatus.OK);
-        }catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (PessimisticLockingFailureException e) {
+            return new ResponseEntity<>("Failure happened! Try again!", HttpStatus.BAD_REQUEST);
+        } catch (Exception e2) {
+            return new ResponseEntity<>(e2.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
