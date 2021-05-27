@@ -298,8 +298,10 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         if(differenceInMinutes < 1440) throw new RuntimeException("There's less then 24h to picking up the reservation, can not cancel it!");
 
         reservation.setState(ReservationState.CANCELLED);
-        reservation.getMedicineItem().setAmountPlusOne();
 
+        Optional<MedicineItem> item = itemRepository.findById(reservation.getMedicineItem().getId());
+        item.get().setAmountPlusOne();
+        itemRepository.save(item.get());
         reservationRepository.save(reservation);
     }
 

@@ -20,6 +20,10 @@ public class MedicineItem {
     @Column(name = "amount", nullable = false)
     private int amount;
 
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Long version;
+
     public MedicineItem() {
     }
 
@@ -34,6 +38,14 @@ public class MedicineItem {
         this.amount = amount;
         this.medicinePrices = medicinePrices;
         this.medicine = medicine;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public Long getId() {

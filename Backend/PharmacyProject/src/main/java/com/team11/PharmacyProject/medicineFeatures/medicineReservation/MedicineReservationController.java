@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 import java.time.Instant;
 import java.time.temporal.ChronoField;
@@ -88,7 +89,7 @@ public class MedicineReservationController {
         try {
             service.cancelReservation(id);
             return new ResponseEntity<>("Reservation is canceled successfully!", HttpStatus.OK);
-        }catch (PessimisticLockingFailureException e) {
+        }catch (OptimisticLockException e) {
             return new ResponseEntity<>("Failed! Try again!", HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
