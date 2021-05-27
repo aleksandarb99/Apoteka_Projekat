@@ -19,5 +19,5 @@ public interface PriceListRepository extends JpaRepository<PriceList, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({@QueryHint(name="javax.persistence.lock.timeout", value = "3000")})
     @Query("SELECT pl FROM PriceList pl JOIN FETCH pl.medicineItems mi JOIN FETCH mi.medicine m WHERE pl.id = (:id)")
-    PriceList findPriceListByPharmacyId(@Param("id") Long id);
+    PriceList findPriceListForTransaction(@Param("id") Long id);
 }

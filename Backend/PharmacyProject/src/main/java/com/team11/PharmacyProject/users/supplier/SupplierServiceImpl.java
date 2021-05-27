@@ -177,7 +177,7 @@ public class SupplierServiceImpl implements SupplierService {
         order1.setOrderState(OrderState.ENDED);
         myOrderRepository.save(order1);
 
-        PriceList priceList = priceListRepository.findPriceListByPharmacyId(order1.getPharmacy().getPriceList().getId());
+        PriceList priceList = priceListRepository.findPriceListForTransaction(order1.getPharmacy().getPriceList().getId());
         for (OrderItem item : order1.getOrderItem()) {
             for (MedicineItem mitem : priceList.getMedicineItems()) {
                 if (item.getMedicine().getId().equals(mitem.getMedicine().getId())) {
