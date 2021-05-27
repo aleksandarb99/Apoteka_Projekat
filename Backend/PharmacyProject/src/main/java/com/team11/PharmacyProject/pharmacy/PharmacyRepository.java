@@ -36,11 +36,6 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
     @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.workplaces")
     List<Pharmacy> findPharmaciesFetchWorkplaces(Sort sorter);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @QueryHints({@QueryHint(name="javax.persistence.lock.timeout", value = "4000")})
-    @Query("SELECT p FROM Pharmacy p LEFT JOIN FETCH p.appointments WHERE p.id = (:id)")
-    Pharmacy findPharmacyByIdFetchAppointments(@Param("id") Long id);
-
     @Query("SELECT p FROM Pharmacy p left join fetch p.priceList plist join fetch plist.medicineItems mi " +
             "join fetch mi.medicine med join fetch med.manufacturer join fetch med.medicineForm join fetch med.medicineType " +
             "where p.id = ?1 and mi.medicine.id not in " +
