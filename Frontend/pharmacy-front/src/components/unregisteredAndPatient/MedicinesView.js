@@ -45,7 +45,9 @@ function MedicinesView() {
 
       return request;
     }
-    fetchMedicines();
+    if (!!searchParams) {
+      fetchMedicines();
+    }
   }, [searchParams]);
 
   function updateSearchParams(newParams) {
