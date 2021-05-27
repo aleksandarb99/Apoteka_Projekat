@@ -9,6 +9,7 @@ import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWor
 import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
@@ -37,6 +38,9 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
     @Autowired
     MedicineReservationRepository reservationRepository;
+
+    @Autowired
+    MedicineItemRepository itemRepository;
 
     @Autowired
     PatientRepository patientRepository;
@@ -247,6 +251,8 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         }
 
         if(item == null) throw new RuntimeException("Selected pharmacy doesn't have required medicine!");
+
+        item = itemRepository.findByIdForTransaction(item.getId());
         if(!item.setAmountLessOne()) throw new RuntimeException("There's no required medicine right now in the stock!");
 
         MedicineReservation reservation = new MedicineReservation();
@@ -272,7 +278,7 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
         if(!patient.get().addReservation(reservation)) throw new RuntimeException("You have already reservation with that id!");
 
-        pharmacyRepository.save(pharmacy);
+        itemRepository.save(item);
         patientRepository.save(patient.get());
 
         return new MedicineReservationNotifyPatientDTO(patient.get(), pharmacy, reservation);
