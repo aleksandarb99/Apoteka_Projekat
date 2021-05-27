@@ -23,11 +23,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Transactional(readOnly=true)
 public class MedicineReservationServiceImpl implements MedicineReservationService  {
 
     @Autowired
@@ -224,6 +226,7 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
 
     @Override
+    @Transactional(readOnly = false)
     public MedicineReservationNotifyPatientDTO insertMedicineReservation(MedicineReservationInsertDTO dto) {
 
         Optional<Patient> p = patientRepository.findById(dto.getUserId());
@@ -276,11 +279,11 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void cancelReservation(Long id) {
-        Optional<MedicineReservation> reservationOptional = reservationRepository.findById(id);
-        if (reservationOptional.isEmpty()) throw new RuntimeException("Reservation does not exist!");
+        MedicineReservation reservation = reservationRepository.findByIdForCanceling(id);
 
-        MedicineReservation reservation = reservationOptional.get();
+        if (reservation == null) throw new RuntimeException("Reservation does not exist!");
 
         if (reservation.getState() != ReservationState.RESERVED) throw new RuntimeException("Only reserved medicines can be canceled!");
         if (reservation.getPickupDate() < System.currentTimeMillis()) throw new RuntimeException("Reservation is in the past, can't cancel it!"); // Provera da ipak nije rezervacija iz proslosti
@@ -289,6 +292,7 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         if(differenceInMinutes < 1440) throw new RuntimeException("There's less then 24h to picking up the reservation, can not cancel it!");
 
         reservation.setState(ReservationState.CANCELLED);
+        reservation.getMedicineItem().setAmountPlusOne();
 
         reservationRepository.save(reservation);
     }

@@ -1,10 +1,13 @@
 package com.team11.PharmacyProject.medicineFeatures.medicineReservation;
 
-import com.team11.PharmacyProject.appointment.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import java.util.List;
 
 @Repository
@@ -20,4 +23,8 @@ public interface MedicineReservationRepository extends JpaRepository<MedicineRes
     @Query("SELECT m FROM MedicineReservation  m JOIN FETCH m.medicineItem mi JOIN FETCH mi.medicinePrices where m.reservationDate > ?1 and m.reservationDate < ?2 and m.pharmacy.id = ?3 and m.state = 'RECEIVED' order by m.reservationDate asc")
     List<MedicineReservation> getReservationsBeetwenTwoTimestamps(long yearAgo, long currTime, Long pharmacyId);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @QueryHints({@QueryHint(name="javax.persistence.lock.timeout", value = "3000")})
+    @Query("SELECT m FROM MedicineReservation m JOIN FETCH m.medicineItem mi WHERE m.id = (:id)")
+    MedicineReservation findByIdForCanceling(Long id);
 }

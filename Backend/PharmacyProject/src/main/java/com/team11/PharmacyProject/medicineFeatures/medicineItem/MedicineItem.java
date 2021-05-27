@@ -59,6 +59,11 @@ public class MedicineItem {
         return true;
     }
 
+
+    public void setAmountPlusOne() {
+        amount += 1;
+    }
+
     public List<MedicinePrice> getMedicinePrices() {
         return medicinePrices;
     }
@@ -89,4 +94,5 @@ public class MedicineItem {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
 }

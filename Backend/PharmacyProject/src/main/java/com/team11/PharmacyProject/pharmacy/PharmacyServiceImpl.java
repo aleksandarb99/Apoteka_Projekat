@@ -277,8 +277,7 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
-    public void addMedicineToStock(MyOrder order1) {
-        Pharmacy pharmacy = order1.getPharmacy();
+    public void addMedicineToStock(MyOrder order1, Pharmacy pharmacy) {
         for (OrderItem item : order1.getOrderItem()) {
             for (MedicineItem mitem : pharmacy.getPriceList().getMedicineItems()) {
                 if (item.getMedicine().getId().equals(mitem.getMedicine().getId())) {

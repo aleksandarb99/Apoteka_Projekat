@@ -40,6 +40,10 @@ public class MyUser {
    @Column(name = "is_email_verified", nullable = false)
    private boolean emailVerified = false;
 
+   @Version
+   @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+   private int version;
+
    public MyUser() {
    }
 
@@ -53,6 +57,14 @@ public class MyUser {
       this.telephone = telephone;
       this.address = address;
       this.isPasswordChanged = isPasswordChanged;
+   }
+
+   public int getVersion() {
+      return version;
+   }
+
+   public void setVersion(int version) {
+      this.version = version;
    }
 
    public Long getId() {

@@ -7,6 +7,7 @@ import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWor
 import com.team11.PharmacyProject.email.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,8 @@ public class MedicineReservationController {
             emailService.notifyPatientAboutReservation(reservationDTO);
 
             return new ResponseEntity<>("Medicine is reserved successfully!", HttpStatus.OK);
+        }catch (PessimisticLockingFailureException e) {
+            return new ResponseEntity<>("Failed! Try again!", HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -85,6 +88,8 @@ public class MedicineReservationController {
         try {
             service.cancelReservation(id);
             return new ResponseEntity<>("Reservation is canceled successfully!", HttpStatus.OK);
+        }catch (PessimisticLockingFailureException e) {
+            return new ResponseEntity<>("Failed! Try again!", HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

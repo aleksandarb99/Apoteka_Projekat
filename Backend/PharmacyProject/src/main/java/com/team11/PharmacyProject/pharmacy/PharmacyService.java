@@ -38,7 +38,7 @@ public interface PharmacyService {
 
     Pharmacy getPharmacyWithAlternativeForMedicineNoAllergies(Long pharmid, Long patientID, Long medicineID);
 
-    void addMedicineToStock(MyOrder order1);
+    void addMedicineToStock(MyOrder order1, Pharmacy pharmacy);
 
     List<Pharmacy> getSubscribedPharmaciesByPatientId(Long id);
 

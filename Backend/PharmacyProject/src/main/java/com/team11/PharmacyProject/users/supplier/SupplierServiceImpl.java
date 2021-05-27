@@ -12,15 +12,19 @@ import com.team11.PharmacyProject.myOrder.MyOrderRepository;
 import com.team11.PharmacyProject.offer.Offer;
 import com.team11.PharmacyProject.offer.OfferService;
 import com.team11.PharmacyProject.orderItem.OrderItem;
+import com.team11.PharmacyProject.pharmacy.Pharmacy;
+import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class SupplierServiceImpl implements SupplierService {
 
     @Autowired
@@ -29,6 +33,8 @@ public class SupplierServiceImpl implements SupplierService {
     private MedicineRepository medicineRepository;
     @Autowired
     private MyOrderRepository myOrderRepository;
+    @Autowired
+    private PharmacyRepository pharmacyRepository;
 
     @Autowired
     private OfferService offerService;
@@ -121,14 +127,21 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public void acceptOffer(Long selectedOfferId, Long orderId) {
+    @Transactional(readOnly = false)
+    public void acceptOffer(Long selectedOfferId, Long orderId, Long adminId) {
         Map<String, List<Offer>> offersForOrder = getOffersByOrderId(orderId);
 
         Optional<MyOrder> order = myOrderRepository.getMyOrderById(orderId);
         if(order.isEmpty())
             throw new RuntimeException("Order with id "+orderId+" does not exist!");
+        if(!order.get().getAdmin().getId().equals(adminId)) {
+            throw new RuntimeException("You have no permissions for this order!");
+        }
 
-        boolean flag = true;
+        Optional<Pharmacy> pharmacyOptional = pharmacyRepository.getPharmacyForOrder(order.get().getPharmacy().getId());
+        if(pharmacyOptional.isEmpty()) {
+            throw new RuntimeException("Pharmacy does not exist in the database!");
+        }
 
         String email = "abuljevic8@gmail.com";
 
@@ -161,7 +174,7 @@ public class SupplierServiceImpl implements SupplierService {
         order1.setOrderState(OrderState.ENDED);
         myOrderRepository.save(order1);
 
-        pharmacyService.addMedicineToStock(order1);
+        pharmacyService.addMedicineToStock(order1, pharmacyOptional.get());
     }
 
     @Override
