@@ -79,9 +79,6 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
     @Query("SELECT p FROM Pharmacy p JOIN FETCH p.subscribers pl WHERE p.id = (:id)")
     Optional<Pharmacy> getPharmacyWithSubribers(Long id);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @QueryHints({@QueryHint(name="javax.persistence.lock.timeout", value = "3000")})
-    @Query("SELECT p FROM Pharmacy p JOIN FETCH p.priceList pl JOIN FETCH pl.medicineItems mi WHERE p.id = ?1")
-    Optional<Pharmacy> getPharmacyForOrder(@Param("id") Long id);
-
+    @Query("SELECT p FROM Pharmacy p JOIN FETCH p.priceList pl WHERE p.id = ?1")
+    Pharmacy findPharmacyFetchPriceList(Long pharmacyId);
 }

@@ -5,8 +5,11 @@ import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
 import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.OfferState;
 import com.team11.PharmacyProject.enums.OrderState;
+import com.team11.PharmacyProject.inquiry.Inquiry;
+import com.team11.PharmacyProject.inquiry.InquiryService;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.myOrder.MyOrder;
 import com.team11.PharmacyProject.myOrder.MyOrderRepository;
 import com.team11.PharmacyProject.offer.Offer;
@@ -15,6 +18,8 @@ import com.team11.PharmacyProject.orderItem.OrderItem;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
+import com.team11.PharmacyProject.priceList.PriceList;
+import com.team11.PharmacyProject.priceList.PriceListRepository;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +39,7 @@ public class SupplierServiceImpl implements SupplierService {
     @Autowired
     private MyOrderRepository myOrderRepository;
     @Autowired
-    private PharmacyRepository pharmacyRepository;
+    private PriceListRepository priceListRepository;
 
     @Autowired
     private OfferService offerService;
@@ -44,6 +49,9 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    InquiryService inquiryService;
 
     @Override
     public List<SupplierItem> getStockForId(long id) {
@@ -138,11 +146,6 @@ public class SupplierServiceImpl implements SupplierService {
             throw new RuntimeException("You have no permissions for this order!");
         }
 
-        Optional<Pharmacy> pharmacyOptional = pharmacyRepository.getPharmacyForOrder(order.get().getPharmacy().getId());
-        if(pharmacyOptional.isEmpty()) {
-            throw new RuntimeException("Pharmacy does not exist in the database!");
-        }
-
         String email = "abuljevic8@gmail.com";
 
         for (String key:offersForOrder.keySet()) {
@@ -174,7 +177,27 @@ public class SupplierServiceImpl implements SupplierService {
         order1.setOrderState(OrderState.ENDED);
         myOrderRepository.save(order1);
 
-        pharmacyService.addMedicineToStock(order1, pharmacyOptional.get());
+        PriceList priceList = priceListRepository.findPriceListByPharmacyId(order1.getPharmacy().getPriceList().getId());
+        for (OrderItem item : order1.getOrderItem()) {
+            for (MedicineItem mitem : priceList.getMedicineItems()) {
+                if (item.getMedicine().getId().equals(mitem.getMedicine().getId())) {
+                    mitem.setAmount(mitem.getAmount() + item.getAmount());
+                    break;
+                }
+            }
+        }
+
+        priceListRepository.save(priceList);
+
+        List<Inquiry> list = inquiryService.getInquiriesByPharmacyId(order1.getPharmacy().getId());
+        for (Inquiry i:list) {
+            for (OrderItem item : order1.getOrderItem()) {
+                if(item.getMedicine().getId().equals(i.getMedicineItems().getMedicine().getId())) {
+                    i.setActive(false);
+                    inquiryService.save(i);
+                }
+            }
+        }
     }
 
     @Override
