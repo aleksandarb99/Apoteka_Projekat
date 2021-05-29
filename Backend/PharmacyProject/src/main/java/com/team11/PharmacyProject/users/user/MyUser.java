@@ -40,6 +40,10 @@ public class MyUser {
    @Column(name = "is_email_verified", nullable = false)
    private boolean emailVerified = false;
 
+   @Version
+   @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+   private int version;
+
    public MyUser() {
    }
 
@@ -133,5 +137,13 @@ public class MyUser {
 
    public void setEmailVerified(boolean emailVerified) {
       this.emailVerified = emailVerified;
+   }
+
+   public int getVersion() {
+      return version;
+   }
+
+   public void setVersion(int version) {
+      this.version = version;
    }
 }

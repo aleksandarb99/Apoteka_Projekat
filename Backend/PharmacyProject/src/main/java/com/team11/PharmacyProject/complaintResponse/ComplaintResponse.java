@@ -27,6 +27,10 @@ public class ComplaintResponse {
     @JoinColumn(name = "user_id")
     private MyUser admin;
 
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private int version;
+
     public ComplaintResponse() {
     }
 
@@ -76,5 +80,13 @@ public class ComplaintResponse {
 
     public void setAdmin(MyUser admin) {
         this.admin = admin;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
