@@ -10,7 +10,7 @@ import java.util.List;
 public interface ComplaintResponseService {
     ComplaintResponse getComplaintResponse(long complaintId);
 
-    void submitResponse(ComplaintResponseDTO complaintResponseDTO) throws CustomException, OptimisticLockException;
+    void submitResponse(ComplaintResponseDTO complaintResponseDTO) throws CustomException;
 
     List<ComplaintResponse> getComplaintResponsesForAdmin(long adminId);
 }

@@ -237,7 +237,9 @@ insert into my_user (password, first_name, last_name, email, telephone, role_id,
 insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$QUxaJq2WEdqSwPxT.BePtuD9xI1S74agszK6CR.rN20BpZhbhleAG',
                             'Lea', 'Savic', 'leas@gmail.com', '0634444444', 4, 3, false, true);
-
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$tPT/EHBxszNtPA17Hu9p4OgHuZwJZMsrhT5.jYuBB6arrpaPG5gx6',
+                            'Dusko', 'Dragic Novi Profil', 'duskousko2@gmail.com', '0628832344', 2, 3, false, true);
 /*Pharmacy Workers*/
 insert into pharmacy_worker (avg_grade, id) values (4.8, 6);
 insert into pharmacy_worker (avg_grade, id) values (4.8, 7);
@@ -328,6 +330,8 @@ insert into complaint (content, complaint_on, complaint_on_id, type, state, date
                     values ('Nije ispostovan dogovor, trazim da bude sankcionisan.', 'Nebojsa Radovanovic', 5, 'PHARMACIST', 'RESOLVED', 1616587200000, 1);
 insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
                     values ('Neprikladno ponasanje.', 'Marko Maric', 6, 'DERMATOLOGIST', 'RESOLVED', 1616587203000, 2);
+insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
+                    values ('Neprikladno ponasanje OPET!!!.', 'Marko Maric', 6, 'DERMATOLOGIST', 'IN_PROGRESS', 1616587203000, 2);
 
 /*Complaint Response*/
 insert into complaint_response (response_text, date, complaint_id, user_id)

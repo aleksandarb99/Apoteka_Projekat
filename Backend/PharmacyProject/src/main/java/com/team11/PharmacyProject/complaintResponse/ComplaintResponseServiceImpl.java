@@ -37,9 +37,17 @@ public class ComplaintResponseServiceImpl implements ComplaintResponseService {
     @Transactional
     public void submitResponse(ComplaintResponseDTO complaintResponseDTO) throws CustomException {
         MyUser admin = userRepository.findFirstById(complaintResponseDTO.getAdminId());
+        if (admin == null) {
+            throw new CustomException("Admin not valid");
+        }
         Optional<Complaint> complaint = complaintRepository.findById(complaintResponseDTO.getComplaintId());
         if (complaint.isEmpty())
             throw new CustomException("Complaint does not exist!");
+
+        if (complaint.get().getState() == ComplaintState.RESOLVED) {
+            throw new CustomException("Already resolved");
+        }
+
 
         ComplaintResponse cr = new ComplaintResponse(
                 complaintResponseDTO.getId(),
