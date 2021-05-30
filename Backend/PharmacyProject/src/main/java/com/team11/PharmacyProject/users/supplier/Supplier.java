@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 public class Supplier extends MyUser {
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SupplierItem> supplierItems;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

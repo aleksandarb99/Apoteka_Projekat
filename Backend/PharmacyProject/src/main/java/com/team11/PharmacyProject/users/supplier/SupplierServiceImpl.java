@@ -5,6 +5,7 @@ import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
 import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.OfferState;
 import com.team11.PharmacyProject.enums.OrderState;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
 import com.team11.PharmacyProject.myOrder.MyOrder;
@@ -16,6 +17,7 @@ import com.team11.PharmacyProject.pharmacy.PharmacyService;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -193,34 +195,38 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public void insertOffer(long suppId, OfferListDTO offerDTO) throws Exception {
+    @Transactional(
+            rollbackFor = { CustomException.class }
+    )
+    public void insertOffer(long suppId, OfferListDTO offerDTO) throws CustomException {
         if (offerDTO == null) {
-            throw new Exception("Oops");
+            throw new CustomException("Oops");
         }
         Optional<Supplier> s = supplierRepository.findSupplierWithOffersUsingId(suppId);
         if (s.isEmpty()) {
-            throw new Exception("Supplier not found");
+            throw new CustomException("Supplier not found");
         }
         Supplier supp = s.get();
 
         // Ako je cena negativna, onda nije okej
         if (offerDTO.getPrice() < 0) {
-            throw new Exception("Price must be greater than 0");
+            throw new CustomException("Price must be greater than 0");
         }
         // Dobavi order za offer
         Optional<MyOrder> order = myOrderRepository.getMyOrderById(offerDTO.getOrderId());
         if (order.isEmpty())
-            throw new Exception("Order not found");
+            throw new CustomException("Order not found");
         // Ako je orderId vec u offerima, onda nemoj da dodajes
-//        boolean contains = supp.getOffers().stream().anyMatch(o -> o.getOrder().getId().equals(order.get().getId()));
-//        if (contains)
-//            throw new Exception("Offer already added");
+        boolean contains = supp.getOffers().stream().anyMatch(o -> o.getOrder().getId().equals(order.get().getId()));
+        if (contains)
+            throw new CustomException("Offer already added");
         // Ako je prosao, onda ne moze da se doda (150s ogranicenja)
         if (order.get().getDeadline() < (System.currentTimeMillis() + 150000))
-            throw new Exception("You are past the deadline");
+            throw new CustomException("You are past the deadline");
         // Da li je na stanju sve, ako jeste smanji
+
         if (!onStock(suppId, order.get())) {
-            throw new Exception("Medicine not in stock");
+            throw new CustomException("Medicine not in stock");
         }
 
         Offer offer = new Offer();
@@ -233,40 +239,37 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public void updateOffer(long suppId, OfferListDTO offerDTO) throws Exception {
+    public void updateOffer(long suppId, OfferListDTO offerDTO) throws CustomException {
         if (offerDTO == null) {
-            throw new Exception("Oops");
+            throw new CustomException("Oops");
         }
         Optional<Supplier> s = supplierRepository.findSupplierWithOffersUsingId(suppId);
         if (s.isEmpty()) {
-            throw new Exception("Supplier not found");
+            throw new CustomException("Supplier not found");
         }
         Supplier supp = s.get();
 
         // Ako je cena negativna, onda nije okej
         if (offerDTO.getPrice() < 0) {
-            throw new Exception("Price must be greater than 0");
+            throw new CustomException("Price must be greater than 0");
         }
         // Dobavi order za offer
         Optional<MyOrder> order = myOrderRepository.getMyOrderById(offerDTO.getOrderId());
         if (order.isEmpty())
-            throw new Exception("Order not found");
+            throw new CustomException("Order not found");
         // Mora da bude ista porudzbina
         if (order.get().getId() != offerDTO.getOrderId())
-            throw new Exception("Offer does not belong to this order");
+            throw new CustomException("Offer does not belong to this order");
         // Ako je prosao, onda ne moze da se menja
         if (order.get().getDeadline() < (System.currentTimeMillis()))
-            throw new Exception("You are past the deadline");
-        // Da li je na stanju sve
-        if (!onStock(suppId, order.get())) {
-            throw new Exception("Medicine not in stock");
-        }
+            throw new CustomException("You are past the deadline");
+
         Optional<Offer> offerToUpdate = supp.getOffers().stream()
                 .filter(o -> o.getOrder().getId().equals(offerDTO.getOrderId()))
                 .collect(Collectors.toList()).stream().findFirst();
 
         if (offerToUpdate.isEmpty())
-            throw new Exception("Offer to update not found");
+            throw new CustomException("Offer to update not found");
         offerToUpdate.get().setPrice(offerDTO.getPrice());
         offerToUpdate.get().setDeliveryDate(offerDTO.getDeliveryDate());
         offerToUpdate.get().setOfferState(offerDTO.getOfferState());

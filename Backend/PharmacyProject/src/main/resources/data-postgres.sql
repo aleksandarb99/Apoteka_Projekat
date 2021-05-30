@@ -67,13 +67,6 @@ insert into medicine (name, code, content, side_effects, daily_intake, recipe_re
                             'Nema podataka.', 2, 'REQUIRED', 'Za lečenje esencijalne arterijske hipertenzije (I10) ukoliko se tromesečno lečenje pojedinačnim lekovima koji se koriste za lečenje hipertenzije, uključujući lečenje sa više pojedinačnih lekova istovremeno, pokazalo nedovoljno efikasno.',
                             2.1, 3, 1, 4, 5);
 
-/*Supplier items*/
-insert into supplier_item (amount, medicine_id) values (30, 1);
-insert into supplier_item (amount, medicine_id) values (20, 2);
-insert into supplier_item (amount, medicine_id) values (37, 3);
-insert into supplier_item (amount, medicine_id) values (15, 4);
-insert into supplier_item (amount, medicine_id) values (100, 4);
-
 /*Order items*/
 insert into order_item (amount, medicine_id) values (50, 2);
 insert into order_item (amount, medicine_id) values (150, 2);
@@ -233,12 +226,12 @@ insert into patient_allergies (patient_id, allergies_id) values (2, 4);
 insert into supplier (id) values (5);
 insert into supplier (id) values (4);
 
-/*Supplier - supplier items*/
-insert into supplier_supplier_items (supplier_id, supplier_items_id) values (5, 1);
-insert into supplier_supplier_items (supplier_id, supplier_items_id) values (5, 4);
-insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 2);
-insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 3);
-insert into supplier_supplier_items (supplier_id, supplier_items_id) values (4, 5);
+/*Supplier items*/
+insert into supplier_item (amount, medicine_id, supplier_id) values (30, 1, 5);
+insert into supplier_item (amount, medicine_id, supplier_id) values (20, 2, 5);
+insert into supplier_item (amount, medicine_id, supplier_id) values (37, 3, 4);
+insert into supplier_item (amount, medicine_id, supplier_id) values (15, 4, 4);
+insert into supplier_item (amount, medicine_id, supplier_id) values (100, 4, 4);
 
 /*Ratings*/
 insert into rating (grade, graded_type, gradedId, date, patient_id) values (4, 'MEDICINE', 1, 1616510769000, 1);
@@ -332,22 +325,6 @@ insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id)
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (12, 14);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (12, 15);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (12, 16);
-
-
--- /*PriceList - MedicineItem*/
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (1, 1);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (1, 2);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (2, 3);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (3, 5);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (3, 4);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (2, 6);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (1, 7);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (1, 8);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (2, 9);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (3, 10);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (3, 11);
--- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (1, 12);
-
 
 /*Pharmacy - Subscribers*/
 insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (1, 1);

@@ -6,10 +6,12 @@ import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
 import com.team11.PharmacyProject.dto.offer.OfferListDTO;
 import com.team11.PharmacyProject.dto.workplace.WorkplaceDTOWithWorkdays;
 import com.team11.PharmacyProject.enums.OfferState;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.offer.Offer;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -108,10 +110,12 @@ public class SupplierController {
         try {
             supplierService.insertOffer(id, offerDTO);
             return new ResponseEntity<>("Offer added successfully", HttpStatus.OK);
-
-        } catch (Exception e) {
+        } catch (PessimisticLockingFailureException e) {
+            return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+        } catch (CustomException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-
+        } catch (Exception e) {
+            return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.BAD_REQUEST);
         }
     }
 
