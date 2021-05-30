@@ -15,6 +15,7 @@ import com.team11.PharmacyProject.offer.OfferService;
 import com.team11.PharmacyProject.orderItem.OrderItem;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
+import com.team11.PharmacyProject.supplierItem.SupplierItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,10 +37,13 @@ public class SupplierServiceImpl implements SupplierService {
     private OfferService offerService;
 
     @Autowired
-    PharmacyService pharmacyService;
+    private PharmacyService pharmacyService;
 
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
+
+    @Autowired
+    private SupplierItemRepository supplierItemRepository;
 
     @Override
     public List<SupplierItem> getStockForId(long id) {
@@ -52,73 +56,37 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public void insertStockItem(long supplierId, SupplierStockItemDTO stockItemDTO) throws Exception {
+    public void insertStockItem(long supplierId, SupplierStockItemDTO stockItemDTO) throws CustomException {
         if (stockItemDTO == null) {
-            throw new Exception("Oops");
+            throw new CustomException("Oops");
         }
 
         Optional<Supplier> s = supplierRepository.findSupplierWithSupplierItemsUsingId(supplierId);
         if (s.isEmpty()) {
-            throw new Exception("Supplier not found");
+            throw new CustomException("Supplier not found");
         }
         Supplier supp = s.get();
 
         if (stockItemDTO.getAmount() < 0 || stockItemDTO.getAmount() > 1000) {
-            throw new Exception("Amount must be between 1 and 1000");
+            throw new CustomException("Amount must be between 1 and 1000");
         }
 
         SupplierItem supplierItem = new SupplierItem();
         Optional<Medicine> medicine = medicineRepository.findById(stockItemDTO.getMedicineId());
         // Ako lek postoji i nije vec dodat
         if (medicine.isEmpty()) {
-            throw new Exception("Medicine not found");
+            throw new CustomException("Medicine not found");
         }
 
-        boolean contains = supp.getSupplierItems().stream().anyMatch(si -> si.getMedicine().getId().equals(medicine.get().getId()));
-        if (contains) {
-            Optional<SupplierItem> oldSupplierItem = supp.getSupplierItems().stream()
-                    .filter(si -> si.getMedicine().getId().equals(medicine.get().getId()))
-                    .collect(Collectors.toList()).stream().findFirst();
-            int oldAmount = 0;
-            if (oldSupplierItem.isPresent()) {
-                oldAmount += oldSupplierItem.get().getAmount();
-            }
-            stockItemDTO.setAmount(stockItemDTO.getAmount() + oldAmount);
-            updateStockItem(supplierId, stockItemDTO);
-            return;
-        }
-        supplierItem.setAmount(stockItemDTO.getAmount());
-        supplierItem.setMedicine(medicine.get());
-        supp.getSupplierItems().add(supplierItem);
-        supplierRepository.save(supp);
-    }
-
-    @Override
-    public void updateStockItem(long id, SupplierStockItemDTO stockItemDTO) throws Exception {
-        if (stockItemDTO == null) {
-            throw new Exception("Oops");
-        }
-
-        Optional<Supplier> s = supplierRepository.findSupplierWithSupplierItemsUsingId(id);
-        if (s.isEmpty()) {
-            throw new Exception("Supplier not found");
-        }
-        Supplier supp = s.get();
-
-        Optional<Medicine> medicine = medicineRepository.findById(stockItemDTO.getMedicineId());
-        // Ako lek postoji i nije vec dodat
-        if (medicine.isPresent()) {
-            boolean contains = supp.getSupplierItems().stream().anyMatch(si -> si.getMedicine().getId().equals(medicine.get().getId()));
-            // Lek mora biti dodat
-            if (!contains)
-                throw new Exception("Supplier does not have required medicine");
-            Optional<SupplierItem> SIToUpdate = supp.getSupplierItems()
-                    .stream().filter(si -> si.getMedicine().getId().equals(medicine.get().getId()))
-                    .collect(Collectors.toList()).stream().findFirst();
-            if (SIToUpdate.isEmpty())
-                throw new Exception("Supplier does not have required medicine");
-            SIToUpdate.get().setAmount(stockItemDTO.getAmount());
-            supplierRepository.save(supp);
+        Optional<SupplierItem> optionalSupplierItem = supplierItemRepository.getSupplierItemBySupplierIdCode(supp.getId(), stockItemDTO.getMedicineId());
+        if (optionalSupplierItem.isEmpty()) {
+            supplierItem.setAmount(stockItemDTO.getAmount());
+            supplierItem.setMedicine(medicine.get());
+            supplierItem.setSupplier(supp);
+            supplierItemRepository.save(supplierItem);
+        } else {
+            optionalSupplierItem.get().setAmount(optionalSupplierItem.get().getAmount() + stockItemDTO.getAmount());
+            supplierItemRepository.save(optionalSupplierItem.get());
         }
     }
 
@@ -223,10 +191,17 @@ public class SupplierServiceImpl implements SupplierService {
         // Ako je prosao, onda ne moze da se doda (150s ogranicenja)
         if (order.get().getDeadline() < (System.currentTimeMillis() + 150000))
             throw new CustomException("You are past the deadline");
-        // Da li je na stanju sve, ako jeste smanji
 
-        if (!onStock(suppId, order.get())) {
-            throw new CustomException("Medicine not in stock");
+        // Da li je svaka stavka iz ordera prisutna kod suppliera
+        for (OrderItem oi : order.get().getOrderItem()) {
+            // Proveri da li ima na stanju (bice zakljucano)
+            Optional<SupplierItem> optionalSupplierItem = supplierItemRepository.getSupplierItemBySupplierIdCodeAmount(supp.getId(), oi.getMedicine().getCode(), oi.getAmount());
+            if (optionalSupplierItem.isEmpty()) {
+                throw new CustomException("Item(s) not in stock");
+            }
+            SupplierItem supplierItem = optionalSupplierItem.get();
+            supplierItem.setAmount(supplierItem.getAmount() - oi.getAmount());
+            supplierItemRepository.save(supplierItem);
         }
 
         Offer offer = new Offer();
@@ -274,34 +249,5 @@ public class SupplierServiceImpl implements SupplierService {
         offerToUpdate.get().setDeliveryDate(offerDTO.getDeliveryDate());
         offerToUpdate.get().setOfferState(offerDTO.getOfferState());
         supplierRepository.save(supp);
-    }
-
-    private boolean onStock(long supplierId, MyOrder order) {
-        Optional<Supplier> s = supplierRepository.findSupplierWithSupplierItemsUsingId(supplierId);
-        if (s.isEmpty()) {
-            return false;
-        }
-        List<SupplierItem> sil = s.get().getSupplierItems();
-        // Da li je svaka stavka iz ordera prisutna kod suppliera
-        for (OrderItem oi : order.getOrderItem()) {
-            for (var suppItem : sil) {
-                if (!oi.getMedicine().getCode().equals(suppItem.getMedicine().getCode()))
-                    continue;
-                boolean onStock = suppItem.getAmount() >= oi.getAmount();
-                if (onStock) {
-                    suppItem.setAmount(suppItem.getAmount() - oi.getAmount());
-                } else {
-                    return false;
-                }
-            }
-        }
-//        for (OrderItem oi: order.getOrderItem()) {
-//            boolean onStock = sil.stream()
-//                    .anyMatch(si -> si.getMedicine().getId().equals(oi.getMedicine().getId()) &&
-//                                    si.getAmount() >= oi.getAmount());
-//            if (!onStock) return false;
-//        }
-        supplierRepository.save(s.get());
-        return true;
     }
 }

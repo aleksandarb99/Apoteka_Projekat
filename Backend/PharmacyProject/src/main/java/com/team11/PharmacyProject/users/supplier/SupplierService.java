@@ -13,9 +13,7 @@ import java.util.Map;
 public interface SupplierService {
     List<SupplierItem> getStockForId(long id);
 
-    void insertStockItem(long supplierId, SupplierStockItemDTO stockItemDTO) throws Exception;
-
-    void updateStockItem(long id, SupplierStockItemDTO stockItemDTO) throws Exception;
+    void insertStockItem(long supplierId, SupplierStockItemDTO stockItemDTO) throws CustomException;
 
     List<OfferListDTO> getOffersForId(long supplierId);
 

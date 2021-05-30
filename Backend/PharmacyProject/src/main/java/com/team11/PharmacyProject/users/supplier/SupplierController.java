@@ -47,18 +47,10 @@ public class SupplierController {
         try {
             supplierService.insertStockItem(id, stockItemDTO);
             return new ResponseEntity<>("Stock added successfully", HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (CustomException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping(value="/stock/{id}")
-    public ResponseEntity<String> updateStockAmount(@PathVariable("id") long id, @RequestBody SupplierStockItemDTO stockItemDTO) {
-        try {
-            supplierService.updateStockItem(id, stockItemDTO);
-            return new ResponseEntity<>("Stock updated successfully", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Error. Stock item not updated", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.BAD_REQUEST);
         }
     }
 

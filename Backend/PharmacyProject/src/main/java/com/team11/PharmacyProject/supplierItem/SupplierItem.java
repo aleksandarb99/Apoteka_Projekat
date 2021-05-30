@@ -15,7 +15,7 @@ public class SupplierItem {
     @Column(name = "amount", nullable = false)
     private int amount;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "medicine_id")
     private Medicine medicine;
 

@@ -83,6 +83,8 @@ insert into order_item (amount, medicine_id) values (110, 1);
 insert into order_item (amount, medicine_id) values (130, 4);
 insert into order_item (amount, medicine_id) values (110, 1);
 insert into order_item (amount, medicine_id) values (130, 5);
+insert into order_item (amount, medicine_id) values (30, 1);
+insert into order_item (amount, medicine_id) values (15, 5);
 
 /*Workplace - WorkDays*/
 
@@ -526,6 +528,7 @@ insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1
 insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
 insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1620817200000, 1, 'IN_PROGRESS');
 insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1613411940000, 1, 'ON_HOLD');
+insert into my_order (admin_id, deadline, pharmacy_id, order_state) values (9, 1624652935000, 1, 'IN_PROGRESS');
 
 /*MyOrders - OrderItems*/
 insert into my_order_order_item (my_order_id, order_item_id) values (1, 1);
@@ -543,6 +546,8 @@ insert into my_order_order_item (my_order_id, order_item_id) values (6, 12);
 insert into my_order_order_item (my_order_id, order_item_id) values (6, 13);
 insert into my_order_order_item (my_order_id, order_item_id) values (7, 14);
 insert into my_order_order_item (my_order_id, order_item_id) values (7, 15);
+insert into my_order_order_item (my_order_id, order_item_id) values (8, 16);
+insert into my_order_order_item (my_order_id, order_item_id) values (8, 17);
 
 /*Offers*/
 insert into offer (delivery_date, offer_state, price, order_id)
