@@ -34,7 +34,9 @@ public class ComplaintResponseServiceImpl implements ComplaintResponseService {
     }
 
     @Override
-    @Transactional
+    @Transactional(
+            rollbackFor = { CustomException.class }
+    )
     public void submitResponse(ComplaintResponseDTO complaintResponseDTO) throws CustomException {
         MyUser admin = userRepository.findFirstById(complaintResponseDTO.getAdminId());
         if (admin == null) {
@@ -48,19 +50,16 @@ public class ComplaintResponseServiceImpl implements ComplaintResponseService {
             throw new CustomException("Already resolved");
         }
 
-
-        ComplaintResponse cr = new ComplaintResponse(
-                complaintResponseDTO.getId(),
-                complaintResponseDTO.getResponseText(),
-                complaintResponseDTO.getDate(),
-                complaint.get(),
-                admin
-        );
-
         Complaint c = complaint.get();
         c.setState(ComplaintState.RESOLVED);
 
-        complaintRepository.save(c);
+        ComplaintResponse cr = new ComplaintResponse(
+                complaintResponseDTO.getResponseText(),
+                complaintResponseDTO.getDate(),
+                c,
+                admin
+        );
+
         complaintResponseRepository.save(cr);
     }
 

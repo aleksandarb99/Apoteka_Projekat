@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.OptimisticLockException;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,20 +26,20 @@ public class ComplaintTests {
     private ComplaintResponseService complaintResponseService;
 
     @Test
-    public void multipleAdminsSubmittedComplaint() {
+    public void multipleAdminsSubmittedComplaint() throws Throwable {
         ExecutorService executor = Executors.newFixedThreadPool(2);
         Runnable r1 = () -> {
             ComplaintResponseDTO response = new ComplaintResponseDTO();
             response.setComplaintId(3L);
             response.setAdminId(8);
             response.setResponseText("AAAAA");
-            System.out.println("Prvi admin odgovara");
             try {
+                System.out.println("Prvi admin odgovara");
                 complaintResponseService.submitResponse(response);
+                System.out.println("Prvi admin odgovorio");
             } catch (CustomException customException) {
-                customException.printStackTrace();
+                System.out.println(customException.getMessage());
             }
-            System.out.println("Prvi admin odgovorio");
 
         };
 
@@ -50,23 +48,24 @@ public class ComplaintTests {
             response.setComplaintId(3L);
             response.setAdminId(19);
             response.setResponseText("BBBBB");
-            System.out.println("Drugi admin odgovara");
             try {
+                System.out.println("Drugi admin odgovara");
                 complaintResponseService.submitResponse(response);
+                System.out.println("Drugi admin odgovario");
             } catch (CustomException customException) {
-                customException.printStackTrace();
+                System.out.println(customException.getMessage());
             }
-            System.out.println("Drugi admin odgovario");
 
         };
 
-        Future<?> future = executor.submit(r1);
         executor.submit(r2);
+        Future<?> future = executor.submit(r1);
 
         try {
             future.get();
         } catch (ExecutionException | InterruptedException e) {
-            System.out.println("Exception");
+            System.out.println("Exception from thread " + e.getCause().getClass());
+            throw e.getCause();
         }
     }
 

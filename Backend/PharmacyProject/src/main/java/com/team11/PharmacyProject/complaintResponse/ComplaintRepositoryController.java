@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.OptimisticLockException;
@@ -38,13 +39,14 @@ public class ComplaintRepositoryController {
     public ResponseEntity<String> submitResponse(@RequestBody @Valid ComplaintResponseDTO complaintResponseDTO) {
         try {
             complaintResponseService.submitResponse(complaintResponseDTO);
-            return new ResponseEntity<>("Successfully submitted", HttpStatus.OK);
-        } catch (OptimisticLockException ex) {
-            return new ResponseEntity<>("Already answered!", HttpStatus.OK);
+            return new ResponseEntity<>("Successfully submitted.", HttpStatus.OK);
+        } catch (ObjectOptimisticLockingFailureException ex) {
+            return new ResponseEntity<>("Already answered!", HttpStatus.BAD_REQUEST);
         } catch (CustomException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
-            return new ResponseEntity<>("Server error!", HttpStatus.INTERNAL_SERVER_ERROR);
+            ex.printStackTrace();
+            return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

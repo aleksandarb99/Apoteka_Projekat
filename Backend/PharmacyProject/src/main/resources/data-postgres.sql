@@ -67,20 +67,6 @@ insert into medicine (name, code, content, side_effects, daily_intake, recipe_re
                             'Nema podataka.', 2, 'REQUIRED', 'Za lečenje esencijalne arterijske hipertenzije (I10) ukoliko se tromesečno lečenje pojedinačnim lekovima koji se koriste za lečenje hipertenzije, uključujući lečenje sa više pojedinačnih lekova istovremeno, pokazalo nedovoljno efikasno.',
                             2.1, 3, 1, 4, 5);
 
-/*Medicine items*/
-insert into medicine_item (amount, medicine_id) values (18, 1);
-insert into medicine_item (amount, medicine_id) values (25, 2);
-insert into medicine_item (amount, medicine_id) values (14, 3);
-insert into medicine_item (amount, medicine_id) values (55, 4);
-insert into medicine_item (amount, medicine_id) values (67, 5);
-insert into medicine_item (amount, medicine_id) values (30, 1);
-insert into medicine_item (amount, medicine_id) values (0, 5);
-insert into medicine_item (amount, medicine_id) values (100, 4);
-insert into medicine_item (amount, medicine_id) values (12, 2);
-insert into medicine_item (amount, medicine_id) values (63, 1);
-insert into medicine_item (amount, medicine_id) values (2, 2);
-insert into medicine_item (amount, medicine_id) values (9, 3);
-
 /*Supplier items*/
 insert into supplier_item (amount, medicine_id) values (30, 1);
 insert into supplier_item (amount, medicine_id) values (20, 2);
@@ -104,27 +90,6 @@ insert into order_item (amount, medicine_id) values (110, 1);
 insert into order_item (amount, medicine_id) values (130, 4);
 insert into order_item (amount, medicine_id) values (110, 1);
 insert into order_item (amount, medicine_id) values (130, 5);
-
-
-/*Price Lists*/
-insert into price_list (id) values (1);
-insert into price_list (id) values (2);
-insert into price_list (id) values (3);
-
-/*PriceList - MedicineItem*/
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (1, 1);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (1, 2);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (2, 3);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 5);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 4);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (2, 6);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (1, 7);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (1, 8);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (2, 9);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 10);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (3, 11);
-insert into price_list_medicine_items (price_list_id, medicine_items_id) values (1, 12);
-
 
 /*Workplace - WorkDays*/
 
@@ -307,6 +272,49 @@ insert into medicine_price (price, start_date) values (640, 1616241600000);
 
 insert into medicine_price (price, start_date) values (700, 1616241600000);
 
+
+/*Complaints*/
+insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
+                    values ('Nije ispostovan dogovor, trazim da bude sankcionisan.', 'Nebojsa Radovanovic', 5, 'PHARMACIST', 'RESOLVED', 1616587200000, 1);
+insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
+                    values ('Neprikladno ponasanje.', 'Marko Maric', 6, 'DERMATOLOGIST', 'RESOLVED', 1616587203000, 2);
+insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
+                    values ('Neprikladno ponasanje OPET!!!.', 'Marko Maric', 6, 'DERMATOLOGIST', 'IN_PROGRESS', 1616587203000, 2);
+
+/*Complaint Response*/
+insert into complaint_response (response_text, date, complaint_id, user_id)
+                    values ('Bice sakcionisan!', 1616673600000, 1, 8);
+insert into complaint_response (response_text, date, complaint_id, user_id)
+                    values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602000, 2, 8);
+
+/*Pharmacies*/
+insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, points, address_id)
+                    values (4.4, 500, 15, 'Najjaca apoteka u gradu.', 'Zelena Apoteka', 5, 5);
+insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, points, address_id)
+                    values (4.8, 450, 10, 'Poverenje, sigurnost i dostupnost su, već skoro 30 godina, glavna obeležja Apotekarske ustanove Jankovic.', 'Apoteka Jankovic', 10, 1);
+insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, points, address_id)
+                    values (2.9, 200, 5, 'Poručite sve što vam je potrebno na vašu kućnu adresu. Imas veliki izbor i sjajanu cenu samo na BENU online shop-u.', 'Benu Apoteka', 15, 2);
+
+
+/*Price Lists*/
+insert into price_list (pharmacy_id) values (1);
+insert into price_list (pharmacy_id) values (2);
+insert into price_list (pharmacy_id) values (3);
+
+/*Medicine items*/
+insert into medicine_item (amount, medicine_id, price_list_id) values (18, 1, 1);
+insert into medicine_item (amount, medicine_id, price_list_id) values (25, 2, 1);
+insert into medicine_item (amount, medicine_id, price_list_id) values (14, 3, 2);
+insert into medicine_item (amount, medicine_id, price_list_id) values (55, 4, 3);
+insert into medicine_item (amount, medicine_id, price_list_id) values (67, 5, 3);
+insert into medicine_item (amount, medicine_id, price_list_id) values (30, 1, 2);
+insert into medicine_item (amount, medicine_id, price_list_id) values (0, 5, 1);
+insert into medicine_item (amount, medicine_id, price_list_id) values (100, 4, 1);
+insert into medicine_item (amount, medicine_id, price_list_id) values (12, 2, 2);
+insert into medicine_item (amount, medicine_id, price_list_id) values (63, 1, 3);
+insert into medicine_item (amount, medicine_id, price_list_id) values (2, 2, 3);
+insert into medicine_item (amount, medicine_id, price_list_id) values (9, 3, 1);
+
 /* MedicineItem - MedicinePrices*/
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (1, 1);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (1, 2);
@@ -325,27 +333,21 @@ insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id)
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (12, 15);
 insert into medicine_item_medicine_prices (medicine_item_id, medicine_prices_id) values (12, 16);
 
-/*Complaints*/
-insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
-                    values ('Nije ispostovan dogovor, trazim da bude sankcionisan.', 'Nebojsa Radovanovic', 5, 'PHARMACIST', 'RESOLVED', 1616587200000, 1);
-insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
-                    values ('Neprikladno ponasanje.', 'Marko Maric', 6, 'DERMATOLOGIST', 'RESOLVED', 1616587203000, 2);
-insert into complaint (content, complaint_on, complaint_on_id, type, state, date, patient_id)
-                    values ('Neprikladno ponasanje OPET!!!.', 'Marko Maric', 6, 'DERMATOLOGIST', 'IN_PROGRESS', 1616587203000, 2);
 
-/*Complaint Response*/
-insert into complaint_response (response_text, date, complaint_id, user_id)
-                    values ('Bice sakcionisan!', 1616673600000, 1, 8);
-insert into complaint_response (response_text, date, complaint_id, user_id)
-                    values ('Uz duzno postovanje, bice preuzete najstroze mere!', 1616673602000, 2, 8);
+-- /*PriceList - MedicineItem*/
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (1, 1);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (1, 2);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (2, 3);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (3, 5);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (3, 4);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (2, 6);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (1, 7);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (1, 8);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (2, 9);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (3, 10);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (3, 11);
+-- insert into price_list_medicine_items (price_list_pharmacy_id, medicine_items_id) values (1, 12);
 
-/*Pharmacies*/
-insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, points, address_id, price_list_id)
-                    values (4.4, 500, 15, 'Najjaca apoteka u gradu.', 'Zelena Apoteka', 5, 5, 1);
-insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, points, address_id, price_list_id)
-                    values (4.8, 450, 10, 'Poverenje, sigurnost i dostupnost su, već skoro 30 godina, glavna obeležja Apotekarske ustanove Jankovic.', 'Apoteka Jankovic', 10, 1, 2);
-insert into pharmacy (avg_grade, consultation_price, consultation_duration, description, name, points, address_id, price_list_id)
-                    values (2.9, 200, 5, 'Poručite sve što vam je potrebno na vašu kućnu adresu. Imas veliki izbor i sjajanu cenu samo na BENU online shop-u.', 'Benu Apoteka', 15, 2, 3);
 
 /*Pharmacy - Subscribers*/
 insert into pharmacy_subscribers (pharmacy_id, subscribers_id) values (1, 1);

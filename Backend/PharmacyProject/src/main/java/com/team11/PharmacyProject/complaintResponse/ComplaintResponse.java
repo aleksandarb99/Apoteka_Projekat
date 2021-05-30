@@ -34,8 +34,7 @@ public class ComplaintResponse {
     public ComplaintResponse() {
     }
 
-    public ComplaintResponse(Long id, String responseText, Long date, Complaint complaint, MyUser user) {
-        this.id = id;
+    public ComplaintResponse(String responseText, Long date, Complaint complaint, MyUser user) {
         this.responseText = responseText;
         this.date = date;
         this.complaint = complaint;
