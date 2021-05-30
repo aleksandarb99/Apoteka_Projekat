@@ -4,9 +4,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import java.util.List;
 
 @Repository
@@ -45,11 +49,21 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             "order by a.startTime asc")
     List<Appointment> getAppointmentsOfPatientWorkerOnDate(Long workerID, Long patID, Long start, Long end);
 
-    @Query("select case when count(a) > 0 then true else false end from Appointment a where " +
-            "(a.worker.id = ?1 or a.patient.id = ?2) and " +
-            "((a.startTime >= ?3 and a.startTime <= ?4) or (a.endTime >= ?3 and a.endTime <= ?4) or " +
-            "(a.startTime >= ?3 and a.endTime <= ?4) or (a.startTime <= ?3 and a.endTime >= ?4))")
-    boolean hasAppointmentsInRange(Long workerID, Long patientID, Long apptStart, Long apptEnd);
+
+//    @Query("select case when count(a) > 0 then true else false end from Appointment a where " +
+//            "(a.worker.id = ?1 or a.patient.id = ?2) and " +
+//            "((a.startTime >= ?3 and a.startTime <= ?4) or (a.endTime >= ?3 and a.endTime <= ?4) or " +
+//            "(a.startTime >= ?3 and a.endTime <= ?4) or (a.startTime <= ?3 and a.endTime >= ?4))")
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select a from Appointment a where (a.worker.id = ?1 or a.patient.id = ?2) and a.appointmentState='RESERVED'")
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="0")})
+    List<Appointment> appointmentsInRange(Long workerID, Long patientID);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select a from Appointment a where a.worker.id = ?1 and (a.appointmentState='RESERVED' or a.appointmentState='EMPTY')")
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="0")})
+    List<Appointment> dermAppointmentsInRange(Long workerID);
 
     @Query("SELECT a FROM Appointment  a JOIN FETCH a.pharmacy p where a.startTime > ?1 and a.startTime < ?2 and p.id = ?3 and a.appointmentState = 'FINISHED' order by a.startTime asc")
     List<Appointment> getAppointmentBeetwenTwoTimestamps(Long yearAgo, Long currTime, Long pharmacyId);
