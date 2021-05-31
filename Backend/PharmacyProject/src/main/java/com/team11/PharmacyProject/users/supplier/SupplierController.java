@@ -6,6 +6,7 @@ import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
 import com.team11.PharmacyProject.dto.offer.OfferListDTO;
 import com.team11.PharmacyProject.dto.workplace.WorkplaceDTOWithWorkdays;
 import com.team11.PharmacyProject.enums.OfferState;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.offer.Offer;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import org.modelmapper.ModelMapper;
@@ -46,18 +47,10 @@ public class SupplierController {
         try {
             supplierService.insertStockItem(id, stockItemDTO);
             return new ResponseEntity<>("Stock added successfully", HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (CustomException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping(value="/stock/{id}")
-    public ResponseEntity<String> updateStockAmount(@PathVariable("id") long id, @RequestBody SupplierStockItemDTO stockItemDTO) {
-        try {
-            supplierService.updateStockItem(id, stockItemDTO);
-            return new ResponseEntity<>("Stock updated successfully", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Error. Stock item not updated", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -111,10 +104,12 @@ public class SupplierController {
         try {
             supplierService.insertOffer(id, offerDTO);
             return new ResponseEntity<>("Offer added successfully", HttpStatus.OK);
-
-        } catch (Exception e) {
+        } catch (PessimisticLockingFailureException e) {
+            return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+        } catch (CustomException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-
+        } catch (Exception e) {
+            return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.BAD_REQUEST);
         }
     }
 

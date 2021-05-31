@@ -146,4 +146,12 @@ public class MyUser {
    public void setEmailVerified(boolean emailVerified) {
       this.emailVerified = emailVerified;
    }
+
+   public int getVersion() {
+      return version;
+   }
+
+   public void setVersion(int version) {
+      this.version = version;
+   }
 }

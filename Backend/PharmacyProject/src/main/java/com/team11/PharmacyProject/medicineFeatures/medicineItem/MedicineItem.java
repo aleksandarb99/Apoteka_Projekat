@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.medicineFeatures.medicineItem;
 
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.priceList.PriceList;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +21,10 @@ public class MedicineItem {
     @Column(name = "amount", nullable = false)
     private int amount;
 
+    @ManyToOne
+    @JoinColumn(name = "price_list_id", nullable = false)
+    private PriceList priceList;
+  
     @Version
     @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
