@@ -199,7 +199,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         List<Appointment> appointments;
         try {
-            appointments = appointmentRepository.dermAppointmentsInRange(dId);
+            appointments = appointmentRepository.dermAppointments(dId);
         }catch(PessimisticLockingFailureException | PersistenceException e){
             throw new RuntimeException("Server is busy! Couldn't create appointment! Try again please!");
         }
@@ -808,7 +808,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         //da li se preklapaju appointmenti
         List<Appointment> appointments;
         try {
-            appointments = appointmentRepository.appointmentsInRange(workerID, patientID);
+            appointments = appointmentRepository.appointmentsOfWorkerAndPatient(workerID, patientID);
         }catch(PessimisticLockingFailureException | PersistenceException e){
             //todo izmeniti u klasi exception koji se baca
             //todo hvatati ovaj exception kod gettovanja appointmenata

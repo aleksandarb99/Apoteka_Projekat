@@ -58,12 +58,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select a from Appointment a where (a.worker.id = ?1 or a.patient.id = ?2) and a.appointmentState='RESERVED'")
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="0")})
-    List<Appointment> appointmentsInRange(Long workerID, Long patientID);
+    List<Appointment> appointmentsOfWorkerAndPatient(Long workerID, Long patientID);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select a from Appointment a where a.worker.id = ?1 and (a.appointmentState='RESERVED' or a.appointmentState='EMPTY')")
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="0")})
-    List<Appointment> dermAppointmentsInRange(Long workerID);
+    List<Appointment> dermAppointments(Long workerID);
 
     @Query("SELECT a FROM Appointment  a JOIN FETCH a.pharmacy p where a.startTime > ?1 and a.startTime < ?2 and p.id = ?3 and a.appointmentState = 'FINISHED' order by a.startTime asc")
     List<Appointment> getAppointmentBeetwenTwoTimestamps(Long yearAgo, Long currTime, Long pharmacyId);
