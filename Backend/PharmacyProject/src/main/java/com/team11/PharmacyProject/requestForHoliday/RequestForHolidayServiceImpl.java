@@ -13,6 +13,7 @@ import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class RequestForHolidayServiceImpl implements RequestForHolidayService{
 
     @Autowired
@@ -70,7 +72,8 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
     }
 
     @Override
-    public void rejectRequest(String requestId, String reason) {
+    @Transactional(readOnly = false)
+    public RequestForHoliday rejectRequest(String requestId, String reason) {
         long id;
         try {
             String substring = requestId.substring(7);
@@ -86,23 +89,18 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
         RequestForHoliday r = requestForHolidayRepository.findOneWithWorker(id);
         if(r==null)
             throw new RuntimeException("Request with id "+id+" does not exist!");
+        if(!r.getRequestState().equals(AbsenceRequestState.PENDING))
+            throw new RuntimeException("Request with id "+id+" is not pending!");
 
         r.setDeclineText(reason);
         r.setRequestState(AbsenceRequestState.CANCELLED);
         requestForHolidayRepository.save(r);
-
-        String email = "abuljevic8@gmail.com";
-        RequestForHolidayWithWorkerDetailsDTO dto = new RequestForHolidayWithWorkerDetailsDTO(r);
-
-        try {
-            emailService.notifyWorkerAboutRequestForHoliday(email, dto, reason);
-        } catch (Exception e) {
-            throw new RuntimeException("Problem with sending mail!");
-        }
+        return r;
     }
 
     @Override
-    public void acceptRequest(String requestId) {
+    @Transactional(readOnly = false)
+    public RequestForHoliday acceptRequest(String requestId) {
         long id;
         try {
             String substring = requestId.substring(7);
@@ -112,21 +110,14 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
         }
 
         RequestForHoliday r = requestForHolidayRepository.findOneWithWorker(id);
-
         if(r==null)
             throw new RuntimeException("Request with id "+id+" does not exist!");
+        if(!r.getRequestState().equals(AbsenceRequestState.PENDING))
+            throw new RuntimeException("Request with id "+id+" is not pending!");
 
         r.setRequestState(AbsenceRequestState.ACCEPTED);
         requestForHolidayRepository.save(r);
-
-        String email = "abuljevic8@gmail.com";
-        RequestForHolidayWithWorkerDetailsDTO dto = new RequestForHolidayWithWorkerDetailsDTO(r);
-
-        try {
-            emailService.notifyWorkerAboutRequestForHoliday(email, dto, "");
-        } catch (Exception e) {
-            throw new RuntimeException("Problem with sending mail!");
-        }
+        return r;
     }
 
     @Override
