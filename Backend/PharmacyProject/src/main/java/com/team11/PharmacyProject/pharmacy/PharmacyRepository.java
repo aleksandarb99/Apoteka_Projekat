@@ -1,15 +1,10 @@
 package com.team11.PharmacyProject.pharmacy;
 
-import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +30,6 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
 
     @Query("SELECT distinct p FROM Pharmacy p LEFT JOIN FETCH p.workplaces")
     List<Pharmacy> findPharmaciesFetchWorkplaces(Sort sorter);
-
-    @Query("SELECT p FROM Pharmacy p LEFT JOIN FETCH p.appointments WHERE p.id = (:id)")
-    Pharmacy findPharmacyByIdFetchAppointments(@Param("id") Long id);
 
     @Query("SELECT p FROM Pharmacy p left join fetch p.priceList plist join fetch plist.medicineItems mi " +
             "join fetch mi.medicine med join fetch med.manufacturer join fetch med.medicineForm join fetch med.medicineType " +
@@ -79,4 +71,7 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
 
     @Query("SELECT p FROM Pharmacy p JOIN FETCH p.subscribers pl WHERE p.id = (:id)")
     Optional<Pharmacy> getPharmacyWithSubribers(Long id);
+
+    @Query("SELECT p FROM Pharmacy p JOIN FETCH p.priceList pl WHERE p.id = ?1")
+    Pharmacy findPharmacyFetchPriceList(Long pharmacyId);
 }

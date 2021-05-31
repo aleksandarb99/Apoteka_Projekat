@@ -34,6 +34,10 @@ public class RequestForHoliday {
     @JoinColumn(name = "pharmacy_worker_id")
     private PharmacyWorker pharmacyWorker;
 
+    @Version
+    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Long version;
+
     public RequestForHoliday() {
     }
 
@@ -53,6 +57,14 @@ public class RequestForHoliday {
         this.absenceType = absenceType;
         this.pharmacyWorker = pharmacyWorker;
         this.requestState = AbsenceRequestState.PENDING;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public Long getId() {

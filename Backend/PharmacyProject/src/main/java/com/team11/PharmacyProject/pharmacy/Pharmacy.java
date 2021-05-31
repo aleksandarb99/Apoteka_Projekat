@@ -39,8 +39,8 @@ public class Pharmacy {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Patient> subscribers;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "price_list_id")
+    @OneToOne(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private PriceList priceList;
 
     @OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -55,6 +55,10 @@ public class Pharmacy {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MyUser> admins;
+
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private int version;
 
     public Pharmacy() {
     }
@@ -75,6 +79,14 @@ public class Pharmacy {
         this.consultationPrice = consultationPrice;
         this.consultationDuration = consultationDuration;
         this.pointsForAppointment = pointsForAppointment;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public List<MyUser> getAdmins() {

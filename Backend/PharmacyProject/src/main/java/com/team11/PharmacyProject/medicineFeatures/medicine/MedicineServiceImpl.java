@@ -213,7 +213,7 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     public List<Medicine> filterMedicine(String searchParams) {
         List<SearchCriteria> sc = new ArrayList<>();
-        if (searchParams != null) {
+        if (searchParams != null && !searchParams.isEmpty()) {
             Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w ]*),", Pattern.UNICODE_CHARACTER_CLASS);
             Matcher matcher = pattern.matcher(searchParams + ",");
             while (matcher.find()) {
@@ -223,12 +223,7 @@ public class MedicineServiceImpl implements MedicineService {
             return new ArrayList<>();
         }
 
-        // TODO refactor
-        return medicineRepository.findAllFetchTypeForm().stream().filter(m ->
-                m.getName().toLowerCase().contains(sc.get(0).getValue().toString().toLowerCase()) &&
-                        (sc.get(1).getValue().toString().isEmpty() || m.getMedicineType().getName().equalsIgnoreCase(sc.get(1).getValue().toString())) &&
-                        (sc.get(2).getValue().toString().isEmpty() || m.getMedicineForm().getName().equalsIgnoreCase(sc.get(2).getValue().toString())))
-                .collect(Collectors.toList());
+        return medicineRepository.filterMedicine(sc);
     }
 
     private List<Medicine> addMedicine(List<Medicine> medicines, Medicine m) {

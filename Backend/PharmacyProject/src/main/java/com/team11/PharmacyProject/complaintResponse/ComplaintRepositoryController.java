@@ -2,13 +2,16 @@ package com.team11.PharmacyProject.complaintResponse;
 
 import com.team11.PharmacyProject.dto.complaintResponse.ComplaintResponseDTO;
 import com.team11.PharmacyProject.dto.complaintResponse.ComplaintResponseInfoDTO;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,10 +37,16 @@ public class ComplaintRepositoryController {
 
     @PostMapping(value="/{complaintId}")
     public ResponseEntity<String> submitResponse(@RequestBody @Valid ComplaintResponseDTO complaintResponseDTO) {
-        if (complaintResponseService.submitResponse(complaintResponseDTO)) {
-            return new ResponseEntity<>("Successfully submitted", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error. Response not submitted", HttpStatus.BAD_REQUEST);
+        try {
+            complaintResponseService.submitResponse(complaintResponseDTO);
+            return new ResponseEntity<>("Successfully submitted.", HttpStatus.OK);
+        } catch (ObjectOptimisticLockingFailureException ex) {
+            return new ResponseEntity<>("Already answered!", HttpStatus.BAD_REQUEST);
+        } catch (CustomException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

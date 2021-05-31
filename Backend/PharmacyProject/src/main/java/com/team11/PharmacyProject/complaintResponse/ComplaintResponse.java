@@ -27,11 +27,14 @@ public class ComplaintResponse {
     @JoinColumn(name = "user_id")
     private MyUser admin;
 
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private int version;
+
     public ComplaintResponse() {
     }
 
-    public ComplaintResponse(Long id, String responseText, Long date, Complaint complaint, MyUser user) {
-        this.id = id;
+    public ComplaintResponse(String responseText, Long date, Complaint complaint, MyUser user) {
         this.responseText = responseText;
         this.date = date;
         this.complaint = complaint;
@@ -76,5 +79,13 @@ public class ComplaintResponse {
 
     public void setAdmin(MyUser admin) {
         this.admin = admin;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

@@ -71,4 +71,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("SELECT a FROM Appointment  a where (a.startTime > ?1 and a.appointmentState = 'RESERVED') or " +
             "(a.startTime > ?2 and a.appointmentState='IN_PROGRESS')")
     List<Appointment> getNotFinishedAppointments(Long time, Long time2);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @QueryHints({@QueryHint(name="javax.persistence.lock.timeout", value = "4000")})
+    @Query("SELECT a FROM Appointment  a where a.worker.id=?1")
+    List<Appointment> getAppointmentsOfWorker(Long workerId);
 }

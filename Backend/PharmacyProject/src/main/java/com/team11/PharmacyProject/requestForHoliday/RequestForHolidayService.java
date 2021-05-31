@@ -20,9 +20,9 @@ public interface RequestForHolidayService {
 
     boolean isWorkerOnHoliday(Long workerId, Date date);
 
-    void acceptRequest(String requestId);
+    RequestForHoliday acceptRequest(String requestId);
 
-    void rejectRequest(String requestId, String reason);
+    RequestForHoliday rejectRequest(String requestId, String reason);
 
     void cancelExpiredVacRequests();
 }

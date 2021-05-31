@@ -19,7 +19,6 @@ public class RankingCategoryServiceImpl implements RankingCategoryService {
     @Override
     public RankingCategory getCategoryByPoints(int points) {
 
-        List<RankingCategory> selected = new ArrayList<>();
         List<RankingCategory> categories = rankingRepository.findAll(Sort.by(Sort.Direction.ASC, "pointsRequired"));
 
         RankingCategory cat = null;

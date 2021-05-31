@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,9 +58,13 @@ public class MedicineController {
 
     @GetMapping(value="", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MedicineDTO>> getFilteredMedicine(@RequestParam(value = "search") String searchParams) {
-        List<Medicine> medicine = medicineService.filterMedicine(searchParams);
-        List<MedicineDTO> medicineDTOs = medicine.stream().map(m -> mapper.map(m, MedicineDTO.class)).collect(Collectors.toList());
-        return new ResponseEntity<>(medicineDTOs, HttpStatus.OK);
+        try {
+            List<Medicine> medicine = medicineService.filterMedicine(searchParams);
+            List<MedicineDTO> medicineDTOs = medicine.stream().map(m -> mapper.map(m, MedicineDTO.class)).collect(Collectors.toList());
+            return new ResponseEntity<>(medicineDTOs, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/crud", produces = MediaType.APPLICATION_JSON_VALUE)

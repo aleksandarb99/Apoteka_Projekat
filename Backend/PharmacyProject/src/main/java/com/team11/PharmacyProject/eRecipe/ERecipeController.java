@@ -4,8 +4,10 @@ import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDispenseDTO;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
 import com.team11.PharmacyProject.email.EmailService;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +41,21 @@ public class ERecipeController {
 
     @PostMapping(value="/dispense-medicine/{patientId}")
     public ResponseEntity<?> dispenseMedicine(@PathVariable("patientId") long patientId, @RequestBody @Valid ERecipeDispenseDTO eRecipeDispenseDTO) {
-        ERecipe recipe = eRecipeService.dispenseMedicine(patientId, eRecipeDispenseDTO);
-        if (recipe != null) {
-            emailService.notifyPatientAboutERecipe(recipe);
-            return new ResponseEntity<>("Medicine successfully dispensed", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error. Medicine not dispensed", HttpStatus.BAD_REQUEST);
+        ERecipe recipe;
+        try {
+            recipe = eRecipeService.dispenseMedicine(patientId, eRecipeDispenseDTO);
+            if (recipe != null) {
+                emailService.notifyPatientAboutERecipe(recipe);
+                return new ResponseEntity<>("Medicine successfully dispensed", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Medicine not dispensed. Try again later.", HttpStatus.BAD_REQUEST);
+        } catch (PessimisticLockingFailureException ex) {
+            return new ResponseEntity<>("Medicine not dispensed. Try again later.", HttpStatus.BAD_REQUEST);
+        }
+        catch (CustomException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Medicine not dispensed.", HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 
 @RestController
@@ -76,6 +77,8 @@ public class RatingController {
 
         try {
             ratingService.addRating(dto);
+        }catch(OptimisticLockException e) {
+            return new ResponseEntity<>("Failed! Try again", HttpStatus.BAD_REQUEST);
         }catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -93,6 +96,8 @@ public class RatingController {
 
         try {
             ratingService.editRating(dto);
+        }catch(OptimisticLockException e) {
+            return new ResponseEntity<>("Failed! Try again", HttpStatus.BAD_REQUEST);
         }catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

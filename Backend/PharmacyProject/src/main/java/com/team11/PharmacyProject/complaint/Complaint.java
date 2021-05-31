@@ -37,6 +37,10 @@ public class Complaint {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private int version;
+
     public Complaint() {
     }
 
@@ -113,5 +117,13 @@ public class Complaint {
 
     public void setState(ComplaintState state) {
         this.state = state;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
