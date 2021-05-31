@@ -23,6 +23,8 @@ import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineR
 import com.team11.PharmacyProject.myOrder.MyOrder;
 import com.team11.PharmacyProject.offer.OfferService;
 import com.team11.PharmacyProject.orderItem.OrderItem;
+import com.team11.PharmacyProject.priceList.PriceList;
+import com.team11.PharmacyProject.priceList.PriceListRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
@@ -34,6 +36,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.time.Instant;
@@ -49,6 +52,9 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Autowired
     PharmacyRepository pharmacyRepository;
+
+    @Autowired
+    PriceListRepository priceListRepository;
 
     @Autowired
     MedicineService medicineService;
@@ -274,32 +280,6 @@ public class PharmacyServiceImpl implements PharmacyService {
             }
         }
         return data;
-    }
-
-    @Override
-    public void addMedicineToStock(MyOrder order1) {
-        Pharmacy pharmacy = order1.getPharmacy();
-        for (OrderItem item : order1.getOrderItem()) {
-            for (MedicineItem mitem : pharmacy.getPriceList().getMedicineItems()) {
-                if (item.getMedicine().getId().equals(mitem.getMedicine().getId())) {
-                    mitem.setAmount(mitem.getAmount() + item.getAmount());
-                    break;
-                }
-            }
-        }
-
-        pharmacyRepository.save(pharmacy);
-
-        List<Inquiry> list = inquiryService.getInquiriesByPharmacyId(pharmacy.getId());
-        for (Inquiry i:list) {
-            for (OrderItem item : order1.getOrderItem()) {
-                if(item.getMedicine().getId().equals(i.getMedicineItems().getMedicine().getId())) {
-                    i.setActive(false);
-                    inquiryService.save(i);
-                }
-            }
-        }
-
     }
 
     @Override

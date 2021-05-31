@@ -96,7 +96,7 @@ public class EmailService {
         javaMailSender.send(mail);
     }
 
-
+    @Async
     public void notifySupplierThatHisOfferIsAccepted(String email, MyOrder myOrder, String name) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(email);
@@ -116,6 +116,7 @@ public class EmailService {
         javaMailSender.send(mail);
     }
 
+    @Async
     public void notifySupplierThatHisOfferIsRefused(String email, MyOrder myOrder, String name) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(email);

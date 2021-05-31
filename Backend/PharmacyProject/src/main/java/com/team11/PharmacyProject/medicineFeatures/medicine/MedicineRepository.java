@@ -22,4 +22,5 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long> {
 
     @Query("SELECT m FROM Medicine m WHERE m.code = (:medicineCode)")
     Medicine findByMedicineCode(String medicineCode);
+
 }

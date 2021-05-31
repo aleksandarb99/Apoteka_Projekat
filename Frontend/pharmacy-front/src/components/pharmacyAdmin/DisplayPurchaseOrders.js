@@ -174,6 +174,7 @@ function DisplayPurchaseOrders({
     let dto = {
       selectedOfferId,
       orderId: showedOrder.id,
+      adminId: getIdFromToken(),
     };
     setShowSpinner(true);
     const request = await axios

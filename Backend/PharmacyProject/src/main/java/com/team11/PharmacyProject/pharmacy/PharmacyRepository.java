@@ -1,15 +1,10 @@
 package com.team11.PharmacyProject.pharmacy;
 
-import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.LockModeType;
-import javax.persistence.QueryHint;
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,4 +71,7 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
 
     @Query("SELECT p FROM Pharmacy p JOIN FETCH p.subscribers pl WHERE p.id = (:id)")
     Optional<Pharmacy> getPharmacyWithSubribers(Long id);
+
+    @Query("SELECT p FROM Pharmacy p JOIN FETCH p.priceList pl WHERE p.id = ?1")
+    Pharmacy findPharmacyFetchPriceList(Long pharmacyId);
 }

@@ -7,6 +7,7 @@ import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWor
 import com.team11.PharmacyProject.email.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 import java.time.Instant;
 import java.time.temporal.ChronoField;
@@ -58,6 +60,8 @@ public class MedicineReservationController {
             emailService.notifyPatientAboutReservation(reservationDTO);
 
             return new ResponseEntity<>("Medicine is reserved successfully!", HttpStatus.OK);
+        }catch (PessimisticLockingFailureException e) {
+            return new ResponseEntity<>("Failed! Try again!", HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -85,6 +89,8 @@ public class MedicineReservationController {
         try {
             service.cancelReservation(id);
             return new ResponseEntity<>("Reservation is canceled successfully!", HttpStatus.OK);
+        }catch (OptimisticLockException e) {
+            return new ResponseEntity<>("Failed! Try again!", HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
