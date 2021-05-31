@@ -51,7 +51,7 @@ const AddEditOfferModal = (props) => {
                 props.onHide()
             })
             .catch((err) => {
-                addToast(err.response.data.message, { appearance: "error" });
+                addToast(getErrorMessage(err), { appearance: "error" });
             })
     }
 
