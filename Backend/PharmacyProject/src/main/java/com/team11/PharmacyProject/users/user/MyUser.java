@@ -59,6 +59,14 @@ public class MyUser {
       this.isPasswordChanged = isPasswordChanged;
    }
 
+   public int getVersion() {
+      return version;
+   }
+
+   public void setVersion(int version) {
+      this.version = version;
+   }
+
    public Long getId() {
       return id;
    }

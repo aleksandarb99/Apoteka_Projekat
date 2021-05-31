@@ -5,8 +5,8 @@ import api from '../../app/api';
 
 const MedicineSearchAndFilter = (props) => {
 
-    const [singleSelectionType, setSingleSelectionType] = useState([]);
-    const [singleSelectionForm, setSingleSelectionForm] = useState([]);
+    const [medicineType, setMedicineType] = useState("");
+    const [medicineForm, setMedicineForm] = useState("");
     const [medTypes, setMedTypes] = useState([]);
     const [medForms, setMedForms] = useState([]);
     const [medName, setMedName] = useState("");
@@ -14,21 +14,11 @@ const MedicineSearchAndFilter = (props) => {
     useEffect(() => {
         api.get(`http://localhost:8080/api/medicine-types/`)
             .then((res) => {
-                let dummy = { id: -1, name: "Prikaži sve" }
-                let d = res.data
-                d.push(dummy)
-                setMedTypes(d)
-
-                setSingleSelectionType([dummy])
+                setMedTypes(res.data)
             });
         api.get(`http://localhost:8080/api/medicine-forms/`)
             .then((res) => {
-                let dummy = { id: -1, name: "Prikaži sve" }
-                let d = res.data
-                d.push(dummy)
-                setMedForms(d)
-
-                setSingleSelectionForm([dummy])
+                setMedForms(res.data)
             });
     }, [])
 
@@ -41,9 +31,7 @@ const MedicineSearchAndFilter = (props) => {
 
 
     const generateSearchParams = () => {
-        let mt = singleSelectionType[0].id === -1 ? "" : singleSelectionType[0].name;
-        let mf = singleSelectionForm[0].id === -1 ? "" : singleSelectionForm[0].name;
-        let searchParam = `name:${medName},medicineType:${mt},medicineForm:${mf}`
+        let searchParam = `name:${medName},medicineType:${medicineType},medicineForm:${medicineForm}`
         return searchParam
     }
 
@@ -62,27 +50,23 @@ const MedicineSearchAndFilter = (props) => {
                     <Col md={3}>
                         <Form.Group>
                             <Form.Label>Type:</Form.Label>
-                            <Typeahead
-                                id="medTypeTypeahead"
-                                labelKey={(option) => `${option.name}`}
-                                onChange={setSingleSelectionType}
-                                options={medTypes}
-                                placeholder={"Select type..."}
-                                selected={singleSelectionType}
-                            />
+                            <Form.Control as="select" custom onChange={(event) => { setMedicineType(event.target.value) }}>
+                                <option value="">Show all</option>
+                                {medTypes.map((mt) => {
+                                    return <option value={mt.name}>{mt.name}</option>
+                                })}
+                            </Form.Control>
                         </Form.Group>
                     </Col>
                     <Col md={3}>
                         <Form.Group>
                             <Form.Label>Form:</Form.Label>
-                            <Typeahead
-                                id="medFormTypeahead"
-                                labelKey={(option) => `${option.name}`}
-                                onChange={setSingleSelectionForm}
-                                options={medForms}
-                                placeholder={"Select form..."}
-                                selected={singleSelectionForm}
-                            />
+                            <Form.Control as="select" custom onChange={(event) => { setMedicineForm(event.target.value) }}>
+                                <option value="">Show all</option>
+                                {medForms.map((mf) => {
+                                    return <option value={mf.name}>{mf.name}</option>
+                                })}
+                            </Form.Control>
                         </Form.Group>
                     </Col>
                     <Col md={1}>

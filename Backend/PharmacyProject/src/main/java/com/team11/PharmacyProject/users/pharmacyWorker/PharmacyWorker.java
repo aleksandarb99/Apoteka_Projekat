@@ -21,6 +21,7 @@ public class PharmacyWorker extends MyUser {
     @OneToMany(mappedBy = "worker", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Workplace> workplaces;
 
+
     public PharmacyWorker() {
     }
 
@@ -30,6 +31,7 @@ public class PharmacyWorker extends MyUser {
         this.appointmentList = appointmentList;
         this.workplaces = workplaces;
     }
+
 
     public double getAvgGrade() {
         return avgGrade;

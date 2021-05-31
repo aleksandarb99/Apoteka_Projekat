@@ -2,11 +2,13 @@ package com.team11.PharmacyProject.requestForHoliday;
 
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayDTO;
 import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayWithWorkerDetailsDTO;
+import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.AbsenceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,9 @@ import java.util.List;
 public class RequestForHolidayController {
     @Autowired
     RequestForHolidayServiceImpl requestForHolidayService;
+
+    @Autowired
+    EmailService emailService;
 
     @GetMapping(value = "/getVacationsFromWorker", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
@@ -47,10 +52,13 @@ public class RequestForHolidayController {
     @PreAuthorize("hasAnyAuthority('PHARMACY_ADMIN', 'ADMIN')")
     public ResponseEntity<String> acceptRequest(@PathVariable("requestId") String requestId){
         try {
-            requestForHolidayService.acceptRequest(requestId);
+            RequestForHoliday request = requestForHolidayService.acceptRequest(requestId);
+            emailService.notifyWorkerAboutRequestForHoliday("abuljevic8@gmail.com", new RequestForHolidayWithWorkerDetailsDTO(request), "");
             return new ResponseEntity<>("Successfully accepted", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            return new ResponseEntity<>("Failure happened! Try again!", HttpStatus.BAD_REQUEST);
+        } catch (Exception e2) {
+            return new ResponseEntity<>(e2.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -58,10 +66,13 @@ public class RequestForHolidayController {
     @PreAuthorize("hasAnyAuthority('PHARMACY_ADMIN', 'ADMIN')")
     public ResponseEntity<String> rejectRequest(@PathVariable("requestId") String requestId, @RequestBody String reason){
         try {
-            requestForHolidayService.rejectRequest(requestId, reason);
+            RequestForHoliday request = requestForHolidayService.rejectRequest(requestId, reason);
+            emailService.notifyWorkerAboutRequestForHoliday("abuljevic8@gmail.com", new RequestForHolidayWithWorkerDetailsDTO(request), reason);
             return new ResponseEntity<>("Successfully rejected", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            return new ResponseEntity<>("Failure happened! Try again!", HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e2) {
+            return new ResponseEntity<>(e2.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

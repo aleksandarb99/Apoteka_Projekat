@@ -9,6 +9,7 @@ import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWor
 import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
@@ -23,11 +24,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Transactional(readOnly=true)
 public class MedicineReservationServiceImpl implements MedicineReservationService  {
 
     @Autowired
@@ -35,6 +38,9 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
     @Autowired
     MedicineReservationRepository reservationRepository;
+
+    @Autowired
+    MedicineItemRepository itemRepository;
 
     @Autowired
     PatientRepository patientRepository;
@@ -224,6 +230,7 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
 
     @Override
+    @Transactional(readOnly = false)
     public MedicineReservationNotifyPatientDTO insertMedicineReservation(MedicineReservationInsertDTO dto) {
 
         Optional<Patient> p = patientRepository.findById(dto.getUserId());
@@ -244,6 +251,8 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         }
 
         if(item == null) throw new RuntimeException("Selected pharmacy doesn't have required medicine!");
+
+        item = itemRepository.findByIdForTransaction(item.getId());
         if(!item.setAmountLessOne()) throw new RuntimeException("There's no required medicine right now in the stock!");
 
         MedicineReservation reservation = new MedicineReservation();
@@ -269,18 +278,18 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
         if(!patient.get().addReservation(reservation)) throw new RuntimeException("You have already reservation with that id!");
 
-        pharmacyRepository.save(pharmacy);
+        itemRepository.save(item);
         patientRepository.save(patient.get());
 
         return new MedicineReservationNotifyPatientDTO(patient.get(), pharmacy, reservation);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void cancelReservation(Long id) {
-        Optional<MedicineReservation> reservationOptional = reservationRepository.findById(id);
-        if (reservationOptional.isEmpty()) throw new RuntimeException("Reservation does not exist!");
+        MedicineReservation reservation = reservationRepository.findByIdForCanceling(id);
 
-        MedicineReservation reservation = reservationOptional.get();
+        if (reservation == null) throw new RuntimeException("Reservation does not exist!");
 
         if (reservation.getState() != ReservationState.RESERVED) throw new RuntimeException("Only reserved medicines can be canceled!");
         if (reservation.getPickupDate() < System.currentTimeMillis()) throw new RuntimeException("Reservation is in the past, can't cancel it!"); // Provera da ipak nije rezervacija iz proslosti
@@ -290,6 +299,9 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
         reservation.setState(ReservationState.CANCELLED);
 
+        Optional<MedicineItem> item = itemRepository.findById(reservation.getMedicineItem().getId());
+        item.get().setAmountPlusOne();
+        itemRepository.save(item.get());
         reservationRepository.save(reservation);
     }
 

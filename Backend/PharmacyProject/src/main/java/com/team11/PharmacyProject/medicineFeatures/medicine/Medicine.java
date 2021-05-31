@@ -58,6 +58,10 @@ public class Medicine {
    @JoinColumn(name = "manufacturer_id")
    private Manufacturer manufacturer;
 
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private int version;
+
     public Medicine() {
 
     }
@@ -77,6 +81,14 @@ public class Medicine {
         this.medicineType = medicineType;
         this.medicineForm = medicineForm;
         this.manufacturer = manufacturer;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public Long getId() {

@@ -13,11 +13,13 @@ import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class RatingServiceImpl implements RatingService{
 
     @Autowired
@@ -60,6 +62,7 @@ public class RatingServiceImpl implements RatingService{
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void addRating(RatingCreateUpdateDTO dto) {
 
         Optional<Rating> rating = ratingRepository.findById(dto.getId());
@@ -151,6 +154,7 @@ public class RatingServiceImpl implements RatingService{
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void editRating(RatingCreateUpdateDTO dto) {
 
         Optional<Rating> rating = ratingRepository.findById(dto.getId());

@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
+import com.team11.PharmacyProject.search.SearchCriteria;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MedicineRepository extends JpaRepository<Medicine, Long> {
+public interface MedicineRepository extends JpaRepository<Medicine, Long>, MedicineRepositoryCustom {
 
     // TODO da li umesto ':id' treba '?1'
     @Query("SELECT m FROM Medicine m JOIN FETCH m.medicineForm JOIN FETCH m.medicineType JOIN FETCH m.manufacturer WHERE m.id = (:id)")
@@ -22,4 +23,5 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long> {
 
     @Query("SELECT m FROM Medicine m WHERE m.code = (:medicineCode)")
     Medicine findByMedicineCode(String medicineCode);
+
 }

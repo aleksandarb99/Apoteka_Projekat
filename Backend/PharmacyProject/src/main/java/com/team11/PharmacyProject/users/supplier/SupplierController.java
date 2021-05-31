@@ -87,9 +87,11 @@ public class SupplierController {
     @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<String> acceptOffer(@RequestBody OfferAcceptDTO dto) {
         try {
-            supplierService.acceptOffer(dto.getSelectedOfferId(), dto.getOrderId());
+            supplierService.acceptOffer(dto.getSelectedOfferId(), dto.getOrderId(), dto.getAdminId());
             return new ResponseEntity<>("Offer is successfully accepted!", HttpStatus.OK);
 
+        } catch (PessimisticLockingFailureException e) {
+            return new ResponseEntity<>("Failed! Try again!", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
