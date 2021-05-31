@@ -10,8 +10,10 @@ import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.AppointmentType;
 import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemService;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
+import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservationRepository;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.rankingCategory.RankingCategory;
@@ -27,13 +29,19 @@ import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceRepository;
 import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.LockTimeoutException;
+import javax.persistence.PersistenceException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -43,6 +51,13 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class AppointmentServiceImpl implements AppointmentService {
+
+    @Autowired
+    MedicineItemRepository medicineItemRepository;
+
+    @Autowired
+    MedicineReservationRepository medicineReservationRepository;
+
     @Autowired
     AppointmentRepository appointmentRepository;
 
@@ -184,7 +199,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new RuntimeException("Dermatologist does not work on that day!");
         }
 
-        for (Appointment appointment : appointmentRepository.findFreeAppointmentsByPharmacyIdAndWorkerId(pharmacyId, worker.getId())) {
+        List<Appointment> appointments;
+        try {
+            appointments = appointmentRepository.dermAppointments(dId);
+        }catch(PessimisticLockingFailureException | PersistenceException e){
+            throw new RuntimeException("Server is busy! Couldn't create appointment! Try again please!");
+        }
+
+        for (Appointment appointment : appointments) {
             Date d1 = new Date(appointment.getStartTime());
             Date d2 = new Date(appointment.getEndTime());
 
@@ -690,6 +712,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public boolean finalizeAppointment(Long appt_id, List<TherapyPresriptionDTO> therapyDTOList, String info){
         Optional<Appointment> appt = appointmentRepository.findById(appt_id);
         Appointment appointment = appt.orElse(null);
@@ -703,8 +726,21 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<MedicineItem> medicineItemsOfTherapy = new ArrayList<>();
 
         for (TherapyPresriptionDTO tpDTO : therapyDTOList){
-            medicineItemsOfTherapy.add(medicineItemService.findById(tpDTO.getMedicineItemID()));
+            MedicineItem mi = medicineItemService.findById(tpDTO.getMedicineItemID());
+            if (mi.getAmount() <= 0){
+                throw new RuntimeException("Error! Medicine item with ID " + mi.getId() + " not available in pharmacy!");
+            }
+            medicineItemsOfTherapy.add(mi);
         }
+
+        Optional<Patient> patient = Optional.ofNullable(patientRepository
+                .findByIdAndFetchReservationsEagerly(appointment.getPatient().getId())); //fetchujemo pacijentove rezervacije
+        if(patient.isEmpty()) {
+            patient = patientRepository.findById(appointment.getPatient().getId());
+            if(patient.isEmpty()) return false;
+            patient.get().setMedicineReservation(new ArrayList<>());
+        }
+
         double pat_disc = categoryService.getCategoryByPoints(appointment.getPatient().getPoints()).getDiscount() * 0.01;
         for (int i = 0; i < therapyDTOList.size(); i++){
             //dajemo nedelju dana da pacijent pokupi rezervaciju terapije
@@ -714,20 +750,19 @@ public class AppointmentServiceImpl implements AppointmentService {
             ReservationState state = ReservationState.RESERVED;
             MedicineItem mi = medicineItemsOfTherapy.get(i);
             Pharmacy pharmacy = appointment.getPharmacy();
-            if(!mi.setAmountLessOne()) return false; //smanjujemo kolicinu za 1
+            mi.setAmountLessOne(); //smanjujemo kolicinu za 1
+            medicineItemRepository.save(mi);
+
+
             double price = mi.getMedicinePrices().get(mi.getMedicinePrices().size() - 1).getPrice(); // TODO ovo videti, taj get je sumnjiv
             price -= price*pat_disc;
 
             MedicineReservation medicineReservation = new MedicineReservation(pickupDate, resDate, resID, state, mi, pharmacy, price);
 
-            Optional<Patient> patient = Optional.ofNullable(patientRepository
-                    .findByIdAndFetchReservationsEagerly(appointment.getPatient().getId())); //fetchujemo pacijentove rezervacije
-            if(patient.isEmpty()) {
-                patient = patientRepository.findById(appointment.getPatient().getId());
-                if(patient.isEmpty()) return false;
-                patient.get().setMedicineReservation(new ArrayList<>());
-            }
+            medicineReservationRepository.save(medicineReservation);
+
             patient.get().getMedicineReservation().add(medicineReservation);
+
             //todo mozda malo srediti notif ako bude vremena
             MedicineReservationNotifyPatientDTO resDTO = new MedicineReservationNotifyPatientDTO(patient.get(), pharmacy, medicineReservation);
             try {
@@ -762,6 +797,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public Appointment scheduleAppointmentInRange(Long workerID, Long patientID, Long pharmID, Long apptStart,
                                                   Long apptEnd, int duration) throws Exception{
         // provera da li postji radnik uopste
@@ -778,9 +814,22 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
 
         //da li se preklapaju appointmenti
-        boolean taken = appointmentRepository.hasAppointmentsInRange(workerID, patientID, apptStart, apptEnd);
-        if (taken){
-            throw new Exception("Patient or worker have an appointment in that period!");
+        List<Appointment> appointments;
+        try {
+            appointments = appointmentRepository.appointmentsOfWorkerAndPatient(workerID, patientID);
+        }catch(PessimisticLockingFailureException | PersistenceException e){
+            //todo izmeniti u klasi exception koji se baca
+            //todo hvatati ovaj exception kod gettovanja appointmenata
+            throw new Exception("Server is busy! Couldn't create appointment! Try again please!");
+        }
+
+        for (Appointment appt : appointments){
+            if ((appt.getStartTime() >= apptStart && appt.getStartTime() <= apptEnd) ||
+                    (appt.getEndTime() >= apptStart && appt.getEndTime() <= apptEnd) ||
+                    (appt.getStartTime() >= apptStart && appt.getEndTime() <= apptEnd) ||
+                    (appt.getStartTime() <= apptStart && appt.getEndTime() >= apptEnd)){
+                throw new Exception("Patient or worker have an appointment in that period!");
+            }
         }
 
         // provera za workplace

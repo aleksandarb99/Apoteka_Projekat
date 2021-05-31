@@ -252,8 +252,14 @@ public class AppointmentController {
     @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<String> finalizeAppointment (@RequestBody TherapyDTO therapyDTO)
     {
-        //TODO trebace kasnije - ako je neko u medjuvremenu uzeo te lekove, javi frontu! i resetuj terapiju
-        boolean result = appointmentServiceImpl.finalizeAppointment(therapyDTO.getApptId(), therapyDTO.getMedicineList(), therapyDTO.getInfo());
+        boolean result;
+        try {
+            result = appointmentServiceImpl.finalizeAppointment(therapyDTO.getApptId(), therapyDTO.getMedicineList(), therapyDTO.getInfo());
+        }catch (ObjectOptimisticLockingFailureException e){
+            return new ResponseEntity<>("Error while adding therapy to database! Try again!", HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         if (result)
             return new ResponseEntity<>("Finalized appointment!", HttpStatus.OK);
         return new ResponseEntity<>("Failed to add therapy!", HttpStatus.BAD_REQUEST);

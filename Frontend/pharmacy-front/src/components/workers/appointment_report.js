@@ -67,7 +67,11 @@ function AppointmentReport() {
         let appointment_id = currAppt.id; 
         api.post('http://localhost:8080/api/appointment/finalizeAppointment', { apptId: appointment_id, medicineList: selectedMedicine, info: apptInfo})
             .then(()=> { addToast("Appointment finished!", { appearance: "success" }); setShowScheduleAnother(false); history.push('/'); })  
-            .catch(() => addToast("Couldn't add therapy!", { appearance: "error" }) ); 
+            .catch((resp) => 
+                {
+                    setSelectedMedicine([]);
+                    addToast(resp.response.data, { appearance: "error" }); 
+                }); 
     }
   
     return (
