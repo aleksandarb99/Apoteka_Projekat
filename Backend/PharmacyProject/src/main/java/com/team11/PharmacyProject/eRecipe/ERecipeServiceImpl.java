@@ -168,7 +168,6 @@ public class ERecipeServiceImpl implements ERecipeService {
         int points = 0;
 
         for (var item : items) {
-            boolean found = false;
             // pokusaj da nadjes lek u datoj apoteci i zakljucaj ga
             // ako ne postoji, izadji
             Optional<MedicineItem> optionalMedicineItem = medicineItemRepository.findByPriceListIdAndCodeFetchMedicine(eRecipeDispenseDTO.getPharmacyId(), item.getMedicineCode());
