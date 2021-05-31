@@ -56,6 +56,10 @@ public class Appointment {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TherapyPrescription> therapyPrescriptionList;
 
+    @Version
+    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Long version;
+
     public Appointment(Long id, Long startTime, Long endTime, int duration, AppointmentState appointmentState,
                        String info, double price, AppointmentType appointmentType, Patient patient, PharmacyWorker worker, double reservationDiscount) {
         this.id = id;
@@ -87,6 +91,14 @@ public class Appointment {
     }
 
     public Appointment() {
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public List<TherapyPrescription> getTherapyPrescriptionList() {
