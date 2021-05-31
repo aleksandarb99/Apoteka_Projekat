@@ -294,9 +294,9 @@ public class SupplierServiceImpl implements SupplierService {
         if (order.get().getDeadline() < (System.currentTimeMillis()))
             throw new Exception("You are past the deadline");
         // Da li je na stanju sve
-        if (!onStock(suppId, order.get())) {
-            throw new Exception("Medicine not in stock");
-        }
+//        if (!onStock(suppId, order.get())) {
+//            throw new Exception("Medicine not in stock");
+//        }
         Optional<Offer> offerToUpdate = supp.getOffers().stream()
                 .filter(o -> o.getOrder().getId().equals(offerDTO.getOrderId()))
                 .collect(Collectors.toList()).stream().findFirst();
