@@ -3,13 +3,16 @@ import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Form, FormGroup, FormLabel, Row } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead';
 import api from '../../app/api';
-import { getIdFromToken } from '../../app/jwtTokenUtils';
+import { getIdFromToken } from '../../app/jwtTokenUtils'
+import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from '../../app/errorHandler';
 
 const SubmitComplaintForm = () => {
     const [complaintType, setComplaintType] = useState("PHARMACIST");
     const [singleSelection, setSingleSelection] = useState([]);
     const [options, setOptions] = useState([])
     const [textAreaText, setTextAreaText] = useState("")
+    const { addToast } = useToasts();
 
     useEffect(() => {
         let url = `http://localhost:8080/api/patients/${getIdFromToken()}/`;
@@ -59,11 +62,11 @@ const SubmitComplaintForm = () => {
         e.preventDefault();
         e.stopPropagation();
         if (!singleSelection[0]) {
-            alert(`Please select the ${complaintType.toLocaleLowerCase()}`)
+            addToast(`Please select the ${complaintType.toLocaleLowerCase()}`, { appearance: "warning" });
             return;
         }
         if (!textAreaText) {
-            alert(`Please fill out complaint text`)
+            addToast("Please fill out complaint text", { appearance: "warning" });
             return;
         }
         let data = {
@@ -78,11 +81,10 @@ const SubmitComplaintForm = () => {
         let url = "http://localhost:8080/api/complaints/";
         api.post(url, JSON.stringify(data))
             .then(() => {
-                alert("Successfully submitted");
+                addToast("Successfully submitted", { appearance: "success" });
             })
             .catch((err) => {
-                console.log(err)
-                alert("Error. Complaint not submitted")
+                addToast(getErrorMessage(err), { appearance: "error" });
             })
     }
 

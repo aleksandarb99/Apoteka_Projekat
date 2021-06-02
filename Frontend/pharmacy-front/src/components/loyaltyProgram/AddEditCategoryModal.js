@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap'
 import api from '../../app/api';
+import { getErrorMessage } from '../../app/errorHandler';
+import { useToasts } from 'react-toast-notifications'
 
 const AddEditCategoryModal = (props) => {
 
     const [name, setName] = useState(!!props.category ? props.category.name : "")
     const [requiredPoints, setRequiredPoints] = useState(props.category ? props.category.pointsRequired : 0);
     const [discount, setDiscount] = useState(props.category ? props.category.discount : 0.00);
+    const { addToast } = useToasts();
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -24,8 +27,8 @@ const AddEditCategoryModal = (props) => {
                 props.onAddEdit()
                 props.onHide()
             })
-            .catch(() => {
-                alert("Error")
+            .catch((err) => {
+                addToast(getErrorMessage(err), { appearance: "error" });
             })
     }
 

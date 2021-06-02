@@ -6,15 +6,19 @@ import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 import PharmacyWithMedicineList from "./PharmacyWithMedicineList";
 import RequiredMedicineList from "./RequiredMedicineList";
+import { useToasts } from 'react-toast-notifications';
+import { getErrorMessage } from '../../app/errorHandler'
 
 const ERecipeSearch = () => {
-  const [errorMessage, setErrorMessage] = useState("");
   const [QRImage, setQRImage] = useState({});
+  // Lista apoteka u kojima je dostupno
   const [pharmacies, setPharmacies] = useState([]);
   const [showSearchPanel, setShowSearchPanel] = useState(false);
   const [sortBy, setSortBy] = useState("totalPrice");
   const [sortOrder, setSortOrder] = useState("ASC");
+  // Podaci procitani iz QR koda
   const [parsedData, setParsedData] = useState({});
+  const { addToast } = useToasts();
 
   const handleFileChange = (e) => {
     setQRImage(e.target.files[0]);
@@ -23,6 +27,12 @@ const ERecipeSearch = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    // Slika mora biti ucitana
+    if (Object.keys(QRImage).length === 0 && QRImage.constructor === Object) {
+      addToast("Please select QR code", { appearance: "warning" });
+      return;
+    }
 
     let formData = new FormData();
     formData.append("file", QRImage);
@@ -37,20 +47,26 @@ const ERecipeSearch = () => {
         setParsedData(res.data);
       })
       .catch(() => {
-        setErrorMessage("Invalid QR code!");
+        addToast("Invalid QR code!", { appearance: "error" });
       });
   };
 
   useEffect(() => {
+
+    // Ako podaci nisu ucitani ovo nema smisla raditi
+    if (Object.keys(parsedData).length === 0 && parsedData.constructor === Object) {
+      return;
+    }
+
     let data = parsedData;
     if (data.state == "REJECTED") {
       setPharmacies([]);
-      setErrorMessage("Invalid QR code!");
       setShowSearchPanel(false);
+      addToast("Invalid QR code!", { appearance: "error" });
       return;
     } else if (data.state == "PROCESSED") {
       setPharmacies([]);
-      setErrorMessage("This code has already been processed!");
+      addToast("This code has already been processed!", { appearance: "error" });
       setShowSearchPanel(false);
       return;
     }
@@ -61,13 +77,12 @@ const ERecipeSearch = () => {
       data: data,
     })
       .then((res) => {
-        setErrorMessage("");
         setPharmacies(res.data);
         setShowSearchPanel(true);
       })
       .catch(() => {
         setPharmacies([]);
-        setErrorMessage("Invalid QR code!");
+        addToast("Invalid QR code!", { appearance: "error" });
         setShowSearchPanel(false);
       });
   }, [parsedData, sortBy, sortOrder]);
@@ -84,11 +99,13 @@ const ERecipeSearch = () => {
         data
       )
       .then(() => {
-        alert("Success");
-        setParsedData([]);
+        addToast("Successfully dispensed!", { appearance: "success" });
+        setParsedData({});
+        setPharmacies([]);
+        setShowSearchPanel(false);
       })
-      .catch(() => {
-        alert("Oops");
+      .catch((err) => {
+        addToast(getErrorMessage(err), { appearance: "error" });
       });
   };
 
@@ -113,7 +130,6 @@ const ERecipeSearch = () => {
                 <Button type="submit">Submit</Button>
               </Col>
             </Row>
-            <p>{errorMessage}</p>
           </Container>
         </Form>
         <Form hidden={!showSearchPanel}>

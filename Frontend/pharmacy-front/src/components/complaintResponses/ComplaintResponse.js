@@ -2,16 +2,18 @@ import React, { useState } from 'react'
 import { Button, Col, Container, Form, FormGroup, FormLabel, Row } from 'react-bootstrap'
 import api from '../../app/api'
 import { getIdFromToken } from '../../app/jwtTokenUtils'
+import { useToasts } from "react-toast-notifications"
 
 const ComplaintResponse = ({ complaint, onSuccessfulSubmit }) => {
     const [responseText, setResponseText] = useState()
+    const { addToast } = useToasts();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         e.stopPropagation();
 
         if (!responseText) {
-            alert(`Please fill out response text`)
+            addToast("Please fill out response text", { appearance: "warning" });
             return;
         }
 
@@ -26,11 +28,10 @@ const ComplaintResponse = ({ complaint, onSuccessfulSubmit }) => {
         api.post(url, JSON.stringify(data))
             .then(() => {
                 onSuccessfulSubmit()
-                alert("Successfully submitted");
+                addToast("Successfully submitted", { appearance: "success" });
             })
             .catch((err) => {
-                console.log(err)
-                alert("Error. Response not submitted")
+                addToast("Error. Response not submitted!", { appearance: "success" });
             })
     }
 

@@ -4,7 +4,7 @@ import api from '../../app/api'
 import { getIdFromToken } from '../../app/jwtTokenUtils'
 
 const PharmacyWithMedicineItem = ({ pharmacy, doBuy }) => {
-    const [points, setPoints] = useState({})
+    const [points, setPoints] = useState(0)
     const [category, setCategory] = useState({})
 
     useEffect(() => {
@@ -58,7 +58,7 @@ const PharmacyWithMedicineItem = ({ pharmacy, doBuy }) => {
                             {`Total price: ${pharmacy.totalPrice}`}
                         </Col>
                         <Col md={{ span: 3, offset: 1 }}>
-                            {!!category && category.discount != 0 ? `Total price with discount: ${pharmacy.totalPrice * (1 - category.discount / 100)}` : ""}
+                            {!!category && category.discount != 0 ? `Total price with discount: ${(pharmacy.totalPrice * (1 - category.discount / 100)).toFixed(2)}` : ""}
                         </Col>
                         <Col md={{ span: 2, offset: 3 }}>
                             <Button style={{ width: '100%' }} onClick={() => { doBuy(pharmacy) }}>Buy</Button>
