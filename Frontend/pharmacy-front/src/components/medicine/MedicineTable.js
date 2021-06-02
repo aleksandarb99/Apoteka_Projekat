@@ -5,8 +5,8 @@ import MedicineRow from "./MedicineRow";
 import AddMedicineModal from "./AddMedicineModal";
 import EditMedicineModal from "./EditMedicineModal";
 import DeleteModal from "../utilComponents/modals/DeleteModal";
-import ErrorModal from "../utilComponents/modals/ErrorModal";
-import SuccessModal from "../utilComponents/modals/SuccessModal";
+import { useToasts } from 'react-toast-notifications';
+import { getErrorMessage } from '../../app/errorHandler';
 
 function MedicineTable() {
   const [reload, setReload] = useState(false);
@@ -17,9 +17,7 @@ function MedicineTable() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchData() {
@@ -45,10 +43,10 @@ function MedicineTable() {
       .then(() => {
         reloadTable();
         setShowDeleteModal(false);
-        setShowSuccessModal(true);
+        addToast("Medicine deleted successfully.", { appearance: 'success' });
       })
-      .catch(() => {
-        setShowErrorModal(true);
+      .catch((err) => {
+        addToast(getErrorMessage(err), { appearance: 'error' })
       });
   };
 
@@ -101,16 +99,6 @@ function MedicineTable() {
         onHide={() => setShowEditModal(false)}
         onSuccess={reloadTable}
       />
-      <ErrorModal
-        show={showErrorModal}
-        onHide={() => setShowErrorModal(false)}
-        message="Something went wrong."
-      ></ErrorModal>
-      <SuccessModal
-        show={showSuccessModal}
-        onHide={() => setShowSuccessModal(false)}
-        message="Medicine deleted successfully."
-      ></SuccessModal>
     </Container>
   );
 }

@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux'
 import PasswordFormGroup from '../formGroups/PasswordFormGroup'
 import api from '../../../app/api'
 import { getIdFromToken } from '../../../app/jwtTokenUtils'
-import ErrorModal from '../modals/ErrorModal'
 import { logout } from '../../../app/slices/userSlice'
 
 // Use when user is logging in for the first time
@@ -61,10 +60,10 @@ const SetPasswordModal = (props) => {
                     <Button className="float-center" variant="outline-secondary" type="submit" >Set Password</Button>
                 </Form>
                 {errorMessage.length > 0 &&
-                        <Row className="justify-content-center m-3">
-                            <p className="text-danger">{errorMessage}</p>
-                        </Row>
-                    }
+                    <Row className="justify-content-center m-3">
+                        <p className="text-danger">{errorMessage}</p>
+                    </Row>
+                }
             </Modal.Body>
         </Modal >
     )

@@ -13,16 +13,14 @@ import StreetFormGroup from "./utilComponents/formGroups/StreetFormGroup";
 import axios from "../app/api";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router";
-import ErrorModal from "./utilComponents/modals/ErrorModal";
-import SuccessModal from "./utilComponents/modals/SuccessModal";
+import { useToasts } from 'react-toast-notifications'
+import { getErrorMessage } from "../app/errorHandler";
 
 function Registration() {
   const [form, setForm] = useState({});
   const [validated, setValidated] = useState(false);
   const user = useSelector((state) => state.user);
-
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const { addToast } = useToasts();
 
   const setField = (field, value) => {
     setForm({
@@ -50,10 +48,10 @@ function Registration() {
       .post("http://localhost:8080/api/users/", newForm)
       .then(() => {
         setForm({});
-        setShowSuccessModal(true);
+        addToast("Successfully registred. Please confirm your email.", { appearance: 'success' });
       })
-      .catch(() => {
-        setShowErrorModal(true);
+      .catch((err) => {
+        addToast(getErrorMessage(err), { appearance: 'error' })
       });
   };
 
@@ -117,19 +115,8 @@ function Registration() {
           Submit
         </Button>
       </Form>
-      <ErrorModal
-        show={showErrorModal}
-        onHide={() => setShowErrorModal(false)}
-        message="Something went wrong. User registration failed."
-      ></ErrorModal>
-      <SuccessModal
-        show={showSuccessModal}
-        onHide={() => setShowSuccessModal(false)}
-        message="Successfully registred. Please confirm your email."
-      >
-        {" "}
-      </SuccessModal>
-    </main>
+      {" "}
+    </main >
   );
 }
 

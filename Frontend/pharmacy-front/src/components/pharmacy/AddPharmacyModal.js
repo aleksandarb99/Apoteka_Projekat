@@ -1,18 +1,16 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
-import ErrorModal from '../utilComponents/modals/ErrorModal';
-import SuccessModal from '../utilComponents/modals/SuccessModal';
 import Location from '../utilComponents/Location'
+import { useToasts } from 'react-toast-notifications';
+import { getErrorMessage } from '../../app/errorHandler';
 
 function AddPharmacyModal(props) {
 
     const [form, setForm] = useState({})
     const [errors, setErrors] = useState({})
     const [address, setAddress] = useState({});
-
-    const [showErrorModal, setShowErrorModal] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const { addToast } = useToasts();
 
     const setField = (field, value) => {
 
@@ -69,10 +67,10 @@ function AddPharmacyModal(props) {
                 setForm({})
                 props.onSuccess()
                 props.onHide()
-                setShowSuccessModal(true);
+                addToast("Pharmacy added successfully.", { appearance: 'success' });
             })
-            .catch(() => {
-                setShowErrorModal(true);
+            .catch((err) => {
+                addToast(getErrorMessage(err), { appearance: 'error' })
             })
     }
 
@@ -138,8 +136,6 @@ function AddPharmacyModal(props) {
             </Modal.Body>
             <Modal.Footer>
             </Modal.Footer>
-            <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
-            <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Pharmacy added successfully."> </SuccessModal>
         </Modal>
     )
 }

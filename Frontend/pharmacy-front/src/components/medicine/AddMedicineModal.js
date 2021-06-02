@@ -6,17 +6,15 @@ import MedicineCodeFormGroup from "../utilComponents/medicineFormGroups/Medicine
 import MedicineContentFormGroup from "../utilComponents/medicineFormGroups/MedicineContentFormGroup"
 import SideEffectsFormGroup from "../utilComponents/medicineFormGroups/SideEffectsFormGroup"
 import AdditionalNotesFormGroup from "../utilComponents/medicineFormGroups/AdditionalNotesFormGroup"
-import ErrorModal from '../utilComponents/modals/ErrorModal'
-import SuccessModal from '../utilComponents/modals/SuccessModal'
+import { useToasts } from 'react-toast-notifications';
+import { getErrorMessage } from '../../app/errorHandler'
 
 function AddMedicineModal(props) {
 
     // TODO add default value
     const [form, setForm] = useState({})
     const [validated, setValidated] = useState(false)
-
-    const [showErrorModal, setShowErrorModal] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const { addToast } = useToasts();
 
     const setField = (field, value) => {
         setForm({
@@ -44,10 +42,10 @@ function AddMedicineModal(props) {
                 setForm({})
                 props.onSuccess()
                 props.onHide()
-                setShowSuccessModal(true);
+                addToast("Medicine added successfully.", { appearance: 'success' });
             })
-            .catch(() => {
-                setShowErrorModal(true);
+            .catch((err) => {
+                addToast(getErrorMessage(err), { appearance: 'error' })
             })
     }
 
@@ -102,8 +100,6 @@ function AddMedicineModal(props) {
             </Modal.Body>
             <Modal.Footer>
             </Modal.Footer>
-            <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
-            <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Medicine added successfully."> </SuccessModal>
         </Modal>
     )
 }
