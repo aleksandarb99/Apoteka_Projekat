@@ -73,7 +73,7 @@ function Registration() {
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    console.log(form)
+
     if (validateForm()) {
       if (form['password'] !== form['repeatPassword']) {
         addToast("Passwords do not match", { appearance: 'warning' })
@@ -85,7 +85,6 @@ function Registration() {
 
   const sendPostRequest = () => {
     const newForm = convertForm(form);
-    console.log(newForm);
     api
       .post("http://localhost:8080/api/users/", newForm)
       .then(() => {
