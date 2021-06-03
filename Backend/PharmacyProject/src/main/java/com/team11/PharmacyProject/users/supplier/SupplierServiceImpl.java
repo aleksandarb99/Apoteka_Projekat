@@ -69,6 +69,7 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
+    @Transactional
     public void insertStockItem(long supplierId, SupplierStockItemDTO stockItemDTO) throws CustomException {
         if (stockItemDTO == null) {
             throw new CustomException("Oops");
