@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import React, { useRef, useState } from "react";
+import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import FirstNameFormGroup from "../utilComponents/formGroups/FirstNameFormGroup";
 import LastNameFormGroup from "../utilComponents/formGroups/LastNameFormGroup";
@@ -11,12 +11,30 @@ import CountryFormGroup from "../utilComponents/formGroups/CountryFormGroup";
 import { useToasts } from 'react-toast-notifications';
 import { getErrorMessage } from '../../app/errorHandler';
 import axios from "../../app/api";
+import Validator from "../../app/validator";
 
 function EditUserModal(props) {
   const [form, setForm] = useState({});
-  const [validated, setValidated] = useState(false);
-
+  const formRef = useRef(null);
   const { addToast } = useToasts();
+
+  const resetForm = () => {
+    setForm(
+      {
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        repeatPassword: '',
+        telephone: '',
+        city: '',
+        street: '',
+        country: ''
+      }
+    )
+    formRef.current.reset();
+  }
+
 
   const setField = (field, value) => {
     setForm({
@@ -25,15 +43,26 @@ function EditUserModal(props) {
     });
   };
 
+  const validateForm = () => {
+    return Validator['firstName'](form['firstName'])
+      && Validator['lastName'](form['lastName'])
+      && Validator['email'](form['email'])
+      && Validator['telephone'](form['telephone'])
+      && Validator['city'](form['city'])
+      && Validator['street'](form['street'])
+      && Validator['country'](form['country'])
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const f = event.currentTarget;
-
-    if (f.checkValidity() === true) {
-      setValidated(true);
-      sendPostRequest();
+    if (validateForm()) {
+      if (form['password'] !== form['repeatPassword']) {
+        addToast("Passwords do not match", { appearance: 'warning' })
+        return;
+      }
+      sendPutRequest();
     }
   };
 
@@ -47,7 +76,7 @@ function EditUserModal(props) {
     setForm(newForm);
   };
 
-  const sendPostRequest = () => {
+  const sendPutRequest = () => {
     const newForm = convertForm(form);
     console.log(newForm);
     axios
@@ -97,24 +126,36 @@ function EditUserModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <FirstNameFormGroup
-            onChange={(event) => setField("firstName", event.target.value)}
-            defaultValue={!!props.user.firstName ? props.user.firstName : ""}
-          />
-          <LastNameFormGroup
-            onChange={(event) => setField("lastName", event.target.value)}
-            defaultValue={!!props.user.lastName ? props.user.lastName : ""}
-          />
-          <EmailFormGroup
-            onChange={(event) => setField("email", event.target.value)}
-            defaultValue={!!props.user.email ? props.user.email : ""}
-            disabled={true}
-          />
-          <PhoneNumberFormGroup
-            onChange={(event) => setField("telephone", event.target.value)}
-            defaultValue={!!props.user.telephone ? props.user.telephone : ""}
-          />
+        <Form noValidate onSubmit={handleSubmit}>
+          <Row>
+            <Col md={6}>
+              <FirstNameFormGroup
+                onChange={(event) => setField("firstName", event.target.value)}
+                defaultValue={!!props.user.firstName ? props.user.firstName : ""}
+              />
+            </Col>
+            <Col md={6}>
+              <LastNameFormGroup
+                onChange={(event) => setField("lastName", event.target.value)}
+                defaultValue={!!props.user.lastName ? props.user.lastName : ""}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              <EmailFormGroup
+                onChange={(event) => setField("email", event.target.value)}
+                defaultValue={!!props.user.email ? props.user.email : ""}
+                disabled={true}
+              />
+            </Col>
+            <Col md={6}>
+              <PhoneNumberFormGroup
+                onChange={(event) => setField("telephone", event.target.value)}
+                defaultValue={!!props.user.telephone ? props.user.telephone : ""}
+              />
+            </Col>
+          </Row>
           <CityFormGroup
             onChange={(event) => setField("city", event.target.value)}
             defaultValue={!!props.user.address ? props.user.address.city : ""}

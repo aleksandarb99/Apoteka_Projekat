@@ -23,7 +23,7 @@ function TextFormGroup({ name, placeholder, minLength, maxLength, defaultValue, 
         if (required && (!fieldText || fieldText === ''))
             error = 'This field cannot be blank!'
 
-        else if (!!pattern) {
+        else if (!!pattern && !!regex) {
             if (!regex.test(fieldText)) {
                 error = 'Input data is not in a valid format'
             }
