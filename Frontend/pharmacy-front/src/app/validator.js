@@ -71,7 +71,17 @@ function medicineNameValidator(input, required = true) {
 
 const Validator = {
     'email': emailValidator,
-    'password': passwordValidator
+    'password': passwordValidator,
+    'firstName': firstNameValidator,
+    'lastName': lastNameValidator,
+    'telephone': phoneNumberValidator,
+    'city': cityValidator,
+    'street': streetValidator,
+    'country': countryValidator,
+    'additionalNotes': additionalNotesValidator,
+    'medicineCode': medicineCodeValidator,
+    'medicineContent': medicineContentValidator,
+    'medicineName': medicineNameValidator,
 }
 
 export default Validator;
