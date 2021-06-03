@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import DatePicker from "react-datepicker";
+import { FileEarmarkText } from "react-bootstrap-icons"
 
 import {
   getIdFromToken,
@@ -109,7 +110,12 @@ function MedicineProfile() {
   return (
     <div className="medicine__profile__container">
       <div className="medicine__content">
-        <p className="my__medicine__header">{medicine.name}</p>
+        <p className="my__medicine__header">
+          <h2>{medicine.name}</h2>
+          <a href={`http://localhost:8080/api/medicine/${id}/get-pdf`} target="_blank" rel="noopener noreferrer">
+            <h4><FileEarmarkText /></h4>
+          </a>
+        </p>
         <p className="my__medicine__paragraph">
           <span className="my__start_paragraph">Code: </span>
           {medicine.code}
@@ -154,11 +160,7 @@ function MedicineProfile() {
           <span className="my__start_paragraph">Manufacturer: </span>
           {medicine.manufacturer}
         </p>
-        <div
-          style={{
-            display: getUserTypeFromToken() === "PATIENT" ? "block" : "none",
-          }}
-        >
+        <div>
           <Table
             striped
             bordered
@@ -194,69 +196,71 @@ function MedicineProfile() {
                 ))}
             </tbody>
           </Table>
-          <p className="my__medicine__paragraph">
-            <span className="my__start_paragraph">Pickup deadline: </span>
-            <DatePicker
-              closeOnScroll={true}
-              selected={pickupDate}
-              dateFormat="dd/MM/yyyy"
-              onChange={(date) => setPickupDate(date)}
-              isClearable
-            />
+          <div style={{ display: getUserTypeFromToken() === "PATIENT" ? "block" : "none" }}>
+            <p className="my__medicine__paragraph">
+              <span className="my__start_paragraph">Pickup deadline: </span>
+              <DatePicker
+                closeOnScroll={true}
+                selected={pickupDate}
+                dateFormat="dd/MM/yyyy"
+                onChange={(date) => setPickupDate(date)}
+                isClearable
+              />
+            </p>
+            <p
+              style={{
+                textAlign: "center",
+                display: category == "" ? "none" : "block",
+              }}
+            >
+              You have a discount of {category.discount}%
           </p>
-          <p
-            style={{
-              textAlign: "center",
-              display: category == "" ? "none" : "block",
-            }}
-          >
-            You have a discount of {category.discount}%
-          </p>
-          <p
-            style={{
-              textAlign: "center",
-              fontSize: "1.3rem",
-              display:
-                pid == -1 && Object.keys(selectedPharmacy).length != 0
-                  ? "block"
-                  : "none",
-            }}
-          >
-            Total price:{" "}
-            <span style={{ textDecoration: "line-through" }}>
-              {selectedPharmacy.price}
-            </span>
-            {"   ->   "}
-            {(selectedPharmacy.price * (100 - category.discount)) / 100}
-          </p>
-          <p
-            style={{
-              textAlign: "center",
-              fontSize: "1.3rem",
-              display: pid != -1 ? "block" : "none",
-            }}
-          >
-            Total price:{" "}
-            <span style={{ textDecoration: "line-through" }}>{priceid}</span>
-            {"   ->   "}
-            {(priceid * (100 - category.discount)) / 100}
-          </p>
-          <Button
-            variant="info"
-            onClick={createReservation}
-            disabled={
-              pickupDate == null ||
-              (Object.keys(selectedPharmacy).length === 0 && pid == -1)
-            }
-            style={{
-              marginBottom: "25px",
-            }}
-          >
-            Reserve
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "1.3rem",
+                display:
+                  pid == -1 && Object.keys(selectedPharmacy).length != 0
+                    ? "block"
+                    : "none",
+              }}
+            >
+              Total price:{" "}
+              <span style={{ textDecoration: "line-through" }}>
+                {selectedPharmacy.price}
+              </span>
+              {"   ->   "}
+              {(selectedPharmacy.price * (100 - category.discount)) / 100}
+            </p>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "1.3rem",
+                display: pid != -1 ? "block" : "none",
+              }}
+            >
+              Total price:{" "}
+              <span style={{ textDecoration: "line-through" }}>{priceid}</span>
+              {"   ->   "}
+              {(priceid * (100 - category.discount)) / 100}
+            </p>
+            <Button
+              variant="info"
+              onClick={createReservation}
+              disabled={
+                pickupDate == null ||
+                (Object.keys(selectedPharmacy).length === 0 && pid == -1)
+              }
+              style={{
+                marginBottom: "25px",
+              }}
+            >
+              Reserve
           </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 

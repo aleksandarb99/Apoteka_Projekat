@@ -42,6 +42,23 @@ const MedicineSearchAndFilter = (props) => {
                     <Col md={5}>
                         <Form.Group>
                             <Form.Label>Name:</Form.Label>
+                        </Form.Group>
+                    </Col>
+                    <Col md={3}>
+                        <Form.Group>
+                            <Form.Label>Type:</Form.Label>
+                        </Form.Group>
+                    </Col>
+                    <Col md={3}>
+                        <Form.Group>
+                            <Form.Label>Form:</Form.Label>
+                        </Form.Group>
+
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={5}>
+                        <Form.Group>
                             <Form.Control
                                 type="text"
                                 onChange={(event) => { setMedName(event.target.value) }} />
@@ -49,7 +66,6 @@ const MedicineSearchAndFilter = (props) => {
                     </Col>
                     <Col md={3}>
                         <Form.Group>
-                            <Form.Label>Type:</Form.Label>
                             <Form.Control as="select" custom onChange={(event) => { setMedicineType(event.target.value) }}>
                                 <option value="">Show all</option>
                                 {medTypes.map((mt) => {
@@ -60,7 +76,6 @@ const MedicineSearchAndFilter = (props) => {
                     </Col>
                     <Col md={3}>
                         <Form.Group>
-                            <Form.Label>Form:</Form.Label>
                             <Form.Control as="select" custom onChange={(event) => { setMedicineForm(event.target.value) }}>
                                 <option value="">Show all</option>
                                 {medForms.map((mf) => {
