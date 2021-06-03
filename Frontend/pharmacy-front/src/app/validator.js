@@ -3,18 +3,18 @@ function textValidator(input, required, pattern, minLength, maxLength) {
     if (!input && required) {
         return false;
     }
-    if (!!pattern) {
+    if (!!pattern && !!input) {
         const main = pattern.match(/\/(.+)\/.*/)[1]
         const options = pattern.match(/\/.+\/(.*)/)[1]
         const regex = new RegExp(main, options);
         valid = valid && regex.test(input);
     }
 
-    if (!!minLength) {
+    if (!!minLength && !!input) {
         valid = valid && input.length >= minLength;
     }
 
-    if (!!maxLength) {
+    if (!!maxLength && !!input) {
         valid = valid && input.length <= maxLength;
     }
 
@@ -54,7 +54,7 @@ function phoneNumberValidator(input, required = true) {
 }
 
 function additionalNotesValidator(input, required = true) {
-    return textValidator(input, required, null, 1, 150);
+    return textValidator(input, required, null, 0, 250);
 }
 
 function medicineCodeValidator(input, required = true) {
@@ -67,6 +67,10 @@ function medicineContentValidator(input, required = true) {
 
 function medicineNameValidator(input, required = true) {
     return textValidator(input, required, null, 1, 50);
+}
+
+function sideEffectValidator(input, required = true) {
+    return textValidator(input, required, null, 1, 250);
 }
 
 const Validator = {
@@ -82,6 +86,7 @@ const Validator = {
     'medicineCode': medicineCodeValidator,
     'medicineContent': medicineContentValidator,
     'medicineName': medicineNameValidator,
+    'sideEffects': sideEffectValidator
 }
 
 export default Validator;

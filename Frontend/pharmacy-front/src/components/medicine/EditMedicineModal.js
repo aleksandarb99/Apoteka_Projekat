@@ -1,6 +1,6 @@
 import axios from 'axios'
-import React, { useState } from 'react'
-import { Button, Form, Modal } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap'
 import MedicineNameFormGroup from "../utilComponents/medicineFormGroups/MedicineNameFromGroup"
 import MedicineCodeFormGroup from "../utilComponents/medicineFormGroups/MedicineCodeFormGroup"
 import MedicineContentFormGroup from "../utilComponents/medicineFormGroups/MedicineContentFormGroup"
@@ -8,11 +8,25 @@ import SideEffectsFormGroup from "../utilComponents/medicineFormGroups/SideEffec
 import AdditionalNotesFormGroup from "../utilComponents/medicineFormGroups/AdditionalNotesFormGroup"
 import { useToasts } from 'react-toast-notifications';
 import { getErrorMessage } from '../../app/errorHandler';
+import Validator from '../../app/validator'
+import api from '../../app/api'
+import { Token, Typeahead } from 'react-bootstrap-typeahead'
 
 function EditMedicineModal(props) {
 
-    const [form, setForm] = useState({})
-    const [validated, setValidated] = useState(false)
+    const [form, setForm] = useState({
+        name: '',
+        code: '',
+        content: '',
+        sideEffects: '',
+        additionalNotes: '',
+        recipeRequired: 'REQUIRED',
+        dailyIntake: 0,
+        points: '',
+        substitutes: []
+    })
+    const [multiSelections, setMultiSelections] = useState([]);
+    const [medicines, setMedicines] = useState([]);
     const { addToast } = useToasts();
 
     const setField = (field, value) => {
@@ -22,21 +36,58 @@ function EditMedicineModal(props) {
         })
     }
 
+    const validateForm = () => {
+        return Validator['medicineName'](form['name'])
+            && Validator['medicineCode'](form['code'])
+            && Validator['medicineContent'](form['content'])
+            && Validator['sideEffects'](form['sideEffects'])
+            && Validator['additionalNotes'](form['additionalNotes'], false)
+    }
+
+    useEffect(() => {
+        fetchMedicine()
+    }, [])
+
+    function fetchMedicine() {
+        api.get(`http://localhost:8080/api/medicine/`)
+            .then((res) => {
+                setMedicines(res.data);
+            });
+    }
+
+    const showHandler = () => {
+        fetchMedicine();
+        setForm({
+            ...form,
+            name: props.medicine.name || '',
+            code: props.medicine.code || '',
+            content: props.medicine.content || '',
+            sideEffects: props.medicine.sideEffects || '',
+            additionalNotes: props.medicine.additionalNotes || '',
+            recipeRequired: props.medicine.recipeRequired || 'REQUIRED',
+            dailyIntake: props.medicine.dailyIntake || 0,
+            points: props.medicine.points || 0,
+            substitutes: props.medicine.substitutes || []
+        })
+        setMultiSelections(props.medicine.substitutes || [])
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault()
         event.stopPropagation()
 
-        const f = event.currentTarget;
-
-        if (f.checkValidity() === true) {
-            setValidated(true)
+        if (validateForm()) {
             sendPutRequest()
         }
     }
 
     const sendPutRequest = () => {
+        let data = {
+            ...form,
+            substitutes: multiSelections
+        }
         axios
-            .put('http://localhost:8080/api/medicine/' + props.medicine.id, form)
+            .put('http://localhost:8080/api/medicine/' + props.medicine.id, data)
             .then(() => {
                 setForm({})
                 props.onSuccess()
@@ -49,66 +100,103 @@ function EditMedicineModal(props) {
     }
 
     return (
-        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered onShow={showHandler}>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Edit {props.medicine.name}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                    <MedicineNameFormGroup
-                        onChange={(event) => setField('name', event.target.value)}
-                        defaultValue={!!props.medicine.code ? props.medicine.code : ""} />
-                    <MedicineCodeFormGroup
-                        onChange={(event) => setField('code', event.target.value)}
-                        defaultValue={!!props.medicine.name ? props.medicine.name : ""} />
+                <Form onSubmit={handleSubmit}>
+                    <Row>
+                        <Col md={6}>
+                            <MedicineNameFormGroup
+                                onChange={(event) => setField('name', event.target.value)}
+                                defaultValue={!!props.medicine.name ? props.medicine.name : ""} />
+                        </Col>
+                        <Col md={6}>
+                            <MedicineCodeFormGroup
+                                onChange={(event) => setField('code', event.target.value)}
+                                defaultValue={!!props.medicine.code ? props.medicine.code : ""} />
+                        </Col>
+                    </Row>
                     <MedicineContentFormGroup
                         onChange={(event) => setField('content', event.target.value)}
                         defaultValue={!!props.medicine.content ? props.medicine.content : ""} />
+                    <Row>
+                        <Col>
+                        </Col>
+                        <Col>
+                        </Col>
+                    </Row>
                     <SideEffectsFormGroup
                         onChange={(event) => setField('sideEffects', event.target.value)}
                         defaultValue={!!props.medicine.sideEffects ? props.medicine.sideEffects : ""} />
-                    <Form.Group controlId="userTypeSelect">
-                        <Form.Label>Recipe Required</Form.Label>
-                        <Form.Control
-                            as="select"
-                            onChange={(event) => setField('recipeRequired', event.target.value)}
-                            defaultValue={props.medicine.recipeRequired}>
+                    <Row>
+                        <Col md={4}>
+                            <Form.Group controlId="userTypeSelect">
+                                <Form.Label>Recipe Required</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    onChange={(event) => setField('recipeRequired', event.target.value)}
+                                    defaultValue={props.medicine.recipeRequired}>
 
-                            <option value="REQUIRED">Required</option>
-                            <option value="NOTREQUIRED">Not required</option>
-                        </Form.Control>
-                    </Form.Group>
-
-                    <Form.Group controlId="userTypeSelect">
-                        <Form.Label>Daily Intake</Form.Label>
-                        <Form.Control
-                            type="number"
-                            onChange={(event) => setField('dailyIntake', event.target.value)}
-                            step="0.1"
-                            min="0"
-                            max="10"
-                            defaultValue={props.medicine.dailyIntake}>
-                        </Form.Control>
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.Label>Points</Form.Label>
-                        <Form.Control
-                            type="number"
-                            onChange={(event) => setField('points', event.target.value)}
-                            defaultValue={props.medicine.points}
-                            min={0}
-                            max={100.00}
-                            step={0.01}
-                            defaultValue={props.medicine.dailyIntake}
-                        />
-                    </Form.Group>
-
+                                    <option value="REQUIRED">Required</option>
+                                    <option value="NOTREQUIRED">Not required</option>
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                        <Col md={4}>
+                            <Form.Group controlId="userTypeSelect">
+                                <Form.Label>Daily Intake</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    onChange={(event) => setField('dailyIntake', event.target.value)}
+                                    step="0.1"
+                                    min="0"
+                                    max="10"
+                                    defaultValue={props.medicine.dailyIntake}>
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                        <Col md={4}>
+                            <Form.Group>
+                                <Form.Label>Points</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    onChange={(event) => setField('points', event.target.value)}
+                                    defaultValue={props.medicine.points}
+                                    min={0}
+                                    max={10000}
+                                    step={1}
+                                    defaultValue={props.medicine.dailyIntake}
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
                     <AdditionalNotesFormGroup
                         onChange={(event) => setField('additionalNotes', event.target.value)}
                         defaultValue={props.medicine.additionalNotes} />
+                    <Form.Group>
+                        <Form.Label>Medicine substitutes</Form.Label>
+                        <Typeahead
+                            id="basic-typeahead-multiple"
+                            labelKey={(option) => `${option.code} -- ${option.name}`}
+                            multiple
+                            onChange={setMultiSelections}
+                            options={medicines}
+                            placeholder="Select substitutes..."
+                            selected={multiSelections}
+                            renderToken={(option, { onRemove }, index) => (
+                                <Token
+                                    key={index}
+                                    onRemove={onRemove}
+                                    option={option}>
+                                    {`${option.name}`}
+                                </Token>
+                            )}
+                        />
+                    </Form.Group>
                     <Button variant="primary" type="submit">Submit</Button>
                 </Form>
             </Modal.Body>
