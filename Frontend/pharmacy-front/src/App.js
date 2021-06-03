@@ -39,6 +39,7 @@ import EPrescriptionPage from "./components/ePrescription/EPrescriptionPage";
 import CategotyList from "./components/loyaltyProgram/CategoryList";
 
 import "./styling/navbar.css";
+import './styling/modal.css'
 
 import { ToastProvider } from "react-toast-notifications";
 

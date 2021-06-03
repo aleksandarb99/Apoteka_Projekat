@@ -1,25 +1,45 @@
-import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
-import Location from '../utilComponents/Location'
 import { useToasts } from 'react-toast-notifications';
+import api from '../../app/api';
 import { getErrorMessage } from '../../app/errorHandler';
+import Map from '../utilComponents/MapElement';
 
 function EditPharmacyModal(props) {
 
-    const [form, setForm] = useState({})
+    const [form, setForm] = useState({
+        name: props.pharmacy.name || '',
+        description: props.pharmacy.description || '',
+        pointsForAppointment: props.pharmacy.pointsForAppointment || '',
+        address: props.pharmacy.address
+    })
     const [errors, setErrors] = useState({})
     const [address, setAddress] = useState({});
+    const [pharmacyAdmins, setPharmacyAdmins] = useState([]);
+    const [selected, setSelected] = useState();
     const { addToast } = useToasts();
 
-    const showHandler = () => {
-        let defaultForm = {
-            'name': props.pharmacy.name,
-            'description': props.pharmacy.description,
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get('http://localhost:8080/api/users/?type=PHARMACY_ADMIN')
+                .then((res) => {
+                    setPharmacyAdmins(res.data);
+                });
         }
+        fetchData();
+    }, [])
+
+    const showHandler = () => {
+        setForm({
+            ...form,
+            name: props.pharmacy.name || '',
+            description: props.pharmacy.description || '',
+            pointsForAppointment: props.pharmacy.pointsForAppointment || '',
+            address: props.pharmacy.address
+        })
         setAddress(props.pharmacy.address)
-        setForm(defaultForm)
-        findFormErrors();
+        setSelected([])
     }
 
     const setField = (field, value) => {
@@ -34,44 +54,56 @@ function EditPharmacyModal(props) {
         })
     }
 
-    const findFormErrors = () => {
-        const { name, description, location } = form
-        const { city, street, country } = address
+    const validate = () => {
+        const { name, description } = form
         const newErrors = {}
         // name errors
         if (!name || name === '') newErrors.name = 'Name cannot be blank!'
         else if (name.length > 40) newErrors.name = 'Name is too long!'
         // Description errors
         if (!description || description === '') newErrors.description = 'Description cannot be blank!'
-        else if (description.length > 180) newErrors.description = 'Description is too long!'
-        // City errors
-        if (!city || city === '') newErrors.city = 'City cannot be blank!'
-        else if (city.length > 40) newErrors.city = 'City name is too long!'
-        // Street errors
-        if (!street || street === '') newErrors.street = 'Street cannot be blank!'
-        else if (street.length > 60) newErrors.street = 'Street name is too long!'
-        // Country errors
-        if (!country || country === '') newErrors.country = 'Country cannot be blank!'
-        else if (country.length > 40) newErrors.country = 'Country name is too long!'
+        else if (description.length > 300) newErrors.description = 'Description is too long!'
 
         return newErrors
     }
 
+    const validateAddress = () => {
+        const { city, street, country } = address;
+
+        // City errors
+        if (!city || city === '') return false;
+        // Street errors
+        if (!street || street === '') return false;
+        // Country errors
+        if (!country || country === '') return false;
+
+        return true;
+    }
+
+    const validateAdmin = () => {
+        return (!!selected)
+    }
+
     const handleSubmit = e => {
         e.preventDefault()
-        const newErrors = findFormErrors()
+        e.stopPropagation()
+        const newErrors = validate()
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors)
         } else {
-            sendPostRequest()
+            if (!validateAddress())
+                addToast("Please select valid address", { appearance: 'warning' })
+            else if (!validateAdmin())
+                addToast("Please select pharmacy admin", { appearance: 'warning' })
+            else
+                sendPutRequest()
         }
     }
 
-    const sendPostRequest = () => {
+    const sendPutRequest = () => {
         let data = convertForm();
-        console.log(data)
-        axios
+        api
             .put('http://localhost:8080/api/pharmacy/' + props.pharmacy.id, data)
             .then(() => {
                 setForm({})
@@ -86,7 +118,8 @@ function EditPharmacyModal(props) {
 
     const convertForm = () => {
         let data = {}
-        data.id = props.pharmacy.id
+        data.id = props.pharmacy.id;
+        data.pharmacyAdmin = selected;
         data.name = form.name;
         data.description = form.description;
         data.pointsForAppointment = form.pointsForAppointment;
@@ -95,7 +128,7 @@ function EditPharmacyModal(props) {
     }
 
     return (
-        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered onShow={showHandler}>
+        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" dialogClassName="modal-50w" centered onShow={showHandler}>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Edit pharmacy
@@ -103,6 +136,17 @@ function EditPharmacyModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <Form>
+                    <Form.Group>
+                        <Form.Label>
+                            Pharmacy admin
+                        </Form.Label>
+                        <Form.Control as="select" custom onChange={(event) => { setSelected(event.target.value) }}>
+                            <option value="">Not selected...</option>
+                            {pharmacyAdmins.map((pa) => {
+                                return <option value={pa.id}>{pa.firstName + " " + pa.lastName}</option>
+                            })}
+                        </Form.Control>
+                    </Form.Group>
                     <Form.Group>
                         <Form.Label>Name</Form.Label>
                         <Form.Control
@@ -141,7 +185,7 @@ function EditPharmacyModal(props) {
                         />
                     </Form.Group>
 
-                    <Location onChange={(address) => setAddress(address)} defAddress={props.pharmacy.address}></Location>
+                    <Map onChange={(address) => setAddress(address)} defAddress={props.pharmacy.address}></Map>
 
                     <Button variant="primary" onClick={handleSubmit}>Submit</Button>
                 </Form>

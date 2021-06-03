@@ -6,7 +6,7 @@ import com.team11.PharmacyProject.dto.patient.PatientDTO;
 import com.team11.PharmacyProject.dto.patient.PatientWorkerSearchDTO;
 
 import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
-import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
+import com.team11.PharmacyProject.dto.user.UserViewInfoDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
@@ -215,25 +215,25 @@ public class PatientController {
     }
 
     @GetMapping(value = "/{id}/my-pharmacists")
-    public ResponseEntity<List<PharmacyWorkerInfoDTO>> getMyPharmacists(@PathVariable("id") long patientId) {
+    public ResponseEntity<List<UserViewInfoDTO>> getMyPharmacists(@PathVariable("id") long patientId) {
         List<PharmacyWorker> pharmacists = patientService.getMyPharmacists(patientId);
         return getListResponseEntity(pharmacists);
     }
 
     @GetMapping(value = "/{id}/my-dermatologists")
-    public ResponseEntity<List<PharmacyWorkerInfoDTO>> getMyDermatologists(@PathVariable("id") long patientId) {
+    public ResponseEntity<List<UserViewInfoDTO>> getMyDermatologists(@PathVariable("id") long patientId) {
         List<PharmacyWorker> dermatologists = patientService.getMyDermatologists(patientId);
         return getListResponseEntity(dermatologists);
     }
 
     @NotNull
-    private ResponseEntity<List<PharmacyWorkerInfoDTO>> getListResponseEntity(List<PharmacyWorker> pharmacyWorkers) {
+    private ResponseEntity<List<UserViewInfoDTO>> getListResponseEntity(List<PharmacyWorker> pharmacyWorkers) {
         if (pharmacyWorkers == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        List<PharmacyWorkerInfoDTO> pDTOs = pharmacyWorkers
+        List<UserViewInfoDTO> pDTOs = pharmacyWorkers
                 .stream()
-                .map(PharmacyWorkerInfoDTO::new)
+                .map(UserViewInfoDTO::new)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(pDTOs, HttpStatus.OK);
     }

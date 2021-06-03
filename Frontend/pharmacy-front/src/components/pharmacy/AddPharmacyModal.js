@@ -1,19 +1,46 @@
-import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
-import Location from '../utilComponents/Location'
+import Map from '../utilComponents/MapElement'
 import { useToasts } from 'react-toast-notifications';
 import { getErrorMessage } from '../../app/errorHandler';
+import api from '../../app/api'
+import { Typeahead } from 'react-bootstrap-typeahead';
 
 function AddPharmacyModal(props) {
 
-    const [form, setForm] = useState({})
-    const [errors, setErrors] = useState({})
+    const [form, setForm] = useState({
+        pharmacyAdmin: '',
+        name: '',
+        description: '',
+        pointsForAppointment: 0,
+        address: {
+            city: '',
+            street: '',
+            country: '',
+            location: {
+                latitude: 0,
+                longitude: 0
+            }
+        }
+    })
     const [address, setAddress] = useState({});
+    const [errors, setErrors] = useState({});
+    const [pharmacyAdmins, setPharmacyAdmins] = useState([]);
+    const [selected, setSelected] = useState();
     const { addToast } = useToasts();
 
-    const setField = (field, value) => {
+    useEffect(() => {
+        async function fetchData() {
+            await api
+                .get('http://localhost:8080/api/users/?type=PHARMACY_ADMIN')
+                .then((res) => {
+                    setPharmacyAdmins(res.data);
+                });
+        }
+        fetchData();
+    }, [])
 
+    const setField = (field, value) => {
         setForm({
             ...form,
             [field]: value
@@ -25,43 +52,56 @@ function AddPharmacyModal(props) {
         })
     }
 
-    const findFormErrors = () => {
+    const validate = () => {
         const { name, description } = form
-        const { city, street, country } = address
         const newErrors = {}
         // name errors
         if (!name || name === '') newErrors.name = 'Name cannot be blank!'
         else if (name.length > 40) newErrors.name = 'Name is too long!'
         // Description errors
         if (!description || description === '') newErrors.description = 'Description cannot be blank!'
-        else if (description.length > 60) newErrors.description = 'Description is too long!'
-        // City errors
-        if (!city || city === '') newErrors.city = 'City cannot be blank!'
-        else if (city.length > 40) newErrors.city = 'City name is too long!'
-        // Street errors
-        if (!street || street === '') newErrors.street = 'Street cannot be blank!'
-        else if (street.length > 60) newErrors.street = 'Street name is too long!'
-        // Country errors
-        if (!country || country === '') newErrors.country = 'Country cannot be blank!'
-        else if (country.length > 40) newErrors.country = 'Country name is too long!'
+        else if (description.length > 300) newErrors.description = 'Description is too long!'
 
         return newErrors
     }
 
+    const validateAddress = () => {
+        const { city, street, country } = address;
+
+        // City errors
+        if (!city || city === '') return false;
+        // Street errors
+        if (!street || street === '') return false;
+        // Country errors
+        if (!country || country === '') return false;
+
+        return true;
+    }
+
+    const validateAdmin = () => {
+        return (!!selected)
+    }
+
     const handleSubmit = e => {
         e.preventDefault()
-        const newErrors = findFormErrors()
+        e.stopPropagation()
+        const newErrors = validate()
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors)
         } else {
-            sendPostRequest()
+            if (!validateAddress())
+                addToast("Please select valid address", { appearance: 'warning' })
+            else if (!validateAdmin())
+                addToast("Please select pharmacy admin", { appearance: 'warning' })
+            else
+                sendPostRequest()
         }
     }
 
     const sendPostRequest = () => {
         let data = convertForm();
-        axios
+        api
             .post('http://localhost:8080/api/pharmacy/', data)
             .then(() => {
                 setForm({})
@@ -83,7 +123,7 @@ function AddPharmacyModal(props) {
     }
 
     return (
-        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" dialogClassName="modal-50w" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Add new pharmacy
@@ -91,6 +131,17 @@ function AddPharmacyModal(props) {
             </Modal.Header>
             <Modal.Body>
                 <Form>
+                    <Form.Group>
+                        <Form.Label>
+                            Pharmacy admin
+                        </Form.Label>
+                        <Form.Control as="select" custom onChange={(event) => { setSelected(event.target.value) }}>
+                            <option value="">Not selected...</option>
+                            {pharmacyAdmins.map((pa) => {
+                                return <option value={pa.id}>{pa.firstName + " " + pa.lastName}</option>
+                            })}
+                        </Form.Control>
+                    </Form.Group>
                     <Form.Group>
                         <Form.Label>Name</Form.Label>
                         <Form.Control
@@ -124,12 +175,12 @@ function AddPharmacyModal(props) {
                             onChange={(event) => setField('pointsForAppointment', event.target.value)}
                             defaultValue={0}
                             min={0}
-                            max={100.00}
-                            step={0.01}
+                            max={10000}
+                            step={1}
                         />
                     </Form.Group>
 
-                    <Location onChange={(address) => setAddress(address)}></Location>
+                    <Map onChange={(address) => setAddress(address)}></Map>
 
                     <Button variant="primary" onClick={handleSubmit}>Submit</Button>
                 </Form>

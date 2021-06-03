@@ -3,16 +3,16 @@ package com.team11.PharmacyProject.dto.user;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.user.MyUser;
 
-public class PharmacyWorkerInfoDTO {
+public class UserViewInfoDTO {
     private long id;
     private String name;
 
-    public PharmacyWorkerInfoDTO() {
+    public UserViewInfoDTO() {
     }
 
-    public PharmacyWorkerInfoDTO(PharmacyWorker pw) {
-        this.id = pw.getId();
-        this.name = String.format("%s %s", pw.getFirstName(), pw.getLastName());
+    public UserViewInfoDTO(MyUser myUser) {
+        this.id = myUser.getId();
+        this.name = String.format("%s %s", myUser.getFirstName(), myUser.getLastName());
     }
 
     public long getId() {
