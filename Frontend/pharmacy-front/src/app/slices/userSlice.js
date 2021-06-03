@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Redirect } from "react-router";
 import axios from "../api";
+import { useToasts } from 'react-toast-notifications'
+import { getErrorMessage } from '../errorHandler'
 
 const initialUser = localStorage.getItem("user")
   ? JSON.parse(localStorage.getItem("user"))
@@ -34,9 +35,8 @@ export const login = ({ email, password }) => async (dispatch) => {
       password,
     });
     dispatch(loginSuccess(res.data));
-  } catch (e) {
-    alert("User not found");
-    return console.error(e.message);
+  } catch (err) {
+    return err;
   }
 };
 

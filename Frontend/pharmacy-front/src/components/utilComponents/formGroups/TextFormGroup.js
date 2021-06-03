@@ -14,7 +14,7 @@ function TextFormGroup({ name, placeholder, minLength, maxLength, defaultValue, 
             let re = new RegExp(main, options)
             setRegex(re)
         }
-        //findGroupErrors(defaultValue)
+        findGroupErrors(defaultValue)
     }, [])
 
     const findGroupErrors = (fieldText) => {

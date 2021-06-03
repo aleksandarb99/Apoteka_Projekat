@@ -9,7 +9,7 @@ function MedicineContentFormGroup(props) {
             name={"Medicine Content"}
             placeholder={"Enter medicine content..."}
             minLength={1}
-            maxLength={100}
+            maxLength={200}
             onChange={(event) => { props.onChange(event) }}
             required={true}
         ></TextFormGroup>

@@ -1,0 +1,77 @@
+function textValidator(input, required, pattern, minLength, maxLength) {
+    let valid = true;
+    if (!input && required) {
+        return false;
+    }
+    if (!!pattern) {
+        const main = pattern.match(/\/(.+)\/.*/)[1]
+        const options = pattern.match(/\/.+\/(.*)/)[1]
+        const regex = new RegExp(main, options);
+        valid = valid && regex.test(input);
+    }
+
+    if (!!minLength) {
+        valid = valid && input.length >= minLength;
+    }
+
+    if (!!maxLength) {
+        valid = valid && input.length <= maxLength;
+    }
+
+    return valid;
+}
+
+function emailValidator(input, required = true) {
+    return textValidator(input, required, "/^(([^<>()[\\]\\.,;:\\s@\"]+(\\.[^<>()[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@(([^<>()[\\]\\.,;:\\s@\"]+\\.)+[^<>()[\\]\\.,;:\\s@\"]{2,})$/i", null, null)
+}
+
+function passwordValidator(input, required = true) {
+    return textValidator(input, required, null, 6, 255)
+}
+
+function streetValidator(input, required = true) {
+    return textValidator(input, required, null, 1, 150);
+}
+
+function cityValidator(input, required = true) {
+    return textValidator(input, required, null, 1, 100);
+}
+
+function countryValidator(input, required = true) {
+    return textValidator(input, required, null, 1, 100);
+}
+
+function firstNameValidator(input, required = true) {
+    return textValidator(input, required, null, 1, 30);
+}
+
+function lastNameValidator(input, required = true) {
+    return textValidator(input, required, null, 1, 60);
+}
+
+function phoneNumberValidator(input, required = true) {
+    return textValidator(input, required, "/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$/", 1, 30);
+}
+
+function additionalNotesValidator(input, required = true) {
+    return textValidator(input, required, null, 1, 150);
+}
+
+function medicineCodeValidator(input, required = true) {
+    return textValidator(input, required, null, 1, 30);
+}
+
+function medicineContentValidator(input, required = true) {
+    return textValidator(input, required, null, 1, 200);
+}
+
+function medicineNameValidator(input, required = true) {
+    return textValidator(input, required, null, 1, 50);
+}
+
+const Validator = {
+    'email': emailValidator,
+    'password': passwordValidator
+}
+
+export default Validator;
