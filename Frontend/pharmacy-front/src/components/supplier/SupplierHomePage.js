@@ -9,12 +9,13 @@ import NewOrders from '../supplier/orders/NewOrders'
 import SupplierOffers from './offers/SupplierOffers';
 
 const SupplierHomePage = () => {
-    const [isPasswordSet, setIsPasswordSet] = useState(false);
+    const [showModalPWChange, setShowModalPWChange] = useState(false);
+
     useEffect(() => {
         let id = getIdFromToken();
         api.get("http://localhost:8080/api/users/" + id)
             .then((res) => {
-                setIsPasswordSet(res.data.passwordChanged)
+                setShowModalPWChange(!res.data.passwordChanged)
             })
     }, [])
 
@@ -58,7 +59,7 @@ const SupplierHomePage = () => {
                     </Row>
                 </Tab.Container>
             </main>
-            <SetPasswordModal show={!isPasswordSet} onPasswordSet={() => setIsPasswordSet(true)}></SetPasswordModal>
+            <SetPasswordModal show={showModalPWChange} onPasswordSet={() => setShowModalPWChange(false)}></SetPasswordModal>
         </div >
     )
 }

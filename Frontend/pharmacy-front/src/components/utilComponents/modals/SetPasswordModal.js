@@ -1,28 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Modal, Form, Button, Row } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import PasswordFormGroup from '../formGroups/PasswordFormGroup'
 import api from '../../../app/api'
 import { getIdFromToken } from '../../../app/jwtTokenUtils'
 import { logout } from '../../../app/slices/userSlice'
+import Validator from '../../../app/validator'
 
 // Use when user is logging in for the first time
 const SetPasswordModal = (props) => {
 
-    const [validated, setValidated] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-
-    useEffect(() => {
-
-    })
-
-    const [form, setForm] = useState({})
-    const setField = (field, value) => {
-        setForm({
-            ...form,
-            [field]: value
-        })
-    }
+    const [password, setPassword] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
 
     const dispatch = useDispatch();
 
@@ -30,23 +20,35 @@ const SetPasswordModal = (props) => {
         dispatch(logout());
     }
 
+    const validate = () => {
+        return Validator['password'](password) && Validator['password'](repeatPassword);
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault()
         event.stopPropagation()
 
-        const f = event.currentTarget;
-
-        if (f.checkValidity() === true) {
-            setErrorMessage('');
-            setValidated(true);
-            handleSet();
+        if (validate()) {
+            if (password !== repeatPassword) {
+                setErrorMessage('Passwords do not match');
+            } else {
+                setErrorMessage('');
+                handleSet();
+            }
         }
     }
 
     const handleSet = () => {
-        api.put("http://localhost:8080/api/users/set-password/" + getIdFromToken(), form)
-            .then(props.onPasswordSet())
-            .catch(setErrorMessage('Oops! Something went wrong, try again!'));
+        let data = {
+            newPassword: password
+        }
+        api.put("http://localhost:8080/api/users/set-password/" + getIdFromToken(), data)
+            .then(() => {
+                props.onPasswordSet()
+            })
+            .catch(() => {
+                setErrorMessage('Oops! Something went wrong, try again!')
+            });
     }
 
     return (
@@ -55,8 +57,9 @@ const SetPasswordModal = (props) => {
                 <p>Welcome! Please set new password!</p>
             </Modal.Header>
             <Modal.Body className="justify-content-center">
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                    <PasswordFormGroup onChange={(event) => setField('newPassword', event.target.value)}></PasswordFormGroup>
+                <Form noValidate onSubmit={handleSubmit}>
+                    <PasswordFormGroup onChange={(event) => setPassword(event.target.value)}></PasswordFormGroup>
+                    <PasswordFormGroup name="Repeat password" onChange={(event) => setRepeatPassword(event.target.value)}></PasswordFormGroup>
                     <Button className="float-center" variant="outline-secondary" type="submit" >Set Password</Button>
                 </Form>
                 {errorMessage.length > 0 &&

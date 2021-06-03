@@ -11,7 +11,6 @@ import CountryFormGroup from "./utilComponents/formGroups/CountryFormGroup";
 import StreetFormGroup from "./utilComponents/formGroups/StreetFormGroup";
 
 import api from "../app/api";
-import { useSelector } from "react-redux";
 import { Redirect } from "react-router";
 import { useToasts } from 'react-toast-notifications'
 import { getErrorMessage } from "../app/errorHandler";
@@ -76,7 +75,7 @@ function Registration() {
     event.stopPropagation();
     console.log(form)
     if (validateForm()) {
-      if (form['password'] != form['repeatPassword']) {
+      if (form['password'] !== form['repeatPassword']) {
         addToast("Passwords do not match", { appearance: 'warning' })
         return;
       }
