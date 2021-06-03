@@ -90,7 +90,7 @@ const SubmitComplaintForm = () => {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <Container>
+            <Container className="border border-primary" style={{ borderRadius: '10px', padding: '10px', marginTop: '10px', marginBottom: '10px', backgroundColor: 'white' }}>
                 <Row className="justify-content-between">
                     <Col md={3}>
                         <FormGroup>
@@ -130,7 +130,7 @@ const SubmitComplaintForm = () => {
                 </Form.Group>
                 <Button type="submit">Submit</Button>
             </Container>
-        </Form>
+        </Form >
     )
 }
 
