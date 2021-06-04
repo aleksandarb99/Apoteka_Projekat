@@ -14,19 +14,11 @@ import { Token, Typeahead } from 'react-bootstrap-typeahead'
 
 function EditMedicineModal(props) {
 
-    const [form, setForm] = useState({
-        name: '',
-        code: '',
-        content: '',
-        sideEffects: '',
-        additionalNotes: '',
-        recipeRequired: 'REQUIRED',
-        dailyIntake: 0,
-        points: '',
-        substitutes: []
-    })
+    const [form, setForm] = useState({})
     const [multiSelections, setMultiSelections] = useState([]);
     const [medicines, setMedicines] = useState([]);
+    const [medTypes, setMedTypes] = useState([]);
+    const [medForms, setMedForms] = useState([]);
     const { addToast } = useToasts();
 
     const setField = (field, value) => {
@@ -36,6 +28,14 @@ function EditMedicineModal(props) {
         })
     }
 
+    useEffect(() => {
+        fetchMedicine();
+        fetchTypesAndForms();
+        setMultiSelections(props.medicine['substitutes'] || [])
+        console.log(props.medicine)
+        setForm({ ...props.medicine })
+    }, [props.medicine])
+
     const validateForm = () => {
         return Validator['medicineName'](form['name'])
             && Validator['medicineCode'](form['code'])
@@ -44,10 +44,6 @@ function EditMedicineModal(props) {
             && Validator['additionalNotes'](form['additionalNotes'], false)
     }
 
-    useEffect(() => {
-        fetchMedicine()
-    }, [])
-
     function fetchMedicine() {
         api.get(`http://localhost:8080/api/medicine/`)
             .then((res) => {
@@ -55,26 +51,22 @@ function EditMedicineModal(props) {
             });
     }
 
-    const showHandler = () => {
-        fetchMedicine();
-        setForm({
-            ...form,
-            name: props.medicine.name || '',
-            code: props.medicine.code || '',
-            content: props.medicine.content || '',
-            sideEffects: props.medicine.sideEffects || '',
-            additionalNotes: props.medicine.additionalNotes || '',
-            recipeRequired: props.medicine.recipeRequired || 'REQUIRED',
-            dailyIntake: props.medicine.dailyIntake || 0,
-            points: props.medicine.points || 0,
-            substitutes: props.medicine.substitutes || []
-        })
-        setMultiSelections(props.medicine.substitutes || [])
+    function fetchTypesAndForms() {
+        api.get(`http://localhost:8080/api/medicine-types/`)
+            .then((res) => {
+                setMedTypes(res.data)
+            });
+        api.get(`http://localhost:8080/api/medicine-forms/`)
+            .then((res) => {
+                setMedForms(res.data)
+            });
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
         event.stopPropagation()
+
+        console.log(multiSelections)
 
         if (validateForm()) {
             sendPutRequest()
@@ -100,7 +92,7 @@ function EditMedicineModal(props) {
     }
 
     return (
-        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered onShow={showHandler}>
+        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Edit {props.medicine.name}
@@ -125,8 +117,22 @@ function EditMedicineModal(props) {
                         defaultValue={!!props.medicine.content ? props.medicine.content : ""} />
                     <Row>
                         <Col>
+                            <Form.Group>
+                                <Form.Control as="select" custom onChange={(event) => setField('medicineType', event.target.value)} value={props.medicine.medicineType}>
+                                    {medTypes.map((mt) => {
+                                        return <option key={mt.id} value={mt.name}>{mt.name}</option>
+                                    })}
+                                </Form.Control>
+                            </Form.Group>
                         </Col>
                         <Col>
+                            <Form.Group>
+                                <Form.Control as="select" custom onChange={(event) => setField('medicineForm', event.target.value)} value={props.medicine.medicineForm}>
+                                    {medForms.map((mf) => {
+                                        return <option key={mf.id} value={mf.name}>{mf.name}</option>
+                                    })}
+                                </Form.Control>
+                            </Form.Group>
                         </Col>
                     </Row>
                     <SideEffectsFormGroup
@@ -199,10 +205,10 @@ function EditMedicineModal(props) {
                     </Form.Group>
                     <Button variant="primary" type="submit">Submit</Button>
                 </Form>
-            </Modal.Body>
+            </Modal.Body >
             <Modal.Footer>
             </Modal.Footer>
-        </Modal>
+        </Modal >
     )
 }
 

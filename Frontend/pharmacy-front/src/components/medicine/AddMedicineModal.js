@@ -28,6 +28,8 @@ function AddMedicineModal(props) {
     })
     const [multiSelections, setMultiSelections] = useState([]);
     const [medicines, setMedicines] = useState([]);
+    const [medTypes, setMedTypes] = useState([]);
+    const [medForms, setMedForms] = useState([]);
     const { addToast } = useToasts();
 
     const setField = (field, value) => {
@@ -56,8 +58,21 @@ function AddMedicineModal(props) {
             });
     }
 
+    function fetchTypesAndForms() {
+        api.get(`http://localhost:8080/api/medicine-types/`)
+            .then((res) => {
+                setMedTypes(res.data)
+                setField('medicineType', res.data[0].name || '');
+            });
+        api.get(`http://localhost:8080/api/medicine-forms/`)
+            .then((res) => {
+                setMedForms(res.data)
+                setField('medicineForm', res.data[0].name || '');
+            });
+    }
+
+
     const showHandler = () => {
-        fetchMedicine();
         setForm({
             ...form,
             name: '',
@@ -66,10 +81,14 @@ function AddMedicineModal(props) {
             sideEffects: '',
             additionalNotes: '',
             recipeRequired: 'REQUIRED',
+            medicineType: '',
+            medicineForm: '',
             dailyIntake: 0,
             points: 0,
             substitutes: []
         })
+        fetchMedicine();
+        fetchTypesAndForms();
         setMultiSelections([])
     }
 
@@ -120,8 +139,22 @@ function AddMedicineModal(props) {
                     <MedicineContentFormGroup onChange={(event) => setField('content', event.target.value)} />
                     <Row>
                         <Col>
+                            <Form.Group>
+                                <Form.Control as="select" custom onChange={(event) => setField('medicineType', event.target.value)} value={form['medicineType']}>
+                                    {medTypes.map((mt) => {
+                                        return <option value={mt.name}>{mt.name}</option>
+                                    })}
+                                </Form.Control>
+                            </Form.Group>
                         </Col>
                         <Col>
+                            <Form.Group>
+                                <Form.Control as="select" custom onChange={(event) => setField('medicineType', event.target.value)} value={form['medicineForm']}>
+                                    {medForms.map((mf) => {
+                                        return <option value={mf.name}>{mf.name}</option>
+                                    })}
+                                </Form.Control>
+                            </Form.Group>
                         </Col>
                     </Row>
                     <SideEffectsFormGroup onChange={(event) => setField('sideEffects', event.target.value)} />
