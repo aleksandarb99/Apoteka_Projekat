@@ -53,4 +53,8 @@ public class PriceList {
     public void setPharmacy(Pharmacy pharmacy) {
         this.pharmacy = pharmacy;
     }
+
+    public void addMedicineItem(MedicineItem item) {
+        medicineItems.add(item);
+    }
 }
