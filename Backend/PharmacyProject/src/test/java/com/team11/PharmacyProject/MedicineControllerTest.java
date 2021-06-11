@@ -51,7 +51,7 @@ public class MedicineControllerTest {
     @Test
     public void testGetAllMedicines() throws Exception {
         mockMvc.perform(get(URL_PREFIX + "/")).andExpect(status().isOk())
-                .andExpect(content().contentType(mediaType)).andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(content().contentType(mediaType)).andExpect(jsonPath("$", hasSize(5)))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(1)))
                 .andExpect(jsonPath("$.[*].code").value(hasItem("M01AE01")))
                 .andExpect(jsonPath("$.[*].name").value(hasItem("Brufen")))
@@ -91,21 +91,4 @@ public class MedicineControllerTest {
                 .andExpect(jsonPath("$.[*].points").value(hasItem(20)));
     }
 
-    /*@Test
-    @Transactional
-    @Rollback(true)
-    public void testSaveStudent() throws Exception {
-        MedicineCrudDTO dto = new MedicineCrudDTO();
-        dto.setCode("M03AE01");
-        dto.setContent("Najbrze deluje.");
-        dto.setAdditionalNotes("Nema");
-        dto.setDailyIntake(3);
-        dto.setName("Fervex");
-        dto.setPoints(20);
-        dto.setRecipeRequired(RecipeRegime.REQUIRED);
-        dto.setSideEffects("Nema");
-
-        String json = TestUtil.json(dto);
-        this.mockMvc.perform(post(URL_PREFIX).contentType(mediaType).content(json)).andExpect(status().isOk());
-    }*/
 }
