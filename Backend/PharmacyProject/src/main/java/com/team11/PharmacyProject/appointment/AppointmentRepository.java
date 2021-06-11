@@ -49,14 +49,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             "order by a.startTime asc")
     List<Appointment> getAppointmentsOfPatientWorkerOnDate(Long workerID, Long patID, Long start, Long end);
 
-
-//    @Query("select case when count(a) > 0 then true else false end from Appointment a where " +
-//            "(a.worker.id = ?1 or a.patient.id = ?2) and " +
-//            "((a.startTime >= ?3 and a.startTime <= ?4) or (a.endTime >= ?3 and a.endTime <= ?4) or " +
-//            "(a.startTime >= ?3 and a.endTime <= ?4) or (a.startTime <= ?3 and a.endTime >= ?4))")
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select a from Appointment a where (a.worker.id = ?1 or a.patient.id = ?2) and a.appointmentState='RESERVED'")
+    @Query("select a from Appointment a where (a.worker.id = ?1 or a.patient.id = ?2) and (a.appointmentState='RESERVED' or a.appointmentState = 'EMPTY')")
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="0")})
     List<Appointment> appointmentsOfWorkerAndPatient(Long workerID, Long patientID);
 
@@ -76,4 +70,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @QueryHints({@QueryHint(name="javax.persistence.lock.timeout", value = "4000")})
     @Query("SELECT a FROM Appointment  a where a.worker.id=?1")
     List<Appointment> getAppointmentsOfWorker(Long workerId);
+
+    @Query("SELECT  a FROM Appointment  a left join fetch a.therapyPrescriptionList th left join fetch th.medicineReservation mr " +
+            " left join fetch mr.medicineItem mi left join fetch mi.medicine m where a.id = ?1")
+    Appointment getAppointmentInfo(Long id);
 }

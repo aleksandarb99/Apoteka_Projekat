@@ -51,7 +51,6 @@ public class PharmacyWorkerController {
     @GetMapping(value = "/calendarAppointments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<AppointmentCalendarDTO>> getWorkerCalendar(@PathVariable("id") Long id){
-        //todo dodati mozda i radno vreme u kalendar
         PharmacyWorker worker = pharmacyWorkerService.getWorkerForCalendar(id);
 
         if (worker == null){

@@ -4,6 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import AppointmentStartModal from "./appointment_start_modal";
+import AppointmentInfoModal from "./appointment_info_modal";
 import moment from "moment";
 import api from "../../app/api";
 import "../../styling/calendar.css";
@@ -17,6 +18,7 @@ import "../../styling/worker.css";
 function WorkCalendar() {
     const [eventi, setEventi] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [showModalInfo, setShowModalInfo] = useState(false);
     const [startAppt, setStartAppt] = useState({});
     const [currUser, setCurrUser] = useState({});
 
@@ -55,6 +57,17 @@ function WorkCalendar() {
         if (info.event.extendedProps.calendarType !== 'appointment'){
             return;
         }
+        if (info.event.extendedProps.appointmentState === 'FINISHED'){
+            let appt = {} //uga buga zbog id-a
+            for(var k in info.event.extendedProps){ 
+                appt[k]=info.event.extendedProps[k];
+            }
+            appt.id = info.event.id;
+            setStartAppt(appt);
+            setShowModalInfo(true);
+            return;
+        }
+
         if (info.event.extendedProps.appointmentState !== 'RESERVED'){
             return;
         }
@@ -191,6 +204,7 @@ function WorkCalendar() {
                         }
                     }}
             />
+            <AppointmentInfoModal show={showModalInfo} appointment={startAppt} onHideFun={() => {setShowModalInfo(false); setStartAppt({})}}></AppointmentInfoModal>
             <AppointmentStartModal show={showModal} onCancelMethod={onCancelMethod} appointment={startAppt} onHide={() => {setShowModal(false); setStartAppt({})}}></AppointmentStartModal>
         </div>
   );
