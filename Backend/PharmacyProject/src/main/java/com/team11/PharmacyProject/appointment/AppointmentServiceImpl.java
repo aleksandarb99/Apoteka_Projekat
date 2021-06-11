@@ -49,7 +49,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
 public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
