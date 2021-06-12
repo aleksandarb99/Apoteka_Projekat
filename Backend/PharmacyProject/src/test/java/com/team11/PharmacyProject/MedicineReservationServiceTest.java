@@ -31,7 +31,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = PharmacyProjectApplication.class)
 public class MedicineReservationServiceTest {
 
     @InjectMocks
