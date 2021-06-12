@@ -4,6 +4,7 @@ import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.priceList.PriceList;
 import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.user.MyUser;
 import com.team11.PharmacyProject.workplace.Workplace;
 
 import javax.persistence.*;
@@ -32,11 +33,14 @@ public class Pharmacy {
     @Column(name = "consultation_duration")
     private int consultationDuration;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "points")
+    private int pointsForAppointment;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Patient> subscribers;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "price_list_id")
+    @OneToOne(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private PriceList priceList;
 
     @OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -49,12 +53,20 @@ public class Pharmacy {
     @OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Workplace> workplaces;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<MyUser> admins;
+
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private int version;
+
     public Pharmacy() {
     }
 
     public Pharmacy(Long id, String name, String description, Double avgGrade,
                     List<Patient> subscribers, PriceList priceList, ArrayList<Appointment> appointments,
-                    Address address, List<Workplace> workplaces, Double consultationPrice, int consultationDuration) {
+                    Address address, List<Workplace> workplaces, Double consultationPrice, int consultationDuration,
+                    int pointsForAppointment) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -66,6 +78,23 @@ public class Pharmacy {
         this.workplaces = workplaces;
         this.consultationPrice = consultationPrice;
         this.consultationDuration = consultationDuration;
+        this.pointsForAppointment = pointsForAppointment;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public List<MyUser> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(List<MyUser> admins) {
+        this.admins = admins;
     }
 
     public Long getId() {
@@ -120,6 +149,10 @@ public class Pharmacy {
         return appointments;
     }
 
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+
     public void setAppointments(ArrayList<Appointment> appointments) {
         this.appointments = appointments;
     }
@@ -166,6 +199,14 @@ public class Pharmacy {
 
     public void setConsultationDuration(int consultationDuration) {
         this.consultationDuration = consultationDuration;
+    }
+
+    public int getPointsForAppointment() {
+        return pointsForAppointment;
+    }
+
+    public void setPointsForAppointment(int pointsForAppointment) {
+        this.pointsForAppointment = pointsForAppointment;
     }
 
     @Override

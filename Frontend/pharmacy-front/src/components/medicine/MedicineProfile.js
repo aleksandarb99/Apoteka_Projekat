@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Table, Button, Alert, Spinner } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 
 import {
@@ -8,28 +8,48 @@ import {
   getUserTypeFromToken,
 } from "./../../app/jwtTokenUtils";
 
-import axios from "axios";
-import axios2 from "./../../app/api";
+import axios from "./../../app/api";
 
 import "../../styling/medicineProfile.css";
 import "../../styling/allergies.css";
+import { useToasts } from "react-toast-notifications";
 
 function MedicineProfile() {
   const [medicine, setMedicine] = useState({});
   const [pharmacies, setPharmacies] = useState([]);
   const [pickupDate, setPickupDate] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
-  const [successAlert, setSuccessAlert] = useState(false);
-  const [spinner, setSpinner] = useState(false);
   const [selectedPharmacy, setSelectedPharmacy] = useState({});
+  const { addToast } = useToasts();
 
-  let { id, pid } = useParams();
+  let { id, pid, priceid } = useParams();
+
+  const [points, setPoints] = useState({});
+  const [category, setCategory] = useState({});
+
+  useEffect(() => {
+    async function fetchPoints() {
+      const request = await axios.get(
+        "/api/patients/" + getIdFromToken() + "/points"
+      );
+      setPoints(request.data);
+      return request;
+    }
+    fetchPoints();
+  }, []);
+
+  useEffect(() => {
+    async function fetchCategory() {
+      const request = await axios.get("/api/ranking-category/points/" + points);
+      setCategory(request.data);
+
+      return request;
+    }
+    fetchCategory();
+  }, [points]);
 
   useEffect(() => {
     async function fetchMedicine() {
-      const request = await axios.get(
-        `http://localhost:8080/api/medicine/${id}`
-      );
+      const request = await axios.get(`/api/medicine/${id}`);
       setMedicine(request.data);
       return request;
     }
@@ -38,9 +58,7 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get(
-        `http://localhost:8080/api/pharmacy/medicine/${id}`
-      );
+      const request = await axios.get(`/api/pharmacy/medicine/${id}`);
       setPharmacies(request.data);
       return request;
     }
@@ -54,13 +72,9 @@ function MedicineProfile() {
   };
 
   const createReservation = () => {
-    setSuccessAlert(false);
     if (pickupDate) {
-      if (pickupDate > new Date()) {
-        setShowAlert(false);
-      } else {
-        setSuccessAlert(false);
-        setShowAlert(true);
+      if (pickupDate < new Date()) {
+        addToast("Choose date from the future!", { appearance: "warning" });
         return;
       }
     }
@@ -70,20 +84,16 @@ function MedicineProfile() {
       medicineId: id,
       pharmacyId: pid == -1 ? selectedPharmacy.id : pid,
       userId: getIdFromToken(),
+      price: priceid == -1 ? selectedPharmacy.price : priceid,
     };
 
-    setSpinner(true);
-
-    axios2
-      .post("http://localhost:8080/api/medicine-reservation/", forSend)
-      .then(() => {
-        setSpinner(false);
-        setSuccessAlert(true);
-        setShowAlert(false);
+    axios
+      .post("/api/medicine-reservation/", forSend)
+      .then((res) => {
+        addToast(res.data, { appearance: "success" });
       })
-      .catch(() => {
-        setSuccessAlert(false);
-        setShowAlert(true);
+      .catch((err) => {
+        addToast(err.response.data, { appearance: "error" });
       });
 
     setSelectedPharmacy({});
@@ -188,41 +198,43 @@ function MedicineProfile() {
               isClearable
             />
           </p>
-          <Alert
+          <p
             style={{
-              display: showAlert ? "block" : "none",
-              width: "80%",
-              margin: "35px auto",
-            }}
-            variant="danger"
-          >
-            Choose a day from the future!
-          </Alert>
-          <Alert
-            style={{
-              display: successAlert ? "block" : "none",
-              width: "80%",
-              margin: "35px auto",
-            }}
-            variant="success"
-          >
-            Successfully reserved the medicine!
-          </Alert>
-          <div
-            className="my__spinner__email"
-            style={{
-              display: spinner ? "flex" : "none",
+              textAlign: "center",
+              display: category == "" ? "none" : "block",
             }}
           >
-            <p>Email is sending...</p>
-            <Spinner
-              animation="border"
-              variant="success"
-              style={{
-                display: "inline-block",
-              }}
-            />
-          </div>
+            You have a discount of {category.discount}%
+          </p>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "1.3rem",
+              display:
+                pid == -1 && Object.keys(selectedPharmacy).length != 0
+                  ? "block"
+                  : "none",
+            }}
+          >
+            Total price:{" "}
+            <span style={{ textDecoration: "line-through" }}>
+              {selectedPharmacy.price}
+            </span>
+            {"   ->   "}
+            {(selectedPharmacy.price * (100 - category.discount)) / 100}
+          </p>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "1.3rem",
+              display: pid != -1 ? "block" : "none",
+            }}
+          >
+            Total price:{" "}
+            <span style={{ textDecoration: "line-through" }}>{priceid}</span>
+            {"   ->   "}
+            {(priceid * (100 - category.discount)) / 100}
+          </p>
           <Button
             variant="info"
             onClick={createReservation}

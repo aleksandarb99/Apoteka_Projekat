@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "./../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 function PatientBenefits() {
@@ -9,7 +9,7 @@ function PatientBenefits() {
   useEffect(() => {
     async function fetchPoints() {
       const request = await axios.get(
-        "http://localhost:8080/api/patients/" + getIdFromToken() + "/points"
+        "/api/patients/" + getIdFromToken() + "/points"
       );
       setPoints(request.data);
 
@@ -20,9 +20,7 @@ function PatientBenefits() {
 
   useEffect(() => {
     async function fetchCategory() {
-      const request = await axios.get(
-        "http://localhost:8080/api/ranking-category/points/" + points
-      );
+      const request = await axios.get("/api/ranking-category/points/" + points);
       setCategory(request.data);
 
       return request;

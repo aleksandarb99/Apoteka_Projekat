@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.medicineFeatures.medicineItem;
 
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
+import com.team11.PharmacyProject.priceList.PriceList;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +21,14 @@ public class MedicineItem {
     @Column(name = "amount", nullable = false)
     private int amount;
 
+    @ManyToOne
+    @JoinColumn(name = "price_list_id", nullable = false)
+    private PriceList priceList;
+  
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Long version;
+
     public MedicineItem() {
     }
 
@@ -34,6 +43,14 @@ public class MedicineItem {
         this.amount = amount;
         this.medicinePrices = medicinePrices;
         this.medicine = medicine;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public Long getId() {
@@ -57,6 +74,11 @@ public class MedicineItem {
 
         amount -= 1;
         return true;
+    }
+
+
+    public void setAmountPlusOne() {
+        amount += 1;
     }
 
     public List<MedicinePrice> getMedicinePrices() {
@@ -89,4 +111,5 @@ public class MedicineItem {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
 }

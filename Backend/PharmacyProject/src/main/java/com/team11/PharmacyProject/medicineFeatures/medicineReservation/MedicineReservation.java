@@ -26,6 +26,9 @@ public class MedicineReservation {
     @Enumerated(EnumType.STRING)
     private ReservationState state;
 
+    @Column(name = "price", nullable = false)
+    private double price;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "medicine_item_id")
     private MedicineItem medicineItem;
@@ -35,6 +38,16 @@ public class MedicineReservation {
     private Pharmacy pharmacy;
 
     public MedicineReservation() {
+    }
+
+    public MedicineReservation(Long pickupDate, Long reservationDate, String reservationID, ReservationState state, MedicineItem medicineItem, Pharmacy pharmacy, double price) {
+        this.pickupDate = pickupDate;
+        this.reservationDate = reservationDate;
+        this.reservationID = reservationID;
+        this.state = state;
+        this.medicineItem = medicineItem;
+        this.pharmacy = pharmacy;
+        this.price = price;
     }
 
     public Long getId() {
@@ -91,5 +104,17 @@ public class MedicineReservation {
 
     public void setPharmacy(Pharmacy pharmacy) {
         this.pharmacy = pharmacy;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setPriceWithDiscout(double discountPercent) {
+        this.price = this.price * (100 - discountPercent) / 100;
     }
 }

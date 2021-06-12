@@ -2,22 +2,26 @@ package com.team11.PharmacyProject.users.supplier;
 
 import com.team11.PharmacyProject.dto.offer.OfferListDTO;
 import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.offer.Offer;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SupplierService {
     List<SupplierItem> getStockForId(long id);
 
-    boolean insertStockItem(long supplierId, SupplierStockItemDTO stockItemDTO);
-
-    boolean updateStockItem(long id, SupplierStockItemDTO stockItemDTO);
+    void insertStockItem(long supplierId, SupplierStockItemDTO stockItemDTO) throws CustomException;
 
     List<OfferListDTO> getOffersForId(long supplierId);
 
-    boolean insertOffer(long id, OfferListDTO offerDTO);
+    void insertOffer(long id, OfferListDTO offerDTO) throws CustomException;
 
-    boolean updateOffer(long id, OfferListDTO offerDTO);
+    void updateOffer(long id, OfferListDTO offerDTO) throws CustomException;
+
+    Map<String, List<Offer>> getOffersByOrderId(long orderId);
+
+    void acceptOffer(Long selectedOfferId, Long orderId, Long adminId);
 }

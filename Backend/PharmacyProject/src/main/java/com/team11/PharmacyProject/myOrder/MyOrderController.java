@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +26,13 @@ public class MyOrderController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/bypharmacyid/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<List<MyOrderDTO>> getOrdersByPharmacyId(@PathVariable("id") Long id, @RequestParam(value = "filter", required = false) String filterValue) {
         List<MyOrderDTO> myOrderDTOS = orderService.getOrdersByPharmacyId(id, filterValue).stream().map(m -> modelMapper.map(m, MyOrderDTO.class)).collect(Collectors.toList());
+        for (MyOrderDTO dto:
+                myOrderDTOS) {
+            dto.setAdminId(orderService.getAdminIdOfOrderId(dto.getId()));
+        }
         return new ResponseEntity<>(myOrderDTOS, HttpStatus.OK);
     }
 
@@ -52,13 +59,44 @@ public class MyOrderController {
     }
 
     @PostMapping(value = "/addorder", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<String> addOrder(@RequestBody MyOrderAddingDTO data) {
-        boolean flag = orderService.addOrder(data);
-        if(flag)
-          return new ResponseEntity<>("Succesfully added", HttpStatus.OK);
-        else
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        try {
+            orderService.addOrder(data);
+            return new ResponseEntity<>("Successfully added!", HttpStatus.OK);
 
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping(value = "/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
+    public ResponseEntity<String> removeOrder(@PathVariable("orderId") long orderId) {
+        try {
+            orderService.removeOrder(orderId);
+            return new ResponseEntity<>("Successfully removed!", HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping(value = "/{orderId}/{date}/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
+    public ResponseEntity<String> editOrder(@PathVariable("orderId") long orderId, @PathVariable("date") Long date) {
+        try {
+            orderService.editOrder(orderId, date);
+            return new ResponseEntity<>("Successfully edited!", HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Scheduled(cron = "${greeting.cron}")
+    public void checkIfOrderIsOver() {
+        orderService.checkIfOrderIsOver();
     }
 
 }

@@ -1,17 +1,29 @@
 package com.team11.PharmacyProject.requestForHoliday;
 
+import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.appointment.AppointmentRepository;
+import com.team11.PharmacyProject.dto.requestForHoliday.RequestForHolidayWithWorkerDetailsDTO;
+import com.team11.PharmacyProject.email.EmailService;
+import com.team11.PharmacyProject.enums.AbsenceRequestState;
 import com.team11.PharmacyProject.enums.AbsenceType;
-import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
+import com.team11.PharmacyProject.workplace.Workplace;
+import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class RequestForHolidayServiceImpl implements RequestForHolidayService{
 
     @Autowired
@@ -22,6 +34,91 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
 
     @Autowired
     PharmacyWorkerRepository pharmacyWorkerRepository;
+
+    @Autowired
+    WorkplaceService workplaceService;
+
+    @Autowired
+    EmailService emailService;
+
+    @Override
+    public List<RequestForHoliday> getUnresolvedRequestsByPharmacy(Long pharmacyId) {
+        List<Workplace> workplaces = workplaceService.getWorkplacesByPharmacyId(pharmacyId);
+        Date now = new Date();
+
+        List<RequestForHoliday> listOfRequests = new ArrayList<>();
+
+        for (Workplace w: workplaces) {
+            Long workerId = w.getWorker().getId();
+            if(pharmacyId==-1){
+                if(w.getWorker().getRole().getName().equals("PHARMACIST"))
+                    continue;
+            } else {
+                if(w.getWorker().getRole().getName().equals("DERMATOLOGIST"))
+                    continue;
+            }
+
+            List<RequestForHoliday> requests = requestForHolidayRepository.getUnresolvedRequestsByWorker(workerId, now.getTime());
+            listOfRequests.addAll(requests);
+        }
+
+        return listOfRequests;
+    }
+
+    @Override
+    public boolean isWorkerOnHoliday(Long workerId, Date date) {
+        List<RequestForHoliday> requestForHoliday = requestForHolidayRepository.findOneWithWorkerAndCheckIsHeOnHoliday(workerId, date.getTime());
+        return !requestForHoliday.isEmpty();
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public RequestForHoliday rejectRequest(String requestId, String reason) {
+        long id;
+        try {
+            String substring = requestId.substring(7);
+            id = Long.parseLong(substring);
+        } catch (Exception e){
+            throw new RuntimeException("Cannot parse id!");
+        }
+
+        if(reason.equals("")){
+            throw new RuntimeException("You must write a reason for rejecting request!");
+        }
+
+        RequestForHoliday r = requestForHolidayRepository.findOneWithWorker(id);
+        if(r==null)
+            throw new RuntimeException("Request with id "+id+" does not exist!");
+        if(!r.getRequestState().equals(AbsenceRequestState.PENDING))
+            throw new RuntimeException("Request with id "+id+" is not pending!");
+
+        r.setDeclineText(reason);
+        r.setRequestState(AbsenceRequestState.CANCELLED);
+        requestForHolidayRepository.save(r);
+        return r;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public RequestForHoliday acceptRequest(String requestId) {
+        long id;
+        try {
+            String substring = requestId.substring(7);
+            id = Long.parseLong(substring);
+        } catch (Exception e){
+            throw new RuntimeException("Cannot parse id!");
+        }
+
+        RequestForHoliday r = requestForHolidayRepository.findOneWithWorker(id);
+        if(r==null)
+            throw new RuntimeException("Request with id "+id+" does not exist!");
+        if(!r.getRequestState().equals(AbsenceRequestState.PENDING))
+            throw new RuntimeException("Request with id "+id+" is not pending!");
+
+        r.setRequestState(AbsenceRequestState.ACCEPTED);
+        requestForHolidayRepository.save(r);
+        return r;
+    }
 
     @Override
     public String createHolidayRequest(Long workerId, Long start, Long end, AbsenceType absenceType) {
@@ -52,4 +149,25 @@ public class RequestForHolidayServiceImpl implements RequestForHolidayService{
     public List<RequestForHoliday> getAcceptedWorkerHolidays(Long workerID) {
         return requestForHolidayRepository.getAcceptedRequestsFromUser(workerID);
     }
+
+    @Override
+    public List<RequestForHoliday> getRequestForHolidayAcceptedOrPendingInFuture(Long workerID) {
+        return requestForHolidayRepository.getRequestForHolidayAcceptedOrPendingInFuture(workerID, Instant.now().toEpochMilli());
+    }
+
+    @Override
+    public boolean hasVacationInThatDateRange(Long workerID, Long start, Long end){
+        return requestForHolidayRepository.hasVacationInThatDateRange(workerID, start, end);
+    }
+
+    public void cancelExpiredVacRequests(){
+        Long time = Instant.now().toEpochMilli();
+        //znaci da je proslo 15 min od pocetka appt
+        List<RequestForHoliday> requestForHolidays = requestForHolidayRepository.getExpiredHolidays(time);
+        for (RequestForHoliday request : requestForHolidays){
+            request.setRequestState(AbsenceRequestState.CANCELLED);
+            requestForHolidayRepository.save(request);
+        }
+    }
+
 }

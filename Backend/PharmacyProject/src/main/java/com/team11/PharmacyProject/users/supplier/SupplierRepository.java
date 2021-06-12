@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.users.supplier;
 
+import com.team11.PharmacyProject.offer.Offer;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,6 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     Optional<Supplier> findSupplierWithSupplierItemsUsingId(Long id);
     @Query("select supp from Supplier supp join fetch supp.offers so join fetch so.order where supp.id = ?1")
     Optional<Supplier> findSupplierWithOffersUsingId(long supplierId);
+    @Query("select distinct  supp from Supplier supp join fetch supp.offers so join fetch so.order")
+    List<Supplier> findAllWithOffers();
 }

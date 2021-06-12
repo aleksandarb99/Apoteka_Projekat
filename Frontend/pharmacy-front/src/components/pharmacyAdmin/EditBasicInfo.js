@@ -7,7 +7,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert";
 
 import Map from "ol/Map";
 import OSM from "ol/source/OSM";
@@ -16,13 +15,13 @@ import View from "ol/View";
 import { fromLonLat, toLonLat } from "ol/proj";
 
 import "../../styling/pharmacyHomePage.css";
+import { useToasts } from "react-toast-notifications";
 
 function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
-  const [showAlert, setShowAlert] = useState(false);
+  const { addToast } = useToasts();
   const [fixing, setFixing] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [valid, setValid] = useState(true);
-  const [alertText, setAlertText] = useState("");
   const [text, setText] = useState({
     name: "",
     description: "",
@@ -41,7 +40,6 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
   };
 
   let editClickHandler = () => {
-    setShowAlert(false);
     setEditMode(true);
   };
 
@@ -67,17 +65,22 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
     };
 
     axios
-      .put(`http://localhost:8080/api/pharmacy/${pharmacyDetails.id}`, dto)
-      .then(() => {
+      .put(`/api/pharmacy/${pharmacyDetails.id}`, dto)
+      .then((res) => {
         changedPharmacy();
-        setShowAlert(true);
+        addToast(res.data, {
+          appearance: "success",
+        });
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
   };
 
   let cancelClickHandler = () => {
-    setShowAlert(false);
     setValid(true);
-    setAlertText("");
     setEditMode(false);
     setText({
       name: pharmacyDetails?.name,
@@ -94,7 +97,6 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
     setText({ ...text, latitude: latitude, longitude: longitude });
     if (fixing === "longitude" || fixing === "latitude") {
       setFixing(null);
-      setAlertText("");
       setValid(true);
     }
     // Try finding city and country
@@ -111,8 +113,10 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
           street: res.data.locality,
         });
       })
-      .catch(() => {
-        alert("Failed to find country and city");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
   };
 
@@ -150,7 +154,11 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
     }
 
     setValid(isValid);
-    setAlertText(message);
+
+    if (message != "")
+      addToast(message, {
+        appearance: "warning",
+      });
   };
 
   useEffect(() => {
@@ -331,22 +339,6 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
           </Col>
           <Col lg={6} md={12} sm={12}>
             <div id="divForMap"></div>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="center">
-            {!valid && (
-              <Alert variant="warning">
-                <Alert.Heading>Warning</Alert.Heading>
-                {alertText}
-              </Alert>
-            )}
-            {showAlert && (
-              <Alert variant="success">
-                <Alert.Heading>Congratulations!</Alert.Heading>
-                <p>You have successfully changed the pharmacy!</p>
-              </Alert>
-            )}
           </Col>
         </Row>
         <hr></hr>

@@ -19,23 +19,18 @@ public class MedicinePrice implements Comparable<MedicinePrice>{
     @Column(name = "start_date", nullable = false)
     private Long startDate;
 
-    @ManyToMany(mappedBy = "medicineList", fetch = FetchType.EAGER)
-    private List<Advertisement> advertisements;
-
     public MedicinePrice() {
     }
 
     public MedicinePrice(double price, Long startDate, List<Advertisement> advertisements) {
         this.price = price;
         this.startDate = startDate;
-        this.advertisements = advertisements;
     }
 
     public MedicinePrice(Long id, double price, Long startDate, List<Advertisement> advertisements) {
         this.id = id;
         this.price = price;
         this.startDate = startDate;
-        this.advertisements = advertisements;
     }
 
     public Long getId() {
@@ -60,14 +55,6 @@ public class MedicinePrice implements Comparable<MedicinePrice>{
 
     public void setStartDate(Long startDate) {
         this.startDate = startDate;
-    }
-
-    public List<Advertisement> getAdvertisemens() {
-        return advertisements;
-    }
-
-    public void setAdvertisemens(List<Advertisement> advertisemens) {
-        this.advertisements = advertisemens;
     }
 
     @Override

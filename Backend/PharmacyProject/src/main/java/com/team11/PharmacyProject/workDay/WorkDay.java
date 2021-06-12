@@ -24,6 +24,13 @@ public class WorkDay {
     public WorkDay() {
     }
 
+    public WorkDay(Weekday weekday, int startTime, int endTime) {
+        this.id = id;
+        this.weekday = weekday;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
     public WorkDay(Long id, Weekday weekday, int startTime, int endTime) {
         this.id = id;
         this.weekday = weekday;

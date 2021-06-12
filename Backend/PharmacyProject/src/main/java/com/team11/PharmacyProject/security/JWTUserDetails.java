@@ -1,7 +1,7 @@
 package com.team11.PharmacyProject.security;
 
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.users.user.MyUser;
+import com.team11.PharmacyProject.users.user.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,9 +20,9 @@ public class JWTUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserType role = user.getUserType();
+        Role role = user.getRole();
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role.toString()));
+        authorities.add(new SimpleGrantedAuthority(role.getName()));
         return authorities;
     }
 
@@ -38,7 +38,7 @@ public class JWTUserDetails implements UserDetails {
 
     public long getId() { return user.getId(); }
 
-    public UserType getUserType() { return user.getUserType(); }
+    public String getUserType() { return user.getRole().getName(); }
 
     @Override
     public boolean isAccountNonExpired() {

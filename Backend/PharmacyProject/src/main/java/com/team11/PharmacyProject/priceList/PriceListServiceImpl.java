@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.priceList;
 
+import com.team11.PharmacyProject.advertisement.Advertisement;
+import com.team11.PharmacyProject.advertisement.AdvertismentService;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
@@ -29,13 +31,16 @@ public class PriceListServiceImpl implements PriceListService {
     @Autowired
     private MedicineReservationService medicineReservationService;
 
+    @Autowired
+    private AdvertismentService advertismentService;
+
     @Override
     public PriceList findById(long id) {
         Optional<PriceList> priceList = priceListRepository.findById(id);
         return priceList.orElse(null);
     }
 
-    public double getMedicineItemPrice(Long medicineItemId) {
+    public double getMedicineItemPrice(Long medicineItemId, Long pharmacyId) {
         MedicineItem mi = medicineItemService.findById(medicineItemId);
         if (mi == null) {
             return -1;
@@ -48,7 +53,18 @@ public class PriceListServiceImpl implements PriceListService {
                 priceLast = price.getPrice();
             }
         }
-        return priceLast;
+
+        MedicineItem mi2 = medicineItemService.findByIdWithMedicine(medicineItemId);
+        double discount = 0;
+
+        List<Advertisement> sales = advertismentService.findAllSalesWithDate(mi2.getMedicine().getId(), pharmacyId, System.currentTimeMillis());
+        if(sales != null) {
+            for (Advertisement a:sales) {
+                discount = a.getDiscountPercent();
+                break;
+            }
+        }
+        return priceLast * (100 - discount) / 100;
     }
 
     @Override
@@ -57,14 +73,14 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
-    public PriceList changePrice(long id, long medicineItemId, int newPrice) {
+    public void changePrice(long id, long medicineItemId, int newPrice) {
         PriceList priceList = findByIdAndFetchMedicineItems(id);
-        if (priceList == null) return null;
+        if (priceList == null) throw new RuntimeException("Price list with id "+ id+" does not exist!");
 
         MedicineItem medicineItem = medicineItemService.findById(medicineItemId);
-        if (medicineItem == null) return null;
+        if (medicineItem == null) throw new RuntimeException("Medicine item with id "+ id+" does not exist!");
 
-        if (newPrice < 0) return null;
+        if (newPrice < 0) throw new RuntimeException("Price must be greater than 0");
 
         MedicinePrice medicinePrice = new MedicinePrice(newPrice, new Date().getTime(), new ArrayList<>());
 
@@ -76,23 +92,21 @@ public class PriceListServiceImpl implements PriceListService {
             }
         }
         if(!isThatMedicineInPricelist){
-            return null;
+            throw new RuntimeException("Medicine is not in pricelist!");
         }
 
         priceListRepository.save(priceList);
-        priceList = findByIdAndFetchMedicineItems(id);
-        return priceList;
     }
 
     @Override
-    public PriceList insertMedicine(long id, long medicineId, int startintPrice) {
+    public void insertMedicine(long id, long medicineId, int startintPrice) {
         PriceList priceList = findByIdAndFetchMedicineItems(id);
-        if (priceList == null) return null;
+        if (priceList == null) throw new RuntimeException("Price list with id "+ id+" does not exist!");
 
         Medicine medicine = medicineService.findOne(medicineId);
-        if (medicine == null) return null;
+        if (medicine == null) throw new RuntimeException("Medicine with id "+ id+" does not exist!");
 
-        if (startintPrice < 0) return null;
+        if (startintPrice < 0) throw new RuntimeException("Starting price must be greater than 0");
 
         MedicinePrice medicinePrice = new MedicinePrice(startintPrice, new Date().getTime(), new ArrayList<>());
         List<MedicinePrice> list = new ArrayList<>();
@@ -100,31 +114,28 @@ public class PriceListServiceImpl implements PriceListService {
 
         for (MedicineItem mi:priceList.getMedicineItems()) {
             if(mi.getMedicine().getId().equals(medicineId)){
-                return null;
+                throw new RuntimeException("Price list already have that medicine");
             }
         }
 
         MedicineItem medicineItem = new MedicineItem(0, list, medicine);
         priceList.getMedicineItems().add(medicineItem);
         priceListRepository.save(priceList);
-        priceList = findByIdAndFetchMedicineItems(id);
-        return priceList;
     }
 
     @Override
-    public PriceList removeMedicine(long id, long medicineItemId) {
+    public void removeMedicine(long id, long medicineItemId) {
         PriceList priceList = findByIdAndFetchMedicineItems(id);
-        if (priceList == null) return null;
+        if (priceList == null) throw new RuntimeException("Price list with id "+ id+" does not exist!");
 
         MedicineItem mi = medicineItemService.findById(medicineItemId);
-        if (mi == null) return null;
+        if (mi == null) throw new RuntimeException("Medicine item with id "+ medicineItemId+" does not exist!");
 
         boolean reserved = medicineReservationService.isMedicineItemReserved(medicineItemId);
-        if (reserved) return null;
+        if (reserved) throw new RuntimeException("Medicine item is already reserved!");
 
         priceList.getMedicineItems().remove(mi);
         priceListRepository.save(priceList);
-        return priceList;
     }
 
 }

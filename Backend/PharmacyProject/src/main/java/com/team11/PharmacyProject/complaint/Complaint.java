@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.complaint;
 
+import com.team11.PharmacyProject.enums.ComplaintState;
 import com.team11.PharmacyProject.enums.ComplaintType;
 import com.team11.PharmacyProject.users.patient.Patient;
 
@@ -25,6 +26,10 @@ public class Complaint {
     @Enumerated(EnumType.STRING)
     private ComplaintType type;
 
+    @Column(name = "state", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ComplaintState state;
+
     @Column(name = "date", nullable = false)
     private Long date;
 
@@ -32,15 +37,20 @@ public class Complaint {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private int version;
+
     public Complaint() {
     }
 
-    public Complaint(Long id, String content, String complaintOn, Long complaintOnId, ComplaintType type, Long date, Patient patient) {
+    public Complaint(Long id, String content, String complaintOn, Long complaintOnId, ComplaintType type, ComplaintState state, Long date, Patient patient) {
         this.id = id;
         this.content = content;
         this.complaintOn = complaintOn;
         this.complaintOnId = complaintOnId;
         this.type = type;
+        this.state = state;
         this.date = date;
         this.patient = patient;
     }
@@ -99,5 +109,21 @@ public class Complaint {
 
     public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public ComplaintState getState() {
+        return state;
+    }
+
+    public void setState(ComplaintState state) {
+        this.state = state;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

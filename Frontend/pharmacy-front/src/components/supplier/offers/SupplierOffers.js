@@ -13,7 +13,7 @@ const SupplierOffers = () => {
     let id = getIdFromToken();
     async function fetchOffers() {
       const response = await api.get(
-        `http://localhost:8080/api/suppliers/offers/${id}/?type=${currentOfferType}`
+        `/api/suppliers/offers/${id}/?type=${currentOfferType}`
       );
       setOffers(response.data);
     }
@@ -40,7 +40,15 @@ const SupplierOffers = () => {
       </Form.Group>
       {offers &&
         offers.map((o) => {
-          return <OfferItem key={o.id} offer={o}></OfferItem>;
+          return (
+            <OfferItem
+              key={o.id}
+              offer={o}
+              onSuccess={() => {
+                reloadTable();
+              }}
+            ></OfferItem>
+          );
         })}
     </div>
   );

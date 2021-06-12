@@ -7,7 +7,6 @@ import {
   Col,
   Container,
   Card,
-  Accordion,
   ListGroup,
   ListGroupItem,
   Pagination,
@@ -16,24 +15,33 @@ import {
   Button,
 } from "react-bootstrap";
 import { StarFill, Search, Reply } from "react-bootstrap-icons";
+import Dropdown from "react-bootstrap/Dropdown";
 
-import axios from "axios";
+import axios from "../../app/api";
 
 import "../../styling/pharmaciesAndMedicines.css";
 
 function PharmaciesView() {
   const [pharmacies, setPharmacies] = useState([]);
+  const [backup, setBackup] = useState([]);
   const [pagNumber, setPugNummber] = useState(0);
   const [maxPag, setMaxPag] = useState(0);
   const [showedPharmacies, setShowedPharmacies] = useState([]);
   const [fsearch, setFSearch] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
   const [filterDistance, setFilterDistance] = useState("");
+  const [sorter, setSorter] = useState("none");
+  const [ascDesc, setAscDesc] = useState("none");
+  const [reload, setReload] = useState(false);
+  const [triggered, setTriggered] = useState("none");
+  let div = document.getElementById("my__transition__div");
+  let blocker = document.getElementById("my__blocker");
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get("http://localhost:8080/api/pharmacy/");
+      const request = await axios.get("/api/pharmacy/");
       setPharmacies(request.data);
+      setBackup(request.data);
 
       return request;
     }
@@ -44,48 +52,122 @@ function PharmaciesView() {
     event.preventDefault();
 
     if (fsearch.length === 0) {
-      axios
-        .get("http://localhost:8080/api/pharmacy/")
-        .then((resp) => setPharmacies(resp.data));
+      axios.get("/api/pharmacy/").then((resp) => {
+        setPharmacies(resp.data);
+        setBackup(resp.data);
+      });
     } else {
       axios
-        .get("http://localhost:8080/api/pharmacy/search", {
+        .get("/api/pharmacy/search", {
           params: { searchValue: fsearch },
         })
-        .then((resp) => setPharmacies(resp.data));
+        .then((resp) => {
+          setPharmacies(resp.data);
+          setBackup(resp.data);
+        });
     }
   };
 
   const formFilter = (event) => {
     event.preventDefault();
 
-    if (filterGrade === "" && filterDistance === "") return;
+    if (filterGrade === "" && filterDistance === "") {
+      setPharmacies(backup);
+      return;
+    }
 
-    axios.get("https://api.ipify.org?format=json").then((res) => {
-      axios
-        .get(
-          "https://api.ipgeolocation.io/ipgeo?apiKey=4939eda48b984abfbb45b4b69f1b6923&ip=" +
-            res.data.ip
-        )
-        .then((res) => {
-          axios
-            .get("http://localhost:8080/api/pharmacy/filter", {
-              params: {
-                gradeValue: filterGrade,
-                distanceValue: filterDistance,
-                longitude: res.data.longitude,
-                latitude: res.data.latitude,
-              },
-            })
-            .then((resp) => setPharmacies(resp.data));
+    var filtered = [];
+
+    if (filterGrade !== "") {
+      for (let i = 0; i < backup.length; i++) {
+        if (filterGrade === "HIGH" && backup[i].avgGrade > 3) {
+          filtered.push(backup[i]);
+        } else if (filterGrade === "MEDIUM" && backup[i].avgGrade === 3) {
+          filtered.push(backup[i]);
+        } else if (filterGrade === "LOW" && backup[i].avgGrade < 3) {
+          filtered.push(backup[i]);
+        }
+      }
+
+      setPharmacies(filtered);
+      if (filtered.length === 0) return;
+    }
+
+    if (filterDistance !== "") {
+      if (navigator.geolocation) {
+        // Ako odredjeni browser podrzava geolocation
+        navigator.geolocation.getCurrentPosition((position) => {
+          let filteringList = filtered.length !== 0 ? [...filtered] : backup;
+          filtered = [];
+          for (let i = 0; i < filteringList.length; i++) {
+            if (
+              filterDistance === "5LESS" &&
+              calculateDistance(
+                filteringList[i].address,
+                position.coords.longitude,
+                position.coords.latitude
+              ) <= 5
+            ) {
+              filtered.push(filteringList[i]);
+            } else if (
+              filterDistance === "10LESS" &&
+              calculateDistance(
+                filteringList[i].address,
+                position.coords.longitude,
+                position.coords.latitude
+              ) <= 10
+            ) {
+              filtered.push(filteringList[i]);
+            } else if (
+              filterDistance === "10HIGHER" &&
+              calculateDistance(
+                filteringList[i].address,
+                position.coords.longitude,
+                position.coords.latitude
+              ) > 10
+            ) {
+              filtered.push(filteringList[i]);
+            }
+          }
+
+          setPharmacies(filtered);
         });
-    });
+      }
+    }
+  };
+
+  const calculateDistance = (address, lon2, lat2) => {
+    let lat1 = address.location.latitude;
+    let lon1 = address.location.longitude;
+
+    if (lat1 == lat2 && lon1 == lon2) {
+      return 0;
+    } else {
+      var radlat1 = (Math.PI * lat1) / 180;
+      var radlat2 = (Math.PI * lat2) / 180;
+      var theta = lon1 - lon2;
+      var radtheta = (Math.PI * theta) / 180;
+      var dist =
+        Math.sin(radlat1) * Math.sin(radlat2) +
+        Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+      if (dist > 1) {
+        dist = 1;
+      }
+      dist = Math.acos(dist);
+      dist = (dist * 180) / Math.PI;
+      dist = dist * 60 * 1.1515 * 1.609344;
+      console.log(dist);
+      return dist;
+    }
   };
 
   const resetSearch = function () {
     axios
-      .get("http://localhost:8080/api/pharmacy/")
-      .then((resp) => setPharmacies(resp.data))
+      .get("/api/pharmacy/")
+      .then((resp) => {
+        setPharmacies(resp.data);
+        setBackup(resp.data);
+      })
       .catch(() => setPharmacies([]));
     setFSearch("");
   };
@@ -96,13 +178,13 @@ function PharmaciesView() {
       maxNumber = maxNumber + 1;
     }
     setMaxPag(maxNumber);
-  }, [pharmacies]);
+  }, [pharmacies, reload]);
 
   useEffect(() => {
     let first = pagNumber * 12;
     let max = pharmacies.length < first + 12 ? pharmacies?.length : first + 12;
     setShowedPharmacies(pharmacies?.slice(first, max));
-  }, [pharmacies, pagNumber]);
+  }, [pharmacies, pagNumber, reload]);
 
   let handleSlideLeft = () => {
     if (pagNumber !== 0) {
@@ -116,84 +198,220 @@ function PharmaciesView() {
     }
   };
 
+  const doSorting = (type, value) => {
+    if (type === "sorter") setSorter(value);
+    else setAscDesc(value);
+
+    if (value === "none") return;
+    if (type === "sorter" && ascDesc === "none") return;
+    if (type === "ascDesc" && sorter === "none") return;
+
+    pharmacies.sort(function (ph1, ph2) {
+      if (
+        (type === "sorter" && value === "grade") ||
+        (type === "ascDesc" && sorter === "grade")
+      )
+        return ph1?.avgGrade - ph2?.avgGrade;
+      if (
+        (type === "sorter" && value === "pharmacy name") ||
+        (type === "ascDesc" && sorter === "pharmacy name")
+      )
+        return ph1?.name.localeCompare(ph2?.name);
+      if (
+        (type === "sorter" && value === "city name") ||
+        (type === "ascDesc" && sorter === "city name")
+      )
+        return ph1?.address?.city.localeCompare(ph2?.address?.city);
+    });
+    if (
+      (type === "ascDesc" && value === "descending") ||
+      (type === "sorter" && ascDesc === "descending")
+    )
+      pharmacies.reverse();
+    setReload(!reload);
+  };
+
+  function hideBlocker() {
+    blocker.classList.remove("blocker");
+    div.classList.remove("my__transition__div__move");
+  }
+
   return (
     <Tab.Pane eventKey="first">
-      <Container fluid>
-        <Row className="justify-content-center mt-5 mb-0">
-          <Form onSubmit={formSearch} style={{ width: "100%" }}>
-            <Form.Group
-              as={Row}
-              className="justify-content-center align-items-center"
-            >
-              <Col lg={6}>
-                <Form.Control
-                  type="text"
-                  name="searchValue"
-                  value={fsearch}
-                  onChange={(e) => setFSearch(e.target.value)}
-                  placeholder="Enter name or place..."
-                />
-              </Col>
+      <div id="my__blocker" onClick={() => hideBlocker()}></div>
+      <div id="my__transition__div" className="my__flex">
+        <Form
+          onSubmit={formSearch}
+          style={{
+            display: triggered === "search" ? "block" : "none",
+            width: "50%",
+          }}
+        >
+          <Form.Group className="my__flex">
+            <Form.Control
+              type="text"
+              name="searchValue"
+              value={fsearch}
+              onChange={(e) => setFSearch(e.target.value)}
+              placeholder="Enter name or place..."
+            />
 
-              <Col className="justify-content-center" lg={2}>
-                <Button type="submit" className="my__search__buttons">
-                  <Search />
-                </Button>
-                <Button className="my__search__buttons" onClick={resetSearch}>
-                  Reset <Reply />
-                </Button>
-              </Col>
-            </Form.Group>
-          </Form>
-        </Row>
-        <Row>
-          <Accordion style={{ width: "100%" }}>
-            <Accordion.Toggle
-              as={Button}
-              className="my__search__buttons"
-              eventKey="0"
+            <Button type="submit" className="my__search__buttons">
+              <Search />
+            </Button>
+            <Button
+              className="my__search__buttons my__flex"
+              onClick={resetSearch}
             >
-              Filter
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey="0">
-              <div>
-                <Form onSubmit={formFilter} className="my__div__filter">
-                  <Form.Group controlId="gradeSelect">
-                    <Form.Label>Grade</Form.Label>
-                    <Form.Control
-                      as="select"
-                      onChange={(event) => setFilterGrade(event.target.value)}
-                      defaultValue=""
-                    >
-                      <option value="">Not Selected</option>
-                      <option value="LOW">Low</option>
-                      <option value="MEDIUM">Medium</option>
-                      <option value="HIGH">High</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Form.Group controlId="distanceSelect">
-                    <Form.Label>Distance</Form.Label>
-                    <Form.Control
-                      as="select"
-                      onChange={(event) =>
-                        setFilterDistance(event.target.value)
-                      }
-                      defaultValue={""}
-                    >
-                      <option value={""}>Not Selected</option>
-                      <option value="5LESS">5km(Less)</option>
-                      <option value="10LESS">10km(Less)</option>
-                      <option value="10HIGHER">10km(Higher)</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Button type="submit" className="my__search__buttons">
-                    <Search />
-                  </Button>
-                </Form>
-              </div>
-            </Accordion.Collapse>
-          </Accordion>
-        </Row>
+              Reset <Reply />
+            </Button>
+          </Form.Group>
+        </Form>
+        <div
+          className="my__flex"
+          style={{ display: triggered === "sorter" ? "flex" : "none" }}
+        >
+          <Form.Label style={{ marginRight: "20px" }}>Sorter: </Form.Label>
+          <Dropdown>
+            <Dropdown.Toggle
+              className="my__search__buttons"
+              id="dropdown-basic"
+            >
+              {sorter}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("sorter", "none");
+                }}
+              >
+                none
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("sorter", "pharmacy name");
+                }}
+              >
+                pharmacy name
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("sorter", "city name");
+                }}
+              >
+                city name
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("sorter", "grade");
+                }}
+              >
+                grade
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          <Dropdown>
+            <Dropdown.Toggle
+              className="my__search__buttons"
+              id="dropdown-basic"
+            >
+              {ascDesc}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("ascDesc", "none");
+                }}
+              >
+                none
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("ascDesc", "ascending");
+                }}
+              >
+                ascending
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  doSorting("ascDesc", "descending");
+                }}
+              >
+                descending
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+        <div style={{ display: triggered === "filter" ? "block" : "none" }}>
+          <Form onSubmit={formFilter} className="my__div__filter">
+            <Form.Group controlId="gradeSelect">
+              <Form.Label>Grade</Form.Label>
+              <Form.Control
+                as="select"
+                onChange={(event) => setFilterGrade(event.target.value)}
+                defaultValue=""
+              >
+                <option value="">Not Selected</option>
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="distanceSelect">
+              <Form.Label>Distance</Form.Label>
+              <Form.Control
+                as="select"
+                onChange={(event) => setFilterDistance(event.target.value)}
+                defaultValue={""}
+              >
+                <option value={""}>Not Selected</option>
+                <option value="5LESS">5km(Less)</option>
+                <option value="10LESS">10km(Less)</option>
+                <option value="10HIGHER">10km(Higher)</option>
+              </Form.Control>
+            </Form.Group>
+            <Button type="submit" className="my__search__buttons">
+              <Search />
+            </Button>
+          </Form>
+        </div>
+      </div>
+
+      <div className="my__flex" style={{ paddingTop: "30px" }}>
+        <Button
+          className="my__search__buttons"
+          onClick={() => {
+            div.classList.add("my__transition__div__move");
+            blocker.classList.add("blocker");
+            setTriggered("search");
+          }}
+        >
+          Search
+        </Button>
+        <Button
+          className="my__search__buttons"
+          onClick={() => {
+            div.classList.add("my__transition__div__move");
+            blocker.classList.add("blocker");
+            setTriggered("sorter");
+          }}
+        >
+          Sorter
+        </Button>
+        <Button
+          className="my__search__buttons"
+          onClick={() => {
+            div.classList.add("my__transition__div__move");
+            blocker.classList.add("blocker");
+            setTriggered("filter");
+          }}
+        >
+          Filter
+        </Button>
+      </div>
+      <Container fluid>
         <Row>
           {showedPharmacies.length === 0 && (
             <Row className="justify-content-center m-3 align-items-center">
@@ -221,7 +439,9 @@ function PharmaciesView() {
                           ))}
                         </ListGroupItem>
                         <ListGroupItem className="my__flex">
-                          {pharmacy.address.street}
+                          {pharmacy.address.street +
+                            ", " +
+                            pharmacy.address.city}
                         </ListGroupItem>
                       </ListGroup>
                     </Card>

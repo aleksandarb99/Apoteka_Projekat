@@ -6,7 +6,11 @@ import moment from "moment";
 
 import { Button, Tab, Row, Col, Table, Form, Alert } from "react-bootstrap";
 
+import { useToasts } from "react-toast-notifications";
+
 function AddAppointment({ idOfPharmacy }) {
+  const { addToast } = useToasts();
+
   const [dermatologists, setDermatologists] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
@@ -14,14 +18,13 @@ function AddAppointment({ idOfPharmacy }) {
   const [dermatogistPicked, setDermatogistPicked] = useState(0);
   const [duration, setDuration] = useState(15);
   const [price, setPrice] = useState(2000);
-  const [workDaysLabel, setWorkDaysLabel] = useState("");
   const [refresh, setRefresh] = useState(true);
 
   useEffect(() => {
     if (idOfPharmacy != undefined) {
       async function fetchDermatologists() {
         const request = await axios.get(
-          `http://localhost:8080/api/workplace/dermatologists/bypharmacyid/${idOfPharmacy}`
+          `/api/workplace/dermatologists/bypharmacyid/${idOfPharmacy}`
         );
         setDermatologists(request.data);
         return request;
@@ -33,11 +36,19 @@ function AddAppointment({ idOfPharmacy }) {
   useEffect(() => {
     if (dermatogistPicked != 0) {
       async function fetchAppointments() {
-        const request = await axios.get(
-          `http://localhost:8080/api/appointment/all/bydermatologistid/${dermatogistPicked}`,
-          { params: { date: startDate.getTime() } }
-        );
-        setAppointments(request.data);
+        const request = await axios
+          .get(`/api/appointment/all/bydermatologistid/${dermatogistPicked}`, {
+            params: { date: startDate.getTime() },
+          })
+          .then((res) => {
+            setAppointments(res.data);
+          })
+          .catch((err) => {
+            addToast(err.response.data, {
+              appearance: "error",
+            });
+          });
+
         return request;
       }
       fetchAppointments();
@@ -74,10 +85,13 @@ function AddAppointment({ idOfPharmacy }) {
               d1.setHours(dermatologists[i].workDays[j].startTime);
               d2.setHours(dermatologists[i].workDays[j].endTime);
 
-              setWorkDaysLabel(
+              addToast(
                 `Workshedule : ${moment(d1.getTime()).format(
                   "hh:00 a"
-                )} - ${moment(d2.getTime()).format("hh:00 a")}`
+                )} - ${moment(d2.getTime()).format("hh:00 a")}`,
+                {
+                  appearance: "info",
+                }
               );
               flag = true;
               break;
@@ -87,9 +101,9 @@ function AddAppointment({ idOfPharmacy }) {
       }
       if (!flag) {
         if (dermatogistPicked != 0) {
-          setWorkDaysLabel("It's a non-working day");
-        } else {
-          setWorkDaysLabel("");
+          addToast("It's a non-working day", {
+            appearance: "info",
+          });
         }
       }
     }
@@ -105,16 +119,17 @@ function AddAppointment({ idOfPharmacy }) {
     console.log(request);
 
     axios
-      .post(
-        `http://localhost:8080/api/appointment/${idOfPharmacy}/${dermatogistPicked}`,
-        request
-      )
-      .then(() => {
-        alert("Appointment added successfully");
+      .post(`/api/appointment/${idOfPharmacy}/${dermatogistPicked}`, request)
+      .then((res) => {
+        addToast(res.data, {
+          appearance: "success",
+        });
         reloadForm();
       })
-      .catch(() => {
-        alert("Appointment is not added successfully");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
   };
 
@@ -158,10 +173,6 @@ function AddAppointment({ idOfPharmacy }) {
             />
           </Form.Group>
 
-          {workDaysLabel == "It's a non-working day" && (
-            <Alert variant="warning">{workDaysLabel}</Alert>
-          )}
-
           <Form.Group controlId="timePicker" di>
             <Form.Label>Start time</Form.Label>
             <Form.Control
@@ -171,10 +182,6 @@ function AddAppointment({ idOfPharmacy }) {
               onChange={(event) => setStartHour(event.target.value)}
             />
           </Form.Group>
-
-          {workDaysLabel != "" && workDaysLabel != "It's a non-working day" && (
-            <Alert variant="info">{workDaysLabel}</Alert>
-          )}
 
           <Form.Group controlId="durationPicker" di>
             <Form.Label>Duration (in minutes)</Form.Label>

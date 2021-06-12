@@ -9,10 +9,10 @@ public class RankingCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "points_required", nullable = false)
+    @Column(name = "points_required", nullable = false, unique = true)
     private int pointsRequired;
 
     @Column(name = "discount", nullable = false)

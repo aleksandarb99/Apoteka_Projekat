@@ -1,16 +1,26 @@
 package com.team11.PharmacyProject.users.supplier;
 
+import com.team11.PharmacyProject.dto.offer.OfferAcceptDTO;
+import com.team11.PharmacyProject.dto.offer.OfferWithWorkerDTO;
 import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
 import com.team11.PharmacyProject.dto.offer.OfferListDTO;
+import com.team11.PharmacyProject.dto.workplace.WorkplaceDTOWithWorkdays;
 import com.team11.PharmacyProject.enums.OfferState;
+import com.team11.PharmacyProject.exceptions.CustomException;
+import com.team11.PharmacyProject.offer.Offer;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,6 +29,9 @@ public class SupplierController {
 
     @Autowired
     private SupplierService supplierService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping(value="/stock/{id}")
     public ResponseEntity<List<SupplierStockItemDTO>> getStock(@PathVariable("id") long supplierId) {
@@ -31,19 +44,13 @@ public class SupplierController {
 
     @PostMapping(value="/stock/{id}")
     public ResponseEntity<String> addItemToStock(@PathVariable("id") long id, @RequestBody SupplierStockItemDTO stockItemDTO) {
-        if (supplierService.insertStockItem(id, stockItemDTO)) {
+        try {
+            supplierService.insertStockItem(id, stockItemDTO);
             return new ResponseEntity<>("Stock added successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error. Stock item not added", HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping(value="/stock/{id}")
-    public ResponseEntity<String> updateStockAmount(@PathVariable("id") long id, @RequestBody SupplierStockItemDTO stockItemDTO) {
-        if (supplierService.updateStockItem(id, stockItemDTO)) {
-            return new ResponseEntity<>("Stock updated successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error. Stock item not updated", HttpStatus.BAD_REQUEST);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -56,23 +63,63 @@ public class SupplierController {
         return new ResponseEntity<>(supplierOffers, HttpStatus.OK);
     }
 
+    @GetMapping(value="/offers/byorderid/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
+    public ResponseEntity<?> getOffersByOrderId(@PathVariable("orderId") long orderId) {
+        Map<String, List<Offer>> map = supplierService.getOffersByOrderId(orderId);
+
+        List<OfferWithWorkerDTO> offersOfferListDTOS = new ArrayList<>();
+        List<OfferWithWorkerDTO> offersList;
+
+        for (String s:map.keySet()) {
+            List<Offer> list = map.get(s);
+            offersList = list.stream().map(m -> modelMapper.map(m, OfferWithWorkerDTO.class)).collect(Collectors.toList());
+            for (OfferWithWorkerDTO item:offersList) {
+                item.setWorker(s);
+                offersOfferListDTOS.add(item);
+            }
+        }
+        return new ResponseEntity<>(offersOfferListDTOS, HttpStatus.OK);
+
+    }
+
+    @PostMapping(value="/offers/accept/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
+    public ResponseEntity<String> acceptOffer(@RequestBody OfferAcceptDTO dto) {
+        try {
+            supplierService.acceptOffer(dto.getSelectedOfferId(), dto.getOrderId(), dto.getAdminId());
+            return new ResponseEntity<>("Offer is successfully accepted!", HttpStatus.OK);
+
+        } catch (PessimisticLockingFailureException e) {
+            return new ResponseEntity<>("Failed! Try again!", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping(value="/offers/{id}")
     public ResponseEntity<String> addOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
         // Uvek ce biti pending kada treba da se doda
         offerDTO.setOfferState(OfferState.PENDING);
-        if (supplierService.insertOffer(id, offerDTO)) {
+        try {
+            supplierService.insertOffer(id, offerDTO);
             return new ResponseEntity<>("Offer added successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error. Offer not added", HttpStatus.BAD_REQUEST);
+        } catch (PessimisticLockingFailureException e) {
+            return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping(value="/offers/{id}")
     public ResponseEntity<String> updateOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
-        if (supplierService.updateOffer(id, offerDTO)) {
-            return new ResponseEntity<>("Offer updted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error. Offer not updated", HttpStatus.BAD_REQUEST);
+        try {
+            supplierService.updateOffer(id, offerDTO);
+            return new ResponseEntity<>("Offer updated successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

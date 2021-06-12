@@ -13,21 +13,35 @@ import Col from "react-bootstrap/Col";
 
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
+import TabPane from "react-bootstrap/TabPane";
 
 import "../../styling/pharmacy.css";
 import "../../styling/home_page.css";
+import { useToasts } from "react-toast-notifications";
+import ERecipeSearchInPharmacy from "./ERecipeSearchInPharmacy";
+
+import { getUserTypeFromToken } from "../../app/jwtTokenUtils.js";
 
 function PharmacyProfile() {
+  const { addToast } = useToasts();
+
   const [details, setPharmacyDetails] = useState({});
 
   let { id } = useParams();
 
   useEffect(() => {
     async function fetchPharmacy() {
-      const request = await axios.get(
-        `http://localhost:8080/api/pharmacy/${id}`
-      );
-      setPharmacyDetails(request.data);
+      const request = await axios
+        .get(`/api/pharmacy/${id}`)
+        .then((res) => {
+          setPharmacyDetails(res.data);
+        })
+        .catch((err) => {
+          addToast(err.response.data, {
+            appearance: "error",
+          });
+        });
+
       return request;
     }
     fetchPharmacy();
@@ -59,11 +73,13 @@ function PharmacyProfile() {
                   Pharmacists and dermatologists
                 </Nav.Link>
               </Nav.Item>
-              <Nav.Item>
-                <Nav.Link className="my__nav__link" eventKey="fifth">
-                  Check availability
-                </Nav.Link>
-              </Nav.Item>
+              {getUserTypeFromToken() === "PATIENT" && (
+                <Nav.Item>
+                  <Nav.Link className="my__nav__link" eventKey="fifth">
+                    Check availability
+                  </Nav.Link>
+                </Nav.Item>
+              )}
             </Nav>
           </Col>
           <Col className="my__container" sm={9} md={9} lg={10} xs={12}>
@@ -75,6 +91,9 @@ function PharmacyProfile() {
               />
               <AppointmentView pharmacyId={id} />
               <WorkersView pharmacyId={id} />
+              <TabPane eventKey="fifth">
+                <ERecipeSearchInPharmacy pharmacyId={id} />
+              </TabPane>
             </Tab.Content>
           </Col>
         </Row>

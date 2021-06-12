@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.supplierItem;
 
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
+import com.team11.PharmacyProject.users.supplier.Supplier;
 
 import javax.persistence.*;
 
@@ -14,9 +15,13 @@ public class SupplierItem {
     @Column(name = "amount", nullable = false)
     private int amount;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "medicine_id")
     private Medicine medicine;
+
+    @ManyToOne
+    @JoinColumn(name = "supplier_id", nullable = false)
+    private Supplier supplier;
 
     public SupplierItem() {
     }
@@ -49,5 +54,13 @@ public class SupplierItem {
 
     public void setMedicine(Medicine medicine) {
         this.medicine = medicine;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
     }
 }

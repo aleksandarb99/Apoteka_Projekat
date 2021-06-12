@@ -19,22 +19,26 @@ public class ComplaintResponse {
     private Long date;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "complaint_id")
+    @JoinColumn(name = "complaint_id", unique = true)
     private Complaint complaint;
 
+    // Ko je odgovorio na zalbu
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private MyUser user;
+    private MyUser admin;
+
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private int version;
 
     public ComplaintResponse() {
     }
 
-    public ComplaintResponse(Long id, String responseText, Long date, Complaint complaint, MyUser user) {
-        this.id = id;
+    public ComplaintResponse(String responseText, Long date, Complaint complaint, MyUser user) {
         this.responseText = responseText;
         this.date = date;
         this.complaint = complaint;
-        this.user = user;
+        this.admin = user;
     }
 
     public Long getId() {
@@ -69,11 +73,19 @@ public class ComplaintResponse {
         this.complaint = complaint;
     }
 
-    public MyUser getUser() {
-        return user;
+    public MyUser getAdmin() {
+        return admin;
     }
 
-    public void setUser(MyUser user) {
-        this.user = user;
+    public void setAdmin(MyUser admin) {
+        this.admin = admin;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

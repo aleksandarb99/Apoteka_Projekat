@@ -1,11 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Nav, Navbar } from "react-bootstrap";
 import { Link, Redirect } from "react-router-dom";
 import { House } from "react-bootstrap-icons";
 import { logout } from "../../../app/slices/userSlice";
 import { useDispatch } from "react-redux";
+import axios from "../../../app/api";
+import { getIdFromToken } from "../../../app/jwtTokenUtils";
 
 const PatientHeader = () => {
+  const [penalties, setPenalties] = useState();
+
+  useEffect(() => {
+    async function fetchPenalties() {
+      const request = await axios.get(
+        "/api/patients/" + getIdFromToken() + "/penalties"
+      );
+      setPenalties(request.data);
+
+      return request;
+    }
+    fetchPenalties();
+  }, {});
+
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -34,6 +50,46 @@ const PatientHeader = () => {
             to="/reserve-consultation/pharmacies"
           >
             Reserve consultation
+          </Nav.Link>
+          <Nav.Link
+            as={Link}
+            style={{ color: "white" }}
+            to="/consultations-insight"
+          >
+            Consultations
+          </Nav.Link>
+          <Nav.Link as={Link} style={{ color: "white" }} to="/checkups-insight">
+            Checkups
+          </Nav.Link>
+          <Nav.Link as={Link} style={{ color: "white" }} to="/user/complaints">
+            Complaints
+          </Nav.Link>
+          <Nav.Link
+            as={Link}
+            style={{ color: "white" }}
+            to="/subscribed-pharmacies"
+          >
+            Subscribed pharmacies
+          </Nav.Link>
+          <Nav.Link
+            as={Link}
+            style={{ color: "white" }}
+            to="/reserved-medicines"
+          >
+            Reserved medicines
+          </Nav.Link>
+          <Nav.Link as={Link} style={{ color: "white" }} to="/rating">
+            Rating
+          </Nav.Link>
+          <Nav.Link
+            as={Link}
+            style={{
+              display: penalties === 3 ? "none" : "block",
+              color: "white",
+            }}
+            to="/e-prescription"
+          >
+            E-Prescription
           </Nav.Link>
         </Nav>
         <Nav>

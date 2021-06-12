@@ -16,6 +16,8 @@ public class PharmacyDTO {
     @NotNull
     private Address address;
 
+    private int pointsForAppointment;
+
     private long priceListId;
 
     public PharmacyDTO() {
@@ -82,4 +84,11 @@ public class PharmacyDTO {
         this.avgGrade = avgGrade;
     }
 
+    public int getPointsForAppointment() {
+        return pointsForAppointment;
+    }
+
+    public void setPointsForAppointment(int pointsForAppointment) {
+        this.pointsForAppointment = pointsForAppointment;
+    }
 }

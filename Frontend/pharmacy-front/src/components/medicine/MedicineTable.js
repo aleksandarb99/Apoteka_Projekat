@@ -1,12 +1,12 @@
-import axios from "axios";
+import axios from "../../app/api";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Row, Table } from "react-bootstrap";
 import MedicineRow from "./MedicineRow";
 import AddMedicineModal from "./AddMedicineModal";
 import EditMedicineModal from "./EditMedicineModal";
 import DeleteModal from "../utilComponents/modals/DeleteModal";
-import ErrorModal from '../utilComponents/modals/ErrorModal'
-import SuccessModal from '../utilComponents/modals/SuccessModal'
+import ErrorModal from "../utilComponents/modals/ErrorModal";
+import SuccessModal from "../utilComponents/modals/SuccessModal";
 
 function MedicineTable() {
   const [reload, setReload] = useState(false);
@@ -23,9 +23,7 @@ function MedicineTable() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(
-        "http://localhost:8080/api/medicine/crud"
-      );
+      const response = await axios.get("/api/medicine/crud");
       setMedicine(response.data);
     }
     fetchData();
@@ -41,7 +39,7 @@ function MedicineTable() {
 
   const deleteMedicine = () => {
     axios
-      .delete("http://localhost:8080/api/medicine/" + selected.id)
+      .delete("/api/medicine/" + selected.id)
       .then(() => {
         reloadTable();
         setShowDeleteModal(false);
@@ -49,7 +47,7 @@ function MedicineTable() {
       })
       .catch(() => {
         setShowErrorModal(true);
-      })
+      });
   };
 
   return (
@@ -101,8 +99,16 @@ function MedicineTable() {
         onHide={() => setShowEditModal(false)}
         onSuccess={reloadTable}
       />
-      <ErrorModal show={showErrorModal} onHide={() => setShowErrorModal(false)} message="Something went wrong."></ErrorModal>
-      <SuccessModal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} message="Medicine deleted successfully."></SuccessModal>
+      <ErrorModal
+        show={showErrorModal}
+        onHide={() => setShowErrorModal(false)}
+        message="Something went wrong."
+      ></ErrorModal>
+      <SuccessModal
+        show={showSuccessModal}
+        onHide={() => setShowSuccessModal(false)}
+        message="Medicine deleted successfully."
+      ></SuccessModal>
     </Container>
   );
 }

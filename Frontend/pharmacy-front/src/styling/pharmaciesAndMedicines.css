@@ -51,6 +51,33 @@
   align-items: center;
 }
 
+#my__transition__div {
+  position: absolute;
+  top: -17vh;
+  right: 25vw;
+  width: 50vw;
+  height: 15vh;
+  z-index: 10;
+  background-color: rgb(225, 233, 233);
+  box-shadow: 0px 0px 10px black;
+}
+
+.my__transition__div__move {
+  transform: translateY(17vh);
+  transition: transform 450ms;
+}
+
+.blocker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  content: " ";
+  background: rgba(0, 0, 0, 0.5);
+}
+
 @media screen and (max-width: 774px) {
   .my__card {
     min-width: 50vw;

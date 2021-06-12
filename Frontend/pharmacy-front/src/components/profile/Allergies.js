@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "./../../app/api";
 import { Table, Button, Modal } from "react-bootstrap";
 import AllergyRow from "./AllergyRow";
-import DeleteModal from "../utilComponents/modals/DeleteModal";
 import { Plus } from "react-bootstrap-icons";
 import "../../styling/allergies.css";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
+import { useToasts } from "react-toast-notifications";
 
 function Allergies() {
   const [reload, setReload] = useState(false);
   const [allergies, setAllergies] = useState([]);
   const [medicines, setMedicines] = useState([]);
-  const [selectedAllergy, setSelectedAllergy] = useState({});
   const [selectedMedicine, setSelectedMedicine] = useState({});
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
-        "http://localhost:8080/api/patients/allergies/all/" + getIdFromToken()
+        "/api/patients/allergies/all/" + getIdFromToken()
       );
       setAllergies(response.data);
       if (response.data == "") setAllergies(null);
@@ -29,37 +28,26 @@ function Allergies() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("http://localhost:8080/api/medicine/");
+      const response = await axios.get("/api/medicine/");
       setMedicines(response.data);
       if (response.data == "") setMedicines(null);
     }
     fetchData();
   }, [reload]);
 
-  const updateSelectedAllergy = (selectedAllergy) => {
-    setSelectedAllergy(selectedAllergy);
-  };
-
   const updateSelectedMedicine = (selectedMedicine) => {
     setSelectedMedicine(selectedMedicine);
   };
 
-  const deleteAllergy = () => {
+  const deleteAllergy = (id) => {
     axios
-      .delete(
-        "http://localhost:8080/api/patients/allergies/" +
-          getIdFromToken() +
-          "/" +
-          selectedAllergy.id
-      )
+      .delete("/api/patients/allergies/" + getIdFromToken() + "/" + id)
       .then((res) => {
-        if (res.data === "") {
-          alert("Deleting allergy has failed!");
-          return;
-        }
         reloadTable();
-        alert("Allergy deleted successfully");
-        setShowDeleteModal(false);
+        addToast(res.data, { appearance: "success" });
+      })
+      .catch((err) => {
+        addToast(err.response.data, { appearance: "error" });
       });
   };
 
@@ -70,20 +58,19 @@ function Allergies() {
   const addAllergy = () => {
     axios
       .post(
-        "http://localhost:8080/api/patients/allergies/" +
+        "/api/patients/allergies/" +
           getIdFromToken() +
           "/" +
           selectedMedicine.id
       )
       .then((res) => {
-        if (res.data === "") {
-          alert("Adding allergy has failed!");
-          return;
-        }
+        addToast(res.data, { appearance: "success" });
         reloadTable();
-        alert("Allergy added successfully");
         setShowAddModal(false);
         setSelectedMedicine({});
+      })
+      .catch((err) => {
+        addToast(err.response.data, { appearance: "error" });
       });
   };
 
@@ -111,8 +98,7 @@ function Allergies() {
               <AllergyRow
                 key={a.id}
                 allergy={a}
-                onClick={() => updateSelectedAllergy(a)}
-                deleteClick={() => setShowDeleteModal(true)}
+                deleteClick={() => deleteAllergy(a.id)}
               ></AllergyRow>
             ))}
         </tbody>
@@ -121,12 +107,6 @@ function Allergies() {
         <Plus style={{ width: "1.5em", height: "1.5em" }} />
         Add
       </Button>
-      <DeleteModal
-        title={"Remove " + selectedAllergy.name}
-        show={showDeleteModal}
-        onHide={() => setShowDeleteModal(false)}
-        onDelete={deleteAllergy}
-      />
       <Modal
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -183,7 +163,6 @@ function Allergies() {
             Add
           </Button>
         </Modal.Body>
-        <Modal.Footer></Modal.Footer>
       </Modal>
     </div>
   );

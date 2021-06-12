@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import api from "../../app/api";
+import { getIdFromToken, getUserTypeFromToken } from "../../app/jwtTokenUtils";
 
 import { StarFill } from "react-bootstrap-icons";
 
@@ -15,7 +17,10 @@ import Button from "react-bootstrap/Button";
 import Tab from "react-bootstrap/Tab";
 
 function PharmacyBasic({ details }) {
+  const [isUserSubscribed, setIsUserSubscribed] = useState(false);
+
   useEffect(() => {
+    checkIfUserIsSubscribed();
     document.getElementById("mapCol").innerHTML = "";
     return new Map({
       target: "mapCol",
@@ -37,6 +42,41 @@ function PharmacyBasic({ details }) {
     });
   }, [details]);
 
+  // CHECK nije moje
+  const subscribe = () => {
+    if (isUserSubscribed) {
+      api
+        .post(`/api/pharmacy/${details.id}/unsubscribe/${getIdFromToken()}`)
+        .then(() => {
+          alert("Success");
+          checkIfUserIsSubscribed();
+        })
+        .catch(() => {
+          alert("Error");
+        });
+    } else {
+      api
+        .post(`/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
+        .then(() => {
+          alert("Success");
+          checkIfUserIsSubscribed();
+        })
+        .catch(() => {
+          alert("Error");
+        });
+    }
+  };
+
+  // CHECK nije moje
+  const checkIfUserIsSubscribed = () => {
+    api
+      .get(`/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
+      .then((res) => {
+        console.log(res.data);
+        setIsUserSubscribed(res.data);
+      });
+  };
+
   return (
     <Tab.Pane eventKey="first">
       <Container fluid>
@@ -54,7 +94,13 @@ function PharmacyBasic({ details }) {
               {details?.address?.street}, {details?.address?.city},{" "}
               {details?.address?.country}
             </h4>
-            <Button variant="primary">Subscribe</Button>
+            <Button
+              variant="primary"
+              hidden={getUserTypeFromToken() !== "PATIENT"}
+              onClick={subscribe}
+            >
+              {isUserSubscribed ? "Unsubscribe" : "Subscribe"}
+            </Button>
           </Col>
           <Col lg={6} md={6} sm={12} id="mapCol" className="center"></Col>
         </Row>

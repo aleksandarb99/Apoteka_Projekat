@@ -1,10 +1,10 @@
 package com.team11.PharmacyProject.users.supplier;
 
 import com.team11.PharmacyProject.address.Address;
-import com.team11.PharmacyProject.enums.UserType;
 import com.team11.PharmacyProject.offer.Offer;
 import com.team11.PharmacyProject.supplierItem.SupplierItem;
 import com.team11.PharmacyProject.users.user.MyUser;
+import com.team11.PharmacyProject.users.user.Role;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 public class Supplier extends MyUser {
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SupplierItem> supplierItems;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -25,7 +25,7 @@ public class Supplier extends MyUser {
 
     }
 
-    public Supplier(Long id, String password, String firstName, String lastName, String email, String telephone, UserType userType, Address address, List<SupplierItem> supplierItems, List<Offer> offers, boolean isPasswordChanged) {
+    public Supplier(Long id, String password, String firstName, String lastName, String email, String telephone, Role userType, Address address, List<SupplierItem> supplierItems, List<Offer> offers, boolean isPasswordChanged) {
         super(id, password, firstName, lastName, email, telephone, userType, address, isPasswordChanged);
         this.supplierItems = supplierItems;
         this.offers = offers;

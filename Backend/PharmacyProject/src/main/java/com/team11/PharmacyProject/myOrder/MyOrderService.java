@@ -10,9 +10,18 @@ public interface MyOrderService {
 
     List<MyOrder> getOrdersByPharmacyId(Long id, String filterValue);
     List<MyOrderDTO> getAvailableOrders();
-    boolean addOrder(MyOrderAddingDTO dto);
+
+    void addOrder(MyOrderAddingDTO dto);
 
     MyOrderDTO getOrder(long id);
 
     List<MyOrderDTO> getAvailableOrdersForSupplier(long supplierId);
+
+    Long getAdminIdOfOrderId(Long id);
+
+    void removeOrder(long orderId);
+
+    void editOrder(long orderId, long date);
+
+    void checkIfOrderIsOver();
 }

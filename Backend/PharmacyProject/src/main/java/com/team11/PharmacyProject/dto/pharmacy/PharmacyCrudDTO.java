@@ -13,6 +13,9 @@ public class PharmacyCrudDTO {
     private String description;
 
     private Double avgGrade = 0.0;
+
+    private int pointsForAppointment;
+
     @NotNull
     private Address address;
 
@@ -57,5 +60,14 @@ public class PharmacyCrudDTO {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+
+    public int getPointsForAppointment() {
+        return pointsForAppointment;
+    }
+
+    public void setPointsForAppointment(int pointsForAppointment) {
+        this.pointsForAppointment = pointsForAppointment;
     }
 }

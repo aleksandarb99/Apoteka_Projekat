@@ -1,13 +1,23 @@
 package com.team11.PharmacyProject.users.pharmacyWorker;
 
 import com.team11.PharmacyProject.appointment.Appointment;
-import com.team11.PharmacyProject.enums.UserType;
+import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
+import com.team11.PharmacyProject.dto.worker.HolidayStartEndDTO;
+import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
+import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
+import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
+import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayService;
+import com.team11.PharmacyProject.users.patient.Patient;
+import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
+import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,7 +30,21 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
     PharmacyWorkerRepository pharmacyWorkerRepository;
 
     @Autowired
+    PatientRepository patientRepository;
+
+    @Autowired
     PharmacyRepository pharmacyRepository;
+
+    @Autowired
+    WorkplaceService workplaceService;
+
+    @Autowired
+    RequestForHolidayService requestForHolidayService;
+
+    @Override
+    public PharmacyWorker getOne(Long id) {
+        return pharmacyWorkerRepository.findByIdAndFetchAWorkplaces(id);
+    }
 
     @Override
     public PharmacyWorker getWorkerForCalendar(Long id) {
@@ -28,15 +52,102 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
     }
 
     @Override
+    public void save(PharmacyWorker worker) {
+        pharmacyWorkerRepository.save(worker);
+    }
+
+    @Override
+    public List<PharmacyWorker> findAll() {
+        return pharmacyWorkerRepository.findAll();
+    }
+
+    @Override
+    public List<PharmacyWorker> getNotWorkingWorkersByPharmacyId(Long pharmacyId, RequestForWorkerDTO dto) {
+        List<PharmacyWorker> workers = new ArrayList<>();
+        List<PharmacyWorker> allWorkers = pharmacyWorkerRepository.findAllAndFetchAWorkplaces();
+
+        List<Workplace> workplaceList = workplaceService.getWorkplacesByPharmacyId(pharmacyId);
+
+        for (PharmacyWorker worker:
+            allWorkers) {
+            if(worker.getWorkplaces().size() == 0) {
+                workers.add(worker);
+                continue;
+            }
+            if(worker.getRole().getName().equals("DERMATOLOGIST")){
+                boolean flag = false;
+                boolean heIsFree = true;
+                for (Workplace workplace: worker.getWorkplaces()) {
+                    for (Workplace workplace2:workplaceList) {
+                        if (workplace.getId().equals(workplace2.getId())) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if(flag){
+                        heIsFree = false;
+                       break;
+                    }
+
+                    for (WorkDay day:workplace.getWorkDays()) {
+                        boolean flag2 = false;
+                        if(day.getWeekday().ordinal() == 0){
+                            flag2 = dto.isEnable7();
+                        }else if(day.getWeekday().ordinal() == 1){
+                            flag2 = dto.isEnable1();
+                        }
+                        else if(day.getWeekday().ordinal()== 2){
+                            flag2 = dto.isEnable2();
+                        }
+                        else if(day.getWeekday().ordinal()== 3){
+                            flag2 = dto.isEnable3();
+                        }
+                        else if(day.getWeekday().ordinal() == 4){
+                            flag2 = dto.isEnable4();
+                        }
+                        else if(day.getWeekday().ordinal() == 5){
+                            flag2 = dto.isEnable5();
+                        }
+                        else if(day.getWeekday().ordinal() == 6){
+                            flag2 = dto.isEnable6();
+                        }
+
+                        if(flag2){
+                            if(dto.getEndHour() < day.getStartTime()){
+                                continue;
+                            }
+                            else if(dto.getStartHour() > day.getEndTime()){
+                                continue;
+                            }else {
+                                heIsFree = false;
+                                break;
+                            }
+                        }
+
+                    }
+
+                }
+
+                if(heIsFree){
+                    workers.add(worker);
+                }
+
+            }
+
+        }
+        return workers;
+    }
+
+    @Override
     public List<PharmacyWorker> getFreePharmacistsByPharmacyIdAndDate(Long id, long date, Sort sorter) {
 
         Pharmacy pharmacy = pharmacyRepository.getPharmacyByIdAndFetchWorkplaces(id);
-        if (pharmacy == null) return  null;
+        if (pharmacy == null) throw new RuntimeException("There's no pharmacies in database!");
 
         Date requestedDateAndTime = new Date(date);
         Date requestedDateAndTimeEnd = new Date(date);
         Date today = new Date();
-        if (requestedDateAndTime.before(today)) return null;
+        if (requestedDateAndTime.before(today)) throw new RuntimeException("Requested date is in the past!");
 
         Calendar c = Calendar.getInstance();
         c.setTime(requestedDateAndTime);
@@ -44,7 +155,7 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
 
         List<PharmacyWorker> chosenWorkers = new ArrayList<>();
         for (Workplace wp : pharmacy.getWorkplaces()) {
-            if (wp.getWorker().getUserType() != UserType.PHARMACIST) continue;
+            if (!wp.getWorker().getRole().getName().equals("PHARMACIST")) continue;
 
             for (WorkDay wd : wp.getWorkDays()) {
                 if (wd.getWeekday().ordinal() + 1 == dayOfWeek) {
@@ -55,6 +166,7 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
                     boolean isPharmacistFree = true;
                     // Kad prebacimo u lazi, prepravi da kad gore dobavim apoteke, fetchujem i workere i njihove appointemnte
                     for (Appointment a : pharmacyWorkerRepository.getPharmacyWorkerForCalendar(wp.getWorker().getId()).getAppointmentList()) {
+                        if(id.equals(a.getPharmacy().getId()) && a.getAppointmentState() == AppointmentState.CANCELLED) continue;
                         Date startTime = new Date(a.getStartTime());
                         Date endTime = new Date(a.getEndTime());
                         if(startTime.compareTo(requestedDateAndTime) == 0) {
@@ -92,5 +204,70 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
                     .collect(Collectors.toList());
 
         return chosenWorkers;
+    }
+
+    @Override
+    public List<PharmacyWorker> getDermatologistsByPatientId(Long id) {
+
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isEmpty()) return null;
+
+        List<PharmacyWorker> dermatologists = pharmacyWorkerRepository.getDermatologistsFetchFinishedCheckups();
+        return getChosenWorkers(dermatologists, id);
+    }
+
+    @Override
+    public List<PharmacyWorker> getPharmacistsByPatientId(Long id) {
+
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isEmpty()) return null;
+
+        List<PharmacyWorker> pharmacists = pharmacyWorkerRepository.getPharmacistsFetchFinishedConsultations();
+        return getChosenWorkers(pharmacists, id);
+    }
+
+    private List<PharmacyWorker> getChosenWorkers(List<PharmacyWorker> workers, long id) {
+
+        List<PharmacyWorker> chosenWorkers = new ArrayList<>();
+
+        for (PharmacyWorker pw : workers) {
+            for (Appointment a : pw.getAppointmentList()) {
+                if (a.getPatient().getId().equals(id)) {
+                    chosenWorkers.add(pw);
+                    break;
+                }
+            }
+        }
+        return chosenWorkers;
+    }
+
+    private WorktimeDTO getWorktimeFromWorkplace(Workplace wp, Long workerID){
+        if (wp == null){
+            return null;
+        }
+        WorktimeDTO worktimeDTO = new WorktimeDTO();
+        worktimeDTO.setWorkDayList(wp.getWorkDays());
+
+        List<RequestForHoliday> holidays = requestForHolidayService.getRequestForHolidayAcceptedOrPendingInFuture(workerID);
+        if (holidays != null && !holidays.isEmpty()){
+            List<HolidayStartEndDTO> holidayStartEndDTOS = new ArrayList<>(holidays.size());
+            for (RequestForHoliday req : holidays){
+                holidayStartEndDTOS.add(new HolidayStartEndDTO(req));
+            }
+            worktimeDTO.setHolidays(holidayStartEndDTOS);
+        }
+        return worktimeDTO;
+    }
+
+    @Override
+    public WorktimeDTO getWorktime(Long workerID){
+        Workplace wp = workplaceService.getWorkplaceOfPharmacist(workerID);
+        return getWorktimeFromWorkplace(wp, workerID);
+    }
+
+    @Override
+    public WorktimeDTO getWorktime(Long workerID, Long pharmID){
+        Workplace wp = workplaceService.getWorkplaceOfDermatologist(workerID, pharmID);
+        return getWorktimeFromWorkplace(wp, workerID);
     }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import {
   Pagination,
@@ -8,6 +9,8 @@ import {
   Col,
   Card,
   Button,
+  Alert,
+  Spinner,
 } from "react-bootstrap";
 
 import Dropdown from "react-bootstrap/Dropdown";
@@ -17,8 +20,18 @@ import axios from "../../app/api";
 import moment from "moment";
 
 import AddPurchaseOrderModal from "./AddPurchaseOrderModal";
+import SelectOfferModal from "./SelectOfferModal";
+import EditOrderModal from "./EditOrderModal";
+import { useToasts } from "react-toast-notifications";
 
-function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
+function DisplayPurchaseOrders({
+  idOfPharmacy,
+  priceListId,
+  refresh,
+  refreshInq,
+  setRefreshInq,
+}) {
+  const { addToast } = useToasts();
   const [orders, setOrders] = useState([]);
   const [filterValue, setFilterValue] = useState("All");
   const [showedOrders, setShowedOrders] = useState([]);
@@ -27,14 +40,25 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
   const [maxPag, setMaxPag] = useState(0);
   const [dropdownLabel, setDropdownLabel] = useState("All");
 
+  const [selectOfferModalShow, setSelectOfferModalShow] = useState(false);
+  const [showEditOrderModal, setShowEditOrderModal] = useState(false);
+
+  const [showSpinner, setShowSpinner] = useState(false);
+
   const [addModalShow, setAddModalShow] = useState(false);
   const [medicineItems, setMedicineItems] = useState([]);
 
   async function fetchPriceList() {
-    const request = await axios.get(
-      `http://localhost:8080/api/pricelist/${priceListId}`
-    );
-    setMedicineItems(request.data.medicineItems);
+    const request = await axios
+      .get(`/api/pricelist/${priceListId}`)
+      .then((res) => {
+        setMedicineItems(res.data.medicineItems);
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
 
     return request;
   }
@@ -43,11 +67,11 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
     if (priceListId != undefined) {
       fetchPriceList();
     }
-  }, [priceListId]);
+  }, [priceListId, refresh]);
 
   async function fetchOrders() {
     const request = await axios.get(
-      `http://localhost:8080/api/orders/bypharmacyid/${idOfPharmacy}`,
+      `/api/orders/bypharmacyid/${idOfPharmacy}`,
       { params: { filter: filterValue } }
     );
     setOrders(request.data);
@@ -85,15 +109,21 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
       pharmacyId: idOfPharmacy,
       deadline: data.startDate.getTime(),
       items: [...data.orders],
+      adminId: getIdFromToken(),
     };
 
     const request = await axios
-      .post(`http://localhost:8080/api/orders/addorder`, dto)
-      .then(() => {
+      .post(`/api/orders/addorder`, dto)
+      .then((res) => {
         fetchOrders();
+        addToast(res.data, {
+          appearance: "success",
+        });
       })
-      .catch(() => {
-        alert("Failed");
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
       });
     return request;
   }
@@ -110,13 +140,95 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
     }
   };
 
-  let handleAddModalSave = (selectedMedicineId, orders) => {
+  let handleAddModalSave = (orders) => {
     setAddModalShow(false);
     addPurchaseOrder(orders);
   };
 
   let handleAddModalClose = () => {
     setAddModalShow(false);
+  };
+
+  async function deletePOrder() {
+    const request = await axios
+      .delete(`/api/orders/${showedOrder.id}`)
+      .then((res) => {
+        fetchOrders();
+        addToast(res.data, {
+          appearance: "success",
+        });
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
+    return request;
+  }
+
+  let deleteOrder = () => {
+    deletePOrder();
+  };
+
+  async function selectOrder(selectedOfferId) {
+    let dto = {
+      selectedOfferId,
+      orderId: showedOrder.id,
+      adminId: getIdFromToken(),
+    };
+    setShowSpinner(true);
+    const request = await axios
+      .post(`/api/suppliers/offers/accept/`, dto)
+      .then((res) => {
+        setShowSpinner(false);
+        filterOrders("All");
+        setDropdownLabel("All");
+        setRefreshInq(!refreshInq);
+        addToast(res.data, {
+          appearance: "success",
+        });
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
+    return request;
+  }
+
+  let handleSelectOfferModalSave = (selectedOfferId) => {
+    setSelectOfferModalShow(false);
+    selectOrder(selectedOfferId);
+  };
+
+  let handleSelectOfferModalClose = () => {
+    setSelectOfferModalShow(false);
+  };
+
+  async function editOrder(date) {
+    const request = await axios
+      .put(`/api/orders/${showedOrder.id}/${date.getTime()}/`)
+      .then((res) => {
+        fetchOrders();
+        addToast(res.data, {
+          appearance: "success",
+        });
+      })
+      .catch((err) => {
+        addToast(err.response.data, {
+          appearance: "error",
+        });
+      });
+    return request;
+  }
+
+  let handleEditModalSave = (date) => {
+    setShowEditOrderModal(false);
+    editOrder(date);
+  };
+
+  let handleEditModalClose = () => {
+    setShowEditOrderModal(false);
   };
 
   return (
@@ -149,11 +261,20 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
+                filterOrders("OnHold");
+                setDropdownLabel("OnHold");
+              }}
+            >
+              On hold
+            </Dropdown.Item>
+
+            <Dropdown.Item
+              onClick={() => {
                 filterOrders("Processed");
                 setDropdownLabel("Processed");
               }}
             >
-              Processed
+              Ended
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
@@ -210,10 +331,77 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
           </Pagination>
         </Col>
       </Row>
+      {showedOrder != null && (
+        <Row>
+          <Col>
+            <Alert variant="secondary">
+              <Alert.Heading>Order {showedOrder.id}</Alert.Heading>
+            </Alert>
+          </Col>
+          <Col className="center">
+            <Button
+              disabled={
+                showedOrder == null || showedOrder.adminId != getIdFromToken()
+              }
+              variant="info"
+              size="lg"
+              onClick={() => {
+                setShowEditOrderModal(true);
+              }}
+            >
+              Edit
+            </Button>
+            <EditOrderModal
+              order={showedOrder}
+              show={showEditOrderModal}
+              onHide={handleEditModalClose}
+              handleEdit={handleEditModalSave}
+            />
+            <Button
+              disabled={
+                showedOrder == null ||
+                dropdownLabel !== "OnHold" ||
+                showedOrder.adminId != getIdFromToken()
+              }
+              variant="primary"
+              size="lg"
+              onClick={() => {
+                setSelectOfferModalShow(true);
+              }}
+            >
+              Choose offer
+            </Button>
+            <Button
+              disabled={
+                showedOrder == null || showedOrder.adminId != getIdFromToken()
+              }
+              variant="danger"
+              size="lg"
+              onClick={() => {
+                deleteOrder();
+              }}
+            >
+              Delete
+            </Button>
+          </Col>
+        </Row>
+      )}
+      <Row>
+        <Col></Col>
+        <Col className="center">
+          {" "}
+          <Spinner
+            style={{ display: showSpinner ? "block" : "none" }}
+            animation="border"
+          />
+          <hr></hr>
+        </Col>
+        <Col></Col>
+      </Row>
       <Row>
         <Col>
           {showedOrder && (
-            <Table striped bordered variant="light">
+            <Table striped bordered variant="dark">
               <thead>
                 <tr>
                   <th>#</th>
@@ -223,6 +411,12 @@ function DisplayPurchaseOrders({ idOfPharmacy, priceListId }) {
                 </tr>
               </thead>
               <tbody>
+                <SelectOfferModal
+                  orderId={showedOrder.id}
+                  show={selectOfferModalShow}
+                  onHide={handleSelectOfferModalClose}
+                  handleSelect={handleSelectOfferModalSave}
+                />
                 {showedOrder &&
                   showedOrder.orderItem.map((item, index) => (
                     <tr>

@@ -12,11 +12,12 @@ import {
   Form,
 } from "react-bootstrap";
 
-import axios from "../../app/api";
+import axios from "./../../app/api";
 import moment from "moment";
 import { getIdFromToken, getUserTypeFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
+import { useToasts } from "react-toast-notifications";
 
 function AppointmentView({ pharmacyId }) {
   const [reload, setReload] = useState(false);
@@ -25,12 +26,38 @@ function AppointmentView({ pharmacyId }) {
   const [maxPag, setMaxPag] = useState(0);
   const [showedAppointsments, setShowedAppointsments] = useState([]);
   const [sorter, setSorter] = useState("none");
+  const [points, setPoints] = useState({});
+  const [category, setCategory] = useState({});
+  const { addToast } = useToasts();
+
+  useEffect(() => {
+    async function fetchPoints() {
+      if (getIdFromToken() == null) return;
+      const request = await axios.get(
+        "/api/patients/" + getIdFromToken() + "/points"
+      );
+      setPoints(request.data);
+      return request;
+    }
+    fetchPoints();
+  }, []);
+
+  useEffect(() => {
+    async function fetchCategory() {
+      if (getIdFromToken() == null) return;
+      const request = await axios.get("/api/ranking-category/points/" + points);
+      setCategory(request.data);
+
+      return request;
+    }
+    fetchCategory();
+  }, [points]);
 
   useEffect(() => {
     if (pharmacyId != undefined) {
       async function fetchAppointsments() {
         const request = await axios.get(
-          `http://localhost:8080/api/appointment/bypharmacyid/${pharmacyId}`
+          `/api/appointment/bypharmacyid/${pharmacyId}`
         );
         setAppointsments(request.data);
 
@@ -69,19 +96,21 @@ function AppointmentView({ pharmacyId }) {
 
   const reserveAppointment = (a) => {
     axios
-      .post(
-        "http://localhost:8080/api/appointment/reserve/" +
-          a.id +
-          "/patient/" +
-          getIdFromToken()
-      )
+      .post("/api/appointment/reserve/" + a.id + "/patient/" + getIdFromToken())
       .then((res) => {
-        if (res.data === "failed") {
-          alert("Failed to reserve appointment!");
-          return;
-        }
+        addToast(res.data, { appearance: "success" });
         setReload(!reload);
-        alert("Successfully reserved appointment!");
+      })
+      .catch((err) => {
+        addToast(
+          err.response.data.message == undefined
+            ? err.response.data
+            : err.response.data.message,
+          {
+            appearance: "error",
+          }
+        );
+        setReload(!reload);
       });
   };
 
@@ -106,12 +135,9 @@ function AppointmentView({ pharmacyId }) {
     }
 
     axios
-      .get(
-        `http://localhost:8080/api/appointment/bypharmacyid/${pharmacyId}/sort`,
-        {
-          params: search_params,
-        }
-      )
+      .get(`/api/appointment/bypharmacyid/${pharmacyId}/sort`, {
+        params: search_params,
+      })
       .then((resp) => setAppointsments(resp.data))
       .catch(setAppointsments([]));
   };
@@ -123,7 +149,10 @@ function AppointmentView({ pharmacyId }) {
   return (
     <Tab.Pane eventKey="third">
       <Container fluid>
-        <Row className="justify-content-center m-3">
+        <Row
+          className="justify-content-center m-3"
+          style={{ display: appointsments.length == 0 ? "none" : "flex" }}
+        >
           <Form onSubmit={formSearch}>
             <Form.Group as={Row} className="align-items-center">
               <Col>
@@ -179,8 +208,31 @@ function AppointmentView({ pharmacyId }) {
                     </Card.Text>
                   </Card.Body>
                   <ListGroup className="list-group-flush">
-                    <ListGroupItem className="my__flex">
+                    <ListGroupItem
+                      className="my__flex"
+                      style={{
+                        display:
+                          category === "" || Object.keys(category).length === 0
+                            ? "flex"
+                            : "none",
+                      }}
+                    >
                       {appointsment.price}
+                    </ListGroupItem>
+                    <ListGroupItem
+                      className="my__flex"
+                      style={{
+                        display:
+                          category !== "" && Object.keys(category).length !== 0
+                            ? "flex"
+                            : "none",
+                      }}
+                    >
+                      <span style={{ textDecoration: "line-through" }}>
+                        {appointsment.price}
+                      </span>
+                      {"   ->   "}
+                      {(appointsment.price * (100 - category.discount)) / 100}
                     </ListGroupItem>
                     <ListGroupItem className="my__flex">
                       {appointsment?.worker?.lastName}{" "}
@@ -206,7 +258,10 @@ function AppointmentView({ pharmacyId }) {
             ))}
         </Row>
 
-        <Row className="my__row__pagination">
+        <Row
+          className="my__row__pagination"
+          style={{ display: appointsments.length == 0 ? "none" : "flex" }}
+        >
           <Col className="my__flex">
             <Pagination size="lg">
               <Pagination.Prev
@@ -221,6 +276,15 @@ function AppointmentView({ pharmacyId }) {
             </Pagination>
           </Col>
         </Row>
+        <h3
+          style={{
+            display: appointsments.length == 0 ? "block" : "none",
+            textAlign: "center",
+            marginTop: "50px",
+          }}
+        >
+          There's no empty checkups!
+        </h3>
       </Container>
     </Tab.Pane>
   );
