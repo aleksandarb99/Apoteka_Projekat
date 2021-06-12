@@ -6,6 +6,8 @@ services:
   - postgresql
 
 before_install:
+  - cd Backend
+  - cd PharmacyProject
   - chmod +x mvnw
 
 script:
