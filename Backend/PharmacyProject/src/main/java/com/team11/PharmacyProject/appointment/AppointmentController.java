@@ -53,6 +53,7 @@ public class AppointmentController {
         Appointment a = convertToEntity(dto);
 		
 
+
         try {
             appointmentServiceImpl.insertAppointment(a, pharmacyId, dId);
             return new ResponseEntity<>("Appointment added successfully", HttpStatus.OK);
