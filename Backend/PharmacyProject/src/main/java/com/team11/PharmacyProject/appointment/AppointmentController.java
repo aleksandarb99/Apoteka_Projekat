@@ -52,6 +52,8 @@ public class AppointmentController {
     public ResponseEntity<String> addAppointment(@PathVariable("idP") Long pharmacyId, @PathVariable("idD") Long dId, @Valid @RequestBody AppointmentDTORequest dto) {
         Appointment a = convertToEntity(dto);
 		
+		
+		
 
 
         try {
