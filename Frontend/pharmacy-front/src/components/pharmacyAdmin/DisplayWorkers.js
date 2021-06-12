@@ -33,16 +33,14 @@ function DisplayWorkers({ idOfPharmacy }) {
   const [filterPharmacyName, setFilterPharmacyName] = useState("");
 
   async function fetchNames() {
-    const request = await axios.get(
-      `http://localhost:8080/api/workplace/pharmacies/all/`
-    );
+    const request = await axios.get(`/api/workplace/pharmacies/all/`);
     setPharamcyNameMap(request.data);
     return request;
   }
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get("http://localhost:8080/api/pharmacy/");
+      const request = await axios.get("/api/pharmacy/");
       setPharmacies(request.data);
 
       return request;
@@ -52,7 +50,7 @@ function DisplayWorkers({ idOfPharmacy }) {
 
   async function fetchWorkers() {
     const request = await axios
-      .get(`http://localhost:8080/api/workplace/bypharmacyid/${idOfPharmacy}`)
+      .get(`/api/workplace/bypharmacyid/${idOfPharmacy}`)
       .then((resp) => {
         setWorkers(resp.data);
       });
@@ -62,10 +60,7 @@ function DisplayWorkers({ idOfPharmacy }) {
 
   async function addWorker(id, dto) {
     const request = await axios
-      .post(
-        `http://localhost:8080/api/workplace/addworker/bypharmacyid/${idOfPharmacy}/${id}`,
-        dto
-      )
+      .post(`/api/workplace/addworker/bypharmacyid/${idOfPharmacy}/${id}`, dto)
       .then((res) => {
         fetchWorkers();
         addToast(res.data, {
@@ -84,7 +79,7 @@ function DisplayWorkers({ idOfPharmacy }) {
   async function removeWorker() {
     const request = await axios
       .delete(
-        `http://localhost:8080/api/workplace/removeworker/bypharmacyid/${idOfPharmacy}/${selectedRowId}`
+        `/api/workplace/removeworker/bypharmacyid/${idOfPharmacy}/${selectedRowId}`
       )
       .then((res) => {
         fetchWorkers();
@@ -134,7 +129,7 @@ function DisplayWorkers({ idOfPharmacy }) {
       fetchWorkers();
     } else {
       axios
-        .get(`http://localhost:8080/api/workplace/search/${idOfPharmacy}`, {
+        .get(`/api/workplace/search/${idOfPharmacy}`, {
           params: { searchValue: fsearch },
         })
         .then((resp) => {

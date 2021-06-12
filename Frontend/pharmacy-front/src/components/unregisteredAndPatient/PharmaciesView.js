@@ -39,7 +39,7 @@ function PharmaciesView() {
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get("http://localhost:8080/api/pharmacy/");
+      const request = await axios.get("/api/pharmacy/");
       setPharmacies(request.data);
       setBackup(request.data);
 
@@ -52,13 +52,13 @@ function PharmaciesView() {
     event.preventDefault();
 
     if (fsearch.length === 0) {
-      axios.get("http://localhost:8080/api/pharmacy/").then((resp) => {
+      axios.get("/api/pharmacy/").then((resp) => {
         setPharmacies(resp.data);
         setBackup(resp.data);
       });
     } else {
       axios
-        .get("http://localhost:8080/api/pharmacy/search", {
+        .get("/api/pharmacy/search", {
           params: { searchValue: fsearch },
         })
         .then((resp) => {
@@ -163,7 +163,7 @@ function PharmaciesView() {
 
   const resetSearch = function () {
     axios
-      .get("http://localhost:8080/api/pharmacy/")
+      .get("/api/pharmacy/")
       .then((resp) => {
         setPharmacies(resp.data);
         setBackup(resp.data);

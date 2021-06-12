@@ -45,7 +45,7 @@ function PharmaciesWithFreePharmacists() {
   useEffect(() => {
     async function fetchPoints() {
       const request = await axios.get(
-        "http://localhost:8080/api/patients/" + getIdFromToken() + "/points"
+        "/api/patients/" + getIdFromToken() + "/points"
       );
       setPoints(request.data);
       return request;
@@ -55,9 +55,7 @@ function PharmaciesWithFreePharmacists() {
 
   useEffect(() => {
     async function fetchCategory() {
-      const request = await axios.get(
-        "http://localhost:8080/api/ranking-category/points/" + points
-      );
+      const request = await axios.get("/api/ranking-category/points/" + points);
       setCategory(request.data);
 
       return request;
@@ -71,10 +69,9 @@ function PharmaciesWithFreePharmacists() {
     async function fetchPharmacies() {
       let search_params = new URLSearchParams();
       search_params.append("date", requestedDate);
-      const request = await axios.get(
-        "http://localhost:8080/api/pharmacy/all/free-pharmacists/",
-        { params: search_params }
-      );
+      const request = await axios.get("/api/pharmacy/all/free-pharmacists/", {
+        params: search_params,
+      });
       if (request.status == 404) {
         addToast(request.data, { appearance: "error" });
         setPharmacies([]);
@@ -103,7 +100,7 @@ function PharmaciesWithFreePharmacists() {
       search_params.append("date", requestedDate);
       search_params.append("id", chosenPharmacy.id);
       const request = await axios.get(
-        "http://localhost:8080/api/workers/all/free-pharmacists/pharmacy",
+        "/api/workers/all/free-pharmacists/pharmacy",
         { params: search_params }
       );
       if (request.status == 404) {
@@ -157,7 +154,7 @@ function PharmaciesWithFreePharmacists() {
   const createReservation = () => {
     axios
       .post(
-        `http://localhost:8080/api/appointment/reserve-consultation/pharmacy/${
+        `/api/appointment/reserve-consultation/pharmacy/${
           chosenPharmacy.id
         }/pharmacist/${
           selectedWorker.id
@@ -225,7 +222,7 @@ function PharmaciesWithFreePharmacists() {
     search_params.append("date", requestedDate);
 
     axios
-      .get("http://localhost:8080/api/pharmacy/all/free-pharmacists/", {
+      .get("/api/pharmacy/all/free-pharmacists/", {
         params: search_params,
       })
       .then((resp) => setPharmacies(resp.data))
@@ -253,7 +250,7 @@ function PharmaciesWithFreePharmacists() {
     search_params.append("date", requestedDate);
     search_params.append("id", chosenPharmacy.id);
     axios
-      .get("http://localhost:8080/api/workers/all/free-pharmacists/pharmacy", {
+      .get("/api/workers/all/free-pharmacists/pharmacy", {
         params: search_params,
       })
       .then((resp) => setWorkers(resp.data))

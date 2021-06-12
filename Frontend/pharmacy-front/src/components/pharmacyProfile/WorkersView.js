@@ -25,7 +25,7 @@ function WorkersView({ pharmacyId }) {
     if (pharmacyId != undefined) {
       async function fetchWorkers() {
         const request = await axios.get(
-          `http://localhost:8080/api/workplace/bypharmacyid/${pharmacyId}`
+          `/api/workplace/bypharmacyid/${pharmacyId}`
         );
         setWorkers(request.data);
 

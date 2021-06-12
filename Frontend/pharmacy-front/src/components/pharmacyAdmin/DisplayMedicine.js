@@ -28,7 +28,7 @@ function DisplayMedicine({
 
   async function fetchPriceList() {
     const request = await axios
-      .get(`http://localhost:8080/api/pricelist/${priceListId}`)
+      .get(`/api/pricelist/${priceListId}`)
       .then((res) => {
         setMedicineItems(res.data.medicineItems);
       })
@@ -55,7 +55,7 @@ function DisplayMedicine({
   async function addMedicine(selectedMedicineId, price) {
     const request = await axios
       .post(
-        `http://localhost:8080/api/pricelist/${priceListId}/addmedicine/${selectedMedicineId}/${price}`
+        `/api/pricelist/${priceListId}/addmedicine/${selectedMedicineId}/${price}`
       )
       .then((res) => {
         fetchPriceList();
@@ -74,9 +74,7 @@ function DisplayMedicine({
 
   async function removeMedicine() {
     const request = await axios
-      .delete(
-        `http://localhost:8080/api/pricelist/${priceListId}/removemedicine/${selectedRowId}`
-      )
+      .delete(`/api/pricelist/${priceListId}/removemedicine/${selectedRowId}`)
       .then((res) => {
         fetchPriceList();
         setRefreshPriceList(!refreshPriceList);
@@ -95,7 +93,7 @@ function DisplayMedicine({
   async function changePrice(price) {
     const request = await axios
       .post(
-        `http://localhost:8080/api/pricelist/${priceListId}/changeprice/${selectedRowId}/${price}`
+        `/api/pricelist/${priceListId}/changeprice/${selectedRowId}/${price}`
       )
       .then((res) => {
         fetchPriceList();

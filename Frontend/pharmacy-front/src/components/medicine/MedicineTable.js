@@ -23,9 +23,7 @@ function MedicineTable() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(
-        "http://localhost:8080/api/medicine/crud"
-      );
+      const response = await axios.get("/api/medicine/crud");
       setMedicine(response.data);
     }
     fetchData();
@@ -41,7 +39,7 @@ function MedicineTable() {
 
   const deleteMedicine = () => {
     axios
-      .delete("http://localhost:8080/api/medicine/" + selected.id)
+      .delete("/api/medicine/" + selected.id)
       .then(() => {
         reloadTable();
         setShowDeleteModal(false);

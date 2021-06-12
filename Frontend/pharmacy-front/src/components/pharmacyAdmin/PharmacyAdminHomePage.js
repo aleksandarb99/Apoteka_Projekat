@@ -36,9 +36,7 @@ function PharmacyAdminHomePage() {
 
   async function fetchPharmacyid() {
     const request = await axios
-      .get(
-        `http://localhost:8080/api/pharmacy/getpharmacyidbyadmin/${getIdFromToken()}`
-      )
+      .get(`/api/pharmacy/getpharmacyidbyadmin/${getIdFromToken()}`)
       .then((res) => {
         setPharmacyId(res.data);
       })
@@ -57,7 +55,7 @@ function PharmacyAdminHomePage() {
 
   async function fetchPharmacy() {
     const request = await axios
-      .get(`http://localhost:8080/api/pharmacy/${pharmacyId}`)
+      .get(`/api/pharmacy/${pharmacyId}`)
       .then((res) => {
         setPharmacyDetails(res.data);
       })
@@ -80,17 +78,15 @@ function PharmacyAdminHomePage() {
   useEffect(() => {
     fetchPharmacyid();
 
-    axios
-      .get("http://localhost:8080/api/users/" + getIdFromToken())
-      .then((res) => {
-        if (!res.data.passwordChanged) {
-          setShowModalPWChange(true);
-          setLoadingPWChanged(false);
-        } else {
-          setShowModalPWChange(false);
-          setLoadingPWChanged(false);
-        }
-      });
+    axios.get("/api/users/" + getIdFromToken()).then((res) => {
+      if (!res.data.passwordChanged) {
+        setShowModalPWChange(true);
+        setLoadingPWChanged(false);
+      } else {
+        setShowModalPWChange(false);
+        setLoadingPWChanged(false);
+      }
+    });
   }, []);
 
   return (

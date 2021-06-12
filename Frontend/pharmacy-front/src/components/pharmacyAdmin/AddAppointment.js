@@ -24,7 +24,7 @@ function AddAppointment({ idOfPharmacy }) {
     if (idOfPharmacy != undefined) {
       async function fetchDermatologists() {
         const request = await axios.get(
-          `http://localhost:8080/api/workplace/dermatologists/bypharmacyid/${idOfPharmacy}`
+          `/api/workplace/dermatologists/bypharmacyid/${idOfPharmacy}`
         );
         setDermatologists(request.data);
         return request;
@@ -37,10 +37,9 @@ function AddAppointment({ idOfPharmacy }) {
     if (dermatogistPicked != 0) {
       async function fetchAppointments() {
         const request = await axios
-          .get(
-            `http://localhost:8080/api/appointment/all/bydermatologistid/${dermatogistPicked}`,
-            { params: { date: startDate.getTime() } }
-          )
+          .get(`/api/appointment/all/bydermatologistid/${dermatogistPicked}`, {
+            params: { date: startDate.getTime() },
+          })
           .then((res) => {
             setAppointments(res.data);
           })
@@ -120,10 +119,7 @@ function AddAppointment({ idOfPharmacy }) {
     console.log(request);
 
     axios
-      .post(
-        `http://localhost:8080/api/appointment/${idOfPharmacy}/${dermatogistPicked}`,
-        request
-      )
+      .post(`/api/appointment/${idOfPharmacy}/${dermatogistPicked}`, request)
       .then((res) => {
         addToast(res.data, {
           appearance: "success",

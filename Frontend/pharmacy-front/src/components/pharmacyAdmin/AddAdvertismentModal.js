@@ -17,7 +17,7 @@ function AddAdvertismentModal(props) {
 
   async function fetchPriceList() {
     const request = await axios
-      .get(`http://localhost:8080/api/pricelist/${props.priceListId}`)
+      .get(`/api/pricelist/${props.priceListId}`)
       .then((res) => {
         setMedicineItems(res.data.medicineItems);
       })

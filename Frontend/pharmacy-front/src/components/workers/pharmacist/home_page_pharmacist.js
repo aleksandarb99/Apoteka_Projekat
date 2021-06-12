@@ -35,11 +35,7 @@ function PharmHomePage() {
         return;
       }
       await api
-        .get(
-          "http://localhost:8080/api/appointment/workers_upcoming?id=" +
-            id +
-            "&page=0&size=10"
-        )
+        .get("/api/appointment/workers_upcoming?id=" + id + "&page=0&size=10")
         .then((resp) => {
           setAppointments(resp.data);
           setLoadingAppts(false);
@@ -50,7 +46,7 @@ function PharmHomePage() {
         });
     }
     let id = getIdFromToken();
-    api.get("http://localhost:8080/api/users/" + id).then((res) => {
+    api.get("/api/users/" + id).then((res) => {
       if (!res.data.passwordChanged) {
         setShowModalPWChange(true);
         setLoadingPWChanged(false);
@@ -85,7 +81,7 @@ function PharmHomePage() {
       return;
     }
     api
-      .get("http://localhost:8080/api/appointment/workers_upcoming", {
+      .get("/api/appointment/workers_upcoming", {
         params: { id: id_farm, page: 0, size: 10 },
       })
       .then((resp) => setAppointments(resp.data))

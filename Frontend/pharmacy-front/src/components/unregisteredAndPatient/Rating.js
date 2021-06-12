@@ -27,13 +27,13 @@ function Rating() {
     async function fetchEntities() {
       let url;
       if (dropdownLabel === "Dermatologist") {
-        url = "http://localhost:8080/api/workers/all-dermatologists/patient/";
+        url = "/api/workers/all-dermatologists/patient/";
       } else if (dropdownLabel === "Pharmacist") {
-        url = "http://localhost:8080/api/workers/all-pharmacists/patient/";
+        url = "/api/workers/all-pharmacists/patient/";
       } else if (dropdownLabel === "Medicine") {
-        url = "http://localhost:8080/api/medicine/all-medicines/patient/";
+        url = "/api/medicine/all-medicines/patient/";
       } else {
-        url = "http://localhost:8080/api/pharmacy/all-pharmacies/patient/";
+        url = "/api/pharmacy/all-pharmacies/patient/";
       }
 
       const request = await axios
@@ -55,7 +55,7 @@ function Rating() {
 
     axios
       .get(
-        "http://localhost:8080/api/rating/" +
+        "/api/rating/" +
           dropdownLabel.toLowerCase() +
           "/" +
           selectedEntity.id +
@@ -84,7 +84,7 @@ function Rating() {
 
     if (enabledRating === false) {
       axios
-        .post("http://localhost:8080/api/rating/", forSend)
+        .post("/api/rating/", forSend)
         .then((res) => {
           addToast(res.data, { appearance: "success" });
           setEnabledRating(false);
@@ -97,7 +97,7 @@ function Rating() {
     } else {
       forSend.id = rating.id;
       axios
-        .put("http://localhost:8080/api/rating/", forSend)
+        .put("/api/rating/", forSend)
         .then((res) => {
           addToast(res.data, { appearance: "success" });
           setEnabledRating(false);
