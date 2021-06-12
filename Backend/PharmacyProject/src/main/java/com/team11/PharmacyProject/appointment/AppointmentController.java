@@ -52,6 +52,7 @@ public class AppointmentController {
     public ResponseEntity<String> addAppointment(@PathVariable("idP") Long pharmacyId, @PathVariable("idD") Long dId, @Valid @RequestBody AppointmentDTORequest dto) {
         Appointment a = convertToEntity(dto);
 		
+
         try {
             appointmentServiceImpl.insertAppointment(a, pharmacyId, dId);
             return new ResponseEntity<>("Appointment added successfully", HttpStatus.OK);
