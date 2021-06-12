@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap'
 import api from '../../app/api';
 import { getErrorMessage } from '../../app/errorHandler';
@@ -6,10 +6,17 @@ import { useToasts } from 'react-toast-notifications'
 
 const AddEditCategoryModal = (props) => {
 
-    const [name, setName] = useState(!!props.category ? props.category.name : "")
-    const [requiredPoints, setRequiredPoints] = useState(props.category ? props.category.pointsRequired : 0);
-    const [discount, setDiscount] = useState(props.category ? props.category.discount : 0.00);
+    const [name, setName] = useState(!!props.category ? props.category.name : "b")
+    const [requiredPoints, setRequiredPoints] = useState(!!props.category ? props.category.pointsRequired : 0);
+    const [discount, setDiscount] = useState(!!props.category ? props.category.discount : 0.00);
     const { addToast } = useToasts();
+
+    useEffect(() => {
+        console.log(props.category)
+        setName(!!props.category ? props.category.name : "a");
+        setRequiredPoints(!!props.category ? props.category.pointsRequired : 0);
+        setDiscount(!!props.category ? props.category.discount : 0.00);
+    }, [])
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -39,7 +46,7 @@ const AddEditCategoryModal = (props) => {
     }
 
     return (
-        <Modal {...props} onEnter={() => { resetData() }} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     {!!props.category ? `Edit ${props.category.name}` : "Add new category"}

@@ -32,7 +32,6 @@ function EditMedicineModal(props) {
         fetchMedicine();
         fetchTypesAndForms();
         setMultiSelections(props.medicine['substitutes'] || [])
-        console.log(props.medicine)
         setForm({ ...props.medicine })
     }, [props.medicine])
 
@@ -118,6 +117,7 @@ function EditMedicineModal(props) {
                     <Row>
                         <Col>
                             <Form.Group>
+                                <Form.Label>Medicine Type</Form.Label>
                                 <Form.Control as="select" custom onChange={(event) => setField('medicineType', event.target.value)} value={props.medicine.medicineType}>
                                     {medTypes.map((mt) => {
                                         return <option key={mt.id} value={mt.name}>{mt.name}</option>
@@ -127,6 +127,7 @@ function EditMedicineModal(props) {
                         </Col>
                         <Col>
                             <Form.Group>
+                                <Form.Label>Medicine Form</Form.Label>
                                 <Form.Control as="select" custom onChange={(event) => setField('medicineForm', event.target.value)} value={props.medicine.medicineForm}>
                                     {medForms.map((mf) => {
                                         return <option key={mf.id} value={mf.name}>{mf.name}</option>

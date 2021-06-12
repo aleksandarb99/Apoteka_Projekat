@@ -52,8 +52,8 @@ const SetPasswordModal = (props) => {
     }
 
     return (
-        <Modal {...props}>
-            <Modal.Header className="justify-content-center" backdrop="static" onHide={handleClose} closeButton>
+        <Modal {...props} onHide={handleClose} backdrop="static">
+            <Modal.Header className="justify-content-center" backdrop="static" closeButton>
                 <p>Welcome! Please set new password!</p>
             </Modal.Header>
             <Modal.Body className="justify-content-center">
