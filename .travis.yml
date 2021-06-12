@@ -15,7 +15,12 @@ script:
 
 dist: trusty
 
+before-deploy:
+- cd ..
+- cd ..
+
 deploy:
   provider: heroku
   api_key: $HEROKU_API_KEY
   app: apotekaprojekat
+  on: main
