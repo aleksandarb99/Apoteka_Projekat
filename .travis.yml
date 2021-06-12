@@ -10,8 +10,15 @@ before_install:
   - cd PharmacyProject
   - chmod +x mvnw
 
+addons:
+  sonarcloud:
+  organization: "aleksandarb99"
+  token: $SONAR_TOKEN
+
 script:
   - ./mvnw clean install -DskipTests=false -B
+    - ./mvnw sonar:sonar -Dsonar.projectKey=$PROJECT_KEY -Dsonar.organization=aleksandarb99 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+
 
 dist: trusty
 

@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PharmacyProjectApplication.class)
+@SpringBootTest
 public class PriceListServiceTest {
 
     @Mock

@@ -24,7 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PharmacyProjectApplication.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 @SpringIntegrationTest
 @WebAppConfiguration
