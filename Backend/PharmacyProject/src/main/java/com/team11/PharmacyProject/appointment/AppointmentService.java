@@ -56,6 +56,8 @@ public interface AppointmentService {
 
     Map<String, Integer> getInfoForReport(String period, Long pharmacyId);
 
+    Appointment getAppointmentInfo (Long apptID);
+
     int calculateProfit(long start, long end, long pharmacyId);
 
     void finishUnfinishedAppointments();

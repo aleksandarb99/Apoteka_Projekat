@@ -330,6 +330,18 @@ public class AppointmentController {
         return new ResponseEntity<>("Invalid appt date!", HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping(value = "/get_info/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
+    public ResponseEntity<AppointmentInfoDTO> getApptInfo(@PathVariable("id") Long id) {
+        Appointment appt = appointmentServiceImpl.getAppointmentInfo(id);
+        if (appt == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else{
+            AppointmentInfoDTO infoDTO = new AppointmentInfoDTO(appt);
+            return new ResponseEntity<AppointmentInfoDTO>(infoDTO, HttpStatus.OK);
+        }
+    }
+
     @Scheduled(cron = "${greeting.cron}")
     public void endAppointments() {
         appointmentServiceImpl.finishUnfinishedAppointments();
