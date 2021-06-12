@@ -44,7 +44,7 @@ function AddUserModal(props) {
     const newForm = convertForm(form);
     console.log(newForm);
     axios
-      .post("http://localhost:8080/api/users/", newForm)
+      .post("/api/users/", newForm)
       .then(() => {
         setForm({});
         props.onSuccess();

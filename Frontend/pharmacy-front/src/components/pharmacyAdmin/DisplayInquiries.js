@@ -15,7 +15,7 @@ function DisplayInquiries({ idOfPharmacy, refreshInq }) {
 
   async function fetchInquiries() {
     const request = await axios.get(
-      `http://localhost:8080/api/inquiry/bypharmacyid/${idOfPharmacy}`
+      `/api/inquiry/bypharmacyid/${idOfPharmacy}`
     );
     setInquiries(request.data);
     return request;

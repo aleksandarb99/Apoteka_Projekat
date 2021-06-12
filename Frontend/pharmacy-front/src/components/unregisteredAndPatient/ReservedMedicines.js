@@ -19,7 +19,7 @@ function ReservedMedicines() {
   useEffect(() => {
     async function fetchReservations() {
       const request = await axios.get(
-        "http://localhost:8080/api/medicine-reservation/reserved-medicines/patient/" +
+        "/api/medicine-reservation/reserved-medicines/patient/" +
           getIdFromToken()
       );
       setReservations(request.data);
@@ -31,10 +31,7 @@ function ReservedMedicines() {
 
   const cancelReservation = (id) => {
     axios
-      .put(
-        "http://localhost:8080/api/medicine-reservation/cancel-reservation/" +
-          id
-      )
+      .put("/api/medicine-reservation/cancel-reservation/" + id)
       .then((res) => {
         addToast(res.data, { appearance: "success" });
         setReload(!reload);

@@ -23,7 +23,7 @@ function EPrescriptionReview() {
   useEffect(() => {
     async function fetchEntities() {
       const request = await axios
-        .get("http://localhost:8080/api/e-recipes/patient/" + getIdFromToken())
+        .get("/api/e-recipes/patient/" + getIdFromToken())
         .then((res) => {
           setEntitites(res.data);
           setReload2(!reload2);

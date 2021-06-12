@@ -46,11 +46,7 @@ function PharmacyBasic({ details }) {
   const subscribe = () => {
     if (isUserSubscribed) {
       api
-        .post(
-          `http://localhost:8080/api/pharmacy/${
-            details.id
-          }/unsubscribe/${getIdFromToken()}`
-        )
+        .post(`/api/pharmacy/${details.id}/unsubscribe/${getIdFromToken()}`)
         .then(() => {
           alert("Success");
           checkIfUserIsSubscribed();
@@ -60,11 +56,7 @@ function PharmacyBasic({ details }) {
         });
     } else {
       api
-        .post(
-          `http://localhost:8080/api/pharmacy/${
-            details.id
-          }/subscribe/${getIdFromToken()}`
-        )
+        .post(`/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
         .then(() => {
           alert("Success");
           checkIfUserIsSubscribed();
@@ -78,11 +70,7 @@ function PharmacyBasic({ details }) {
   // CHECK nije moje
   const checkIfUserIsSubscribed = () => {
     api
-      .get(
-        `http://localhost:8080/api/pharmacy/${
-          details.id
-        }/subscribe/${getIdFromToken()}`
-      )
+      .get(`/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
       .then((res) => {
         console.log(res.data);
         setIsUserSubscribed(res.data);

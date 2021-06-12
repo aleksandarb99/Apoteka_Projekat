@@ -65,7 +65,7 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
     };
 
     axios
-      .put(`http://localhost:8080/api/pharmacy/${pharmacyDetails.id}`, dto)
+      .put(`/api/pharmacy/${pharmacyDetails.id}`, dto)
       .then((res) => {
         changedPharmacy();
         addToast(res.data, {

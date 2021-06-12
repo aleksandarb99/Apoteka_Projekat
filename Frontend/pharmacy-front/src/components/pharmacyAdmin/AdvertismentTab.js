@@ -16,7 +16,7 @@ function AdvertismentTab({ pharmacyDetails }) {
 
   async function fetchAdvertisment() {
     const request = await axios
-      .get(`http://localhost:8080/api/sales/${pharmacyDetails.id}`)
+      .get(`/api/sales/${pharmacyDetails.id}`)
       .then((res) => {
         setList(res.data);
       })
@@ -37,7 +37,7 @@ function AdvertismentTab({ pharmacyDetails }) {
 
   async function addAdverb(data) {
     const request = await axios
-      .post(`http://localhost:8080/api/sales/${pharmacyDetails.id}`, data)
+      .post(`/api/sales/${pharmacyDetails.id}`, data)
       .then((res) => {
         addToast(res.data, {
           appearance: "success",

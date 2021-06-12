@@ -53,7 +53,7 @@ function EditUserModal(props) {
     const newForm = convertForm(form);
     console.log(newForm);
     axios
-      .put("http://localhost:8080/api/users/" + props.user.id, newForm)
+      .put("/api/users/" + props.user.id, newForm)
       .then(() => {
         setForm({});
         props.onSuccess();

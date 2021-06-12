@@ -40,7 +40,7 @@ function AddingWorkerModal(props) {
     };
     const request = await axios
       .post(
-        `http://localhost:8080/api/workers/notexistingworkplacebypharmacyid/${props.idOfPharmacy}`,
+        `/api/workers/notexistingworkplacebypharmacyid/${props.idOfPharmacy}`,
         dto
       )
       .then((res) => {

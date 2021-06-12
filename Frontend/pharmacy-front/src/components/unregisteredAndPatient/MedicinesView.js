@@ -28,7 +28,7 @@ function MedicinesView() {
 
   useEffect(() => {
     async function fetchMedicines() {
-      const request = await axios.get("http://localhost:8080/api/medicine/");
+      const request = await axios.get("/api/medicine/");
       setMedicines(request.data);
 
       return request;
@@ -38,9 +38,7 @@ function MedicinesView() {
 
   useEffect(() => {
     async function fetchMedicines() {
-      const request = await axios.get(
-        `http://localhost:8080/api/medicine?search=${searchParams}`
-      );
+      const request = await axios.get(`/api/medicine?search=${searchParams}`);
       setMedicines(request.data);
 
       return request;
