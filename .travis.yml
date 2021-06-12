@@ -11,7 +11,7 @@ before_install:
   - chmod +x mvnw
 
 script:
-  - ./mvnw clean install
+  - ./mvnw clean install -DskipTests=false -B
 
 dist: trusty
 
