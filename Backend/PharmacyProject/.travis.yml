@@ -1,0 +1,19 @@
+sudo: required
+language: java
+jdk: oraclejdk11
+
+services:
+  - postgresql
+
+before_install:
+  - chmod +x mvnw
+
+script:
+  - ./mvnw clean install -DskipTests=false -B
+
+dist: trusty
+
+deploy:
+  provider: heroku
+  api_key: $HEROKU_API_KEY
+  app: apotekaprojekat
