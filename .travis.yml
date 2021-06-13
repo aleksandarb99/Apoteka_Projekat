@@ -13,7 +13,8 @@ before_install:
 addons:
   sonarcloud:
   organization: "aleksandarb99"
-  token: $SONAR_TOKEN
+  token: 
+    secure: "S5+rUu0BkcaxxB5MHgupuzHcs3Jj+Zu582dJSxqSUzGH+adclbKOeHhnVabI3jcq63nXe5r9LdILhPUlqp5cvXklEDi/yRV9rRwQPBVMJA6S69Gx8q6JrW9F6l9O5EIYAwDCWajhagy+bA3p0B6wYr7hymhpqH0rM818FVzB3R9cduJ4yz2JzOk6dUNMjffOTpJPfl92no2FgTa0KRbBGaQNZ9GMLm8t0lksODBtI6lb6xTtex5Ofyp6CBYvJH2uk1DogTcGvXiAQXvUAmbmQxmkmHzwyAytF5YjEMh/hwtNsgxcuAVxyE0WdYulJ1r6o0BJF672C0liFcTRzdsU6qZXYaapdM/D7w3zDaH3pZA+qZtUtJPYh4/sK+qbpBP03nO8hMRtTIXEMNXFjGxq1QpA/NqPrwZtE50qQU+P0VVnloXkJdUdlWoXIoNymM+QWdPxvMQYViS8L7/STTGaTTa0iWqH1o1/T/+59aBJ33eamqK0q+FWXTTl6td/sTj+exuoeqYR16P/t+i5UdmDBtehCg6zkOTQenFU7r8Nfh6+9yAWZYOsy2xeKAoaQz7sOmw0EYvdFWjEIc0lsgefBq7LeIleItXoPyks3Y5bzzE77UYMoEwzybg68ia5FEirg58JTwEDJbOXFugANFYOyc2MlDx7CqDMgdzW3CojWYU="
 
 script:
   - ./mvnw clean install -DskipTests=false -B
