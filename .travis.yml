@@ -18,6 +18,7 @@ addons:
 
 script:
   - ./mvnw clean install -DskipTests=false -B
+  - ./mvnw test
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=aleksandarb99_Apoteka_Projekat
 
 

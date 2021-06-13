@@ -76,20 +76,6 @@ public class Appointment {
         this.reservationDiscount = reservationDiscount;
     }
 
-    // TODO proveriti, mislim da ovo ne treba
-    public Appointment(Long pharmacyId, Long dId, AppointmentDTORequest dto) {
-        this.pharmacy = null;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.duration = duration;
-        this.appointmentState = appointmentState;
-        this.info = info;
-        this.price = price;
-        this.appointmentType = appointmentType;
-        this.patient = patient;
-        this.worker = worker;
-    }
-
     public Appointment() {
     }
 
