@@ -15,6 +15,9 @@
 	<description>This is our project for MRS and ISA.</description>
 	<properties>
 		<java.version>11</java.version>
+		<sonar.projectKey>aleksandarb99_Apoteka_Projekat</sonar.projectKey>
+		<sonar.organization>aleksandarb99</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
 		<dependency>
