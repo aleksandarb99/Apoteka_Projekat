@@ -58,5 +58,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://apotekaprojekat.herokuapp.com"
+  "proxy": "http://localhost:8080"
 }
