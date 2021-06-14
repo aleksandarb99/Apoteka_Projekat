@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
 import com.team11.PharmacyProject.email.EmailService;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.verificationToken.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -52,29 +53,33 @@ public class UserServiceImpl implements UserService {
     @Override
     public void insertUser(MyUser user) throws Exception {
         if (user == null) {
-            throw new Exception("Oops");
+            throw new CustomException("Oops");
         }
         if (user.getFirstName().isBlank()) {
-            throw new Exception("First name cannot be blank");
+            throw new CustomException("First name cannot be blank");
         }
 
         if (user.getLastName().isBlank()) {
-            throw new Exception("Last name cannot be blank");
+            throw new CustomException("Last name cannot be blank");
         }
 
         Optional<MyUser> userOptional = userRepository.findByEmail(user.getEmail());
         if (userOptional.isPresent()) {
-            throw new Exception("An account with this email already exists");
+            throw new CustomException("An account with this email already exists");
         }
 
         String encoded = passwordEncoder.encode(user.getPassword());
         user.setPassword(encoded);
 
         String token = UUID.randomUUID().toString();
-
-        userRepository.save(user);
-        verificationTokenService.createVerificationToken(user, token);
-        emailService.sendVerificationEmail(user, token);
+        if (!user.getRole().getName().equals("PATIENT")) {
+            user.setEmailVerified(true);
+            userRepository.save(user);
+        } else {
+            userRepository.save(user);
+            verificationTokenService.createVerificationToken(user, token);
+            emailService.sendVerificationEmail(user, token);
+        }
     }
 
     @Override
@@ -93,7 +98,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean changePassword(Long userId, String oldPassword, String newPassword) {
+    public boolean changePassword(Long userId, String oldPassword, String newPassword) throws CustomException {
+        if (newPassword.length() < 6) {
+            throw new CustomException("Error!");
+        }
         MyUser currentUser = userRepository.findFirstById(userId);
         String newPasswordHash = passwordEncoder.encode(newPassword);
         if (!passwordEncoder.matches(oldPassword, currentUser.getPassword())) {
