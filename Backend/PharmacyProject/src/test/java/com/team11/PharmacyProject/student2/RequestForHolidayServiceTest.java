@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject;
+package com.team11.PharmacyProject.student2;
 
 import com.team11.PharmacyProject.appointment.AppointmentRepository;
 import com.team11.PharmacyProject.email.EmailService;
@@ -8,7 +8,8 @@ import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayRepository;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayServiceImpl;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.workplace.WorkplaceService;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,9 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringRunner.class)
@@ -57,7 +55,7 @@ public class RequestForHolidayServiceTest {
         Mockito.when(requestForHolidayRepositoryMock.save(r1)).thenReturn(r1);
 
         RequestForHoliday r2 = requestForHolidayService.acceptRequest("worker 1");
-        assertEquals(r2.getRequestState(), AbsenceRequestState.ACCEPTED);
+        Assertions.assertEquals(r2.getRequestState(), AbsenceRequestState.ACCEPTED);
 
         Mockito.verify(requestForHolidayRepositoryMock, Mockito.times(1)).save(r1);
     }

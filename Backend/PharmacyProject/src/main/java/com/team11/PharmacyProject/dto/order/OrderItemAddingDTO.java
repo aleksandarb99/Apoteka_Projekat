@@ -1,7 +1,5 @@
 package com.team11.PharmacyProject.dto.order;
 
-import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
-
 public class OrderItemAddingDTO {
 
     private int amount;
@@ -16,15 +14,15 @@ public class OrderItemAddingDTO {
         this.name = name;
     }
 
+    public OrderItemAddingDTO() {
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public OrderItemAddingDTO() {
     }
 
     public int getAmount() {

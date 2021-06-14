@@ -14,7 +14,8 @@ public class AppointmentPatientInsightDTO {
     private String workerName;
     private String pharmacyName;
 
-    public AppointmentPatientInsightDTO() {}
+    public AppointmentPatientInsightDTO() {
+    }
 
     public AppointmentPatientInsightDTO(Long id, Long startTime, Long endTime, int duration, double price, String workerName, String pharmacyName) {
         this.id = id;

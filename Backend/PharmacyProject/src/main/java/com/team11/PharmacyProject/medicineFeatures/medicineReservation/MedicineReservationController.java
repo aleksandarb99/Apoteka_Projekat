@@ -122,7 +122,6 @@ public class MedicineReservationController {
             try {
                 emailService.notifyPatientAboutPickingUpMedicine(dto);
             } catch (Exception e) {
-                e.printStackTrace();
             }
             return new ResponseEntity<>("Succesfuly issued medicine!", HttpStatus.OK);
         }else {

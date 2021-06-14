@@ -1,7 +1,6 @@
 package com.team11.PharmacyProject.dto.offer;
 
 import com.team11.PharmacyProject.enums.OfferState;
-import com.team11.PharmacyProject.users.supplier.Supplier;
 
 public class OfferWithWorkerDTO {
     private long id;

@@ -10,6 +10,7 @@ import java.util.Date;
 
 public class MedicineReservationNotifyPatientDTO {
 
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy.");
     private String reservationId;
     private String firstName;
     private String lastName;
@@ -19,8 +20,6 @@ public class MedicineReservationNotifyPatientDTO {
     private String pharmacyName;
     private String pharmacyAddress;
     private double price;
-
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy.");
 
     public MedicineReservationNotifyPatientDTO() {
 
@@ -114,9 +113,9 @@ public class MedicineReservationNotifyPatientDTO {
     }
 
     public void setPharmacyAddress(Address pharmacyAddress) {
-        if(pharmacyAddress != null) {
+        if (pharmacyAddress != null) {
             this.pharmacyAddress = pharmacyAddress.getStreet() + ", " + pharmacyAddress.getCity() + ", " + pharmacyAddress.getCountry();
-        }else {
+        } else {
             this.pharmacyAddress = "nedefinisana";
         }
     }

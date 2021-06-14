@@ -862,9 +862,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         //OVO -2 JE OFFSET zbog zonske razlike, ovaj truncutated to je malo glup
         // da li se poklapa radno vreme
         long workerStartTimeOnDate = Instant.ofEpochMilli(apptStart).truncatedTo(ChronoUnit.DAYS)
-                .plus(starHour-2, ChronoUnit.HOURS).toEpochMilli();
+                .plus((long) starHour-2, ChronoUnit.HOURS).toEpochMilli();
         long workerEndTimeOnDate = Instant.ofEpochMilli(apptStart).truncatedTo(ChronoUnit.DAYS)
-                .plus(endHour-2, ChronoUnit.HOURS).toEpochMilli();
+                .plus((long) endHour-2, ChronoUnit.HOURS).toEpochMilli();
         if (!(apptStart >= workerStartTimeOnDate && apptEnd <= workerEndTimeOnDate)){
             throw new Exception("Invalid appointment time (worker not working in that time period)!");
         }

@@ -11,7 +11,8 @@ public class MedicineReservationInfoDTO {
     private String medicineName;
     private String pharmacyName;
 
-    public MedicineReservationInfoDTO() {}
+    public MedicineReservationInfoDTO() {
+    }
 
     public MedicineReservationInfoDTO(MedicineReservation r) {
         setId(r.getId());

@@ -1,10 +1,9 @@
 package com.team11.PharmacyProject.users.supplier;
 
 import com.team11.PharmacyProject.dto.offer.OfferAcceptDTO;
+import com.team11.PharmacyProject.dto.offer.OfferListDTO;
 import com.team11.PharmacyProject.dto.offer.OfferWithWorkerDTO;
 import com.team11.PharmacyProject.dto.supplier.SupplierStockItemDTO;
-import com.team11.PharmacyProject.dto.offer.OfferListDTO;
-import com.team11.PharmacyProject.dto.workplace.WorkplaceDTOWithWorkdays;
 import com.team11.PharmacyProject.enums.OfferState;
 import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.offer.Offer;
@@ -33,7 +32,7 @@ public class SupplierController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping(value="/stock/{id}")
+    @GetMapping(value = "/stock/{id}")
     public ResponseEntity<List<SupplierStockItemDTO>> getStock(@PathVariable("id") long supplierId) {
         List<SupplierItem> supplierStock = supplierService.getStockForId(supplierId);
         List<SupplierStockItemDTO> supplierStockItemDTOS = supplierStock.stream()
@@ -42,7 +41,7 @@ public class SupplierController {
         return new ResponseEntity<>(supplierStockItemDTOS, HttpStatus.OK);
     }
 
-    @PostMapping(value="/stock/{id}")
+    @PostMapping(value = "/stock/{id}")
     public ResponseEntity<String> addItemToStock(@PathVariable("id") long id, @RequestBody SupplierStockItemDTO stockItemDTO) {
         try {
             supplierService.insertStockItem(id, stockItemDTO);
@@ -54,7 +53,7 @@ public class SupplierController {
         }
     }
 
-    @GetMapping(value="/offers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/offers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OfferListDTO>> getOffers(@PathVariable("id") long supplierId, @RequestParam(required = false) OfferState type) {
         List<OfferListDTO> supplierOffers = supplierService.getOffersForId(supplierId);
         if (type != null) {
@@ -63,7 +62,7 @@ public class SupplierController {
         return new ResponseEntity<>(supplierOffers, HttpStatus.OK);
     }
 
-    @GetMapping(value="/offers/byorderid/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/offers/byorderid/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<?> getOffersByOrderId(@PathVariable("orderId") long orderId) {
         Map<String, List<Offer>> map = supplierService.getOffersByOrderId(orderId);
@@ -71,10 +70,10 @@ public class SupplierController {
         List<OfferWithWorkerDTO> offersOfferListDTOS = new ArrayList<>();
         List<OfferWithWorkerDTO> offersList;
 
-        for (String s:map.keySet()) {
+        for (String s : map.keySet()) {
             List<Offer> list = map.get(s);
             offersList = list.stream().map(m -> modelMapper.map(m, OfferWithWorkerDTO.class)).collect(Collectors.toList());
-            for (OfferWithWorkerDTO item:offersList) {
+            for (OfferWithWorkerDTO item : offersList) {
                 item.setWorker(s);
                 offersOfferListDTOS.add(item);
             }
@@ -83,7 +82,7 @@ public class SupplierController {
 
     }
 
-    @PostMapping(value="/offers/accept/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/offers/accept/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<String> acceptOffer(@RequestBody OfferAcceptDTO dto) {
         try {
@@ -97,7 +96,7 @@ public class SupplierController {
         }
     }
 
-    @PostMapping(value="/offers/{id}")
+    @PostMapping(value = "/offers/{id}")
     public ResponseEntity<String> addOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
         // Uvek ce biti pending kada treba da se doda
         offerDTO.setOfferState(OfferState.PENDING);
@@ -113,7 +112,7 @@ public class SupplierController {
         }
     }
 
-    @PutMapping(value="/offers/{id}")
+    @PutMapping(value = "/offers/{id}")
     public ResponseEntity<String> updateOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
         try {
             supplierService.updateOffer(id, offerDTO);

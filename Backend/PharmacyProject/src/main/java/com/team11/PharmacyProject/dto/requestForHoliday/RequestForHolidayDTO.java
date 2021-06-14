@@ -3,14 +3,11 @@ package com.team11.PharmacyProject.dto.requestForHoliday;
 import com.team11.PharmacyProject.enums.AbsenceRequestState;
 import com.team11.PharmacyProject.enums.AbsenceType;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
-import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
-
-import javax.persistence.*;
 
 public class RequestForHolidayDTO {
 
     private String id;  //string da bi se dodala rec request na sve; zbog frontend kalendara, da se ne bi mesali
-                        //id-ovi request-ova sa id-ovima appointmenta
+    //id-ovi request-ova sa id-ovima appointmenta
 
     private Long start;
 

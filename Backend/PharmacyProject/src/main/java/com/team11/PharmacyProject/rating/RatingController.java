@@ -21,7 +21,7 @@ public class RatingController {
 
     @GetMapping(value = "/dermatologist/{dId}/patient/{pId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PATIENT')")
-    public ResponseEntity<?> getDermatologistGrade(@PathVariable("dId") Long dId, @PathVariable("pId") Long pId){
+    public ResponseEntity<?> getDermatologistGrade(@PathVariable("dId") Long dId, @PathVariable("pId") Long pId) {
         Rating grade = ratingService.getDermatologistGrade(dId, pId);
 
         if (grade == null) {
@@ -33,7 +33,7 @@ public class RatingController {
 
     @GetMapping(value = "/pharmacist/{pId}/patient/{paId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PATIENT')")
-    public ResponseEntity<?> getPharmacistGrade(@PathVariable("pId") Long pId, @PathVariable("paId") Long paId){
+    public ResponseEntity<?> getPharmacistGrade(@PathVariable("pId") Long pId, @PathVariable("paId") Long paId) {
         Rating grade = ratingService.getPharmacistGrade(pId, paId);
 
         if (grade == null) {
@@ -45,7 +45,7 @@ public class RatingController {
 
     @GetMapping(value = "/medicine/{mId}/patient/{paId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PATIENT')")
-    public ResponseEntity<?> getMedicineGrade(@PathVariable("mId") Long mId, @PathVariable("paId") Long paId){
+    public ResponseEntity<?> getMedicineGrade(@PathVariable("mId") Long mId, @PathVariable("paId") Long paId) {
         Rating grade = ratingService.getMedicineGrade(mId, paId);
 
         if (grade == null) {
@@ -57,7 +57,7 @@ public class RatingController {
 
     @GetMapping(value = "/pharmacy/{pId}/patient/{paId}/grade", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PATIENT')")
-    public ResponseEntity<?> getPharmacyGrade(@PathVariable("pId") Long pId, @PathVariable("paId") Long paId){
+    public ResponseEntity<?> getPharmacyGrade(@PathVariable("pId") Long pId, @PathVariable("paId") Long paId) {
         Rating grade = ratingService.getPharmacyGrade(pId, paId);
 
         if (grade == null) {
@@ -69,7 +69,7 @@ public class RatingController {
 
     @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PATIENT')")
-    public ResponseEntity<?> addRating(@Valid @RequestBody RatingCreateUpdateDTO dto, BindingResult result){
+    public ResponseEntity<?> addRating(@Valid @RequestBody RatingCreateUpdateDTO dto, BindingResult result) {
 
         if (result.hasErrors()) {
             return new ResponseEntity<>("Sent data is not valid!", HttpStatus.BAD_REQUEST);
@@ -77,9 +77,9 @@ public class RatingController {
 
         try {
             ratingService.addRating(dto);
-        }catch(OptimisticLockException e) {
+        } catch (OptimisticLockException e) {
             return new ResponseEntity<>("Failed! Try again", HttpStatus.BAD_REQUEST);
-        }catch(Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
@@ -88,7 +88,7 @@ public class RatingController {
 
     @PutMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PATIENT')")
-    public ResponseEntity<?> editRating(@Valid @RequestBody RatingCreateUpdateDTO dto, BindingResult result){
+    public ResponseEntity<?> editRating(@Valid @RequestBody RatingCreateUpdateDTO dto, BindingResult result) {
 
         if (result.hasErrors()) {
             return new ResponseEntity<>("Sent data is not valid!", HttpStatus.BAD_REQUEST);
@@ -96,9 +96,9 @@ public class RatingController {
 
         try {
             ratingService.editRating(dto);
-        }catch(OptimisticLockException e) {
+        } catch (OptimisticLockException e) {
             return new ResponseEntity<>("Failed! Try again", HttpStatus.BAD_REQUEST);
-        }catch(Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 

@@ -44,16 +44,16 @@ public class PharmacyERecipeDTO {
         this.avgGrade = avgGrade;
     }
 
+    public void setAvgGrade(Double avgGrade) {
+        this.avgGrade = avgGrade;
+    }
+
     public double getTotalPrice() {
         return totalPrice;
     }
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
-    }
-
-    public void setAvgGrade(Double avgGrade) {
-        this.avgGrade = avgGrade;
     }
 
     public void setTotalPrice(Double totalPrice) {

@@ -17,8 +17,6 @@ import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemRepository;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
-import com.team11.PharmacyProject.priceList.PriceList;
-import com.team11.PharmacyProject.priceList.PriceListRepository;
 import com.team11.PharmacyProject.rankingCategory.RankingCategory;
 import com.team11.PharmacyProject.rankingCategory.RankingCategoryService;
 import com.team11.PharmacyProject.users.patient.Patient;
@@ -38,7 +36,10 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -125,7 +126,7 @@ public class ERecipeServiceImpl implements ERecipeService {
 
     @Override
     @Transactional(
-            rollbackFor = { CustomException.class },
+            rollbackFor = {CustomException.class},
             propagation = Propagation.REQUIRES_NEW
     )
     public ERecipe dispenseMedicine(long patientId, ERecipeDispenseDTO eRecipeDispenseDTO) throws CustomException {
@@ -195,7 +196,7 @@ public class ERecipeServiceImpl implements ERecipeService {
             discount = rankingCategory.getDiscount();
         }
 
-        eRecipe.setTotalPriceWithDiscount(eRecipeDispenseDTO.getTotalPrice() * (1 - discount/100));
+        eRecipe.setTotalPriceWithDiscount(eRecipeDispenseDTO.getTotalPrice() * (1 - discount / 100));
 
         patient.setPoints(patient.getPoints() + points);
         eRecipe.setPatient(patient);
@@ -214,7 +215,7 @@ public class ERecipeServiceImpl implements ERecipeService {
         if (patient.isEmpty())
             throw new RuntimeException("Patient is not recognized in the database!");
 
-        if(patient.get().getPenalties() >= 3) {
+        if (patient.get().getPenalties() >= 3) {
             throw new RuntimeException("You have achieved 3 penalties, this functionality is not available!");
         }
 

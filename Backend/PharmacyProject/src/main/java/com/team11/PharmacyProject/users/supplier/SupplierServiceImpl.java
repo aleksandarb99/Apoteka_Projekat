@@ -16,8 +16,6 @@ import com.team11.PharmacyProject.myOrder.MyOrderRepository;
 import com.team11.PharmacyProject.offer.Offer;
 import com.team11.PharmacyProject.offer.OfferService;
 import com.team11.PharmacyProject.orderItem.OrderItem;
-import com.team11.PharmacyProject.pharmacy.Pharmacy;
-import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
 import com.team11.PharmacyProject.priceList.PriceList;
 import com.team11.PharmacyProject.priceList.PriceListRepository;
@@ -35,6 +33,8 @@ import java.util.stream.Collectors;
 public class SupplierServiceImpl implements SupplierService {
 
     @Autowired
+    InquiryService inquiryService;
+    @Autowired
     private SupplierRepository supplierRepository;
     @Autowired
     private MedicineRepository medicineRepository;
@@ -42,21 +42,14 @@ public class SupplierServiceImpl implements SupplierService {
     private MyOrderRepository myOrderRepository;
     @Autowired
     private PriceListRepository priceListRepository;
-
     @Autowired
     private OfferService offerService;
-
     @Autowired
     private PharmacyService pharmacyService;
-
     @Autowired
     private EmailService emailService;
-
     @Autowired
     private SupplierItemRepository supplierItemRepository;
-
-    @Autowired
-    InquiryService inquiryService;
 
     @Override
     public List<SupplierItem> getStockForId(long id) {
@@ -109,19 +102,19 @@ public class SupplierServiceImpl implements SupplierService {
         Map<String, List<Offer>> offersForOrder = getOffersByOrderId(orderId);
 
         Optional<MyOrder> order = myOrderRepository.getMyOrderById(orderId);
-        if(order.isEmpty())
-            throw new RuntimeException("Order with id "+orderId+" does not exist!");
-        if(!order.get().getAdmin().getId().equals(adminId)) {
+        if (order.isEmpty())
+            throw new RuntimeException("Order with id " + orderId + " does not exist!");
+        if (!order.get().getAdmin().getId().equals(adminId)) {
             throw new RuntimeException("You have no permissions for this order!");
         }
 
         String email = "abuljevic8@gmail.com";
 
-        for (String key:offersForOrder.keySet()) {
+        for (String key : offersForOrder.keySet()) {
             List<Offer> offers = offersForOrder.get(key);
 
-            for (Offer o:offers) {
-                if(o.getId().equals(selectedOfferId)) {
+            for (Offer o : offers) {
+                if (o.getId().equals(selectedOfferId)) {
                     o.setOfferState(OfferState.ACCEPTED);
                     try {
                         emailService.notifySupplierThatHisOfferIsAccepted(email, order.get(), key);
@@ -129,8 +122,7 @@ public class SupplierServiceImpl implements SupplierService {
                         throw new RuntimeException("Sending email failed");
                     }
                     offerService.save(o);
-                }
-                else {
+                } else {
                     o.setOfferState(OfferState.DENIED);
                     try {
                         emailService.notifySupplierThatHisOfferIsRefused(email, order.get(), key);
@@ -159,9 +151,9 @@ public class SupplierServiceImpl implements SupplierService {
         priceListRepository.save(priceList);
 
         List<Inquiry> list = inquiryService.getInquiriesByPharmacyId(order1.getPharmacy().getId());
-        for (Inquiry i:list) {
+        for (Inquiry i : list) {
             for (OrderItem item : order1.getOrderItem()) {
-                if(item.getMedicine().getId().equals(i.getMedicineItems().getMedicine().getId())) {
+                if (item.getMedicine().getId().equals(i.getMedicineItems().getMedicine().getId())) {
                     i.setActive(false);
                     inquiryService.save(i);
                 }
@@ -174,15 +166,15 @@ public class SupplierServiceImpl implements SupplierService {
         List<Supplier> supplierList = supplierRepository.findAllWithOffers();
         Map<String, List<Offer>> offerMap = new HashMap();
 
-        for (Supplier s:supplierList) {
-            String key = s.getFirstName()+" " + s.getLastName();
-            for (Offer o:s.getOffers()) {
-                if(o.getOrder().getId().equals(orderId) && o.getOfferState().equals(OfferState.PENDING)) {
-                    if(offerMap.containsKey(key))
+        for (Supplier s : supplierList) {
+            String key = s.getFirstName() + " " + s.getLastName();
+            for (Offer o : s.getOffers()) {
+                if (o.getOrder().getId().equals(orderId) && o.getOfferState().equals(OfferState.PENDING)) {
+                    if (offerMap.containsKey(key))
                         offerMap.get(key).add(o);
                     else
                         offerMap.put(key, new ArrayList<Offer>());
-                        offerMap.get(key).add(o);
+                    offerMap.get(key).add(o);
                 }
             }
         }
@@ -199,7 +191,7 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     @Transactional(
-            rollbackFor = { CustomException.class }
+            rollbackFor = {CustomException.class}
     )
     public void insertOffer(long suppId, OfferListDTO offerDTO) throws CustomException {
         if (offerDTO == null) {

@@ -1,11 +1,9 @@
 package com.team11.PharmacyProject.dto.user;
 
 import com.team11.PharmacyProject.address.Address;
-import com.team11.PharmacyProject.users.user.Role;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 public class UserDTO {
 

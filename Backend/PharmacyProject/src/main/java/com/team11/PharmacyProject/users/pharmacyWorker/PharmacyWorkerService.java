@@ -2,7 +2,6 @@ package com.team11.PharmacyProject.users.pharmacyWorker;
 
 import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
 import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
-import org.hibernate.jdbc.Work;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public interface PharmacyWorkerService {
     PharmacyWorker getOne(Long id);
 
     void save(PharmacyWorker worker);
-    
+
     List<PharmacyWorker> getDermatologistsByPatientId(Long id);
 
     List<PharmacyWorker> getPharmacistsByPatientId(Long id);

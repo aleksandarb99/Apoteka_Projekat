@@ -1,8 +1,5 @@
 package com.team11.PharmacyProject.dto.pharmacy;
 
-import com.team11.PharmacyProject.dto.user.RoleDTO;
-import com.team11.PharmacyProject.users.user.Role;
-
 public class PharmacyWorkerDTO {
 
     private Long id;
