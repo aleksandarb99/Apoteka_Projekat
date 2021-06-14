@@ -8,10 +8,10 @@ function AdditionalNotesFormGroup(props) {
             {...props}
             name={"Additional notes"}
             placeholder={"Additional notes..."}
-            minLength={1}
-            maxLength={150}
+            minLength={0}
+            maxLength={250}
             onChange={(event) => { props.onChange(event) }}
-            required={true}
+            required={false}
         ></TextFormGroup>
     )
 }

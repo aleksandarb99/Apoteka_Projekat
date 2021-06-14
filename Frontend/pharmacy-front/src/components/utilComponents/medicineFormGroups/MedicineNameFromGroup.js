@@ -6,10 +6,10 @@ function MedicineNameFormGroup(props) {
     return (
         <TextFormGroup
             {...props}
-            name={"Medicine Name"}
+            name={"Medicine Name *"}
             placeholder={"Enter medicine name..."}
             minLength={1}
-            maxLength={30}
+            maxLength={50}
             onChange={(event) => { props.onChange(event) }}
             required={true}
         ></TextFormGroup>

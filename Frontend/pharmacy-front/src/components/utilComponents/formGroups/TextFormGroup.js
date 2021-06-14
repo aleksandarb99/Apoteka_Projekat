@@ -14,7 +14,7 @@ function TextFormGroup({ name, placeholder, minLength, maxLength, defaultValue, 
             let re = new RegExp(main, options)
             setRegex(re)
         }
-        //findGroupErrors(defaultValue)
+        findGroupErrors(defaultValue)
     }, [])
 
     const findGroupErrors = (fieldText) => {
@@ -23,16 +23,16 @@ function TextFormGroup({ name, placeholder, minLength, maxLength, defaultValue, 
         if (required && (!fieldText || fieldText === ''))
             error = 'This field cannot be blank!'
 
-        else if (!!pattern) {
+        else if (!!pattern && !!regex && !!fieldText) {
             if (!regex.test(fieldText)) {
                 error = 'Input data is not in a valid format'
             }
         }
 
-        else if (!!minLength && fieldText.length < minLength)
+        else if (!!minLength && !!fieldText && fieldText.length < minLength)
             error = 'Minimum number of characters is ' + minLength + '.'
 
-        else if (!!maxLength && fieldText.length > maxLength) {
+        else if (!!maxLength && !!fieldText && fieldText.length > maxLength) {
             error = 'Maximum number of characters is ' + maxLength + '.'
         }
 

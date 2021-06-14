@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject.medicineFeatures.medicineType;
+package com.team11.PharmacyProject.medicineFeatures.manufacturer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/medicine-types")
-public class MedicineTypeController {
+@RequestMapping("/api/manufacturers")
+public class ManufacturerController {
 
     @Autowired
-    MedicineTypeService medicineTypeService;
+    ManufacturerService manufacturerService;
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MedicineType>> getTypes() {
-        return new ResponseEntity<>(medicineTypeService.getAllTypes(), HttpStatus.OK);
+    public ResponseEntity<List<Manufacturer>> getForms() {
+        return new ResponseEntity<>(manufacturerService.getAllManufacturers(), HttpStatus.OK);
     }
 }

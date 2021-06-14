@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -138,8 +140,13 @@ public class PatientService {
                 .collect(Collectors.toList());
 
         // Spoji ove dve liste
-        pharmaciesWithAppointments.addAll(pharmaciesWithReservations);
-        return pharmaciesWithAppointments.stream().distinct().collect(Collectors.toList());
+        return getDistinctPharmaciesById(pharmaciesWithAppointments, pharmaciesWithReservations);
+    }
+
+    public List<Pharmacy> getDistinctPharmaciesById(List<Pharmacy> p1, List<Pharmacy> p2) {
+        p1.addAll(p2);
+        Set<Long> pharmacySet = new HashSet<>(p1.size());
+        return p1.stream().filter(p -> pharmacySet.add(p.getId())).collect(Collectors.toList());
     }
 
     public void givePenaltyForNotPickedUpOrCanceledReservation() {

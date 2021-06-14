@@ -81,7 +81,6 @@ public class UserController {
 
     @PutMapping(value = "/change-password/{id}")
     public ResponseEntity<String> changePassword(@PathVariable("id") Long userId, @RequestBody ChangePasswordDTO changePassword) {
-        // TODO validation, javi Deki ako ovo budes menjao, da prilagodim na frontu
         String oldPassword = changePassword.getOldPassword();
         String newPassword = changePassword.getNewPassword();
         if (userService.changePassword(userId, oldPassword, newPassword)) {
