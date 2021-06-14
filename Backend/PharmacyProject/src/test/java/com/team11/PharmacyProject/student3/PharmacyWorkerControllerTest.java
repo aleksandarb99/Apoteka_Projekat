@@ -64,8 +64,6 @@ public class PharmacyWorkerControllerTest {
                 .andExpect(jsonPath("$.[*].appointmentState").value(hasItem("FINISHED")))
                 .andExpect(jsonPath("$.[*].start").value(hasItem(1621955200000L)))
                 .andExpect(jsonPath("$.[*].end").value(hasItem(1621955700000L)))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(29)))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(34)));
-
+                .andExpect(jsonPath("$.[*].pharmacy").value(hasItem("Zelena Apoteka")));
     }
 }
