@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject;
+package com.team11.PharmacyProject.student2;
 
 import com.team11.PharmacyProject.advertisement.AdvertismentService;
 import com.team11.PharmacyProject.enums.AbsenceRequestState;
@@ -12,7 +12,8 @@ import com.team11.PharmacyProject.priceList.PriceList;
 import com.team11.PharmacyProject.priceList.PriceListRepository;
 import com.team11.PharmacyProject.priceList.PriceListServiceImpl;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -68,13 +69,13 @@ public class PriceListServiceTest {
 
         priceListServiceMock.insertMedicine(1L, 1L, 1000);
 
-        assertEquals(1, p1.getMedicineItems().size());
-        assertEquals(1L, p1.getMedicineItems().get(0).getMedicine().getId(), 0.0);
+        Assertions.assertEquals(1, p1.getMedicineItems().size());
+        Assertions.assertEquals(1L, p1.getMedicineItems().get(0).getMedicine().getId(), 0.0);
 
         Mockito.verify(priceListRepositoryMock, Mockito.times(1)).save(p1);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test()
     @Transactional
     @Rollback(value = true)
     public void insertMedicineTestFail() {
@@ -103,7 +104,7 @@ public class PriceListServiceTest {
         Mockito.when(medicineServiceMock.findOne(2L)).thenReturn(m2);
         Mockito.when(priceListRepositoryMock.save(p1)).thenReturn(p1);
 
-        priceListServiceMock.insertMedicine(1L, 2L, 1000);
+        Assertions.assertThrows(RuntimeException.class, () -> priceListServiceMock.insertMedicine(1L, 2L, 1000));
     }
 
 }
