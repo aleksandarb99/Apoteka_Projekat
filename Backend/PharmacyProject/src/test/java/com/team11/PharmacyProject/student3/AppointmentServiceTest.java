@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject;
+package com.team11.PharmacyProject.student3;
 
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.appointment.AppointmentRepository;
@@ -23,7 +23,8 @@ import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceService;
 import com.team11.PharmacyProject.workplace.WorkplaceServiseImpl;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -42,7 +43,6 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class AppointmentServiceTest {
 
@@ -132,11 +132,11 @@ public class AppointmentServiceTest {
 
         try {
             Appointment appt = appointmentServiceMock.scheduleAppointmentInRange(1L, 2L, 3L, apptStart, apptEnd, 20);
-            assertEquals(450, appt.getPrice(), 0);
-            assertEquals(apptStart, appt.getStartTime());
-            assertEquals(apptEnd, appt.getEndTime());
+            Assertions.assertEquals(450, appt.getPrice(), 0);
+            Assertions.assertEquals(apptStart, appt.getStartTime());
+            Assertions.assertEquals(apptEnd, appt.getEndTime());
         }catch (Exception e){
-            fail();
+            Assertions.fail();
             System.out.println("exception while adding appointment");
         }
     }
@@ -201,7 +201,7 @@ public class AppointmentServiceTest {
 
         try {
             Appointment appt = appointmentServiceMock.scheduleAppointmentInRange(1L, 2L, 3L, apptStart, apptEnd, 20);
-            fail(); //mora da padne jer se preklapaju sastanci
+            Assertions.fail(); //mora da padne jer se preklapaju sastanci
         }catch (Exception e){
             System.out.println("exception thrown");
         }
@@ -211,7 +211,7 @@ public class AppointmentServiceTest {
 
         try {
             Appointment appt = appointmentServiceMock.scheduleAppointmentInRange(1L, 2L, 3L, apptStart, apptEnd, 20);
-            fail(); //mora da padne jer se preklapaju sastanci
+            Assertions.fail(); //mora da padne jer se preklapaju sastanci
         }catch (Exception e){
             System.out.println("exception thrown");
         }
@@ -221,7 +221,7 @@ public class AppointmentServiceTest {
 
         try {
             Appointment appt = appointmentServiceMock.scheduleAppointmentInRange(1L, 2L, 3L, apptStart, apptEnd, 20);
-            fail(); //mora da padne jer nije u okviru radnog vremena
+            Assertions.fail(); //mora da padne jer nije u okviru radnog vremena
         }catch (Exception e){
             System.out.println("exception thrown");
         }
@@ -241,8 +241,8 @@ public class AppointmentServiceTest {
 
         Mockito.when(appointmentRepositoryMock.findById(1L)).thenReturn(Optional.of(app));
 
-        assertTrue(appointmentServiceMock.startAppointment(1L));
-        assertEquals(AppointmentState.IN_PROGRESS, app.getAppointmentState());
+        Assertions.assertTrue(appointmentServiceMock.startAppointment(1L));
+        Assertions.assertEquals(AppointmentState.IN_PROGRESS, app.getAppointmentState());
 
         Appointment app2 = new Appointment();
         app2.setId(2L);
@@ -252,7 +252,7 @@ public class AppointmentServiceTest {
 
         Mockito.when(appointmentRepositoryMock.findById(2L)).thenReturn(Optional.of(app2));
 
-        assertFalse(appointmentServiceMock.startAppointment(2L));
+        Assertions.assertFalse(appointmentServiceMock.startAppointment(2L));
 
         Appointment app3 = new Appointment();
         app3.setId(3L);
@@ -262,7 +262,7 @@ public class AppointmentServiceTest {
 
         Mockito.when(appointmentRepositoryMock.findById(3L)).thenReturn(Optional.of(app3));
 
-        assertFalse(appointmentServiceMock.startAppointment(3L));
+        Assertions.assertFalse(appointmentServiceMock.startAppointment(3L));
 
         Appointment app4 = new Appointment();
         app4.setId(4L);
@@ -272,6 +272,6 @@ public class AppointmentServiceTest {
 
         Mockito.when(appointmentRepositoryMock.findById(4L)).thenReturn(Optional.of(app4));
 
-        assertFalse(appointmentServiceMock.startAppointment(4L));
+        Assertions.assertFalse(appointmentServiceMock.startAppointment(4L));
     }
 }
