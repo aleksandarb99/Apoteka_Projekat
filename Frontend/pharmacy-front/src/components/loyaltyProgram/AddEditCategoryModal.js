@@ -5,14 +5,6 @@ import { getErrorMessage } from '../../app/errorHandler';
 import { useToasts } from 'react-toast-notifications'
 
 const AddEditCategoryModal = (props) => {
-  const [name, setName] = useState(!!props.category ? props.category.name : "");
-  const [requiredPoints, setRequiredPoints] = useState(
-    props.category ? props.category.pointsRequired : 0
-  );
-  const [discount, setDiscount] = useState(
-    props.category ? props.category.discount : 0.0
-  );
-
     const [name, setName] = useState(!!props.category ? props.category.name : "b")
     const [requiredPoints, setRequiredPoints] = useState(!!props.category ? props.category.pointsRequired : 0);
     const [discount, setDiscount] = useState(!!props.category ? props.category.discount : 0.00);
@@ -24,33 +16,33 @@ const AddEditCategoryModal = (props) => {
         setRequiredPoints(!!props.category ? props.category.pointsRequired : 0);
         setDiscount(!!props.category ? props.category.discount : 0.00);
     }, [])
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
 
-    let data = {
-      id: !!props.category ? props.category.id : -1,
-      name: name,
-      pointsRequired: parseInt(requiredPoints),
-      discount: parseFloat(discount),
-    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-      api.post('/api/ranking-category/', data)
-          .then(() => {
-              props.onAddEdit()
-              props.onHide()
-          })
-          .catch((err) => {
-              addToast(getErrorMessage(err), { appearance: "error" });
-          })
+        let data = {
+            id: !!props.category ? props.category.id : -1,
+            name: name,
+            pointsRequired: parseInt(requiredPoints),
+            discount: parseFloat(discount),
+        };
+
+        api.post('/api/ranking-category/', data)
+            .then(() => {
+                props.onAddEdit()
+                props.onHide()
+            })
+            .catch((err) => {
+                addToast(getErrorMessage(err), { appearance: "error" });
+            })
     }
-  
-  const resetData = () => {
-    setName("");
-    setRequiredPoints(0);
-    setDiscount(0.0);
-  };
+
+    const resetData = () => {
+        setName("");
+        setRequiredPoints(0);
+        setDiscount(0.0);
+    };
 
     return (
         <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>

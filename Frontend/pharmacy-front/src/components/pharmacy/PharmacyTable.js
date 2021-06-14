@@ -15,34 +15,32 @@ function PharmacyTable(props) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const { addToast } = useToasts();
+  const { addToast } = useToasts();
 
-    useEffect(() => {
-        async function fetchData() {
-            const response = await axios.get("/api/pharmacy/crud");
-            setPharmacies(response.data);
-        }
-        fetchData();
-    }, [reload]);
-
-    const reloadTable = () => {
-        setReload(!reload)
+  useEffect(() => {
+    async function fetchData() {
+      const response = await axios.get("/api/pharmacy/crud");
+      setPharmacies(response.data);
     }
     fetchData();
   }, [reload]);
 
-    const deletePharmacy = () => {
-        axios
-            .delete("/api/pharmacy/" + selected.id)
-            .then(() => {
-                reloadTable()
-                setShowDeleteModal(false)
-                addToast("Pharmacy deleted successfully.", { appearance: 'success' });
-            })
-            .catch((err) => {
-                addToast(getErrorMessage(err), { appearance: 'error' })
-            })
-    }
+  const reloadTable = () => {
+    setReload(!reload)
+  };
+
+  const deletePharmacy = () => {
+    axios
+      .delete("/api/pharmacy/" + selected.id)
+      .then(() => {
+        reloadTable()
+        setShowDeleteModal(false)
+        addToast("Pharmacy deleted successfully.", { appearance: 'success' });
+      })
+      .catch((err) => {
+        addToast(getErrorMessage(err), { appearance: 'error' })
+      })
+  }
 
   const updateSelected = (selectedPharmacy) => {
     setSelected(selectedPharmacy);
@@ -85,11 +83,11 @@ function PharmacyTable(props) {
           ))}
         </tbody>
       </Table>
-            <AddPharmacyModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} />
-            <EditPharmacyModal show={showEditModal} pharmacy={selected} onHide={() => setShowEditModal(false)} onSuccess={reloadTable} />
-            <DeleteModal title={"Remove " + selected.name} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deletePharmacy} />
-        </Container >
-    )
+      <AddPharmacyModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} />
+      <EditPharmacyModal show={showEditModal} pharmacy={selected} onHide={() => setShowEditModal(false)} onSuccess={reloadTable} />
+      <DeleteModal title={"Remove " + selected.name} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deletePharmacy} />
+    </Container >
+  )
 }
 
 export default PharmacyTable;

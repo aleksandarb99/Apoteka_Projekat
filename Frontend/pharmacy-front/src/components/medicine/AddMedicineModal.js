@@ -14,9 +14,6 @@ import api from '../../app/api'
 import Validator from '../../app/validator'
 
 function AddMedicineModal(props) {
-  const [form, setForm] = useState({});
-  const [validated, setValidated] = useState(false);
-
     const [form, setForm] = useState({
         // name: '',
         // code: '',
@@ -109,7 +106,7 @@ function AddMedicineModal(props) {
             sendPostRequest()
         }
     }
-  };
+
 
     const sendPostRequest = () => {
         let data = {

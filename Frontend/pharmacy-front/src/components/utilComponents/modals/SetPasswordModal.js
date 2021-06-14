@@ -14,10 +14,10 @@ const SetPasswordModal = (props) => {
     const [repeatPassword, setRepeatPassword] = useState('');
 
     const dispatch = useDispatch();
-  
-  const handleClose = () => {
-    dispatch(logout());
-  };
+
+    const handleClose = () => {
+        dispatch(logout());
+    };
 
     const validate = () => {
         return Validator['password'](password) && Validator['password'](repeatPassword);
@@ -36,7 +36,6 @@ const SetPasswordModal = (props) => {
             }
         }
     }
-  };
 
     const handleSet = () => {
         let data = {
@@ -73,7 +72,7 @@ const SetPasswordModal = (props) => {
 }
 
 SetPasswordModal.defaultProps = {
-  isPasswordSet: false,
+    isPasswordSet: false,
 };
 
 export default SetPasswordModal;
