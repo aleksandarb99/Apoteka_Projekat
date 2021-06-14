@@ -12,6 +12,7 @@ import com.team11.PharmacyProject.enums.ReservationState;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemService;
+import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservationRepository;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
@@ -753,8 +754,15 @@ public class AppointmentServiceImpl implements AppointmentService {
             mi.setAmountLessOne(); //smanjujemo kolicinu za 1
             medicineItemRepository.save(mi);
 
-
-            double price = mi.getMedicinePrices().get(mi.getMedicinePrices().size() - 1).getPrice(); // TODO ovo videti, taj get je sumnjiv
+            double price = 0;
+            try{
+                price = mi.getMedicinePrices()
+                                .stream()
+                                .max(Comparator.comparing(MedicinePrice::getStartDate))
+                                .orElseThrow(NoSuchElementException::new).getPrice();
+            }catch (NoSuchElementException e){
+                return false;
+            }
             price -= price*pat_disc;
 
             MedicineReservation medicineReservation = new MedicineReservation(pickupDate, resDate, resID, state, mi, pharmacy, price);
@@ -763,7 +771,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             patient.get().getMedicineReservation().add(medicineReservation);
 
-            //todo mozda malo srediti notif ako bude vremena
             MedicineReservationNotifyPatientDTO resDTO = new MedicineReservationNotifyPatientDTO(patient.get(), pharmacy, medicineReservation);
             try {
                 emailService.notifyPatientAboutReservation(resDTO);
@@ -794,6 +801,16 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<Appointment> getAppointmentsOfPatientWorkerOnDate(Long workerID, Long patID, Long date){
         Long endDate = Instant.ofEpochMilli(date).plus(1, ChronoUnit.DAYS).toEpochMilli();
         return appointmentRepository.getAppointmentsOfPatientWorkerOnDate(workerID, patID, date, endDate);
+    }
+
+    private long getHourOfDate(long date, int hour){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(date);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTimeInMillis();
     }
 
     @Override
@@ -861,10 +878,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         //OVO -2 JE OFFSET zbog zonske razlike, ovaj truncutated to je malo glup
         // da li se poklapa radno vreme
-        long workerStartTimeOnDate = Instant.ofEpochMilli(apptStart).truncatedTo(ChronoUnit.DAYS)
-                .plus(starHour-2, ChronoUnit.HOURS).toEpochMilli();
-        long workerEndTimeOnDate = Instant.ofEpochMilli(apptStart).truncatedTo(ChronoUnit.DAYS)
-                .plus(endHour-2, ChronoUnit.HOURS).toEpochMilli();
+
+
+        long workerStartTimeOnDate = getHourOfDate(apptStart, starHour);
+
+        long workerEndTimeOnDate = getHourOfDate(apptEnd, endHour);
+
         if (!(apptStart >= workerStartTimeOnDate && apptEnd <= workerEndTimeOnDate)){
             throw new Exception("Invalid appointment time (worker not working in that time period)!");
         }
