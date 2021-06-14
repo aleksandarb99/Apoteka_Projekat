@@ -27,8 +27,7 @@ function CheckupsInsight() {
         if (sorter != "none" && ascDesc != "none")
           search_params.append("sort", sorter + ascDesc);
         const request = await axios.get(
-          "http://localhost:8080/api/appointment/checkups/history/patient/" +
-            getIdFromToken(),
+          "/api/appointment/checkups/history/patient/" + getIdFromToken(),
           {
             params: search_params,
           }
@@ -41,8 +40,7 @@ function CheckupsInsight() {
         if (sorter != "none" && ascDesc != "none")
           search_params.append("sort", sorter + ascDesc);
         const request = await axios.get(
-          "http://localhost:8080/api/appointment/checkups/upcoming/patient/" +
-            getIdFromToken(),
+          "/api/appointment/checkups/upcoming/patient/" + getIdFromToken(),
           {
             params: search_params,
           }
@@ -57,7 +55,7 @@ function CheckupsInsight() {
 
   const cancelCheckup = (id) => {
     axios
-      .put("http://localhost:8080/api/appointment/cancel-checkup/" + id)
+      .put("/api/appointment/cancel-checkup/" + id)
       .then((res) => {
         addToast(res.data, { appearance: "success" });
         setReload(!reload);

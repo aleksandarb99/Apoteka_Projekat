@@ -24,8 +24,7 @@ function SubscribedPharmacies() {
   const loadPharmacies = () => {
     async function fetchPharmacies() {
       const request = await axios.get(
-        "http://localhost:8080/api/pharmacy/subscribed/patient/" +
-          getIdFromToken()
+        "/api/pharmacy/subscribed/patient/" + getIdFromToken()
       );
       setPharmacies(request.data);
 
@@ -37,9 +36,7 @@ function SubscribedPharmacies() {
   const unsubscribe = () => {
     api
       .post(
-        `http://localhost:8080/api/pharmacy/${
-          selectedPharmacy.id
-        }/unsubscribe/${getIdFromToken()}`
+        `/api/pharmacy/${selectedPharmacy.id}/unsubscribe/${getIdFromToken()}`
       )
       .then(() => {
         loadPharmacies();

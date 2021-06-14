@@ -22,7 +22,7 @@ const ERecipeSearchInPharmacy = ({ pharmacyId }) => {
 
     api({
       method: "post",
-      url: `http://localhost:8080/api/e-recipes/upload-qr/${getIdFromToken()}`,
+      url: `/api/e-recipes/upload-qr/${getIdFromToken()}`,
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     })
@@ -42,7 +42,7 @@ const ERecipeSearchInPharmacy = ({ pharmacyId }) => {
 
     api({
       method: "post",
-      url: `http://localhost:8080/api/pharmacy/e-recipe/${pharmacyId}`,
+      url: `/api/pharmacy/e-recipe/${pharmacyId}`,
       data: data,
     })
       .then((res) => {

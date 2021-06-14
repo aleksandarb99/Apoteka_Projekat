@@ -13,6 +13,8 @@ import api from '../../app/api'
 import { Token, Typeahead } from 'react-bootstrap-typeahead'
 
 function EditMedicineModal(props) {
+  const [form, setForm] = useState({});
+  const [validated, setValidated] = useState(false);
 
     const [form, setForm] = useState({})
     const [multiSelections, setMultiSelections] = useState([]);
@@ -97,6 +99,7 @@ function EditMedicineModal(props) {
                 addToast(getErrorMessage(err), { appearance: 'error' })
             })
     }
+  };
 
     return (
         <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
@@ -232,4 +235,4 @@ function EditMedicineModal(props) {
     )
 }
 
-export default EditMedicineModal
+export default EditMedicineModal;

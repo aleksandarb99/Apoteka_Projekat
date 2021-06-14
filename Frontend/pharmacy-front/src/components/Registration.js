@@ -86,7 +86,7 @@ function Registration() {
   const sendPostRequest = () => {
     const newForm = convertForm(form);
     api
-      .post("http://localhost:8080/api/users/", newForm)
+      .post("/api/users/", newForm)
       .then(() => {
         resetForm();
         addToast("Successfully registred. Please confirm your email.", { appearance: 'success' });

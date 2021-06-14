@@ -30,7 +30,7 @@ function MedicineProfile() {
   useEffect(() => {
     async function fetchPoints() {
       const request = await axios.get(
-        "http://localhost:8080/api/patients/" + getIdFromToken() + "/points"
+        "/api/patients/" + getIdFromToken() + "/points"
       );
       setPoints(request.data);
       return request;
@@ -40,9 +40,7 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchCategory() {
-      const request = await axios.get(
-        "http://localhost:8080/api/ranking-category/points/" + points
-      );
+      const request = await axios.get("/api/ranking-category/points/" + points);
       setCategory(request.data);
 
       return request;
@@ -52,9 +50,7 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchMedicine() {
-      const request = await axios.get(
-        `http://localhost:8080/api/medicine/${id}`
-      );
+      const request = await axios.get(`/api/medicine/${id}`);
       setMedicine(request.data);
       return request;
     }
@@ -63,9 +59,7 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get(
-        `http://localhost:8080/api/pharmacy/medicine/${id}`
-      );
+      const request = await axios.get(`/api/pharmacy/medicine/${id}`);
       setPharmacies(request.data);
       return request;
     }
@@ -95,7 +89,7 @@ function MedicineProfile() {
     };
 
     axios
-      .post("http://localhost:8080/api/medicine-reservation/", forSend)
+      .post("/api/medicine-reservation/", forSend)
       .then((res) => {
         addToast(res.data, { appearance: "success" });
       })

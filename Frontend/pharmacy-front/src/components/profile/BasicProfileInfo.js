@@ -20,9 +20,7 @@ const BasicProfileInfo = (props) => {
 
   useEffect(() => {
     async function fetchUser() {
-      const request = await api.get(
-        "http://localhost:8080/api/users/" + getIdFromToken()
-      );
+      const request = await api.get("/api/users/" + getIdFromToken());
       setUser(request.data);
       setShowUser({
         email: request.data?.email,
@@ -89,7 +87,7 @@ const BasicProfileInfo = (props) => {
     user.address.country = showUser.country;
 
     api
-      .put("http://localhost:8080/api/users/" + getIdFromToken(), user)
+      .put("/api/users/" + getIdFromToken(), user)
       .then((res) => {
         addToast("User changed successfully!", { appearance: "success" });
         setUser(res.data);
@@ -110,10 +108,7 @@ const BasicProfileInfo = (props) => {
     let forSend = { ...passwordDTO };
     delete forSend.repeatPassword;
     api
-      .put(
-        "http://localhost:8080/api/users/change-password/" + getIdFromToken(),
-        forSend
-      )
+      .put("/api/users/change-password/" + getIdFromToken(), forSend)
       .then(() => {
         addToast("Successfully changed password!", { appearance: "success" });
         passwordDTO.oldPassword = "";

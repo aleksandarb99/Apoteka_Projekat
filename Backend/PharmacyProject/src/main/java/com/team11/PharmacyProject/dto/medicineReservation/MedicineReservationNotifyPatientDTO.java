@@ -114,6 +114,10 @@ public class MedicineReservationNotifyPatientDTO {
     }
 
     public void setPharmacyAddress(Address pharmacyAddress) {
-        this.pharmacyAddress = pharmacyAddress.getStreet() + ", " + pharmacyAddress.getCity() + ", " + pharmacyAddress.getCountry();
+        if(pharmacyAddress != null) {
+            this.pharmacyAddress = pharmacyAddress.getStreet() + ", " + pharmacyAddress.getCity() + ", " + pharmacyAddress.getCountry();
+        }else {
+            this.pharmacyAddress = "nedefinisana";
+        }
     }
 }

@@ -33,7 +33,7 @@ function MedicinesView({ priceListId, pharmacyId }) {
     if (priceListId != undefined) {
       async function fetchPriceList() {
         const request = await axios
-          .get(`http://localhost:8080/api/pricelist/${priceListId}`)
+          .get(`/api/pricelist/${priceListId}`)
           .then((res) => {
             setMedicines(res.data.medicineItems);
           })

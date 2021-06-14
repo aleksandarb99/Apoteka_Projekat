@@ -14,7 +14,7 @@ function AddingMedicineModal(props) {
 
   async function fetchMedicine() {
     const request = await axios.get(
-      `http://localhost:8080/api/medicine/notexistingmedicinebypharmacyid/${props.idOfPharmacy}`
+      `/api/medicine/notexistingmedicinebypharmacyid/${props.idOfPharmacy}`
     );
     setMedicineList(request.data);
     return request;

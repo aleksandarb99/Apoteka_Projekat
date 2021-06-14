@@ -18,7 +18,7 @@ function Allergies() {
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
-        "http://localhost:8080/api/patients/allergies/all/" + getIdFromToken()
+        "/api/patients/allergies/all/" + getIdFromToken()
       );
       setAllergies(response.data);
       if (response.data == "") setAllergies(null);
@@ -28,7 +28,7 @@ function Allergies() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("http://localhost:8080/api/medicine/");
+      const response = await axios.get("/api/medicine/");
       setMedicines(response.data);
       if (response.data == "") setMedicines(null);
     }
@@ -41,12 +41,7 @@ function Allergies() {
 
   const deleteAllergy = (id) => {
     axios
-      .delete(
-        "http://localhost:8080/api/patients/allergies/" +
-          getIdFromToken() +
-          "/" +
-          id
-      )
+      .delete("/api/patients/allergies/" + getIdFromToken() + "/" + id)
       .then((res) => {
         reloadTable();
         addToast(res.data, { appearance: "success" });
@@ -63,7 +58,7 @@ function Allergies() {
   const addAllergy = () => {
     axios
       .post(
-        "http://localhost:8080/api/patients/allergies/" +
+        "/api/patients/allergies/" +
           getIdFromToken() +
           "/" +
           selectedMedicine.id

@@ -1,34 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Card, Col, Container, Row } from 'react-bootstrap'
-import api from '../../app/api'
-import { getIdFromToken } from '../../app/jwtTokenUtils'
+import React, { useEffect, useState } from "react";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import api from "../../app/api";
+import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 const PharmacyWithMedicineItem = ({ pharmacy, doBuy }) => {
     const [points, setPoints] = useState(0)
     const [category, setCategory] = useState({})
 
-    useEffect(() => {
-        async function fetchPoints() {
-            const request = await api.get(
-                "http://localhost:8080/api/patients/" + getIdFromToken() + "/points"
-            );
-            setPoints(request.data);
-            return request;
-        }
-        fetchPoints();
-    }, []);
+  useEffect(() => {
+    async function fetchPoints() {
+      const request = await api.get(
+        "/api/patients/" + getIdFromToken() + "/points"
+      );
+      setPoints(request.data);
+      return request;
+    }
+    fetchPoints();
+  }, []);
 
-    useEffect(() => {
-        async function fetchCategory() {
-            const request = await api.get(
-                "http://localhost:8080/api/ranking-category/points/" + points
-            );
-            setCategory(request.data);
+  useEffect(() => {
+    async function fetchCategory() {
+      const request = await api.get("/api/ranking-category/points/" + points);
+      setCategory(request.data);
 
-            return request;
-        }
-        fetchCategory();
-    }, [points]);
+      return request;
+    }
+    fetchCategory();
+  }, [points]);
 
     return (
         <Card style={{ marginBottom: '20px' }}>
@@ -70,4 +68,4 @@ const PharmacyWithMedicineItem = ({ pharmacy, doBuy }) => {
     )
 }
 
-export default PharmacyWithMedicineItem
+export default PharmacyWithMedicineItem;

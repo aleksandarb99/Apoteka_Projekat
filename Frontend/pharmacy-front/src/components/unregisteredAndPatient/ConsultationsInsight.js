@@ -28,8 +28,7 @@ function ConsultationsInsight() {
         if (sorter != "none" && ascDesc != "none")
           search_params.append("sort", sorter + ascDesc);
         const request = await axios.get(
-          "http://localhost:8080/api/appointment/history/patient/" +
-            getIdFromToken(),
+          "/api/appointment/history/patient/" + getIdFromToken(),
           {
             params: search_params,
           }
@@ -42,8 +41,7 @@ function ConsultationsInsight() {
         if (sorter != "none" && ascDesc != "none")
           search_params.append("sort", sorter + ascDesc);
         const request = await axios.get(
-          "http://localhost:8080/api/appointment/upcoming/patient/" +
-            getIdFromToken(),
+          "/api/appointment/upcoming/patient/" + getIdFromToken(),
           {
             params: search_params,
           }
@@ -58,7 +56,7 @@ function ConsultationsInsight() {
 
   const cancelConsultation = (id) => {
     axios
-      .put("http://localhost:8080/api/appointment/cancel-consultation/" + id)
+      .put("/api/appointment/cancel-consultation/" + id)
       .then((res) => {
         addToast(res.data, { appearance: "success" });
         setReload(!reload);

@@ -34,7 +34,7 @@ function AppointmentView({ pharmacyId }) {
     async function fetchPoints() {
       if (getIdFromToken() == null) return;
       const request = await axios.get(
-        "http://localhost:8080/api/patients/" + getIdFromToken() + "/points"
+        "/api/patients/" + getIdFromToken() + "/points"
       );
       setPoints(request.data);
       return request;
@@ -45,9 +45,7 @@ function AppointmentView({ pharmacyId }) {
   useEffect(() => {
     async function fetchCategory() {
       if (getIdFromToken() == null) return;
-      const request = await axios.get(
-        "http://localhost:8080/api/ranking-category/points/" + points
-      );
+      const request = await axios.get("/api/ranking-category/points/" + points);
       setCategory(request.data);
 
       return request;
@@ -59,7 +57,7 @@ function AppointmentView({ pharmacyId }) {
     if (pharmacyId != undefined) {
       async function fetchAppointsments() {
         const request = await axios.get(
-          `http://localhost:8080/api/appointment/bypharmacyid/${pharmacyId}`
+          `/api/appointment/bypharmacyid/${pharmacyId}`
         );
         setAppointsments(request.data);
 
@@ -98,12 +96,7 @@ function AppointmentView({ pharmacyId }) {
 
   const reserveAppointment = (a) => {
     axios
-      .post(
-        "http://localhost:8080/api/appointment/reserve/" +
-          a.id +
-          "/patient/" +
-          getIdFromToken()
-      )
+      .post("/api/appointment/reserve/" + a.id + "/patient/" + getIdFromToken())
       .then((res) => {
         addToast(res.data, { appearance: "success" });
         setReload(!reload);
@@ -142,12 +135,9 @@ function AppointmentView({ pharmacyId }) {
     }
 
     axios
-      .get(
-        `http://localhost:8080/api/appointment/bypharmacyid/${pharmacyId}/sort`,
-        {
-          params: search_params,
-        }
-      )
+      .get(`/api/appointment/bypharmacyid/${pharmacyId}/sort`, {
+        params: search_params,
+      })
       .then((resp) => setAppointsments(resp.data))
       .catch(setAppointsments([]));
   };

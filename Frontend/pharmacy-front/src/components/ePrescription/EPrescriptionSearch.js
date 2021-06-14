@@ -39,7 +39,7 @@ const ERecipeSearch = () => {
 
     api({
       method: "post",
-      url: `http://localhost:8080/api/e-recipes/upload-qr/${getIdFromToken()}`,
+      url: `/api/e-recipes/upload-qr/${getIdFromToken()}`,
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     })
@@ -73,7 +73,7 @@ const ERecipeSearch = () => {
 
     api({
       method: "post",
-      url: `http://localhost:8080/api/pharmacy/e-recipe?sort=${sortBy}&order=${sortOrder}`,
+      url: `/api/pharmacy/e-recipe?sort=${sortBy}&order=${sortOrder}`,
       data: data,
     })
       .then((res) => {
@@ -94,10 +94,7 @@ const ERecipeSearch = () => {
       totalPrice: pharmacy.totalPrice,
     };
     api
-      .post(
-        `http://localhost:8080/api/e-recipes/dispense-medicine/${getIdFromToken()}`,
-        data
-      )
+      .post(`/api/e-recipes/dispense-medicine/${getIdFromToken()}`, data)
       .then(() => {
         addToast("Successfully dispensed!", { appearance: "success" });
         setParsedData({});

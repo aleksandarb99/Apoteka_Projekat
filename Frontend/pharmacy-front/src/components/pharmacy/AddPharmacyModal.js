@@ -191,4 +191,4 @@ function AddPharmacyModal(props) {
     )
 }
 
-export default AddPharmacyModal
+export default AddPharmacyModal;

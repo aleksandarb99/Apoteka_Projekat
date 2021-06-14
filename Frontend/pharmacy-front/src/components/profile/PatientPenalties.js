@@ -8,7 +8,7 @@ function PatientPenalties() {
   useEffect(() => {
     async function fetchPenalties() {
       const request = await axios.get(
-        "http://localhost:8080/api/patients/" + getIdFromToken() + "/penalties"
+        "/api/patients/" + getIdFromToken() + "/penalties"
       );
       setPenalties(request.data);
 

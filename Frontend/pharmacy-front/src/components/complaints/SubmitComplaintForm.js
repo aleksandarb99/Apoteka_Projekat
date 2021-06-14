@@ -13,50 +13,44 @@ const SubmitComplaintForm = () => {
     const [options, setOptions] = useState([])
     const [textAreaText, setTextAreaText] = useState("")
     const { addToast } = useToasts();
-
-    useEffect(() => {
-        let url = `http://localhost:8080/api/patients/${getIdFromToken()}/`;
-        switch (complaintType) {
-            case "PHARMACIST":
-                url = url + "my-pharmacists";
-                break;
-            case "DERMATOLOGIST":
-                url = url + "my-dermatologists";
-                break;
-            case "PHARMACY":
-                url = url + "my-pharmacies";
-                break;
-            default:
-                return;
-        }
-        api.get(url)
-            .then((res) => {
-                setOptions(res.data)
-                setSingleSelection([])
-            });
-
-    }, [complaintType])
-
-    const getLabelKey = (option) => {
-        try {
-            switch (complaintType) {
-                case "PHARMACIST":
-                    return `${option.name}`
-                case "DERMATOLOGIST":
-                    return `${option.name}`
-                case "PHARMACY":
-                    return `${option.name} -- ${option.address.street}`
-                default:
-                    return "";
-            }
-        } catch {
-            return "";
-        }
+  
+  useEffect(() => {
+    let url = `/api/patients/${getIdFromToken()}/`;
+    switch (complaintType) {
+      case "PHARMACIST":
+        url = url + "my-pharmacists";
+        break;
+      case "DERMATOLOGIST":
+        url = url + "my-dermatologists";
+        break;
+      case "PHARMACY":
+        url = url + "my-pharmacies";
+        break;
+      default:
+        return;
     }
+    api.get(url).then((res) => {
+      setOptions(res.data);
+      setSingleSelection([]);
+    });
+  }, [complaintType]);
 
-    const updateComplaintType = (e) => {
-        setComplaintType(e.target.value)
+  const getLabelKey = (option) => {
+    try {
+      switch (complaintType) {
+        case "PHARMACIST":
+          return `${option.name}`;
+        case "DERMATOLOGIST":
+          return `${option.name}`;
+        case "PHARMACY":
+          return `${option.name} -- ${option.address.street}`;
+        default:
+          return "";
+      }
+    } catch {
+      return "";
     }
+  };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -78,7 +72,7 @@ const SubmitComplaintForm = () => {
             "patientId": getIdFromToken()
         }
 
-        let url = "http://localhost:8080/api/complaints/";
+        let url = "/api/complaints/";
         api.post(url, JSON.stringify(data))
             .then(() => {
                 addToast("Successfully submitted", { appearance: "success" });
@@ -86,7 +80,10 @@ const SubmitComplaintForm = () => {
             .catch((err) => {
                 addToast(getErrorMessage(err), { appearance: "error" });
             })
-    }
+      
+  const updateComplaintType = (e) => {
+    setComplaintType(e.target.value);
+  };
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -134,4 +131,4 @@ const SubmitComplaintForm = () => {
     )
 }
 
-export default SubmitComplaintForm
+export default SubmitComplaintForm;

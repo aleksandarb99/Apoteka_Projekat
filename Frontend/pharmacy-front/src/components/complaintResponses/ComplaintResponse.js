@@ -8,9 +8,10 @@ const ComplaintResponse = ({ complaint, onSuccessfulSubmit }) => {
     const [responseText, setResponseText] = useState()
     const { addToast } = useToasts();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
         if (!responseText) {
             addToast("Please fill out response text", { appearance: "warning" });
@@ -83,4 +84,4 @@ const ComplaintResponse = ({ complaint, onSuccessfulSubmit }) => {
     )
 }
 
-export default ComplaintResponse
+export default ComplaintResponse;

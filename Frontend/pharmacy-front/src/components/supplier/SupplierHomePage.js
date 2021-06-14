@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { Col, Nav, Row, Tab, TabPane } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import api from '../../app/api';
-import { getIdFromToken } from '../../app/jwtTokenUtils';
-import SetPasswordModal from '../utilComponents/modals/SetPasswordModal'
-import SupplierStock from '../supplier/stock/SupplierStock'
-import NewOrders from '../supplier/orders/NewOrders'
-import SupplierOffers from './offers/SupplierOffers';
+import React, { useEffect, useState } from "react";
+import { Col, Nav, Row, Tab, TabPane } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import api from "../../app/api";
+import { getIdFromToken } from "../../app/jwtTokenUtils";
+import SetPasswordModal from "../utilComponents/modals/SetPasswordModal";
+import SupplierStock from "../supplier/stock/SupplierStock";
+import NewOrders from "../supplier/orders/NewOrders";
+import SupplierOffers from "./offers/SupplierOffers";
 
 const SupplierHomePage = () => {
     const [showModalPWChange, setShowModalPWChange] = useState(false);
@@ -64,4 +64,4 @@ const SupplierHomePage = () => {
     )
 }
 
-export default SupplierHomePage
+export default SupplierHomePage;

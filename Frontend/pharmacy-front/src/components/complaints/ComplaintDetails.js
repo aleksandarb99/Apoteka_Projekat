@@ -1,21 +1,26 @@
-import React, { useState, useEffect } from 'react'
-import { Col, Container, Form, FormGroup, FormLabel, Row } from 'react-bootstrap'
-import api from '../../app/api'
+import React, { useState, useEffect } from "react";
+import {
+  Col,
+  Container,
+  Form,
+  FormGroup,
+  FormLabel,
+  Row,
+} from "react-bootstrap";
+import api from "../../app/api";
 
 const ComplaintDetails = ({ complaint }) => {
+  const [response, setResponse] = useState("");
 
-    const [response, setResponse] = useState("");
-
-    useEffect(() => {
-        async function fetchResponse() {
-            api.get(`http://localhost:8080/api/complaint-responses/${complaint.id}`)
-                .then((res) => {
-                    console.log(res)
-                    setResponse(res.data ? res.data.responseText : "")
-                })
-        }
-        fetchResponse();
-    }, [])
+  useEffect(() => {
+    async function fetchResponse() {
+      api.get(`/api/complaint-responses/${complaint.id}`).then((res) => {
+        console.log(res);
+        setResponse(res.data ? res.data.responseText : "");
+      });
+    }
+    fetchResponse();
+  }, []);
 
     return (
         <Container className="border border-primary" style={{ borderRadius: '10px', padding: '10px', marginTop: '10px', marginBottom: '10px', backgroundColor: 'white' }}>

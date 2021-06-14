@@ -196,4 +196,4 @@ function EditPharmacyModal(props) {
     )
 }
 
-export default EditPharmacyModal
+export default EditPharmacyModal;

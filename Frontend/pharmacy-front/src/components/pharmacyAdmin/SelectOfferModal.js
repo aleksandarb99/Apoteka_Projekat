@@ -15,7 +15,7 @@ function SelectOfferModal(props) {
 
   async function fetchOffer() {
     const request = await axios.get(
-      `http://localhost:8080/api/suppliers/offers/byorderid/${props.orderId}`
+      `/api/suppliers/offers/byorderid/${props.orderId}`
     );
     setOffers(request.data);
     return request;

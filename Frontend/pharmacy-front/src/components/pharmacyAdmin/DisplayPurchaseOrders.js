@@ -50,7 +50,7 @@ function DisplayPurchaseOrders({
 
   async function fetchPriceList() {
     const request = await axios
-      .get(`http://localhost:8080/api/pricelist/${priceListId}`)
+      .get(`/api/pricelist/${priceListId}`)
       .then((res) => {
         setMedicineItems(res.data.medicineItems);
       })
@@ -71,7 +71,7 @@ function DisplayPurchaseOrders({
 
   async function fetchOrders() {
     const request = await axios.get(
-      `http://localhost:8080/api/orders/bypharmacyid/${idOfPharmacy}`,
+      `/api/orders/bypharmacyid/${idOfPharmacy}`,
       { params: { filter: filterValue } }
     );
     setOrders(request.data);
@@ -113,7 +113,7 @@ function DisplayPurchaseOrders({
     };
 
     const request = await axios
-      .post(`http://localhost:8080/api/orders/addorder`, dto)
+      .post(`/api/orders/addorder`, dto)
       .then((res) => {
         fetchOrders();
         addToast(res.data, {
@@ -151,7 +151,7 @@ function DisplayPurchaseOrders({
 
   async function deletePOrder() {
     const request = await axios
-      .delete(`http://localhost:8080/api/orders/${showedOrder.id}`)
+      .delete(`/api/orders/${showedOrder.id}`)
       .then((res) => {
         fetchOrders();
         addToast(res.data, {
@@ -178,7 +178,7 @@ function DisplayPurchaseOrders({
     };
     setShowSpinner(true);
     const request = await axios
-      .post(`http://localhost:8080/api/suppliers/offers/accept/`, dto)
+      .post(`/api/suppliers/offers/accept/`, dto)
       .then((res) => {
         setShowSpinner(false);
         filterOrders("All");
@@ -207,9 +207,7 @@ function DisplayPurchaseOrders({
 
   async function editOrder(date) {
     const request = await axios
-      .put(
-        `http://localhost:8080/api/orders/${showedOrder.id}/${date.getTime()}/`
-      )
+      .put(`/api/orders/${showedOrder.id}/${date.getTime()}/`)
       .then((res) => {
         fetchOrders();
         addToast(res.data, {

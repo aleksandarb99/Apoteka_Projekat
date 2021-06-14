@@ -49,7 +49,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
 public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
@@ -139,6 +138,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     }
 
+    @Transactional(readOnly = false)
     public void insertAppointment(Appointment a, Long pharmacyId, Long dId) {
         Optional<Pharmacy> p = pharmacyRepository.findById(pharmacyId);
         if (p.isEmpty()) {
@@ -901,6 +901,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentRepository.save(cosultation);
 
         return cosultation;
+    }
+
+    @Override
+    public Appointment getAppointmentInfo (Long apptID){
+        return appointmentRepository.getAppointmentInfo(apptID);
     }
 
     public void finishUnfinishedAppointments(){

@@ -18,7 +18,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
 
   async function fetchRequests() {
     const request = await axios.get(
-      `http://localhost:8080/api/vacation/getunresolvedrequestsbypharmacyid/${idOfPharmacy}`
+      `/api/vacation/getunresolvedrequestsbypharmacyid/${idOfPharmacy}`
     );
     setRequests(request.data);
 
@@ -27,10 +27,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
 
   async function rejectRequest(reason) {
     const request = await axios
-      .post(
-        `http://localhost:8080/api/vacation/rejectrequest/${selectedRowId}`,
-        reason
-      )
+      .post(`/api/vacation/rejectrequest/${selectedRowId}`, reason)
       .then((res) => {
         fetchRequests();
         addToast(res.data, {
@@ -47,7 +44,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
 
   async function acceptRequest() {
     const request = await axios
-      .post(`http://localhost:8080/api/vacation/acceptrequest/${selectedRowId}`)
+      .post(`/api/vacation/acceptrequest/${selectedRowId}`)
       .then((res) => {
         fetchRequests();
         addToast(res.data, {
