@@ -9,7 +9,7 @@ public class AppointmentTimeRangeDTO {
     public AppointmentTimeRangeDTO() {
     }
 
-    public AppointmentTimeRangeDTO(Appointment appt){
+    public AppointmentTimeRangeDTO(Appointment appt) {
         this.startTime = appt.getStartTime();
         this.endTime = appt.getEndTime();
     }
@@ -32,8 +32,15 @@ public class AppointmentTimeRangeDTO {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof AppointmentTimeRangeDTO)) {return false;}
+        if (!(obj instanceof AppointmentTimeRangeDTO)) {
+            return false;
+        }
         AppointmentTimeRangeDTO trange = (AppointmentTimeRangeDTO) obj;
         return this.startTime.equals(trange.getStartTime()) && this.endTime.equals(trange.getEndTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

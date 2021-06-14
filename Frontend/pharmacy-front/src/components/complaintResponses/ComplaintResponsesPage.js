@@ -3,9 +3,9 @@ import { Col, Nav, Row, Tab, TabPane } from 'react-bootstrap'
 import NewComplaintsList from './NewComplaintsList'
 import ComplaintResponsesHistory from './ComplaintResponsesHistory'
 
-const ComplaintsPage = () => {
+const ComplaintResponsesPage = () => {
     return (
-        <main style={{ padding: '0px' }}>
+        <main className="home__page">
             <Tab.Container id="left-tabs-example" defaultActiveKey="first" unmountOnExit>
                 <Row className="my-panel">
                     <Col sm={3} md={3} lg={2} xs={12} className="side__bar">
@@ -38,4 +38,4 @@ const ComplaintsPage = () => {
     )
 }
 
-export default ComplaintsPage
+export default ComplaintResponsesPage

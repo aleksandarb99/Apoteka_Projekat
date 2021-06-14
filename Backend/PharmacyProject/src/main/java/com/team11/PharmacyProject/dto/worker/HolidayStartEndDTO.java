@@ -14,7 +14,7 @@ public class HolidayStartEndDTO {
         this.endTime = endTime;
     }
 
-    public HolidayStartEndDTO(RequestForHoliday req){
+    public HolidayStartEndDTO(RequestForHoliday req) {
         this.startTime = req.getStartDate();
         this.endTime = req.getEndDate();
     }

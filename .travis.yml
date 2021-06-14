@@ -1,0 +1,30 @@
+sudo: required
+language: java
+jdk: oraclejdk11
+
+branches:
+  only:
+    - main
+
+services:
+  - postgresql
+
+before_install:
+  - cd Backend
+  - cd PharmacyProject
+  - chmod +x mvnw
+
+script:
+  - ./mvnw clean install -DskipTests=false -B
+
+dist: trusty
+
+before-deploy:
+- cd ..
+- cd ..
+
+deploy:
+  provider: heroku
+  api_key: $HEROKU_API_KEY
+  app: apotekaprojekat
+  on: main

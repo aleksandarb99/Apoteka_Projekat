@@ -21,129 +21,130 @@ public class MyUser {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-   @Column(name = "email", unique = true, nullable = false)
-   private String email;
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
 
-   @Column(name = "telephone", unique = true, nullable = false)
-   private String telephone;
+    @Column(name = "telephone", unique = true, nullable = false)
+    private String telephone;
 
-   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-   private Role role;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Role role;
 
-   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) //Prebacio sam address u lazy ispraviti, ako treba negde address pacijentu
-   @JoinColumn(name = "address_id")
-   private Address address;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    //Prebacio sam address u lazy ispraviti, ako treba negde address pacijentu
+    @JoinColumn(name = "address_id")
+    private Address address;
 
-   @Column(name = "is_password_changed", nullable = false)
-   private boolean isPasswordChanged;
+    @Column(name = "is_password_changed", nullable = false)
+    private boolean isPasswordChanged;
 
-   @Column(name = "is_email_verified", nullable = false)
-   private boolean emailVerified = false;
+    @Column(name = "is_email_verified", nullable = false)
+    private boolean emailVerified = false;
 
-   @Version
-   @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
-   private int version;
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private int version;
 
-   public MyUser() {
-   }
+    public MyUser() {
+    }
 
-   public MyUser(Long id, String password, String firstName, String lastName, String email, String telephone, Role role, Address address, boolean isPasswordChanged) {
-      this.id = id;
-      this.password = password;
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.email = email;
-      this.role = role;
-      this.telephone = telephone;
-      this.address = address;
-      this.isPasswordChanged = isPasswordChanged;
-   }
+    public MyUser(Long id, String password, String firstName, String lastName, String email, String telephone, Role role, Address address, boolean isPasswordChanged) {
+        this.id = id;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.role = role;
+        this.telephone = telephone;
+        this.address = address;
+        this.isPasswordChanged = isPasswordChanged;
+    }
 
-   public int getVersion() {
-      return version;
-   }
+    public int getVersion() {
+        return version;
+    }
 
-   public void setVersion(int version) {
-      this.version = version;
-   }
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
-   public Long getId() {
-      return id;
-   }
+    public Long getId() {
+        return id;
+    }
 
-   public void setId(Long id) {
-      this.id = id;
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-   public String getPassword() {
-      return password;
-   }
+    public String getPassword() {
+        return password;
+    }
 
-   public void setPassword(String password) {
-      this.password = password;
-   }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-   public String getFirstName() {
-      return firstName;
-   }
+    public String getFirstName() {
+        return firstName;
+    }
 
-   public void setFirstName(String firstName) {
-      this.firstName = firstName;
-   }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-   public String getLastName() {
-      return lastName;
-   }
+    public String getLastName() {
+        return lastName;
+    }
 
-   public void setLastName(String lastName) {
-      this.lastName = lastName;
-   }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-   public String getEmail() {
-      return email;
-   }
+    public String getEmail() {
+        return email;
+    }
 
-   public void setEmail(String email) {
-      this.email = email;
-   }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-   public String getTelephone() {
-      return telephone;
-   }
+    public String getTelephone() {
+        return telephone;
+    }
 
-   public void setTelephone(String telephone) {
-      this.telephone = telephone;
-   }
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
 
-   public Role getRole() {
-      return role;
-   }
+    public Role getRole() {
+        return role;
+    }
 
-   public void setRole(Role role) {
-      this.role = role;
-   }
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
-   public Address getAddress() {
-      return address;
-   }
+    public Address getAddress() {
+        return address;
+    }
 
-   public void setAddress(Address address) {
-      this.address = address;
-   }
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-   public boolean isPasswordChanged() {
-      return isPasswordChanged;
-   }
+    public boolean isPasswordChanged() {
+        return isPasswordChanged;
+    }
 
-   public void setPasswordChanged(boolean passwordChanged) {
-      isPasswordChanged = passwordChanged;
-   }
+    public void setPasswordChanged(boolean passwordChanged) {
+        isPasswordChanged = passwordChanged;
+    }
 
-   public boolean isEmailVerified() {
-      return emailVerified;
-   }
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
 
-   public void setEmailVerified(boolean emailVerified) {
-      this.emailVerified = emailVerified;
-   }
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
 }

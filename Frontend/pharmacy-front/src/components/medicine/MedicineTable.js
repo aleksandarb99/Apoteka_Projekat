@@ -5,8 +5,11 @@ import MedicineRow from "./MedicineRow";
 import AddMedicineModal from "./AddMedicineModal";
 import EditMedicineModal from "./EditMedicineModal";
 import DeleteModal from "../utilComponents/modals/DeleteModal";
-import ErrorModal from "../utilComponents/modals/ErrorModal";
-import SuccessModal from "../utilComponents/modals/SuccessModal";
+import { useToasts } from 'react-toast-notifications';
+import { getErrorMessage } from '../../app/errorHandler';
+import AddMedicineTypeModal from "./AddMedicineTypeModal";
+import AddMedicineFormModal from "./AddMedicineFormModal";
+import AddManufacturerModal from "./AddManufacturerModal";
 
 function MedicineTable() {
   const [reload, setReload] = useState(false);
@@ -15,11 +18,12 @@ function MedicineTable() {
   const [medicine, setMedicine] = useState([]);
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showAddMedicineTypeModal, setShowAddMedicineTypeModal] = useState(false);
+  const [showAddMedicineFormModal, setShowAddMedicineFormModal] = useState(false);
+  const [showAddManufacturerModal, setShowAddManufacturerModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchData() {
@@ -43,10 +47,10 @@ function MedicineTable() {
       .then(() => {
         reloadTable();
         setShowDeleteModal(false);
-        setShowSuccessModal(true);
+        addToast("Medicine deleted successfully.", { appearance: 'success' });
       })
-      .catch(() => {
-        setShowErrorModal(true);
+      .catch((err) => {
+        addToast(getErrorMessage(err), { appearance: 'error' })
       });
   };
 
@@ -59,6 +63,27 @@ function MedicineTable() {
           onClick={() => setShowAddModal(true)}
         >
           Add new medicine
+        </Button>
+        <Button
+          variant="secondary"
+          style={{ float: "right", margin: "20px" }}
+          onClick={() => setShowAddMedicineTypeModal(true)}
+        >
+          Add new medicine type
+        </Button>
+        <Button
+          variant="secondary"
+          style={{ float: "right", margin: "20px" }}
+          onClick={() => setShowAddMedicineFormModal(true)}
+        >
+          Add new medicine form
+        </Button>
+        <Button
+          variant="secondary"
+          style={{ float: "right", margin: "20px" }}
+          onClick={() => setShowAddManufacturerModal(true)}
+        >
+          Add new medicine manufacturer
         </Button>
       </Row>
       <Table striped bordered hover>
@@ -87,6 +112,18 @@ function MedicineTable() {
         onHide={() => setShowAddModal(false)}
         onSuccess={reloadTable}
       />
+      <AddMedicineTypeModal
+        show={showAddMedicineTypeModal}
+        onHide={() => setShowAddMedicineTypeModal(false)}
+      />
+      <AddMedicineFormModal
+        show={showAddMedicineFormModal}
+        onHide={() => setShowAddMedicineFormModal(false)}
+      />
+      <AddManufacturerModal
+        show={showAddManufacturerModal}
+        onHide={() => setShowAddManufacturerModal(false)}
+      />
       <DeleteModal
         title={"Remove " + selected.name}
         show={showDeleteModal}
@@ -99,16 +136,6 @@ function MedicineTable() {
         onHide={() => setShowEditModal(false)}
         onSuccess={reloadTable}
       />
-      <ErrorModal
-        show={showErrorModal}
-        onHide={() => setShowErrorModal(false)}
-        message="Something went wrong."
-      ></ErrorModal>
-      <SuccessModal
-        show={showSuccessModal}
-        onHide={() => setShowSuccessModal(false)}
-        message="Medicine deleted successfully."
-      ></SuccessModal>
     </Container>
   );
 }

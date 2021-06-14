@@ -24,7 +24,6 @@ public class RankingCategoryController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/points/{points}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<RankingCategory> getCategoryByPoints(@PathVariable("points") int points) {
         RankingCategory category = rankingService.getCategoryByPoints(points);
 

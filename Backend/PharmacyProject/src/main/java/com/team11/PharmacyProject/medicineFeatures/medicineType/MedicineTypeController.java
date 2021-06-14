@@ -1,6 +1,5 @@
 package com.team11.PharmacyProject.medicineFeatures.medicineType;
 
-import com.team11.PharmacyProject.medicineFeatures.medicineForm.MedicineForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

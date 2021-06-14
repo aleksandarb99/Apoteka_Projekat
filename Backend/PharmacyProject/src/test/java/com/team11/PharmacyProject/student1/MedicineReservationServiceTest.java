@@ -1,4 +1,4 @@
-package com.team11.PharmacyProject;
+package com.team11.PharmacyProject.student1;
 
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationInsertDTO;
 import com.team11.PharmacyProject.enums.ReservationState;
@@ -15,7 +15,8 @@ import com.team11.PharmacyProject.rankingCategory.RankingCategory;
 import com.team11.PharmacyProject.rankingCategory.RankingCategoryServiceImpl;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -27,8 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Optional;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -106,14 +105,14 @@ public class MedicineReservationServiceTest {
 
         reservationService.insertMedicineReservation(dto);
 
-        assertEquals(9, item.getAmount());
-        assertEquals(900, patient.getMedicineReservation().get(0).getPrice(), 0.0);
+        Assertions.assertEquals(9, item.getAmount());
+        Assertions.assertEquals(900, patient.getMedicineReservation().get(0).getPrice(), 0.0);
 
         Mockito.verify(itemRepositoryMock, Mockito.times(1)).save(item);
         Mockito.verify(patientRepositoryMock, Mockito.times(1)).save(patient);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test()
     @Transactional
     @Rollback(value = true)
     public void insertMedicineReservationFail() {
@@ -158,7 +157,7 @@ public class MedicineReservationServiceTest {
         Mockito.when(pharmacyRepositoryMock.findPharmacyByPharmacyAndMedicineId(3L, 4L)).thenReturn(pharmacy);
         Mockito.when(itemRepositoryMock.findByIdForTransaction(1L)).thenReturn(item);
 
-        reservationService.insertMedicineReservation(dto);
+        Assertions.assertThrows(RuntimeException.class, () -> reservationService.insertMedicineReservation(dto));
     }
 
     @Test()
@@ -184,7 +183,7 @@ public class MedicineReservationServiceTest {
 
         reservationService.cancelReservation(1L);
 
-        assertEquals(11, item.getAmount());
+        Assertions.assertEquals(11, item.getAmount());
 
         Mockito.verify(itemRepositoryMock, Mockito.times(1)).save(item);
         Mockito.verify(reservationRepositoryMock, Mockito.times(1)).save(reservation);

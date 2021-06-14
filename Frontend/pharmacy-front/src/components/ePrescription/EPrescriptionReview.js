@@ -9,6 +9,7 @@ import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
+import { getErrorMessage } from '../../app/errorHandler';
 import { useToasts } from "react-toast-notifications";
 
 function EPrescriptionReview() {
@@ -29,7 +30,7 @@ function EPrescriptionReview() {
           setReload2(!reload2);
         })
         .catch((err) => {
-          addToast(err.response.data, { appearance: "error" });
+          addToast(getErrorMessage(err), { appearance: "error" });
         });
 
       return request;

@@ -1,7 +1,6 @@
 package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.dto.user.*;
-import com.team11.PharmacyProject.dto.user.UserUpdateDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,14 +74,13 @@ public class UserController {
         try {
             MyUser updatedUser = userService.updateUser(user);
             return new ResponseEntity<>(mapper.map(updatedUser, UserUpdateDTO.class), HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping(value = "/change-password/{id}")
     public ResponseEntity<String> changePassword(@PathVariable("id") Long userId, @RequestBody ChangePasswordDTO changePassword) {
-        // TODO validation, javi Deki ako ovo budes menjao, da prilagodim na frontu
         String oldPassword = changePassword.getOldPassword();
         String newPassword = changePassword.getNewPassword();
         if (userService.changePassword(userId, oldPassword, newPassword)) {

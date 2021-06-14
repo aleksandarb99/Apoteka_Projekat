@@ -1,7 +1,5 @@
 package com.team11.PharmacyProject.myOrder;
 
-import com.team11.PharmacyProject.appointment.AppointmentService;
-import com.team11.PharmacyProject.dto.appointment.AppointmentDTO;
 import com.team11.PharmacyProject.dto.order.MyOrderAddingDTO;
 import com.team11.PharmacyProject.dto.order.MyOrderDTO;
 import org.modelmapper.ModelMapper;
@@ -29,7 +27,7 @@ public class MyOrderController {
     @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<List<MyOrderDTO>> getOrdersByPharmacyId(@PathVariable("id") Long id, @RequestParam(value = "filter", required = false) String filterValue) {
         List<MyOrderDTO> myOrderDTOS = orderService.getOrdersByPharmacyId(id, filterValue).stream().map(m -> modelMapper.map(m, MyOrderDTO.class)).collect(Collectors.toList());
-        for (MyOrderDTO dto:
+        for (MyOrderDTO dto :
                 myOrderDTOS) {
             dto.setAdminId(orderService.getAdminIdOfOrderId(dto.getId()));
         }
@@ -58,7 +56,7 @@ public class MyOrderController {
         return new ResponseEntity<>(myOrderDTO, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/addorder", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/addorder", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<String> addOrder(@RequestBody MyOrderAddingDTO data) {
         try {

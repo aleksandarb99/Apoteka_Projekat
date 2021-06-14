@@ -7,7 +7,7 @@ import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
 public class RequestForHolidayWithWorkerDetailsDTO {
 
     private String id;  //string da bi se dodala rec request na sve; zbog frontend kalendara, da se ne bi mesali
-                        //id-ovi request-ova sa id-ovima appointmenta
+    //id-ovi request-ova sa id-ovima appointmenta
 
     private Long start;
 
@@ -33,7 +33,7 @@ public class RequestForHolidayWithWorkerDetailsDTO {
         this.end = request.getEndDate();
         this.requestState = request.getRequestState();
         this.absenceType = request.getAbsenceType();
-        this.workerDetails = request.getPharmacyWorker().getFirstName() + " " +  request.getPharmacyWorker().getLastName();
+        this.workerDetails = request.getPharmacyWorker().getFirstName() + " " + request.getPharmacyWorker().getLastName();
         if (request.getDeclineText() == null)
             this.declineText = "";
         else
