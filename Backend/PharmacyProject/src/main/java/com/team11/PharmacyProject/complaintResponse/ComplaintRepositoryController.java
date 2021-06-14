@@ -45,7 +45,6 @@ public class ComplaintRepositoryController {
         } catch (CustomException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
-            ex.printStackTrace();
             return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
