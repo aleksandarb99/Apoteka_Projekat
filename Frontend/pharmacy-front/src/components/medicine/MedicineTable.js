@@ -7,6 +7,9 @@ import EditMedicineModal from "./EditMedicineModal";
 import DeleteModal from "../utilComponents/modals/DeleteModal";
 import { useToasts } from 'react-toast-notifications';
 import { getErrorMessage } from '../../app/errorHandler';
+import AddMedicineTypeModal from "./AddMedicineTypeModal";
+import AddMedicineFormModal from "./AddMedicineFormModal";
+import AddManufacturerModal from "./AddManufacturerModal";
 
 function MedicineTable() {
   const [reload, setReload] = useState(false);
@@ -15,6 +18,9 @@ function MedicineTable() {
   const [medicine, setMedicine] = useState([]);
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showAddMedicineTypeModal, setShowAddMedicineTypeModal] = useState(false);
+  const [showAddMedicineFormModal, setShowAddMedicineFormModal] = useState(false);
+  const [showAddManufacturerModal, setShowAddManufacturerModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { addToast } = useToasts();
@@ -60,6 +66,27 @@ function MedicineTable() {
         >
           Add new medicine
         </Button>
+        <Button
+          variant="secondary"
+          style={{ float: "right", margin: "20px" }}
+          onClick={() => setShowAddMedicineTypeModal(true)}
+        >
+          Add new medicine type
+        </Button>
+        <Button
+          variant="secondary"
+          style={{ float: "right", margin: "20px" }}
+          onClick={() => setShowAddMedicineFormModal(true)}
+        >
+          Add new medicine form
+        </Button>
+        <Button
+          variant="secondary"
+          style={{ float: "right", margin: "20px" }}
+          onClick={() => setShowAddManufacturerModal(true)}
+        >
+          Add new medicine manufacturer
+        </Button>
       </Row>
       <Table striped bordered hover>
         <thead>
@@ -86,6 +113,18 @@ function MedicineTable() {
         show={showAddModal}
         onHide={() => setShowAddModal(false)}
         onSuccess={reloadTable}
+      />
+      <AddMedicineTypeModal
+        show={showAddMedicineTypeModal}
+        onHide={() => setShowAddMedicineTypeModal(false)}
+      />
+      <AddMedicineFormModal
+        show={showAddMedicineFormModal}
+        onHide={() => setShowAddMedicineFormModal(false)}
+      />
+      <AddManufacturerModal
+        show={showAddManufacturerModal}
+        onHide={() => setShowAddManufacturerModal(false)}
       />
       <DeleteModal
         title={"Remove " + selected.name}

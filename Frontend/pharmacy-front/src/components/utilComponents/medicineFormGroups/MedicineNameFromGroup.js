@@ -6,7 +6,7 @@ function MedicineNameFormGroup(props) {
     return (
         <TextFormGroup
             {...props}
-            name={"Medicine Name"}
+            name={"Medicine Name *"}
             placeholder={"Enter medicine name..."}
             minLength={1}
             maxLength={50}

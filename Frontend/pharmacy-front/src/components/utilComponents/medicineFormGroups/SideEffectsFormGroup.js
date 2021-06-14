@@ -6,7 +6,7 @@ function SideEffectsFormGroup(props) {
     return (
         <TextFormGroup
             {...props}
-            name={"Side effects"}
+            name={"Side effects *"}
             placeholder={"Enter side effects..."}
             minLength={1}
             maxLength={250}

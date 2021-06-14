@@ -19,6 +19,7 @@ function EditMedicineModal(props) {
     const [medicines, setMedicines] = useState([]);
     const [medTypes, setMedTypes] = useState([]);
     const [medForms, setMedForms] = useState([]);
+    const [manufacturers, setManufacturers] = useState([]);
     const { addToast } = useToasts();
 
     const setField = (field, value) => {
@@ -31,6 +32,7 @@ function EditMedicineModal(props) {
     useEffect(() => {
         fetchMedicine();
         fetchTypesAndForms();
+        fetchManufacturers();
         setMultiSelections(props.medicine['substitutes'] || [])
         setForm({ ...props.medicine })
     }, [props.medicine])
@@ -61,11 +63,17 @@ function EditMedicineModal(props) {
             });
     }
 
+    function fetchManufacturers() {
+        api.get(`http://localhost:8080/api/manufacturers/`)
+            .then((res) => {
+                setManufacturers(res.data)
+                setField('manufacturer', res.data[0].name || '');
+            });
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault()
         event.stopPropagation()
-
-        console.log(multiSelections)
 
         if (validateForm()) {
             sendPutRequest()
@@ -117,8 +125,9 @@ function EditMedicineModal(props) {
                     <Row>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Medicine Type</Form.Label>
+                                <Form.Label>Medicine Type *</Form.Label>
                                 <Form.Control as="select" custom onChange={(event) => setField('medicineType', event.target.value)} value={props.medicine.medicineType}>
+                                    <option value="">Select....</option>
                                     {medTypes.map((mt) => {
                                         return <option key={mt.id} value={mt.name}>{mt.name}</option>
                                     })}
@@ -127,8 +136,9 @@ function EditMedicineModal(props) {
                         </Col>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Medicine Form</Form.Label>
+                                <Form.Label>Medicine Form *</Form.Label>
                                 <Form.Control as="select" custom onChange={(event) => setField('medicineForm', event.target.value)} value={props.medicine.medicineForm}>
+                                    <option value="">Select....</option>
                                     {medForms.map((mf) => {
                                         return <option key={mf.id} value={mf.name}>{mf.name}</option>
                                     })}
@@ -181,6 +191,15 @@ function EditMedicineModal(props) {
                             </Form.Group>
                         </Col>
                     </Row>
+                    <Form.Group>
+                        <Form.Label>Manufacturer *</Form.Label>
+                        <Form.Control as="select" custom onChange={(event) => setField('manufacturer', event.target.value)} value={props.medicine.manufacturer}>
+                            <option value="">Select....</option>
+                            {manufacturers.map((mt) => {
+                                return <option value={mt.name}>{mt.name}</option>
+                            })}
+                        </Form.Control>
+                    </Form.Group>
                     <AdditionalNotesFormGroup
                         onChange={(event) => setField('additionalNotes', event.target.value)}
                         defaultValue={props.medicine.additionalNotes} />

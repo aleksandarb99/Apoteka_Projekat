@@ -16,16 +16,19 @@ import Validator from '../../app/validator'
 function AddMedicineModal(props) {
 
     const [form, setForm] = useState({
-        name: '',
-        code: '',
-        content: '',
-        sideEffects: '',
-        additionalNotes: '',
-        recipeRequired: 'REQUIRED',
-        dailyIntake: 0,
-        points: '',
-        manufacturer: '',
-        substitutes: []
+        // name: '',
+        // code: '',
+        // content: '',
+        // sideEffects: '',
+        // additionalNotes: '',
+        // recipeRequired: 'REQUIRED',
+        // medicineType: '',
+        // medicineForm: '',
+        // manufacturer: '',
+        // dailyIntake: 0,
+        // points: 0,
+        // manufacturer: '',
+        // substitutes: []
     })
     const [multiSelections, setMultiSelections] = useState([]);
     const [medicines, setMedicines] = useState([]);
@@ -85,14 +88,7 @@ function AddMedicineModal(props) {
     const showHandler = () => {
         setForm({
             ...form,
-            name: '',
-            code: '',
-            content: '',
-            sideEffects: '',
-            additionalNotes: '',
             recipeRequired: 'REQUIRED',
-            medicineType: '',
-            medicineForm: '',
             dailyIntake: 0,
             points: 0,
             substitutes: []
@@ -116,6 +112,11 @@ function AddMedicineModal(props) {
         let data = {
             ...form,
             substitutes: multiSelections
+        }
+
+        if (!form['medicineType'] || !form['medicineForm'] || !form['manufacturer'] || !form['required']) {
+            addToast("Please fill required fields", { appearance: 'error' })
+            return
         }
         axios
             .post('http://localhost:8080/api/medicine/', data)
@@ -151,8 +152,9 @@ function AddMedicineModal(props) {
                     <Row>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Medicine Type</Form.Label>
-                                <Form.Control as="select" custom onChange={(event) => setField('medicineType', event.target.value)} value={form['medicineType']}>
+                                <Form.Label>Medicine Type *</Form.Label>
+                                <Form.Control as="select" custom onChange={(event) => setField('medicineType', event.target.value)} defaultValue={form['medicineType']}>
+                                    <option value="">Select...</option>
                                     {medTypes.map((mt) => {
                                         return <option value={mt.name}>{mt.name}</option>
                                     })}
@@ -161,8 +163,9 @@ function AddMedicineModal(props) {
                         </Col>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Medicine Form</Form.Label>
-                                <Form.Control as="select" custom onChange={(event) => setField('medicineType', event.target.value)} value={form['medicineForm']}>
+                                <Form.Label>Medicine Form *</Form.Label>
+                                <Form.Control as="select" custom onChange={(event) => setField('medicineForm', event.target.value)} defaultValue={form['medicineForm']}>
+                                    <option value="">Select...</option>
                                     {medForms.map((mf) => {
                                         return <option value={mf.name}>{mf.name}</option>
                                     })}
@@ -174,8 +177,9 @@ function AddMedicineModal(props) {
                     <Row>
                         <Col md={4}>
                             <Form.Group controlId="userTypeSelect">
-                                <Form.Label>Recipe Required</Form.Label>
+                                <Form.Label>Recipe Required *</Form.Label>
                                 <Form.Control as="select" onChange={(event) => setField('recipeRequired', event.target.value)}>
+                                    <option value="">Select...</option>
                                     <option value="REQUIRED">Required</option>
                                     <option value="NOTREQUIRED">Not required</option>
                                 </Form.Control>
@@ -209,8 +213,9 @@ function AddMedicineModal(props) {
                         </Col>
                     </Row>
                     <Form.Group>
-                        <Form.Label>Manufacturer</Form.Label>
+                        <Form.Label>Manufacturer *</Form.Label>
                         <Form.Control as="select" custom onChange={(event) => setField('manufacturer', event.target.value)} value={form['manufacturer']}>
+                            <option value="">Select....</option>
                             {manufacturers.map((mt) => {
                                 return <option value={mt.name}>{mt.name}</option>
                             })}
