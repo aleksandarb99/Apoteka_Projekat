@@ -1,9 +1,7 @@
 package com.team11.PharmacyProject.dto.appointment;
 
 import com.team11.PharmacyProject.appointment.Appointment;
-import com.team11.PharmacyProject.dto.pharmacy.PharmacyWorkerDTO;
 import com.team11.PharmacyProject.enums.AppointmentState;
-import com.team11.PharmacyProject.enums.AppointmentType;
 
 public class AppointmentCalendarDTO {
     private Long id;
@@ -22,11 +20,11 @@ public class AppointmentCalendarDTO {
 
     private String calendarType = "appointment";
 
-    public AppointmentCalendarDTO(){
+    public AppointmentCalendarDTO() {
 
     }
 
-    public AppointmentCalendarDTO(Appointment appt){
+    public AppointmentCalendarDTO(Appointment appt) {
         id = appt.getId();
         start = appt.getStartTime();
         end = appt.getEndTime();
@@ -34,7 +32,7 @@ public class AppointmentCalendarDTO {
         pharmacy = appt.getPharmacy().getName();
         if (appt.getPatient() == null) {
             patient = "none";
-        }else {
+        } else {
             patient = appt.getPatient().getFirstName() + " " + appt.getPatient().getLastName();
         }
         price = appt.getPrice();

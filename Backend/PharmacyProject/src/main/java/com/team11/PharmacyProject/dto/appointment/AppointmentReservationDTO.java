@@ -8,14 +8,13 @@ import java.util.Date;
 
 public class AppointmentReservationDTO {
 
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
     private String firstName;
     private String lastName;
     private String email;
     private String startTime;
     private String endTime;
     private double price;
-
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
     public AppointmentReservationDTO() {
 

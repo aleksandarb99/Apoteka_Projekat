@@ -1,7 +1,5 @@
 package com.team11.PharmacyProject.dto.advertisment;
 
-import com.team11.PharmacyProject.enums.AdvertisementType;
-
 public class AdvertismentDTORequest {
 
     private Long selectedRowId;

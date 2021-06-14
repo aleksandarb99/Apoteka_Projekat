@@ -1,7 +1,6 @@
 package com.team11.PharmacyProject.dto.user;
 
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
-import com.team11.PharmacyProject.users.user.MyUser;
 
 public class PharmacyWorkerInfoDTO {
     private long id;

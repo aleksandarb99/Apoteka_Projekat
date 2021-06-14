@@ -22,10 +22,6 @@ public class MyOrderAddingDTO {
     public MyOrderAddingDTO() {
     }
 
-    public void setPharmacyId(Long pharmacyId) {
-        this.pharmacyId = pharmacyId;
-    }
-
     public Long getAdminId() {
         return adminId;
     }
@@ -36,6 +32,10 @@ public class MyOrderAddingDTO {
 
     public long getPharmacyId() {
         return pharmacyId;
+    }
+
+    public void setPharmacyId(Long pharmacyId) {
+        this.pharmacyId = pharmacyId;
     }
 
     public void setPharmacyId(long pharmacyId) {

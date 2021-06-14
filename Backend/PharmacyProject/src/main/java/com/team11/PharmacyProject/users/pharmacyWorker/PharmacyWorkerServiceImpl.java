@@ -16,15 +16,13 @@ import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
+public class PharmacyWorkerServiceImpl implements PharmacyWorkerService {
 
     @Autowired
     PharmacyWorkerRepository pharmacyWorkerRepository;
@@ -68,57 +66,51 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
 
         List<Workplace> workplaceList = workplaceService.getWorkplacesByPharmacyId(pharmacyId);
 
-        for (PharmacyWorker worker:
-            allWorkers) {
-            if(worker.getWorkplaces().size() == 0) {
+        for (PharmacyWorker worker :
+                allWorkers) {
+            if (worker.getWorkplaces().size() == 0) {
                 workers.add(worker);
                 continue;
             }
-            if(worker.getRole().getName().equals("DERMATOLOGIST")){
+            if (worker.getRole().getName().equals("DERMATOLOGIST")) {
                 boolean flag = false;
                 boolean heIsFree = true;
-                for (Workplace workplace: worker.getWorkplaces()) {
-                    for (Workplace workplace2:workplaceList) {
+                for (Workplace workplace : worker.getWorkplaces()) {
+                    for (Workplace workplace2 : workplaceList) {
                         if (workplace.getId().equals(workplace2.getId())) {
                             flag = true;
                             break;
                         }
                     }
-                    if(flag){
+                    if (flag) {
                         heIsFree = false;
-                       break;
+                        break;
                     }
 
-                    for (WorkDay day:workplace.getWorkDays()) {
+                    for (WorkDay day : workplace.getWorkDays()) {
                         boolean flag2 = false;
-                        if(day.getWeekday().ordinal() == 0){
+                        if (day.getWeekday().ordinal() == 0) {
                             flag2 = dto.isEnable7();
-                        }else if(day.getWeekday().ordinal() == 1){
+                        } else if (day.getWeekday().ordinal() == 1) {
                             flag2 = dto.isEnable1();
-                        }
-                        else if(day.getWeekday().ordinal()== 2){
+                        } else if (day.getWeekday().ordinal() == 2) {
                             flag2 = dto.isEnable2();
-                        }
-                        else if(day.getWeekday().ordinal()== 3){
+                        } else if (day.getWeekday().ordinal() == 3) {
                             flag2 = dto.isEnable3();
-                        }
-                        else if(day.getWeekday().ordinal() == 4){
+                        } else if (day.getWeekday().ordinal() == 4) {
                             flag2 = dto.isEnable4();
-                        }
-                        else if(day.getWeekday().ordinal() == 5){
+                        } else if (day.getWeekday().ordinal() == 5) {
                             flag2 = dto.isEnable5();
-                        }
-                        else if(day.getWeekday().ordinal() == 6){
+                        } else if (day.getWeekday().ordinal() == 6) {
                             flag2 = dto.isEnable6();
                         }
 
-                        if(flag2){
-                            if(dto.getEndHour() < day.getStartTime()){
+                        if (flag2) {
+                            if (dto.getEndHour() < day.getStartTime()) {
                                 continue;
-                            }
-                            else if(dto.getStartHour() > day.getEndTime()){
+                            } else if (dto.getStartHour() > day.getEndTime()) {
                                 continue;
-                            }else {
+                            } else {
                                 heIsFree = false;
                                 break;
                             }
@@ -128,7 +120,7 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
 
                 }
 
-                if(heIsFree){
+                if (heIsFree) {
                     workers.add(worker);
                 }
 
@@ -166,24 +158,25 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
                     boolean isPharmacistFree = true;
                     // Kad prebacimo u lazi, prepravi da kad gore dobavim apoteke, fetchujem i workere i njihove appointemnte
                     for (Appointment a : pharmacyWorkerRepository.getPharmacyWorkerForCalendar(wp.getWorker().getId()).getAppointmentList()) {
-                        if(id.equals(a.getPharmacy().getId()) && a.getAppointmentState() == AppointmentState.CANCELLED) continue;
+                        if (id.equals(a.getPharmacy().getId()) && a.getAppointmentState() == AppointmentState.CANCELLED)
+                            continue;
                         Date startTime = new Date(a.getStartTime());
                         Date endTime = new Date(a.getEndTime());
-                        if(startTime.compareTo(requestedDateAndTime) == 0) {
+                        if (startTime.compareTo(requestedDateAndTime) == 0) {
                             isPharmacistFree = false;
                             break;
                         }
-                        if(requestedDateAndTime.after(startTime) && requestedDateAndTime.before(endTime)) {
+                        if (requestedDateAndTime.after(startTime) && requestedDateAndTime.before(endTime)) {
                             isPharmacistFree = false;
                             break;
                         }
-                        if(requestedDateAndTimeEnd.after(startTime) && requestedDateAndTimeEnd.before(endTime)) {
+                        if (requestedDateAndTimeEnd.after(startTime) && requestedDateAndTimeEnd.before(endTime)) {
                             isPharmacistFree = false;
                             break;
                         }
                     }
 
-                    if(!isPharmacistFree) continue;
+                    if (!isPharmacistFree) continue;
 
                     chosenWorkers.add(wp.getWorker());
                     break;
@@ -194,7 +187,7 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
         if (sorter.toString().equals("UNSORTED"))
             return chosenWorkers;
 
-        if(sorter.toString().equals("avgGrade: DESC"))
+        if (sorter.toString().equals("avgGrade: DESC"))
             chosenWorkers = chosenWorkers.stream()
                     .sorted(Comparator.comparingDouble(PharmacyWorker::getAvgGrade).reversed())
                     .collect(Collectors.toList());
@@ -241,17 +234,17 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
         return chosenWorkers;
     }
 
-    private WorktimeDTO getWorktimeFromWorkplace(Workplace wp, Long workerID){
-        if (wp == null){
+    private WorktimeDTO getWorktimeFromWorkplace(Workplace wp, Long workerID) {
+        if (wp == null) {
             return null;
         }
         WorktimeDTO worktimeDTO = new WorktimeDTO();
         worktimeDTO.setWorkDayList(wp.getWorkDays());
 
         List<RequestForHoliday> holidays = requestForHolidayService.getRequestForHolidayAcceptedOrPendingInFuture(workerID);
-        if (holidays != null && !holidays.isEmpty()){
+        if (holidays != null && !holidays.isEmpty()) {
             List<HolidayStartEndDTO> holidayStartEndDTOS = new ArrayList<>(holidays.size());
-            for (RequestForHoliday req : holidays){
+            for (RequestForHoliday req : holidays) {
                 holidayStartEndDTOS.add(new HolidayStartEndDTO(req));
             }
             worktimeDTO.setHolidays(holidayStartEndDTOS);
@@ -260,13 +253,13 @@ public class PharmacyWorkerServiceImpl implements  PharmacyWorkerService{
     }
 
     @Override
-    public WorktimeDTO getWorktime(Long workerID){
+    public WorktimeDTO getWorktime(Long workerID) {
         Workplace wp = workplaceService.getWorkplaceOfPharmacist(workerID);
         return getWorktimeFromWorkplace(wp, workerID);
     }
 
     @Override
-    public WorktimeDTO getWorktime(Long workerID, Long pharmID){
+    public WorktimeDTO getWorktime(Long workerID, Long pharmID) {
         Workplace wp = workplaceService.getWorkplaceOfDermatologist(workerID, pharmID);
         return getWorktimeFromWorkplace(wp, workerID);
     }

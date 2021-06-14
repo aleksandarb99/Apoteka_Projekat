@@ -4,6 +4,8 @@ package com.team11.PharmacyProject.medicineFeatures.medicineItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class MedicineItemServiceImpl implements MedicineItemService {
 
@@ -17,7 +19,8 @@ public class MedicineItemServiceImpl implements MedicineItemService {
 
     @Override
     public MedicineItem findById(long id) {
-        return medicineItemRepository.findById(id).get();
+        Optional<MedicineItem> optional =  medicineItemRepository.findById(id);
+        return optional.orElse(null);
     }
 
     @Override

@@ -1,32 +1,26 @@
 package com.team11.PharmacyProject.student2;
 
 import com.team11.PharmacyProject.advertisement.AdvertismentService;
-import com.team11.PharmacyProject.enums.AbsenceRequestState;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemService;
-import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservationService;
 import com.team11.PharmacyProject.priceList.PriceList;
 import com.team11.PharmacyProject.priceList.PriceListRepository;
 import com.team11.PharmacyProject.priceList.PriceListServiceImpl;
-import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringRunner.class)

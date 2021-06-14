@@ -28,16 +28,16 @@ public class PatientService {
     @Autowired
     MedicineReservationRepository reservationRepository;
 
-    public List<Patient> searchPatientsByFirstAndLastName(String firstname, String lastname){
+    public List<Patient> searchPatientsByFirstAndLastName(String firstname, String lastname) {
         return patientRepository.searchPatientsByFirstAndLastName(firstname, lastname);
     }
 
 
     public List<Patient> getExaminedPatients(Long workerID,
-                                              String firstName,
-                                              String lastName,
-                                              Long lowerTime,
-                                              Long upperTime, Sort sorter){
+                                             String firstName,
+                                             String lastName,
+                                             Long lowerTime,
+                                             Long upperTime, Sort sorter) {
         return patientRepository.getExaminedPatients(workerID, firstName, lastName, lowerTime, upperTime, sorter);
     }
 
@@ -52,7 +52,7 @@ public class PatientService {
     public void deleteAllergy(long id, long allergy_id) {
         Patient patient = patientRepository.findByIdAndFetchAllergiesEagerly(id);
         if (patient != null) {
-            if(!patient.removeAllergy(allergy_id))
+            if (!patient.removeAllergy(allergy_id))
                 throw new RuntimeException("Patient doesn't have selected allergy!");
 
             patientRepository.save(patient);
@@ -68,28 +68,28 @@ public class PatientService {
             throw new RuntimeException("Patient does not exist in the database!");
 
         Optional<Medicine> medicine = medicineRepository.findById(allergy_id);
-        if(medicine.isEmpty())
+        if (medicine.isEmpty())
             throw new RuntimeException("Medicine does not exist in the database!");
         Medicine allergy = medicine.get();
 
-        if(!patient.addAllergy(allergy))
+        if (!patient.addAllergy(allergy))
             throw new RuntimeException("You already have this medicine recorded as allergy!");
 
         patientRepository.save(patient);
 
     }
 
-    public List<Patient> getAll(){
-        return (List<Patient>) patientRepository.findAll();
+    public List<Patient> getAll() {
+        return patientRepository.findAll();
     }
 
-    public List<Patient> getAllAndFetchAddress(){
+    public List<Patient> getAllAndFetchAddress() {
         return patientRepository.getAllAndFetchAddress();
     }
 
     public Patient getPatient(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
-        if(patient.isEmpty()) return null;
+        if (patient.isEmpty()) return null;
         return patient.get();
     }
 
@@ -145,8 +145,8 @@ public class PatientService {
     public void givePenaltyForNotPickedUpOrCanceledReservation() {
         List<Patient> patients = patientRepository.findAllFetchReservations(System.currentTimeMillis());
 
-        for(Patient p : patients) {
-            for(MedicineReservation mr : p.getMedicineReservation()) {
+        for (Patient p : patients) {
+            for (MedicineReservation mr : p.getMedicineReservation()) {
                 p.setPenalties(p.getPenalties() + 1);
                 mr.setState(ReservationState.NOT_RECEIVED);
                 reservationRepository.save(mr);     // Promenimo u NOT_RECEIVED da i sutradan ne bi gledao ovaj reservation i dao mu opet penal
@@ -158,7 +158,7 @@ public class PatientService {
     public void resetPenalties() {
         List<Patient> patients = patientRepository.findAll();
 
-        for(Patient p : patients) {
+        for (Patient p : patients) {
             p.setPenalties(0);
             patientRepository.save(p);
         }

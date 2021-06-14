@@ -19,11 +19,11 @@ public class MedicineTherapyDTO {
     private double price;
     private int amount;
 
-    public MedicineTherapyDTO(){
+    public MedicineTherapyDTO() {
 
     }
 
-    public MedicineTherapyDTO(MedicineItem medicineItem){
+    public MedicineTherapyDTO(MedicineItem medicineItem) {
         this.medicineItemID = medicineItem.getId();
         this.medicineID = medicineItem.getMedicine().getId();
         this.name = medicineItem.getMedicine().getName();
@@ -37,7 +37,7 @@ public class MedicineTherapyDTO {
         this.medicineForm = medicineItem.getMedicine().getMedicineForm().getName();
         this.manufacturer = medicineItem.getMedicine().getManufacturer().getName();
         //todo ovo
-        this.price = medicineItem.getMedicinePrices().get(medicineItem.getMedicinePrices().size()-1).getPrice();
+        this.price = medicineItem.getMedicinePrices().get(medicineItem.getMedicinePrices().size() - 1).getPrice();
         this.amount = medicineItem.getAmount();
 
     }

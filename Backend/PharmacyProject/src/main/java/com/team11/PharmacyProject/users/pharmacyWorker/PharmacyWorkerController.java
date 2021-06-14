@@ -2,32 +2,23 @@ package com.team11.PharmacyProject.users.pharmacyWorker;
 
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.dto.appointment.AppointmentCalendarDTO;
-import com.team11.PharmacyProject.dto.appointment.AppointmentDTO;
-import com.team11.PharmacyProject.dto.pharmacy.PharmacyConsultationDTO;
-import com.team11.PharmacyProject.dto.pharmacy.PharmacyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyWorkerDTO;
 import com.team11.PharmacyProject.dto.pharmacyWorker.PharmacyWorkerFreePharmacistDTO;
 import com.team11.PharmacyProject.dto.pharmacyWorker.RequestForWorkerDTO;
-import com.team11.PharmacyProject.dto.worker.HolidayStartEndDTO;
-import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
-import com.team11.PharmacyProject.pharmacy.Pharmacy;
-import com.team11.PharmacyProject.requestForHoliday.RequestForHoliday;
+import com.team11.PharmacyProject.dto.worker.WorktimeDTO;
 import com.team11.PharmacyProject.requestForHoliday.RequestForHolidayService;
-import com.team11.PharmacyProject.workplace.Workplace;
 import com.team11.PharmacyProject.workplace.WorkplaceController;
 import com.team11.PharmacyProject.workplace.WorkplaceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,23 +28,20 @@ import java.util.stream.Collectors;
 public class PharmacyWorkerController {
 
     @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
     PharmacyWorkerService pharmacyWorkerService;
-
     @Autowired
     WorkplaceService workplaceService;
-
     @Autowired
     RequestForHolidayService requestForHolidayService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping(value = "/calendarAppointments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
-    public ResponseEntity<List<AppointmentCalendarDTO>> getWorkerCalendar(@PathVariable("id") Long id){
+    public ResponseEntity<List<AppointmentCalendarDTO>> getWorkerCalendar(@PathVariable("id") Long id) {
         PharmacyWorker worker = pharmacyWorkerService.getWorkerForCalendar(id);
 
-        if (worker == null){
+        if (worker == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -74,12 +62,12 @@ public class PharmacyWorkerController {
             List<PharmacyWorker> workers = pharmacyWorkerService.getFreePharmacistsByPharmacyIdAndDate(id, date, pageable.getSort());
             List<PharmacyWorkerFreePharmacistDTO> retVal = new ArrayList<>();
 
-            for(PharmacyWorker pw : workers) {
+            for (PharmacyWorker pw : workers) {
                 retVal.add(new PharmacyWorkerFreePharmacistDTO(pw));
             }
 
             return new ResponseEntity<>(retVal, HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -112,7 +100,7 @@ public class PharmacyWorkerController {
         return new ResponseEntity<>(retVal, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/notexistingworkplacebypharmacyid/{pharmacyId}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/notexistingworkplacebypharmacyid/{pharmacyId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
     public ResponseEntity<?> getNotWorkingWorkersByPharmacyId(@PathVariable("pharmacyId") Long pharmacyId, @RequestBody RequestForWorkerDTO dto) {
         try {
@@ -124,7 +112,7 @@ public class PharmacyWorkerController {
         List<PharmacyWorker> workers = pharmacyWorkerService.getNotWorkingWorkersByPharmacyId(pharmacyId, dto);
 
         List<PharmacyWorkerDTO> retVal = new ArrayList<>();
-        for(PharmacyWorker pw : workers) {
+        for (PharmacyWorker pw : workers) {
             retVal.add(convertToDto(pw));
         }
 
@@ -135,7 +123,7 @@ public class PharmacyWorkerController {
     @PreAuthorize("hasAuthority('PHARMACIST')")
     public ResponseEntity<WorktimeDTO> getWorkTimeForPharmacist(@RequestParam("workerID") Long workerID) {
         WorktimeDTO wt = pharmacyWorkerService.getWorktime(workerID);
-        if (wt == null){
+        if (wt == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(wt, HttpStatus.OK);
@@ -146,7 +134,7 @@ public class PharmacyWorkerController {
     public ResponseEntity<WorktimeDTO> getWorkTimeForDermatologist(@RequestParam("workerID") Long workerID,
                                                                    @RequestParam("pharmacyID") Long pharmID) {
         WorktimeDTO wt = pharmacyWorkerService.getWorktime(workerID, pharmID);
-        if (wt == null){
+        if (wt == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(wt, HttpStatus.OK);
