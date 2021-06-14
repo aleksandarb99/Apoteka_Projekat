@@ -1,6 +1,5 @@
 package com.team11.PharmacyProject.offer;
 
-import com.team11.PharmacyProject.appointment.Appointment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class OfferServiceImpl implements OfferService {
     public double calculateExpenses(long start, long end, long pharmacyId) {
         double sum = 0;
         List<Offer> list = offerRepository.getOffersBeetwenTwoTimestamps(start, end, pharmacyId);
-        for (Offer a:list) {
+        for (Offer a : list) {
             sum += a.getPrice();
         }
         return sum;

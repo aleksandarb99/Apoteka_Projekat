@@ -13,104 +13,105 @@ import java.util.List;
 @Entity
 public class Patient extends MyUser {
 
-   @Column(name = "points", nullable = false)
-   private int points;
+    @Column(name = "points", nullable = false)
+    private int points;
 
-   @Column(name = "penalties", nullable = false)
-   private int penalties;
+    @Column(name = "penalties", nullable = false)
+    private int penalties;
 
-   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-   private List<MedicineReservation> medicineReservation;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private List<MedicineReservation> medicineReservation;
 
-   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   private List<Medicine> allergies;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Medicine> allergies;
 
-   @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   private List<Appointment> appointments;
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Appointment> appointments;
 
-   public Patient() {
-   }
+    public Patient() {
+    }
 
-   public Patient(Long id, String password, String firstName, String lastName, String email, String telephone,
-                  Role userType, Address address, int points, int penalties,
-                  List<MedicineReservation> medicineReservation, List<Medicine> allergies, boolean isPasswordChanged,
-                  List<Appointment> appointments) {
-      super(id, password, firstName, lastName, email, telephone, userType, address, isPasswordChanged);
-      this.points = points;
-      this.penalties = penalties;
-      this.medicineReservation = medicineReservation;
-      this.allergies = allergies;
-      this.appointments = appointments;
-   }
+    public Patient(Long id, String password, String firstName, String lastName, String email, String telephone,
+                   Role userType, Address address, int points, int penalties,
+                   List<MedicineReservation> medicineReservation, List<Medicine> allergies, boolean isPasswordChanged,
+                   List<Appointment> appointments) {
+        super(id, password, firstName, lastName, email, telephone, userType, address, isPasswordChanged);
+        this.points = points;
+        this.penalties = penalties;
+        this.medicineReservation = medicineReservation;
+        this.allergies = allergies;
+        this.appointments = appointments;
+    }
 
-   public int getPoints() {
-      return points;
-   }
+    public int getPoints() {
+        return points;
+    }
 
-   public void setPoints(int points) {
-      this.points = points;
-   }
+    public void setPoints(int points) {
+        this.points = points;
+    }
 
-   public int getPenalties() {
-      return penalties;
-   }
+    public int getPenalties() {
+        return penalties;
+    }
 
-   public void setPenalties(int penalties) {
-      this.penalties = penalties;
-   }
+    public void setPenalties(int penalties) {
+        this.penalties = penalties;
+    }
 
-   public List<MedicineReservation> getMedicineReservation() {
-      return medicineReservation;
-   }
+    public List<MedicineReservation> getMedicineReservation() {
+        return medicineReservation;
+    }
 
-   public void setMedicineReservation(List<MedicineReservation> medicineReservation) {
-      this.medicineReservation = medicineReservation;
-   }
+    public void setMedicineReservation(List<MedicineReservation> medicineReservation) {
+        this.medicineReservation = medicineReservation;
+    }
 
-   public List<Medicine> getAllergies() {
-      return allergies;
-   }
+    public List<Medicine> getAllergies() {
+        return allergies;
+    }
 
-   public void setAllergies(List<Medicine> allergies) {
-      this.allergies = allergies;
-   }
+    public void setAllergies(List<Medicine> allergies) {
+        this.allergies = allergies;
+    }
 
-   public List<Appointment> getAppointments() {
-      return appointments;
-   }
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
 
-   public void setAppointments(List<Appointment> appointments) {
-      this.appointments = appointments;
-   }
-   public boolean removeAllergy(long id) {
-      return allergies.removeIf(allergy -> allergy.getId() == id);
-   }
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
 
-   public boolean addAllergy(Medicine allergy) {
-      for (Medicine allergyFromList : allergies) {
-         if (allergyFromList.getId().equals(allergy.getId())) return false;
-      }
-      allergies.add(allergy);
-      return true;
-   }
+    public boolean removeAllergy(long id) {
+        return allergies.removeIf(allergy -> allergy.getId() == id);
+    }
 
-   public boolean addReservation(MedicineReservation reservation) {
-      for (MedicineReservation reservationFromList : medicineReservation) {
-         if (reservationFromList.getId().equals(reservation.getId())) return false;
-      }
-      medicineReservation.add(reservation);
-      return true;
-   }
+    public boolean addAllergy(Medicine allergy) {
+        for (Medicine allergyFromList : allergies) {
+            if (allergyFromList.getId().equals(allergy.getId())) return false;
+        }
+        allergies.add(allergy);
+        return true;
+    }
 
-   public boolean addAppointment(Appointment appointment) {
-      for (Appointment a : appointments) {
-         if (a.getId().equals(appointment.getId())) return false;
-      }
-      appointments.add(appointment);
-      return true;
-   }
+    public boolean addReservation(MedicineReservation reservation) {
+        for (MedicineReservation reservationFromList : medicineReservation) {
+            if (reservationFromList.getId().equals(reservation.getId())) return false;
+        }
+        medicineReservation.add(reservation);
+        return true;
+    }
+
+    public boolean addAppointment(Appointment appointment) {
+        for (Appointment a : appointments) {
+            if (a.getId().equals(appointment.getId())) return false;
+        }
+        appointments.add(appointment);
+        return true;
+    }
 
     public boolean removeAppointment(Long id) {
-       return appointments.removeIf(a -> a.getId().equals(id));
+        return appointments.removeIf(a -> a.getId().equals(id));
     }
 }

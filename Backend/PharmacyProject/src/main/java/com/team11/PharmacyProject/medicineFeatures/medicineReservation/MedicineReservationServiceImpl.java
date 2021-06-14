@@ -234,9 +234,14 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
     public MedicineReservationNotifyPatientDTO insertMedicineReservation(MedicineReservationInsertDTO dto) {
 
         Optional<Patient> p = patientRepository.findById(dto.getUserId());
+        Patient patient2 = null;
         if(p.isPresent()) {
-            if(p.get().getPenalties() >= 3) throw new RuntimeException("This functionality is not available, you've got 3 penalties!");
+            patient2 = p.get();
+            if(patient2.getPenalties() >= 3) throw new RuntimeException("This functionality is not available, you've got 3 penalties!");
+        } else {
+            throw new RuntimeException("Patient is not recognised!");
         }
+
 
         Pharmacy pharmacy = pharmacyRepository.findPharmacyByPharmacyAndMedicineId(dto.getPharmacyId(), dto.getMedicineId());
         if (pharmacy == null) throw new RuntimeException("Selected pharmacy doesn't have required medicine!");
@@ -264,7 +269,7 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         reservation.setMedicineItem(item);
         reservation.setPrice(dto.getPrice());
 
-        RankingCategory c = categoryService.getCategoryByPoints(p.get().getPoints());   // Ako korisnik pripada nekoj kategoriji, lupi popust
+        RankingCategory c = categoryService.getCategoryByPoints(patient2.getPoints());   // Ako korisnik pripada nekoj kategoriji, lupi popust
         if (c != null) {
             reservation.setPriceWithDiscout(c.getDiscount());
         }
@@ -300,6 +305,8 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
         reservation.setState(ReservationState.CANCELLED);
 
         Optional<MedicineItem> item = itemRepository.findById(reservation.getMedicineItem().getId());
+        if(item.isEmpty())
+            throw new RuntimeException("Medicine item is not recognised!");
         item.get().setAmountPlusOne();
         itemRepository.save(item.get());
         reservationRepository.save(reservation);

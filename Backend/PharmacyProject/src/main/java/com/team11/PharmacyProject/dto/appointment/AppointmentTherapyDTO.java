@@ -7,10 +7,10 @@ public class AppointmentTherapyDTO {
     private String medicineName;
     private int therapyLength;
 
-    public AppointmentTherapyDTO(){
+    public AppointmentTherapyDTO() {
     }
 
-    public AppointmentTherapyDTO(TherapyPrescription therapyPrescription){
+    public AppointmentTherapyDTO(TherapyPrescription therapyPrescription) {
         therapyLength = therapyPrescription.getDuration();
         code = therapyPrescription.getMedicineReservation().getMedicineItem().getMedicine().getCode();
         medicineName = therapyPrescription.getMedicineReservation().getMedicineItem().getMedicine().getName();

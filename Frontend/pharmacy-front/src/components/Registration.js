@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import "../styling/home_page.css";
 import FirstNameFormGroup from "./utilComponents/formGroups/FirstNameFormGroup";
@@ -10,19 +10,46 @@ import CityFormGroup from "./utilComponents/formGroups/CityFormGroup";
 import CountryFormGroup from "./utilComponents/formGroups/CountryFormGroup";
 import StreetFormGroup from "./utilComponents/formGroups/StreetFormGroup";
 
-import axios from "../app/api";
-import { useSelector } from "react-redux";
+import api from "../app/api";
 import { Redirect } from "react-router";
-import ErrorModal from "./utilComponents/modals/ErrorModal";
-import SuccessModal from "./utilComponents/modals/SuccessModal";
+import { useToasts } from 'react-toast-notifications'
+import { getErrorMessage } from "../app/errorHandler";
+import Validator from "../app/validator";
 
 function Registration() {
-  const [form, setForm] = useState({});
-  const [validated, setValidated] = useState(false);
-  const user = useSelector((state) => state.user);
+  const [form, setForm] = useState(
+    {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      repeatPassword: '',
+      telephone: '',
+      city: '',
+      street: '',
+      country: ''
+    }
+  );
 
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const resetForm = () => {
+    setForm(
+      {
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        repeatPassword: '',
+        telephone: '',
+        city: '',
+        street: '',
+        country: ''
+      }
+    )
+    formRef.current.reset();
+  }
+
+  const { addToast } = useToasts();
+  const formRef = useRef(null);
 
   const setField = (field, value) => {
     setForm({
@@ -31,29 +58,46 @@ function Registration() {
     });
   };
 
+  const validateForm = () => {
+    return Validator['firstName'](form['firstName'])
+      && Validator['lastName'](form['lastName'])
+      && Validator['email'](form['email'])
+      && Validator['password'](form['password'])
+      && Validator['password'](form['repeatPassword'])
+      && Validator['telephone'](form['telephone'])
+      && Validator['city'](form['city'])
+      && Validator['street'](form['street'])
+      && Validator['country'](form['country'])
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const f = event.currentTarget;
-
-    if (f.checkValidity() === true) {
-      setValidated(true);
+    if (validateForm()) {
+      if (form['password'] !== form['repeatPassword']) {
+        addToast("Passwords do not match", { appearance: 'warning' })
+        return;
+      }
       sendPostRequest();
     }
   };
 
   const sendPostRequest = () => {
     const newForm = convertForm(form);
-    console.log(newForm);
-    axios
+    api
       .post("/api/users/", newForm)
       .then(() => {
-        setForm({});
-        setShowSuccessModal(true);
+        resetForm();
+        addToast("Successfully registred. Please confirm your email.", { appearance: 'success' });
+        return <Redirect
+          to={{
+            pathname: "/login",
+          }}
+        />
       })
-      .catch(() => {
-        setShowErrorModal(true);
+      .catch((err) => {
+        addToast(getErrorMessage(err), { appearance: 'error' })
       });
   };
 
@@ -77,19 +121,16 @@ function Registration() {
     return newForm;
   };
 
-  if (user.user) {
-    return <Redirect to="/" />;
-  }
-
   return (
     <main className="home__page my__login__container">
       <Form
+        ref={formRef}
         noValidate
-        validated={validated}
         onSubmit={handleSubmit}
         className="my__login__form"
       >
         <FirstNameFormGroup
+          value={form['firstName']}
           onChange={(event) => setField("firstName", event.target.value)}
         />
         <LastNameFormGroup
@@ -100,6 +141,9 @@ function Registration() {
         ></EmailFormGroup>
         <PasswordFormGroup
           onChange={(event) => setField("password", event.target.value)}
+        ></PasswordFormGroup>
+        <PasswordFormGroup
+          name="Repeat password" onChange={(event) => setField("repeatPassword", event.target.value)}
         ></PasswordFormGroup>
         <PhoneNumberFormGroup
           onChange={(event) => setField("telephone", event.target.value)}
@@ -117,19 +161,8 @@ function Registration() {
           Submit
         </Button>
       </Form>
-      <ErrorModal
-        show={showErrorModal}
-        onHide={() => setShowErrorModal(false)}
-        message="Something went wrong. User registration failed."
-      ></ErrorModal>
-      <SuccessModal
-        show={showSuccessModal}
-        onHide={() => setShowSuccessModal(false)}
-        message="Successfully registred. Please confirm your email."
-      >
-        {" "}
-      </SuccessModal>
-    </main>
+      {" "}
+    </main >
   );
 }
 

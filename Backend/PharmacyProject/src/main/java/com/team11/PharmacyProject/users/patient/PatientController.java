@@ -1,32 +1,24 @@
 package com.team11.PharmacyProject.users.patient;
 
 
-import com.team11.PharmacyProject.dto.pharmacy.PharmacyInfoDTO;
+import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 import com.team11.PharmacyProject.dto.patient.PatientDTO;
 import com.team11.PharmacyProject.dto.patient.PatientWorkerSearchDTO;
-
-import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
+import com.team11.PharmacyProject.dto.pharmacy.PharmacyInfoDTO;
 import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
-
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -100,14 +92,14 @@ public class PatientController {
     {
         //TODO promeniti workerID kad se doda login i jwt
         //TODO probati kasnije sa specifikacijama
-        if (firstName == null){
+        if (firstName == null) {
             firstName = "";
         }
-        if (lastName == null){
+        if (lastName == null) {
             lastName = "";
         }
-        if (lowerTime != null && upperTime != null){
-            if (lowerTime >= upperTime){
+        if (lowerTime != null && upperTime != null) {
+            if (lowerTime >= upperTime) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
@@ -116,22 +108,22 @@ public class PatientController {
         List<PatientWorkerSearchDTO> dtos = new ArrayList<>();
         Sort sorter = pageable.getSort();
         Sort checked = Sort.unsorted();
-        for (Sort.Order srt : sorter){
-            if (srt.getProperty().equals("firstName")){
+        for (Sort.Order srt : sorter) {
+            if (srt.getProperty().equals("firstName")) {
                 checked = checked.and(srt.getDirection().toString().equalsIgnoreCase("asc")
                         ? Sort.by("firstName").ascending() : Sort.by("firstName").descending());
-            }else if (srt.getProperty().equals("lastName")){
+            } else if (srt.getProperty().equals("lastName")) {
                 checked = checked.and(srt.getDirection().toString().equalsIgnoreCase("asc")
                         ? Sort.by("lastName").ascending() : Sort.by("lastName").descending());
-            }else if (srt.getProperty().equals("startTime")){
+            } else if (srt.getProperty().equals("startTime")) {
                 checked = checked.and(srt.getDirection().toString().equalsIgnoreCase("asc")
                         ? Sort.by("a.startTime").ascending() : Sort.by("a.startTime").descending());
-            }else{
+            } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
         patients = patientService.getExaminedPatients(workerID, firstName, lastName, lowerTime, upperTime, checked);
-        for (Patient pat: patients) {
+        for (Patient pat : patients) {
             dtos.add(new PatientWorkerSearchDTO(pat));
         }
 
@@ -141,26 +133,25 @@ public class PatientController {
 
     @GetMapping(value = "/getAllExaminedPatients", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
-    public ResponseEntity<List<PatientWorkerSearchDTO>> getAllExaminedPatients( @RequestParam(value = "workerID") Long workerID)
-    {
+    public ResponseEntity<List<PatientWorkerSearchDTO>> getAllExaminedPatients(@RequestParam(value = "workerID") Long workerID) {
         //TODO promeniti workerID kad se doda login i jwt
         List<Patient> patients = patientService.getAllExaminedPatients(workerID);
         List<PatientWorkerSearchDTO> dtos = new ArrayList<>();
-        for (Patient pat: patients) {
+        for (Patient pat : patients) {
             dtos.add(new PatientWorkerSearchDTO(pat));
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
-    @GetMapping(value="/allergies/all/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/allergies/all/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('PATIENT')")
-    public ResponseEntity<List<MedicineDTO>> getAllAllergiesOfPatient(@PathVariable("id") Long id){
+    public ResponseEntity<List<MedicineDTO>> getAllAllergiesOfPatient(@PathVariable("id") Long id) {
 
         Patient patient = patientService.findOne(id);
-        if(patient == null) return null;
+        if (patient == null) return null;
 
         List<MedicineDTO> allergiesDTOs = new ArrayList<>();
-        for (Medicine m: patient.getAllergies()) {
+        for (Medicine m : patient.getAllergies()) {
             allergiesDTOs.add(modelMapper.map(m, MedicineDTO.class));
         }
 
@@ -168,7 +159,7 @@ public class PatientController {
 
     }
 
-    @GetMapping(value="/search", produces=MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<PatientWorkerSearchDTO>> searchPatientsByFirstAndLastName
             (@RequestParam(value = "firstName", required = false) String firstName,
@@ -197,7 +188,7 @@ public class PatientController {
         try {
             patientService.deleteAllergy(id, allergy_id);
             return new ResponseEntity<>("Allergy deleted successfully", HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -209,7 +200,7 @@ public class PatientController {
         try {
             patientService.addAllergy(id, allergy_id);
             return new ResponseEntity<>("Allergy added successfully", HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

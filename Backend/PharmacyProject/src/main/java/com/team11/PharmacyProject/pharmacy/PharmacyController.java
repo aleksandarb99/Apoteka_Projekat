@@ -7,12 +7,9 @@ import com.team11.PharmacyProject.dto.medicine.MedicineTherapyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.*;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
-import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
-import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +74,7 @@ public class PharmacyController {
         return new ResponseEntity<>(pharmacyCrudDTOs, HttpStatus.OK);
     }
 
-    @PostMapping(value="/{pharmacyId}/subscribe/{patientId}")
+    @PostMapping(value = "/{pharmacyId}/subscribe/{patientId}")
     @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> subscribe(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
         boolean b = pharmacyService.subscribe(pharmacyId, patientId);
@@ -89,7 +85,7 @@ public class PharmacyController {
         }
     }
 
-    @PostMapping(value="/{pharmacyId}/unsubscribe/{patientId}")
+    @PostMapping(value = "/{pharmacyId}/unsubscribe/{patientId}")
     @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> unsubscribe(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
         boolean b = pharmacyService.unsubscribe(pharmacyId, patientId);
@@ -100,7 +96,7 @@ public class PharmacyController {
         }
     }
 
-    @GetMapping(value="/{pharmacyId}/subscribe/{patientId}")
+    @GetMapping(value = "/{pharmacyId}/subscribe/{patientId}")
     public ResponseEntity<Boolean> isSubscribed(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
         boolean isSubscribed = pharmacyService.isSubscribed(pharmacyId, patientId);
         return new ResponseEntity<>(isSubscribed, HttpStatus.OK);
@@ -124,12 +120,12 @@ public class PharmacyController {
     @PostMapping(value = "/e-recipe/{pharmacyId}")
     @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> checkIfRecipeIsInPharmacy(@RequestBody @Valid ERecipeDTO eRecipeDTO, @PathVariable("pharmacyId") Long pharmacyId) {
-       try {
-           pharmacyService.checkIfRecipeIsInPharmacy(eRecipeDTO, pharmacyId);
-           return new ResponseEntity<>("E-Recipe is in pharmacy", HttpStatus.OK);
-       } catch (Exception e){
-           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-       }
+        try {
+            pharmacyService.checkIfRecipeIsInPharmacy(eRecipeDTO, pharmacyId);
+            return new ResponseEntity<>("E-Recipe is in pharmacy", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/all/free-pharmacists/", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -145,7 +141,7 @@ public class PharmacyController {
             }
 
             return new ResponseEntity<>(retVal, HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -163,10 +159,7 @@ public class PharmacyController {
             PharmacyCertainMedicineDTO pcm = new PharmacyCertainMedicineDTO(p);
             List<Advertisement> sales = advertismentService.findAllSalesWithDate(pcm.getId(), id, System.currentTimeMillis());
             if (sales != null) {
-                for (Advertisement a : sales) {
-                    pcm.setPriceWithDiscout(a.getDiscountPercent());        // U slucaju da ima vise akcija u datom trenutku, odradi popust za prvu i prekini
-                    break;
-                }
+                pcm.setPriceWithDiscout(sales.get(0).getDiscountPercent());
             }
             dtos.add(pcm);
         }
@@ -193,13 +186,13 @@ public class PharmacyController {
     }
 
     @PutMapping(value = "/{id}")
-    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('PHARMACY_ADMIN', 'ADMIN')")
     public ResponseEntity<String> updatePharmacy(@PathVariable("id") long id, @Valid @RequestBody PharmacyDTO pharmacyDTO) {
         Pharmacy pharmacy = convertToEntity(pharmacyDTO);
         try {
             pharmacyService.update(id, pharmacy);
             return new ResponseEntity<>("Pharmacy updated successfully", HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
@@ -254,13 +247,13 @@ public class PharmacyController {
     @GetMapping(value = "/getAlternativeFromPharmacy", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<List<MedicineTherapyDTO>> getPharmacyAlternativeMedicine
-            (@RequestParam(value="worker_id", required = true) Long workerID,
+            (@RequestParam(value = "worker_id", required = true) Long workerID,
              @RequestParam(value = "pharm_id", required = true) Long pharmID,
              @RequestParam(value = "patient_id", required = true) Long patientID,
              @RequestParam(value = "medicine_item_id", required = true) Long medicineItemID,
              @RequestParam(value = "medicine_id", required = true) Long medicineID) {
         Pharmacy pharm = pharmacyService.getPharmacyWithAlternativeForMedicineNoAllergies(pharmID, patientID, medicineID);
-        if (pharm == null){
+        if (pharm == null) {
             return new ResponseEntity<>(new ArrayList<MedicineTherapyDTO>(), HttpStatus.OK);
         }
         List<MedicineTherapyDTO> medDto = new ArrayList<>();
@@ -270,7 +263,7 @@ public class PharmacyController {
             }
 
             boolean creatingInquiry = pharmacyService.createInquiry(workerID, medicineItemID, pharm);
-            if (!creatingInquiry){
+            if (!creatingInquiry) {
                 System.out.println("Inquiry not created!");
             }
             return new ResponseEntity<>(medDto, HttpStatus.OK);

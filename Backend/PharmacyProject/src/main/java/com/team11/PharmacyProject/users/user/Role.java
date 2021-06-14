@@ -6,17 +6,17 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 
 @Entity
-@Table(name="ROLE")
+@Table(name = "ROLE")
 public class Role implements GrantedAuthority {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name="name")
+    @Column(name = "name")
     String name;
 
     @JsonIgnore
@@ -25,12 +25,12 @@ public class Role implements GrantedAuthority {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @JsonIgnore

@@ -7,7 +7,9 @@ import java.util.List;
 public interface UserService {
 
     MyUser findOne(Long id);
+
     MyUser updateUser(UserUpdateDTO user);
+
     void insertUser(MyUser user) throws Exception;
 
     List<MyUser> getUsersByUserType(String type);

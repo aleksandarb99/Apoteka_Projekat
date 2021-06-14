@@ -878,11 +878,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         //OVO -2 JE OFFSET zbog zonske razlike, ovaj truncutated to je malo glup
         // da li se poklapa radno vreme
-
-
         long workerStartTimeOnDate = getHourOfDate(apptStart, starHour);
 
         long workerEndTimeOnDate = getHourOfDate(apptEnd, endHour);
+
 
         if (!(apptStart >= workerStartTimeOnDate && apptEnd <= workerEndTimeOnDate)){
             throw new Exception("Invalid appointment time (worker not working in that time period)!");

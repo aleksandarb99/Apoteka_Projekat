@@ -2,7 +2,6 @@ package com.team11.PharmacyProject.dto.advertisment;
 
 import com.team11.PharmacyProject.dto.medicine.MedicineItemDTO;
 import com.team11.PharmacyProject.enums.AdvertisementType;
-import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 
 public class AdvertismentDTO {
 
@@ -30,15 +29,15 @@ public class AdvertismentDTO {
         this.discountPercent = discountPercent;
     }
 
+    public AdvertismentDTO() {
+    }
+
     public MedicineItemDTO getMedicineItem() {
         return medicineItem;
     }
 
     public void setMedicineItem(MedicineItemDTO medicineItem) {
         this.medicineItem = medicineItem;
-    }
-
-    public AdvertismentDTO() {
     }
 
     public Long getId() {

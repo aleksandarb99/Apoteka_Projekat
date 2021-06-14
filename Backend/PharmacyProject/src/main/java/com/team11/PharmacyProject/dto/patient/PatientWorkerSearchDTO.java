@@ -1,13 +1,9 @@
 package com.team11.PharmacyProject.dto.patient;
 
-import com.team11.PharmacyProject.address.Address;
 import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.users.patient.Patient;
 
 import javax.validation.constraints.NotNull;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 
 public class PatientWorkerSearchDTO {
     private Long id;
@@ -18,9 +14,10 @@ public class PatientWorkerSearchDTO {
     private Long appointmentStart;
     private String pharmacy;
 
-    public PatientWorkerSearchDTO(){
+    public PatientWorkerSearchDTO() {
 
     }
+
     public PatientWorkerSearchDTO(@NotNull Patient patient, boolean flag) { //konstruktor za dobavljanje pacijenta
         this.id = patient.getId();
         this.firstName = patient.getFirstName();
@@ -35,10 +32,10 @@ public class PatientWorkerSearchDTO {
         this.lastName = patient.getLastName();
         this.email = patient.getEmail();
         this.telephone = patient.getTelephone();
-        if (patient.getAppointments().isEmpty()){
+        if (patient.getAppointments().isEmpty()) {
             this.appointmentStart = 0L;
             this.pharmacy = "";
-        }else{
+        } else {
             Appointment appt = patient.getAppointments().get(0);
             this.appointmentStart = appt.getStartTime();
             this.pharmacy = appt.getPharmacy() == null ? "" : appt.getPharmacy().getName();

@@ -67,7 +67,6 @@ public class AppointmentController {
             appointmentsDTO = appointmentServiceImpl.getAllAppointmentsByPharmacyId(id, date).stream().map(m -> modelMapper.map(m, AppointmentDTO.class)).collect(Collectors.toList());
             return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
         } catch (Exception e){
-            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -289,8 +288,7 @@ public class AppointmentController {
             appointmentsDTO = appointmentServiceImpl.getAppointmentsOfPatientWorkerOnDate(workerID, patientID, date)
                     .stream().map(m -> modelMapper.map(m, AppointmentTimeRangeDTO.class)).collect(Collectors.toList());
             return new ResponseEntity<>(appointmentsDTO, HttpStatus.OK);
-        } catch (Exception e){
-        e.printStackTrace();
+        } catch (Exception ignored){
         }
         return new ResponseEntity<>(appointmentsDTO, HttpStatus.BAD_REQUEST);
     }

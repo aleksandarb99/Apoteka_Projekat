@@ -20,19 +20,19 @@ public class MyOrderDTO {
     public MyOrderDTO() {
     }
 
+    public MyOrderDTO(Long id, Long deadline, List<OrderItemDTO> orderItem, OrderState orderState) {
+        this.id = id;
+        this.deadline = deadline;
+        this.orderItem = orderItem;
+        this.orderState = orderState;
+    }
+
     public Long getAdminId() {
         return adminId;
     }
 
     public void setAdminId(Long adminId) {
         this.adminId = adminId;
-    }
-
-    public MyOrderDTO(Long id, Long deadline, List<OrderItemDTO> orderItem, OrderState orderState) {
-        this.id = id;
-        this.deadline = deadline;
-        this.orderItem = orderItem;
-        this.orderState = orderState;
     }
 
     public OrderState getOrderState() {

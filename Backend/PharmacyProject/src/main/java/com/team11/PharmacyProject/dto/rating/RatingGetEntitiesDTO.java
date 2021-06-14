@@ -12,7 +12,8 @@ public class RatingGetEntitiesDTO {
     private String medicineCode;    // Samo za lek
     private String address; // Samo za apoteku
 
-    public RatingGetEntitiesDTO() {}
+    public RatingGetEntitiesDTO() {
+    }
 
     public RatingGetEntitiesDTO(PharmacyWorker worker) {
         setId(worker.getId());

@@ -15,11 +15,11 @@ public class AppointmentInfoDTO {
     private String info;
     private List<AppointmentTherapyDTO> therapyDTOList;
 
-    public AppointmentInfoDTO(){
+    public AppointmentInfoDTO() {
 
     }
 
-    public AppointmentInfoDTO(Appointment appointment){
+    public AppointmentInfoDTO(Appointment appointment) {
         patient = appointment.getPatient().getFirstName() + " " + appointment.getPatient().getLastName();
         pharmacy = appointment.getPharmacy().getName();
         price = appointment.getPrice();
