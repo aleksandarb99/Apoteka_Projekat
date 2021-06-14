@@ -4,7 +4,6 @@ import com.team11.PharmacyProject.dto.rating.RatingCreateUpdateDTO;
 import com.team11.PharmacyProject.enums.GradedType;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineRepository;
-import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyRepository;
 import com.team11.PharmacyProject.users.patient.Patient;
@@ -20,7 +19,7 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class RatingServiceImpl implements RatingService{
+public class RatingServiceImpl implements RatingService {
 
     @Autowired
     RatingRepository ratingRepository;
@@ -66,7 +65,7 @@ public class RatingServiceImpl implements RatingService{
     public void addRating(RatingCreateUpdateDTO dto) {
 
         Optional<Rating> rating = ratingRepository.findById(dto.getId());
-        if(rating.isPresent()) throw new RuntimeException("The grade with sent id already exists!");
+        if (rating.isPresent()) throw new RuntimeException("The grade with sent id already exists!");
 
         Optional<Patient> patient = patientRepository.findById(dto.getPatientId());
         if (patient.isEmpty()) throw new RuntimeException("You are not registered in our database!");
@@ -75,7 +74,8 @@ public class RatingServiceImpl implements RatingService{
             Optional<PharmacyWorker> worker = workerRepository.findById(dto.getGradedID());
             if (worker.isEmpty()) throw new RuntimeException("Selected worker does not exist in database!");
             Rating existRating = ratingRepository.findIfRatingExistsDermatologist(dto.getGradedID(), dto.getPatientId());
-            if (existRating != null) throw new RuntimeException("Worker is already graded, you can just update the grade!");
+            if (existRating != null)
+                throw new RuntimeException("Worker is already graded, you can just update the grade!");
             List<Rating> ratings = ratingRepository.findAllRatingsByDermatologistId(worker.get().getId());
             if (ratings == null) {
                 worker.get().setAvgGrade(dto.getGrade());
@@ -92,7 +92,8 @@ public class RatingServiceImpl implements RatingService{
             Optional<PharmacyWorker> worker = workerRepository.findById(dto.getGradedID());
             if (worker.isEmpty()) throw new RuntimeException("Selected worker does not exist in database!");
             Rating existRating = ratingRepository.findIfRatingExistsPharmacist(dto.getGradedID(), dto.getPatientId());
-            if (existRating != null) throw new RuntimeException("Worker is already graded, you can just update the grade!");
+            if (existRating != null)
+                throw new RuntimeException("Worker is already graded, you can just update the grade!");
             List<Rating> ratings = ratingRepository.findAllRatingsByPharmacistId(worker.get().getId());
             if (ratings == null) {
                 worker.get().setAvgGrade(dto.getGrade());
@@ -158,7 +159,7 @@ public class RatingServiceImpl implements RatingService{
     public void editRating(RatingCreateUpdateDTO dto) {
 
         Optional<Rating> rating = ratingRepository.findById(dto.getId());
-        if(rating.isEmpty()) throw new RuntimeException("The grade with sent id does not exist!");
+        if (rating.isEmpty()) throw new RuntimeException("The grade with sent id does not exist!");
 
         Optional<Patient> patient = patientRepository.findById(dto.getPatientId());
         if (patient.isEmpty()) throw new RuntimeException("You are not registered in our database!");

@@ -14,7 +14,8 @@ public class MedicineReservationWorkerDTO {
     private String lastName;
     private String email;
 
-    public MedicineReservationWorkerDTO() {}
+    public MedicineReservationWorkerDTO() {
+    }
 
     public MedicineReservationWorkerDTO(MedicineReservation r) {
         this.pickupDate = r.getPickupDate();

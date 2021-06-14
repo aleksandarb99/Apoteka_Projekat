@@ -1,7 +1,6 @@
 package com.team11.PharmacyProject.dto.appointment;
 
 import com.team11.PharmacyProject.appointment.Appointment;
-import com.team11.PharmacyProject.enums.AppointmentState;
 
 public class AppointmentReportDTO {
     private Long id;
@@ -23,7 +22,7 @@ public class AppointmentReportDTO {
     public AppointmentReportDTO() {
     }
 
-    public AppointmentReportDTO(Appointment appt){
+    public AppointmentReportDTO(Appointment appt) {
         id = appt.getId();
         start = appt.getStartTime();
         end = appt.getEndTime();

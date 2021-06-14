@@ -10,7 +10,8 @@ public class PharmacyWorkerFreePharmacistDTO {
 
     private String name;
 
-    public PharmacyWorkerFreePharmacistDTO() {}
+    public PharmacyWorkerFreePharmacistDTO() {
+    }
 
     public PharmacyWorkerFreePharmacistDTO(PharmacyWorker worker) {
         setId(worker.getId());

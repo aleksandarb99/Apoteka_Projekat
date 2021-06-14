@@ -16,7 +16,8 @@ public class PharmacyCertainMedicineDTO {
 
     private double price;
 
-    public PharmacyCertainMedicineDTO() {}
+    public PharmacyCertainMedicineDTO() {
+    }
 
     public PharmacyCertainMedicineDTO(Pharmacy pharmacy) {
         this.id = pharmacy.getId();
@@ -64,7 +65,7 @@ public class PharmacyCertainMedicineDTO {
             return;
         }
 
-        if(prices.size() > 1) {
+        if (prices.size() > 1) {
             Collections.sort(prices);
             Collections.reverse(prices);
             this.price = prices.get(0).getPrice();

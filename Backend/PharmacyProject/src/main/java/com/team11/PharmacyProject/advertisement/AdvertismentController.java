@@ -30,8 +30,7 @@ public class AdvertismentController {
         try {
             advertisementDTOS = advertismentService.findAll(id).stream().map(m -> modelMapper.map(m, AdvertismentDTO.class)).collect(Collectors.toList());
             return new ResponseEntity<>(advertisementDTOS, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         return new ResponseEntity<>("Failed to load advertisment!", HttpStatus.BAD_REQUEST);
     }
