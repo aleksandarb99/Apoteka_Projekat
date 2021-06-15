@@ -1,6 +1,10 @@
 package com.team11.PharmacyProject.dto.medicine;
 
 import com.team11.PharmacyProject.enums.RecipeRegime;
+import com.team11.PharmacyProject.medicineFeatures.medicineForm.MedicineForm;
+import com.team11.PharmacyProject.medicineFeatures.medicineType.MedicineType;
+
+import java.util.List;
 
 public class MedicineCrudDTO {
     private Long id;
@@ -12,6 +16,9 @@ public class MedicineCrudDTO {
     private double dailyIntake;
     private int points;
     private String additionalNotes;
+    private MedicineForm medicineForm;
+    private MedicineType medicineType;
+    private List<MedicineDTO> alternativeMedicine;
 
     public Long getId() {
         return id;
@@ -83,5 +90,29 @@ public class MedicineCrudDTO {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public MedicineForm getMedicineForm() {
+        return medicineForm;
+    }
+
+    public void setMedicineForm(MedicineForm medicineForm) {
+        this.medicineForm = medicineForm;
+    }
+
+    public MedicineType getMedicineType() {
+        return medicineType;
+    }
+
+    public void setMedicineType(MedicineType medicineType) {
+        this.medicineType = medicineType;
+    }
+
+    public List<MedicineDTO> getAlternativeMedicine() {
+        return alternativeMedicine;
+    }
+
+    public void setAlternativeMedicine(List<MedicineDTO> alternativeMedicine) {
+        this.alternativeMedicine = alternativeMedicine;
     }
 }

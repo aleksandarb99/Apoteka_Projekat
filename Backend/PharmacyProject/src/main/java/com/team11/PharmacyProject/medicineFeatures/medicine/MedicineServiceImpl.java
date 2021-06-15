@@ -56,15 +56,12 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Override
     public List<Medicine> getAllMedicines() {
-        List<Medicine> medicines = new ArrayList<>();
-        medicineRepository.findAll().forEach(medicines::add);
-        return medicines;
+        return new ArrayList<>(medicineRepository.fetchFormTypeManufacturerAlternative());
     }
 
     @Override
     public List<Medicine> getNotExistingMedicineFromPharmacy(long id) {
-        List<Medicine> allMedicine = new ArrayList<>();
-        medicineRepository.findAll().forEach(allMedicine::add);
+        List<Medicine> allMedicine = new ArrayList<>(medicineRepository.findAll());
 
         List<Medicine> medicineList = new ArrayList<>();
 
