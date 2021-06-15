@@ -56,6 +56,7 @@ public class SupplierController {
     }
 
     @GetMapping(value = "/offers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('SUPPLIER')")
     public ResponseEntity<List<OfferListDTO>> getOffers(@PathVariable("id") long supplierId, @RequestParam(required = false) OfferState type) {
         List<OfferListDTO> supplierOffers = supplierService.getOffersForId(supplierId);
         if (type != null) {
