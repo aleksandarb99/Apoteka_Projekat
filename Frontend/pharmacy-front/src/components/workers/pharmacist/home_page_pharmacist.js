@@ -54,7 +54,7 @@ function PharmHomePage() {
         setShowModalPWChange(false);
         setLoadingPWChanged(false);
       }
-    });
+    }).catch(() => { });;
     fetchAppointments();
   }, []);
 

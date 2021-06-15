@@ -4,7 +4,7 @@ import { Link, Redirect } from "react-router-dom";
 import { House } from "react-bootstrap-icons";
 import { logout } from "../../../app/slices/userSlice";
 import { useDispatch } from "react-redux";
-import axios from "../../../app/api";
+import api from "../../../app/api";
 import { getIdFromToken } from "../../../app/jwtTokenUtils";
 
 const PatientHeader = () => {
@@ -12,10 +12,10 @@ const PatientHeader = () => {
 
   useEffect(() => {
     async function fetchPenalties() {
-      const request = await axios.get(
+      const request = await api.get(
         "/api/patients/" + getIdFromToken() + "/penalties"
-      );
-      setPenalties(request.data);
+      ).catch(() => { });;
+      setPenalties(!!request ? request.data : null);
 
       return request;
     }

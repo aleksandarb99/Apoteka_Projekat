@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { Button, Row, Col, Container, Modal, Form } from "react-bootstrap";
 import { getErrorMessage } from "../../app/errorHandler";
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import { useToasts } from "react-toast-notifications";
 
@@ -16,7 +16,7 @@ function AddAdvertismentModal(props) {
   const [selectedRowId, setSelectedRowId] = useState(0);
 
   async function fetchPriceList() {
-    const request = await axios
+    const request = await api
       .get(`/api/pricelist/${props.priceListId}`)
       .then((res) => {
         setMedicineItems(res.data.medicineItems);

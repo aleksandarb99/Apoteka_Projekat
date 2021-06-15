@@ -14,8 +14,8 @@ const NewOrders = () => {
     async function fetchOrders() {
       const response = await api.get(
         `/api/orders/without-offers/${getIdFromToken()}`
-      );
-      setOrders(response.data);
+      ).catch(() => { });
+      setOrders(!!response ? response.data : []);
     }
     fetchOrders();
   }, [reload]);

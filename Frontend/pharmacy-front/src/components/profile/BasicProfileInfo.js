@@ -21,8 +21,8 @@ const BasicProfileInfo = (props) => {
 
   useEffect(() => {
     async function fetchUser() {
-      const request = await api.get("/api/users/" + getIdFromToken());
-      setUser(request.data);
+      const request = await api.get("/api/users/" + getIdFromToken()).catch(() => { });
+      setUser(!!request ? request.data : {});
       setShowUser({
         email: request.data?.email,
         firstName: request.data?.firstName,

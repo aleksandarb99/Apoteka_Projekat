@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { Button, Table, Modal, Form, Row, Col } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import { useToasts } from "react-toast-notifications";
 import { getErrorMessage } from "../../app/errorHandler";
@@ -39,7 +39,7 @@ function AddingWorkerModal(props) {
       enable6,
       enable7,
     };
-    const request = await axios
+    const request = await api
       .post(
         `/api/workers/notexistingworkplacebypharmacyid/${props.idOfPharmacy}`,
         dto

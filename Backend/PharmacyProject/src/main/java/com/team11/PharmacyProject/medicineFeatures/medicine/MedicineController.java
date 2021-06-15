@@ -89,6 +89,7 @@ public class MedicineController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> deleteMedicine(@PathVariable("id") long id) {
         if (medicineService.delete(id)) {
             return new ResponseEntity<>("Medicine deleted successfully", HttpStatus.OK);
@@ -98,6 +99,7 @@ public class MedicineController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> updateMedicine(@PathVariable("id") long id, @RequestBody MedicineCrudEditDTO medicineCrudDto) {
         Medicine medicine = mapper.map(medicineCrudDto, Medicine.class);
         try {

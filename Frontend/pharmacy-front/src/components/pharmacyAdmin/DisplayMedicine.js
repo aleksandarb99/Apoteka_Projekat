@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Tab, Row, Col, Button, Table, Modal, Alert } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import "../../styling/pharmacy.css";
 
@@ -28,7 +28,7 @@ function DisplayMedicine({
   const [removeModalShow, setRemoveModalShow] = useState(false);
 
   async function fetchPriceList() {
-    const request = await axios
+    const request = await api
       .get(`/api/pricelist/${priceListId}`)
       .then((res) => {
         setMedicineItems(res.data.medicineItems);
@@ -54,7 +54,7 @@ function DisplayMedicine({
   };
 
   async function addMedicine(selectedMedicineId, price) {
-    const request = await axios
+    const request = await api
       .post(
         `/api/pricelist/${priceListId}/addmedicine/${selectedMedicineId}/${price}`
       )
@@ -74,7 +74,7 @@ function DisplayMedicine({
   }
 
   async function removeMedicine() {
-    const request = await axios
+    const request = await api
       .delete(`/api/pricelist/${priceListId}/removemedicine/${selectedRowId}`)
       .then((res) => {
         fetchPriceList();
@@ -92,7 +92,7 @@ function DisplayMedicine({
   }
 
   async function changePrice(price) {
-    const request = await axios
+    const request = await api
       .post(
         `/api/pricelist/${priceListId}/changeprice/${selectedRowId}/${price}`
       )

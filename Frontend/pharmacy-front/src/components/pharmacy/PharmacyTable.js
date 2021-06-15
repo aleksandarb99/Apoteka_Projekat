@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Row, Table } from 'react-bootstrap'
 import DeleteModal from '../utilComponents/modals/DeleteModal';
@@ -6,6 +5,7 @@ import AddPharmacyModal from './AddPharmacyModal';
 import EditPharmacyModal from './EditPharmacyModal';
 import { useToasts } from 'react-toast-notifications';
 import { getErrorMessage } from '../../app/errorHandler';
+import api from '../../app/api';
 
 function PharmacyTable(props) {
   const [reload, setReload] = useState(false);
@@ -19,8 +19,8 @@ function PharmacyTable(props) {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("/api/pharmacy/crud").catch(() => { });
-      setPharmacies(response.data);
+      const response = await api.get("/api/pharmacy/crud").catch(() => { });
+      setPharmacies(!!response ? response.data : []);
     }
     fetchData();
   }, [reload]);
@@ -30,7 +30,7 @@ function PharmacyTable(props) {
   };
 
   const deletePharmacy = () => {
-    axios
+    api
       .delete("/api/pharmacy/" + selected.id)
       .then(() => {
         reloadTable()

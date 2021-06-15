@@ -33,6 +33,7 @@ public class SupplierController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/stock/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPPLIER')")
     public ResponseEntity<List<SupplierStockItemDTO>> getStock(@PathVariable("id") long supplierId) {
         List<SupplierItem> supplierStock = supplierService.getStockForId(supplierId);
         List<SupplierStockItemDTO> supplierStockItemDTOS = supplierStock.stream()
@@ -42,6 +43,7 @@ public class SupplierController {
     }
 
     @PostMapping(value = "/stock/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPPLIER')")
     public ResponseEntity<String> addItemToStock(@PathVariable("id") long id, @RequestBody SupplierStockItemDTO stockItemDTO) {
         try {
             supplierService.insertStockItem(id, stockItemDTO);
@@ -97,6 +99,7 @@ public class SupplierController {
     }
 
     @PostMapping(value = "/offers/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPPLIER')")
     public ResponseEntity<String> addOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
         // Uvek ce biti pending kada treba da se doda
         offerDTO.setOfferState(OfferState.PENDING);
@@ -113,6 +116,7 @@ public class SupplierController {
     }
 
     @PutMapping(value = "/offers/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPPLIER')")
     public ResponseEntity<String> updateOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
         try {
             supplierService.updateOffer(id, offerDTO);

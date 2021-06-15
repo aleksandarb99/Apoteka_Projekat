@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { Fragment, useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Modal, Row } from 'react-bootstrap'
 import MedicineNameFormGroup from "../utilComponents/medicineFormGroups/MedicineNameFromGroup"
@@ -118,7 +117,7 @@ function AddMedicineModal(props) {
             addToast("Please fill required fields", { appearance: 'error' })
             return
         }
-        axios
+        api
             .post('http://localhost:8080/api/medicine/', data)
             .then(() => {
                 setForm({})

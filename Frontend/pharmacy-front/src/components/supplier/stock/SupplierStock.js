@@ -14,8 +14,8 @@ const SupplierStock = () => {
     async function fetchStock() {
       const response = await api.get(
         `/api/suppliers/stock/${getIdFromToken()}`
-      );
-      setStock(response.data);
+      ).catch(() => { });
+      setStock(!!response ? response.data : []);
     }
     fetchStock();
   }, [reload]);

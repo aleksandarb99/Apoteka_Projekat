@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import "../../styling/pharmaciesAndMedicines.css";
 
@@ -24,10 +24,10 @@ function WorkersView({ pharmacyId }) {
   useEffect(() => {
     if (pharmacyId != undefined) {
       async function fetchWorkers() {
-        const request = await axios.get(
+        const request = await api.get(
           `/api/workplace/bypharmacyid/${pharmacyId}`
-        );
-        setWorkers(request.data);
+        ).catch(() => { });
+        setWorkers(!!request ? request.data : []);
 
         return request;
       }

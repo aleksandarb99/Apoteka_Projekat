@@ -9,7 +9,7 @@ import {
   getUserTypeFromToken,
 } from "./../../app/jwtTokenUtils";
 
-import axios from "./../../app/api";
+import api from "./../../app/api";
 
 import "../../styling/medicineProfile.css";
 import "../../styling/allergies.css";
@@ -25,15 +25,15 @@ function MedicineProfile() {
 
   let { id, pid, priceid } = useParams();
 
-  const [points, setPoints] = useState({});
+  const [points, setPoints] = useState(0);
   const [category, setCategory] = useState({});
 
   useEffect(() => {
     async function fetchPoints() {
-      const request = await axios.get(
+      const request = await api.get(
         "/api/patients/" + getIdFromToken() + "/points"
-      );
-      setPoints(request.data);
+      ).catch(() => { });
+      setPoints(!!request ? request.data : 0);
       return request;
     }
     fetchPoints();
@@ -41,8 +41,8 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchCategory() {
-      const request = await axios.get("/api/ranking-category/points/" + points);
-      setCategory(request.data);
+      const request = await api.get("/api/ranking-category/points/" + points).catch(() => { });
+      setCategory(!!request ? request.data : {});
 
       return request;
     }
@@ -51,8 +51,8 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchMedicine() {
-      const request = await axios.get(`/api/medicine/${id}`);
-      setMedicine(request.data);
+      const request = await api.get(`/api/medicine/${id}`).catch(() => { });
+      setMedicine(!!request ? request.data : {});
       return request;
     }
     fetchMedicine();
@@ -60,8 +60,8 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get(`/api/pharmacy/medicine/${id}`);
-      setPharmacies(request.data);
+      const request = await api.get(`/api/pharmacy/medicine/${id}`).catch(() => { });
+      setPharmacies(!!request ? request.data : []);
       return request;
     }
     if (pid == -1) {
@@ -89,7 +89,7 @@ function MedicineProfile() {
       price: priceid == -1 ? selectedPharmacy.price : priceid,
     };
 
-    axios
+    api
       .post("/api/medicine-reservation/", forSend)
       .then((res) => {
         addToast(res.data, { appearance: "success" });

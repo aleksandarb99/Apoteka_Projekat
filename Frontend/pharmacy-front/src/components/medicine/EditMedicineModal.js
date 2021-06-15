@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Modal, Row } from 'react-bootstrap'
 import MedicineNameFormGroup from "../utilComponents/medicineFormGroups/MedicineNameFromGroup"
@@ -113,7 +112,7 @@ function EditMedicineModal(props) {
             additionalNotes: additionalNotes,
             alternativeMedicine: multiSelections
         }
-        axios
+        api
             .put('/api/medicine/' + props.medicine.id, data)
             .then(() => {
                 props.onSuccess()

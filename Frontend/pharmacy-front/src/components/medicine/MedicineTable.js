@@ -1,4 +1,4 @@
-import axios from "../../app/api";
+import api from "../../app/api";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Row, Table } from "react-bootstrap";
 import MedicineRow from "./MedicineRow";
@@ -27,8 +27,8 @@ function MedicineTable() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("/api/medicine/crud").catch(() => { });
-      setMedicine(response.data);
+      const response = await api.get("/api/medicine/crud").catch(() => { });
+      setMedicine(!!response ? response.data : []);
     }
     fetchData();
   }, [reload]);
@@ -42,7 +42,7 @@ function MedicineTable() {
   };
 
   const deleteMedicine = () => {
-    axios
+    api
       .delete("/api/medicine/" + selected.id)
       .then(() => {
         reloadTable();

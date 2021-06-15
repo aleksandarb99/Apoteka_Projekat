@@ -1,8 +1,7 @@
-import axios from "../../app/api";
+import api from "../../app/api";
 import { data } from "jquery";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 import PharmacyWithMedicineList from "./PharmacyWithMedicineList";
 import RequiredMedicineList from "./RequiredMedicineList";

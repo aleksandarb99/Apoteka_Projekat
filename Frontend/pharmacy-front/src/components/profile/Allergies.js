@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "./../../app/api";
+import api from "./../../app/api";
 import { Table, Button, Modal } from "react-bootstrap";
 import AllergyRow from "./AllergyRow";
 import { Plus } from "react-bootstrap-icons";
@@ -18,10 +18,10 @@ function Allergies() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(
+      const response = await api.get(
         "/api/patients/allergies/all/" + getIdFromToken()
-      );
-      setAllergies(response.data);
+      ).catch(() => { });
+      setAllergies(!!response ? response.data : []);
       if (response.data == "") setAllergies(null);
     }
     fetchData();
@@ -29,8 +29,8 @@ function Allergies() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("/api/medicine/");
-      setMedicines(response.data);
+      const response = await api.get("/api/medicine/").catch(() => { });
+      setMedicines(!!response ? response.data : []);
       if (response.data == "") setMedicines(null);
     }
     fetchData();
@@ -41,7 +41,7 @@ function Allergies() {
   };
 
   const deleteAllergy = (id) => {
-    axios
+    api
       .delete("/api/patients/allergies/" + getIdFromToken() + "/" + id)
       .then((res) => {
         reloadTable();
@@ -57,7 +57,7 @@ function Allergies() {
   };
 
   const addAllergy = () => {
-    axios
+    api
       .post(
         "/api/patients/allergies/" +
         getIdFromToken() +

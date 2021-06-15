@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import { Tab, Nav, Row, Col } from "react-bootstrap";
 
@@ -36,7 +36,7 @@ function PharmacyAdminHomePage() {
   const [showModalPWChange, setShowModalPWChange] = useState(false);
 
   async function fetchPharmacyid() {
-    const request = await axios
+    const request = await api
       .get(`/api/pharmacy/getpharmacyidbyadmin/${getIdFromToken()}`)
       .then((res) => {
         setPharmacyId(res.data);
@@ -52,7 +52,7 @@ function PharmacyAdminHomePage() {
   }
 
   async function fetchPharmacy() {
-    const request = await axios
+    const request = await api
       .get(`/api/pharmacy/${pharmacyId}`)
       .then((res) => {
         setPharmacyDetails(res.data);
@@ -76,7 +76,7 @@ function PharmacyAdminHomePage() {
   useEffect(() => {
     fetchPharmacyid();
 
-    axios.get("/api/users/" + getIdFromToken()).then((res) => {
+    api.get("/api/users/" + getIdFromToken()).then((res) => {
       if (!res.data.passwordChanged) {
         setShowModalPWChange(true);
         setLoadingPWChanged(false);
@@ -84,7 +84,7 @@ function PharmacyAdminHomePage() {
         setShowModalPWChange(false);
         setLoadingPWChanged(false);
       }
-    });
+    }).catch(() => { });
   }, []);
 
   return (

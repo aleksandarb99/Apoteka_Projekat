@@ -6,7 +6,7 @@ import ReactStars from "react-rating-stars-component";
 import { StarFill } from "react-bootstrap-icons";
 import moment from "moment";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
@@ -37,7 +37,7 @@ function Rating() {
         url = "/api/pharmacy/all-pharmacies/patient/";
       }
 
-      const request = await axios
+      const request = await api
         .get(url + getIdFromToken())
         .then((res) => {
           setEntitites(res.data);
@@ -54,7 +54,7 @@ function Rating() {
   const updateSelectedEntity = (selectedEntity) => {
     setSelectedEntity(selectedEntity);
 
-    axios
+    api
       .get(
         "/api/rating/" +
         dropdownLabel.toLowerCase() +
@@ -84,7 +84,7 @@ function Rating() {
     };
 
     if (enabledRating === false) {
-      axios
+      api
         .post("/api/rating/", forSend)
         .then((res) => {
           addToast(res.data, { appearance: "success" });
@@ -97,7 +97,7 @@ function Rating() {
         });
     } else {
       forSend.id = rating.id;
-      axios
+      api
         .put("/api/rating/", forSend)
         .then((res) => {
           addToast(res.data, { appearance: "success" });
