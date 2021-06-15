@@ -66,12 +66,12 @@ function AddMedicineModal(props) {
         api.get(`http://localhost:8080/api/medicine-types/`)
             .then((res) => {
                 setMedTypes(res.data)
-                setField('medicineType', res.data[0].name || '');
+                setField('medicineTypeName', res.data[0].name || '');
             });
         api.get(`http://localhost:8080/api/medicine-forms/`)
             .then((res) => {
                 setMedForms(res.data)
-                setField('medicineForm', res.data[0].name || '');
+                setField('medicineFormName', res.data[0].name || '');
             });
     }
 
@@ -90,7 +90,7 @@ function AddMedicineModal(props) {
             recipeRequired: 'REQUIRED',
             dailyIntake: 0,
             points: 0,
-            substitutes: []
+            alternativeMedicine: []
         })
         fetchMedicine();
         fetchTypesAndForms();
@@ -111,10 +111,10 @@ function AddMedicineModal(props) {
     const sendPostRequest = () => {
         let data = {
             ...form,
-            substitutes: multiSelections
+            alternativeMedicine: multiSelections
         }
 
-        if (!form['medicineType'] || !form['medicineForm'] || !form['manufacturer'] || !form['required']) {
+        if (!form['medicineTypeName'] || !form['medicineFormName'] || !form['manufacturerName'] || !form['recipeRequired']) {
             addToast("Please fill required fields", { appearance: 'error' })
             return
         }
@@ -153,7 +153,7 @@ function AddMedicineModal(props) {
                         <Col>
                             <Form.Group>
                                 <Form.Label>Medicine Type *</Form.Label>
-                                <Form.Control as="select" custom onChange={(event) => setField('medicineType', event.target.value)} defaultValue={form['medicineType']}>
+                                <Form.Control as="select" custom onChange={(event) => setField('medicineTypeName', event.target.value)} defaultValue={form['medicineTypeName']}>
                                     <option value="">Select...</option>
                                     {medTypes.map((mt) => {
                                         return <option value={mt.name}>{mt.name}</option>
@@ -164,7 +164,7 @@ function AddMedicineModal(props) {
                         <Col>
                             <Form.Group>
                                 <Form.Label>Medicine Form *</Form.Label>
-                                <Form.Control as="select" custom onChange={(event) => setField('medicineForm', event.target.value)} defaultValue={form['medicineForm']}>
+                                <Form.Control as="select" custom onChange={(event) => setField('medicineFormName', event.target.value)} defaultValue={form['medicineFormName']}>
                                     <option value="">Select...</option>
                                     {medForms.map((mf) => {
                                         return <option value={mf.name}>{mf.name}</option>
@@ -214,7 +214,7 @@ function AddMedicineModal(props) {
                     </Row>
                     <Form.Group>
                         <Form.Label>Manufacturer *</Form.Label>
-                        <Form.Control as="select" custom onChange={(event) => setField('manufacturer', event.target.value)} value={form['manufacturer']}>
+                        <Form.Control as="select" custom onChange={(event) => setField('manufacturerName', event.target.value)} value={form['manufacturerName']}>
                             <option value="">Select....</option>
                             {manufacturers.map((mt) => {
                                 return <option value={mt.name}>{mt.name}</option>

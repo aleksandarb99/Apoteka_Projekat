@@ -111,7 +111,7 @@ function EditMedicineModal(props) {
             points: points,
             manufacturerName: manufacturerName,
             additionalNotes: additionalNotes,
-            substitutes: multiSelections
+            alternativeMedicine: multiSelections
         }
         axios
             .put('/api/medicine/' + props.medicine.id, data)
@@ -234,6 +234,12 @@ function EditMedicineModal(props) {
                     <AdditionalNotesFormGroup
                         onChange={(event) => setAdditionalNotes(event.target.value)}
                         defaultValue={props.medicine.additionalNotes} />
+                    <Form.Group>
+                        <Form.Label>Substitutes: </Form.Label>
+                        {alternativeMedicine.map((mt) => {
+                            return ` ${mt.name} `;
+                        })}
+                    </Form.Group>
                     <Form.Group>
                         <Form.Label>Medicine substitutes</Form.Label>
                         <Typeahead

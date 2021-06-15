@@ -6,6 +6,7 @@ import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.eRecipe.ERecipeService;
 import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.ReservationState;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.medicineFeatures.manufacturer.ManufacturerRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicineForm.MedicineFormRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
@@ -98,13 +99,37 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
-    public boolean insertMedicine(Medicine medicine) {
-        if (medicine != null) {
-            medicineRepository.save(medicine);
-            return true;
-        } else {
-            return false;
+    public void insertMedicine(Medicine medicine) throws CustomException {
+        if (medicine == null) {
+            throw new CustomException("Null medicine?");
         }
+
+        if (medicine.getMedicineForm() != null) {
+            var mf = medicineFormRepository.findByName(medicine.getMedicineForm().getName());
+            mf.ifPresent(medicine::setMedicineForm);
+        } else {
+            throw new CustomException("Please set medicine form");
+        }
+        if (medicine.getMedicineType() != null) {
+            var mt = medicineTypeRepository.findByName(medicine.getMedicineType().getName());
+            mt.ifPresent(medicine::setMedicineType);
+        } else {
+            throw new CustomException("Please set medicine type");
+        }
+        if (medicine.getManufacturer() != null) {
+            var man = manufacturerRepository.findByName(medicine.getManufacturer().getName());
+            man.ifPresent(medicine::setManufacturer);
+        } else {
+            throw new CustomException("Please set manufacturer");
+        }
+
+        var tempList = new ArrayList<Medicine>();
+        for (var ameddto: medicine.getAlternativeMedicine()) {
+            var amed = medicineRepository.findByMedicineCode(ameddto.getCode());
+            tempList.add(amed);
+        }
+        medicine.setAlternativeMedicine(tempList);
+        medicineRepository.save(medicine);
     }
 
     @Override
@@ -118,47 +143,58 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
-    public boolean update(long id, Medicine medicine) {
-        Optional<Medicine> m = medicineRepository.findById(id);
-        if (m.isPresent()) {
-            Medicine m2 = m.get();
-            if (medicine.getCode() != null) {
-                m2.setCode(medicine.getCode());
-            }
-            if (medicine.getName() != null) {
-                m2.setName(medicine.getName());
-            }
-            if (medicine.getContent() != null) {
-                m2.setContent(medicine.getContent());
-            }
-            if (medicine.getSideEffects() != null) {
-                m2.setSideEffects(medicine.getSideEffects());
-            }
-            if (medicine.getRecipeRequired() != null) {
-                m2.setRecipeRequired(medicine.getRecipeRequired());
-            }
-            m2.setDailyIntake(medicine.getDailyIntake());
-            if (medicine.getAdditionalNotes() != null) {
-                m2.setAdditionalNotes(medicine.getAdditionalNotes());
-            }
-
-            if (medicine.getMedicineForm() != null) {
-                var mf = medicineFormRepository.findByName(medicine.getMedicineForm().getName());
-                mf.ifPresent(m2::setMedicineForm);
-            }
-            if (medicine.getMedicineType() != null) {
-                var mt = medicineTypeRepository.findByName(medicine.getMedicineType().getName());
-                mt.ifPresent(m2::setMedicineType);
-            }
-            if (medicine.getManufacturer() != null) {
-                var man = manufacturerRepository.findByName(medicine.getManufacturer().getName());
-                man.ifPresent(m2::setManufacturer);
-            }
-            medicineRepository.save(m2);
-            return true;
-        } else {
-            return false;
+    public boolean update(long id, Medicine medicine) throws CustomException {
+        Medicine m = medicineRepository.findByIdAndFetchFormTypeManufacturerAlternative(id);
+        if (m == null) {
+            throw new CustomException("Null medicine?");
         }
+        if (medicine.getCode() != null) {
+            m.setCode(medicine.getCode());
+        }
+        if (medicine.getName() != null) {
+            m.setName(medicine.getName());
+        }
+        if (medicine.getContent() != null) {
+            m.setContent(medicine.getContent());
+        }
+        if (medicine.getSideEffects() != null) {
+            m.setSideEffects(medicine.getSideEffects());
+        }
+        if (medicine.getRecipeRequired() != null) {
+            m.setRecipeRequired(medicine.getRecipeRequired());
+        }
+        m.setDailyIntake(medicine.getDailyIntake());
+        if (medicine.getAdditionalNotes() != null) {
+            m.setAdditionalNotes(medicine.getAdditionalNotes());
+        }
+
+        if (medicine.getMedicineForm() != null) {
+            var mf = medicineFormRepository.findByName(medicine.getMedicineForm().getName());
+            mf.ifPresent(m::setMedicineForm);
+        } else {
+            throw new CustomException("Please set medicine form");
+        }
+        if (medicine.getMedicineType() != null) {
+            var mt = medicineTypeRepository.findByName(medicine.getMedicineType().getName());
+            mt.ifPresent(m::setMedicineType);
+        } else {
+            throw new CustomException("Please set medicine type");
+        }
+        if (medicine.getManufacturer() != null) {
+            var man = manufacturerRepository.findByName(medicine.getManufacturer().getName());
+            man.ifPresent(m::setManufacturer);
+        } else {
+            throw new CustomException("Please set manufacturer");
+        }
+
+        var tempList = new ArrayList<Medicine>();
+        for (var ameddto: medicine.getAlternativeMedicine()) {
+            var amed = medicineRepository.findByMedicineCode(ameddto.getCode());
+            tempList.add(amed);
+        }
+        m.setAlternativeMedicine(tempList);
+        medicineRepository.save(m);
+        return true;
     }
 
     @Override
