@@ -12,6 +12,7 @@ import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function ConsultationsInsight() {
   const [consultations, setConsultations] = useState([]);
@@ -62,7 +63,7 @@ function ConsultationsInsight() {
         setReload(!reload);
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
         setReload(!reload);
       });
   };
@@ -214,7 +215,7 @@ function ConsultationsInsight() {
                         style={{
                           display:
                             dropdownLabel === "Upcoming" &&
-                            differenceInMinutes(fc.startTime)
+                              differenceInMinutes(fc.startTime)
                               ? "inline-block"
                               : "none",
                         }}

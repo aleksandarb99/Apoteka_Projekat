@@ -10,6 +10,7 @@ import "../../styling/pharmacy.css";
 import RejectRequestModal from "./RejectRequestModal";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 function DisplayHolidayRequests({ idOfPharmacy }) {
   const { addToast } = useToasts();
   const [requests, setRequests] = useState([]);
@@ -35,7 +36,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -52,7 +53,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -104,9 +105,8 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
                     onClick={() => {
                       handleClick(item.id);
                     }}
-                    className={`${
-                      selectedRowId == item.id ? "selectedRow" : "pointer"
-                    } `}
+                    className={`${selectedRowId == item.id ? "selectedRow" : "pointer"
+                      } `}
                   >
                     <td>{index + 1}</td>
                     <td>{item.absenceType}</td>

@@ -7,6 +7,7 @@ import AddAdvertismentModal from "./AddAdvertismentModal";
 
 import moment from "moment";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function AdvertismentTab({ pharmacyDetails }) {
   const { addToast } = useToasts();
@@ -21,7 +22,7 @@ function AdvertismentTab({ pharmacyDetails }) {
         setList(res.data);
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -45,7 +46,7 @@ function AdvertismentTab({ pharmacyDetails }) {
         setRefresh(!refresh);
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });

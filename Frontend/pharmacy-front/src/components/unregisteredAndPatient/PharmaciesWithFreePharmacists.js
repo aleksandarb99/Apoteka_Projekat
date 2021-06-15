@@ -21,6 +21,7 @@ import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function PharmaciesWithFreePharmacists() {
   const [startDate, setStartDate] = useState(new Date());
@@ -154,10 +155,8 @@ function PharmaciesWithFreePharmacists() {
   const createReservation = () => {
     axios
       .post(
-        `/api/appointment/reserve-consultation/pharmacy/${
-          chosenPharmacy.id
-        }/pharmacist/${
-          selectedWorker.id
+        `/api/appointment/reserve-consultation/pharmacy/${chosenPharmacy.id
+        }/pharmacist/${selectedWorker.id
         }/patient/${getIdFromToken()}/date/${requestedDate}/`
       )
       .then((res) => {
@@ -167,7 +166,7 @@ function PharmaciesWithFreePharmacists() {
         setReloadPharmacies(!reloadPharmacies);
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
         setReloadPharmacies(!reloadPharmacies);
       });
     setChosenPharmacy(null);
@@ -513,7 +512,7 @@ function PharmaciesWithFreePharmacists() {
             style={{
               display:
                 Object.keys(selectedWorker).length === 0 ||
-                chosenPharmacy == null
+                  chosenPharmacy == null
                   ? "none"
                   : "inline-block",
               margin: "auto",

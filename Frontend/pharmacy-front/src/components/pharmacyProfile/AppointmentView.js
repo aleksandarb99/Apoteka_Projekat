@@ -18,6 +18,7 @@ import { getIdFromToken, getUserTypeFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function AppointmentView({ pharmacyId }) {
   const [reload, setReload] = useState(false);
@@ -102,10 +103,7 @@ function AppointmentView({ pharmacyId }) {
         setReload(!reload);
       })
       .catch((err) => {
-        addToast(
-          err.response.data.message == undefined
-            ? err.response.data
-            : err.response.data.message,
+        addToast(getErrorMessage(err),
           {
             appearance: "error",
           }

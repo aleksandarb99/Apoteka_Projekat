@@ -11,6 +11,7 @@ import "../../styling/pharmacy.css";
 import AddingWorkerModal from "./AddingWorkerModal";
 import DetailsOfWorkerModal from "./DetailsOfWorkerModal";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function DisplayWorkers({ idOfPharmacy }) {
   const { addToast } = useToasts();
@@ -68,7 +69,7 @@ function DisplayWorkers({ idOfPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -88,7 +89,7 @@ function DisplayWorkers({ idOfPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -277,9 +278,8 @@ function DisplayWorkers({ idOfPharmacy }) {
                     onClick={() => {
                       handleClick(item.id, item.worker.id);
                     }}
-                    className={`${
-                      selectedRowId == item.id ? "selectedRow" : "pointer"
-                    } `}
+                    className={`${selectedRowId == item.id ? "selectedRow" : "pointer"
+                      } `}
                   >
                     <td>{index + 1}</td>
                     <td>{item?.worker?.roleName}</td>

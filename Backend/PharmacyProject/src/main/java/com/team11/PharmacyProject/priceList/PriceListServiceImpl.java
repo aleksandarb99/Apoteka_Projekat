@@ -58,7 +58,7 @@ public class PriceListServiceImpl implements PriceListService {
         double discount = 0;
 
         List<Advertisement> sales = advertismentService.findAllSalesWithDate(mi2.getMedicine().getId(), pharmacyId, System.currentTimeMillis());
-        if(sales != null) {
+        if(sales != null && !sales.isEmpty()) {
             discount = sales.get(0).getDiscountPercent();
         }
         return priceLast * (100 - discount) / 100;

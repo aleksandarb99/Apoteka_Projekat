@@ -23,6 +23,7 @@ import AddPurchaseOrderModal from "./AddPurchaseOrderModal";
 import SelectOfferModal from "./SelectOfferModal";
 import EditOrderModal from "./EditOrderModal";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function DisplayPurchaseOrders({
   idOfPharmacy,
@@ -55,7 +56,7 @@ function DisplayPurchaseOrders({
         setMedicineItems(res.data.medicineItems);
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -121,7 +122,7 @@ function DisplayPurchaseOrders({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -159,7 +160,7 @@ function DisplayPurchaseOrders({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -189,7 +190,7 @@ function DisplayPurchaseOrders({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -215,7 +216,7 @@ function DisplayPurchaseOrders({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });

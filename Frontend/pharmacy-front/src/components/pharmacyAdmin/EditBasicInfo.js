@@ -16,6 +16,7 @@ import { fromLonLat, toLonLat } from "ol/proj";
 
 import "../../styling/pharmacyHomePage.css";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
   const { addToast } = useToasts();
@@ -73,7 +74,7 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -114,7 +115,7 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });

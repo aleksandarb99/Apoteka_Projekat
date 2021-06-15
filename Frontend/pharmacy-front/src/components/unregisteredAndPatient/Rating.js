@@ -12,6 +12,7 @@ import { getIdFromToken } from "../../app/jwtTokenUtils";
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function Rating() {
   const [dropdownLabel, setDropdownLabel] = useState("Dermatologist");
@@ -56,12 +57,12 @@ function Rating() {
     axios
       .get(
         "/api/rating/" +
-          dropdownLabel.toLowerCase() +
-          "/" +
-          selectedEntity.id +
-          "/patient/" +
-          getIdFromToken() +
-          "/grade"
+        dropdownLabel.toLowerCase() +
+        "/" +
+        selectedEntity.id +
+        "/patient/" +
+        getIdFromToken() +
+        "/grade"
       )
       .then((res) => {
         setRating(res.data);
@@ -92,7 +93,7 @@ function Rating() {
           setReload(!reload);
         })
         .catch((err) => {
-          addToast(err.response.data, { appearance: "error" });
+          addToast(getErrorMessage(err), { appearance: "error" });
         });
     } else {
       forSend.id = rating.id;
@@ -105,7 +106,7 @@ function Rating() {
           setReload(!reload);
         })
         .catch((err) => {
-          addToast(err.response.data, { appearance: "error" });
+          addToast(getErrorMessage(err), { appearance: "error" });
         });
     }
   };
@@ -181,7 +182,7 @@ function Rating() {
             display:
               (dropdownLabel == "Dermatologist" ||
                 dropdownLabel == "Pharmacist") &&
-              entities.length > 0
+                entities.length > 0
                 ? "flex"
                 : "none",
           }}

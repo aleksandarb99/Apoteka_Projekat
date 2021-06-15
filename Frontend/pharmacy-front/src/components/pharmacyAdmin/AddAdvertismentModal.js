@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import { Button, Row, Col, Container, Modal, Form } from "react-bootstrap";
-
+import { getErrorMessage } from "../../app/errorHandler";
 import axios from "../../app/api";
 
 import { useToasts } from "react-toast-notifications";
@@ -22,7 +22,7 @@ function AddAdvertismentModal(props) {
         setMedicineItems(res.data.medicineItems);
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });

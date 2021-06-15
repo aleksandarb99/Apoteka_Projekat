@@ -44,37 +44,41 @@ function PharmacyBasic({ details }) {
 
   // CHECK nije moje
   const subscribe = () => {
-    if (isUserSubscribed) {
-      api
-        .post(`/api/pharmacy/${details.id}/unsubscribe/${getIdFromToken()}`)
-        .then(() => {
-          alert("Success");
-          checkIfUserIsSubscribed();
-        })
-        .catch(() => {
-          alert("Error");
-        });
-    } else {
-      api
-        .post(`/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
-        .then(() => {
-          alert("Success");
-          checkIfUserIsSubscribed();
-        })
-        .catch(() => {
-          alert("Error");
-        });
+    if (!!getIdFromToken()) {
+      if (isUserSubscribed) {
+        api
+          .post(`/api/pharmacy/${details.id}/unsubscribe/${getIdFromToken()}`)
+          .then(() => {
+            alert("Success");
+            checkIfUserIsSubscribed();
+          })
+          .catch(() => {
+            alert("Error");
+          });
+      } else {
+        api
+          .post(`/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
+          .then(() => {
+            alert("Success");
+            checkIfUserIsSubscribed();
+          })
+          .catch(() => {
+            alert("Error");
+          });
+      }
     }
   };
 
   // CHECK nije moje
   const checkIfUserIsSubscribed = () => {
-    api
-      .get(`/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
-      .then((res) => {
-        console.log(res.data);
-        setIsUserSubscribed(res.data);
-      });
+    if (!!getIdFromToken()) {
+      api
+        .get(`/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
+        .then((res) => {
+          console.log(res.data);
+          setIsUserSubscribed(res.data);
+        });
+    }
   };
 
   return (

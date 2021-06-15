@@ -4,6 +4,7 @@ import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 import { Eye } from "react-bootstrap-icons";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 const BasicProfileInfo = (props) => {
   const [user, setUser] = useState({});
@@ -93,7 +94,7 @@ const BasicProfileInfo = (props) => {
         setUser(res.data);
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
       });
   };
 
@@ -117,7 +118,7 @@ const BasicProfileInfo = (props) => {
         setShowPasswordModal(false);
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
       });
   };
 
