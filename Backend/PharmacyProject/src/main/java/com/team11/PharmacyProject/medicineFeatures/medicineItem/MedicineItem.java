@@ -12,7 +12,8 @@ public class MedicineItem {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public List<MedicinePrice> medicinePrices;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "medicine_id")
     public Medicine medicine;
     @Id
@@ -21,7 +22,7 @@ public class MedicineItem {
     @Column(name = "amount", nullable = false)
     private int amount;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "price_list_id", nullable = false)
     private PriceList priceList;
   
@@ -76,6 +77,13 @@ public class MedicineItem {
         return true;
     }
 
+    public PriceList getPriceList() {
+        return priceList;
+    }
+
+    public void setPriceList(PriceList priceList) {
+        this.priceList = priceList;
+    }
 
     public void setAmountPlusOne() {
         amount += 1;

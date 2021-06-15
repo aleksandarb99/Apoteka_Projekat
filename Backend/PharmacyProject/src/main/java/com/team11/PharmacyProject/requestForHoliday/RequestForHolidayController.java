@@ -91,7 +91,6 @@ public class RequestForHolidayController {
     @PreAuthorize("hasAnyAuthority('PHARMACIST', 'DERMATOLOGIST')")
     public ResponseEntity<String> requestVacation(@RequestParam("id") Long id, @RequestParam("start") Long start,
                                                     @RequestParam("end") Long end, @RequestParam("type") String type){
-        //todo provera za datum da ne bude u proslosti, i za ono vece manje
         if (Instant.now().toEpochMilli() > start){
             return new ResponseEntity<>("Error! Start date has to be in future!", HttpStatus.BAD_REQUEST);
         }else if (start >= end){

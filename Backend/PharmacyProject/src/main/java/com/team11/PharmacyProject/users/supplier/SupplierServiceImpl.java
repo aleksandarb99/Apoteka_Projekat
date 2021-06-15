@@ -114,6 +114,7 @@ public class SupplierServiceImpl implements SupplierService {
 
         String email = "abuljevic8@gmail.com";
 
+
         for (String key : offersForOrder.keySet()) {
             List<Offer> offers = offersForOrder.get(key);
 

@@ -5,6 +5,7 @@ import com.team11.PharmacyProject.advertisement.AdvertismentService;
 import com.team11.PharmacyProject.medicineFeatures.medicine.Medicine;
 import com.team11.PharmacyProject.medicineFeatures.medicine.MedicineService;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItemService;
 import com.team11.PharmacyProject.medicineFeatures.medicinePrice.MedicinePrice;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservationService;
@@ -24,6 +25,9 @@ public class PriceListServiceImpl implements PriceListService {
 
     @Autowired
     private MedicineService medicineService;
+
+    @Autowired
+    private MedicineItemRepository medicineItemRepository;
 
     @Autowired
     private MedicineItemService medicineItemService;
@@ -116,8 +120,10 @@ public class PriceListServiceImpl implements PriceListService {
         }
 
         MedicineItem medicineItem = new MedicineItem(0, list, medicine);
-        priceList.getMedicineItems().add(medicineItem);
-        priceListRepository.save(priceList);
+        medicineItem.setPriceList(priceList);
+        medicineItemRepository.save(medicineItem);
+//        priceList.getMedicineItems().add(medicineItem);
+//        priceListRepository.save(priceList);
     }
 
     @Override
@@ -132,7 +138,11 @@ public class PriceListServiceImpl implements PriceListService {
         if (reserved) throw new RuntimeException("Medicine item is already reserved!");
 
         priceList.getMedicineItems().remove(mi);
-        priceListRepository.save(priceList);
+        try {
+            priceListRepository.save(priceList);
+        }catch (Exception e){
+            throw new RuntimeException("Medicine item cannot be deleted!");
+        }
     }
 
 }

@@ -53,7 +53,6 @@ public class EmailService {
 
     @Async
     public void notifyPatientAboutReservedAppointment(AppointmentReservationDTO reservationDTO, String type) throws MailException {
-        //todo ovde da se ubaci u kojoj apoteci mozda, koji radnik itd
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(reservationDTO.getEmail());
         mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
@@ -137,8 +136,7 @@ public class EmailService {
     @Async
     public void notifyPatientAboutPickingUpMedicine(MedicineReservationWorkerDTO reservationDTO) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
-//        mail.setTo(reservationDTO.getEmail()); //todo izmeniti
-        mail.setTo("darko1705@gmail.com");
+        mail.setTo(reservationDTO.getEmail());
         mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
         mail.setSubject("Potvrda izdavanja leka");
 
@@ -163,7 +161,7 @@ public class EmailService {
     public void notifyPatientAboutERecipe(ERecipe eRecipe) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(eRecipe.getPatient().getEmail()); //todo promeni kada se usklade adrese
-        mail.setTo("deja99@live.com");
+//        mail.setTo("deja99@live.com");
         mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
         mail.setSubject("Potvrda izdavanja lekova putem e-recepta");
 
@@ -200,7 +198,8 @@ public class EmailService {
 
         for (MyUser user : pharmacy.getSubscribers()) {
 
-            mail.setTo("abuljevic8@gmail.com");
+            //mail.setTo("abuljevic8@gmail.com");
+            mail.setTo(user.getEmail());
             mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
             mail.setSubject(advertisement.getType().toString());
 

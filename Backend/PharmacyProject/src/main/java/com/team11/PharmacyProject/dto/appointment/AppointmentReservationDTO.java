@@ -60,7 +60,7 @@ public class AppointmentReservationDTO {
 
     public void setEmail(String email) {
         this.email = email;
-        this.email = "jovansimic995@gmail.com";     // Ovo ce se izbrisati kad byude deploy
+        //this.email = "jovansimic995@gmail.com";     // Ovo ce se izbrisati kad byude deploy
     }
 
     public String getStartTime() {

@@ -156,7 +156,7 @@ function DisplayMedicine({
                 medicineItems?.map((item, index) => (
                   <tr
                     onClick={() => {
-                      handleClick(item.id, item.price);
+                      handleClick(item.id, item.price2);
                     }}
                     className={`${selectedRowId == item.id ? "selectedRow" : "pointer"
                       } `}
@@ -166,7 +166,7 @@ function DisplayMedicine({
                     <td>{item.medicine.name}</td>
                     <td>{item.medicine.content}</td>
                     <td>{item.medicine.avgGrade}</td>
-                    <td>{item.price}$</td>
+                    <td>{item.price2}$</td>
                     <td>{item.amount}</td>
                   </tr>
                 ))}

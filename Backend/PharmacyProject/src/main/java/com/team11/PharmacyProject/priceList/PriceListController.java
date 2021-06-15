@@ -29,7 +29,7 @@ public class PriceListController {
         }
         PriceListDTO dto = convertToDto(priceList);
         for (MedicineItemDTO item : dto.getMedicineItems()) {
-            item.setPrice(priceListService.getMedicineItemPrice(item.getId(), id));
+            item.setPrice2(priceListService.getMedicineItemPrice(item.getId(), id));
         }
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

@@ -391,6 +391,11 @@ public class PharmacyServiceImpl implements PharmacyService {
             }
             pharmacy.getAdmins().add(admin);
         }
+        PriceList aa = new PriceList();
+        aa.setMedicineItems(new ArrayList<MedicineItem>());
+        aa.setPharmacy(pharmacy);
+        pharmacy.setPriceList(aa);
+        pharmacy.setConsultationPrice(500d);
         pharmacyRepository.save(pharmacy);
     }
 

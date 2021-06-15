@@ -122,7 +122,7 @@ function Registration() {
   };
 
   return (
-    <main className="home__page my__login__container">
+    <main className="mylogincontainer" style={{ minHeight: "100vh", padding: "0px", paddingBottom: "50px" }} >
       <Form
         ref={formRef}
         noValidate
