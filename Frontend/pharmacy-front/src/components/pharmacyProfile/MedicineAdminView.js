@@ -87,7 +87,7 @@ function MedicinesView({ priceListId, pharmacyId }) {
                 <Nav.Link
                   as={Link}
                   className="my__nav__link__card"
-                  to={`/medicine/${medicine?.medicine?.id}/pharmacy/${pharmacyId}/price/${medicine?.price}`}
+                  to={`/medicine/${medicine?.medicine?.id}/pharmacy/${pharmacyId}/price/${medicine?.price2}`}
                 >
                   <Card className="my__card" style={{ width: "18rem" }}>
                     <Card.Body>
@@ -97,7 +97,7 @@ function MedicinesView({ priceListId, pharmacyId }) {
                     </Card.Body>
                     <ListGroup className="list-group-flush">
                       <ListGroupItem className="my__flex">
-                        {medicine?.price}$
+                        {medicine?.price2}$
                       </ListGroupItem>
                       <ListGroupItem className="my__flex">
                         {medicines &&

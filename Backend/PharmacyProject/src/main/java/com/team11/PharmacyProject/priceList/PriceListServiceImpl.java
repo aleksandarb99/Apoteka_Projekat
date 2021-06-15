@@ -128,7 +128,7 @@ public class PriceListServiceImpl implements PriceListService {
 
     @Override
     public void removeMedicine(long id, long medicineItemId) {
-        PriceList priceList = findByIdAndFetchMedicineItems(id);
+        PriceList priceList = priceListRepository.findByIdAndFetchMedicineItems(id);
         if (priceList == null) throw new RuntimeException("Price list with id "+ id+" does not exist!");
 
         MedicineItem mi = medicineItemService.findById(medicineItemId);
