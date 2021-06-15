@@ -2,6 +2,8 @@ package com.team11.PharmacyProject.pharmacy;
 
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyERecipeDTO;
+import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -19,9 +21,9 @@ public interface PharmacyService {
 
     List<Pharmacy> searchPharmaciesByNameOrCity(String searchValue);
 
-    boolean insertPharmacy(Pharmacy pharmacy);
+    Pharmacy insertPharmacy(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> pharmacyAdminId) throws CustomException;
 
-    boolean delete(long id);
+    void delete(long id) throws CustomException;
 
     void update(long id, Pharmacy pharmacy);
 
@@ -58,4 +60,6 @@ public interface PharmacyService {
     Pharmacy getPharmacyWithSubsribers(Long pharmacyId);
 
     void checkIfRecipeIsInPharmacy(ERecipeDTO eRecipeDTO, Long pharmacyId);
+
+    void addAdmins(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> admins) throws CustomException;
 }

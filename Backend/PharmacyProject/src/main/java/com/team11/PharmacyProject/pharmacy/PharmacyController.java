@@ -6,6 +6,8 @@ import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineTherapyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.*;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
+import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,19 +171,24 @@ public class PharmacyController {
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> insertPharmacy(@Valid @RequestBody PharmacyCrudDTO pharmacyCrudDTO) {
         Pharmacy pharmacy = convertCrudDTOToEntity(pharmacyCrudDTO);
-        if (pharmacyService.insertPharmacy(pharmacy)) {
+        try {
+            var pp = pharmacyService.insertPharmacy(pharmacy, pharmacyCrudDTO.getAdmins());
+            pharmacyService.addAdmins(pp, pharmacyCrudDTO.getAdmins());
             return new ResponseEntity<>("Pharmacy added successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deletePharmacy(@PathVariable("id") long id) {
-        if (pharmacyService.delete(id)) {
+        try {
+            pharmacyService.delete(id);
             return new ResponseEntity<>("Pharmacy deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        } catch (CustomException ce) {
+            return new ResponseEntity<>(ce.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -195,12 +202,23 @@ public class PharmacyController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @GetMapping(value = "/crud", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyCrudDTO>> getAllPharmaciesDTO() {
-        List<PharmacyCrudDTO> pharmacyCrudDTOs = pharmacyService.getAll().stream().map(this::convertToCrudDTO).collect(Collectors.toList());
+        List<Pharmacy> pharmacies = pharmacyService.getAll();
+        List<PharmacyCrudDTO> pharmacyCrudDTOs = new ArrayList<>();
+        for (var p: pharmacies) {
+            var pcd = new PharmacyCrudDTO();
+            pcd.setAdmins(p.getAdmins().stream().map(PharmacyWorkerInfoDTO::new).collect(Collectors.toList()));
+            pcd.setAddress(p.getAddress());
+            pcd.setDescription(p.getDescription());
+            pcd.setName(p.getName());
+            pcd.setAvgGrade(p.getAvgGrade());
+            pcd.setPointsForAppointment(p.getPointsForAppointment());
+            pcd.setId(p.getId());
+            pharmacyCrudDTOs.add(pcd);
+        }
         return new ResponseEntity<>(pharmacyCrudDTOs, HttpStatus.OK);
     }
 

@@ -77,4 +77,11 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
 
     @Query("SELECT p FROM Pharmacy p JOIN FETCH p.priceList pl WHERE p.id = ?1")
     Pharmacy findPharmacyFetchPriceList(Long pharmacyId);
+
+    @Query("SELECT p FROM Pharmacy p LEFT JOIN FETCH p.admins a")
+    List<Pharmacy> findPharmacyFetchAdmins();
+
+    @Transactional
+    @Query(nativeQuery = true, value = "INSERT INTO pharmacy_admins VALUES (?1, ?2)")
+    void addAdmin(long pharmacyId, long adminId);
 }
