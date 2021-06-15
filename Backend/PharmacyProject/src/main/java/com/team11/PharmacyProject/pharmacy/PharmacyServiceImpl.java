@@ -379,30 +379,19 @@ public class PharmacyServiceImpl implements PharmacyService {
         return pharmacyRepository.searchPharmaciesByNameOrCity(searchValue);
     }
 
-    public Pharmacy insertPharmacy(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> pharmacyAdmins) throws CustomException {
+    public void insertPharmacy(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> pharmacyAdmins) throws CustomException {
         if (pharmacy == null) {
             throw new CustomException("Null pharmacy?");
         }
-        pharmacy.setAdmins(null);
-        var p = pharmacyRepository.save(pharmacy);
-        return p;
-    }
-
-    public void addAdmins(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> pharmacyAdmins) throws CustomException {
-        var p = pharmacyRepository.findPharmacyFetchAdmins().stream().filter(pharmacy1 -> pharmacy1.getId().equals(pharmacy.getId())).findFirst();
-        if (p.isEmpty()) {
-            throw new CustomException("AAA");
-        }
-        p.get().getAdmins().clear();
+        pharmacy.getAdmins().clear();
         for (var pwi: pharmacyAdmins) {
             var admin = userRepository.findFirstById(pwi.getId());
             if (admin == null) {
                 throw new CustomException("Admin not found");
             }
-            p.get().getAdmins().add(admin);
+            pharmacy.getAdmins().add(admin);
         }
-
-        pharmacyRepository.save(p.get());
+        pharmacyRepository.save(pharmacy);
     }
 
     public void delete(long id) throws CustomException {

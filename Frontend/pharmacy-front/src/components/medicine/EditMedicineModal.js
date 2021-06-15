@@ -236,7 +236,7 @@ function EditMedicineModal(props) {
                         defaultValue={props.medicine.additionalNotes} />
                     <Form.Group>
                         <Form.Label>Substitutes: </Form.Label>
-                        {alternativeMedicine.map((mt) => {
+                        {!!alternativeMedicine && alternativeMedicine.map((mt) => {
                             return ` ${mt.name} `;
                         })}
                     </Form.Group>

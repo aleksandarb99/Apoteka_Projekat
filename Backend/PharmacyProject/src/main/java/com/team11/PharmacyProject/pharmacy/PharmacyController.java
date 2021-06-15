@@ -172,8 +172,7 @@ public class PharmacyController {
     public ResponseEntity<String> insertPharmacy(@Valid @RequestBody PharmacyCrudDTO pharmacyCrudDTO) {
         Pharmacy pharmacy = convertCrudDTOToEntity(pharmacyCrudDTO);
         try {
-            var pp = pharmacyService.insertPharmacy(pharmacy, pharmacyCrudDTO.getAdmins());
-            pharmacyService.addAdmins(pp, pharmacyCrudDTO.getAdmins());
+            pharmacyService.insertPharmacy(pharmacy, pharmacyCrudDTO.getAdmins());
             return new ResponseEntity<>("Pharmacy added successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);

@@ -21,7 +21,7 @@ public interface PharmacyService {
 
     List<Pharmacy> searchPharmaciesByNameOrCity(String searchValue);
 
-    Pharmacy insertPharmacy(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> pharmacyAdminId) throws CustomException;
+    void insertPharmacy(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> pharmacyAdminId) throws CustomException;
 
     void delete(long id) throws CustomException;
 
@@ -60,6 +60,4 @@ public interface PharmacyService {
     Pharmacy getPharmacyWithSubsribers(Long pharmacyId);
 
     void checkIfRecipeIsInPharmacy(ERecipeDTO eRecipeDTO, Long pharmacyId);
-
-    void addAdmins(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> admins) throws CustomException;
 }
