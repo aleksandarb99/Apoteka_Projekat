@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import Tab from "react-bootstrap/Tab";
 import Row from "react-bootstrap/Row";
@@ -65,7 +65,7 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
       },
     };
 
-    axios
+    api
       .put(`/api/pharmacy/${pharmacyDetails.id}`, dto)
       .then((res) => {
         changedPharmacy();
@@ -101,7 +101,7 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
       setValid(true);
     }
     // Try finding city and country
-    axios
+    api
       .get(
         `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
       )

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Tab, Row, Col, Button, Table } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import AddAdvertismentModal from "./AddAdvertismentModal";
 
 import moment from "moment";
@@ -16,7 +16,7 @@ function AdvertismentTab({ pharmacyDetails }) {
   const [refresh, setRefresh] = useState(false);
 
   async function fetchAdvertisment() {
-    const request = await axios
+    const request = await api
       .get(`/api/sales/${pharmacyDetails.id}`)
       .then((res) => {
         setList(res.data);
@@ -37,7 +37,7 @@ function AdvertismentTab({ pharmacyDetails }) {
   }, [pharmacyDetails, refresh]);
 
   async function addAdverb(data) {
-    const request = await axios
+    const request = await api
       .post(`/api/sales/${pharmacyDetails.id}`, data)
       .then((res) => {
         addToast(res.data, {

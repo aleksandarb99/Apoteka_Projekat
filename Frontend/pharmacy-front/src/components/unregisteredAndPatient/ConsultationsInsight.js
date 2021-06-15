@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Container, Table, Button, Form } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import moment from "moment";
@@ -28,7 +28,7 @@ function ConsultationsInsight() {
         let search_params = new URLSearchParams();
         if (sorter != "none" && ascDesc != "none")
           search_params.append("sort", sorter + ascDesc);
-        const request = await axios.get(
+        const request = await api.get(
           "/api/appointment/history/patient/" + getIdFromToken(),
           {
             params: search_params,
@@ -41,7 +41,7 @@ function ConsultationsInsight() {
         let search_params = new URLSearchParams();
         if (sorter != "none" && ascDesc != "none")
           search_params.append("sort", sorter + ascDesc);
-        const request = await axios.get(
+        const request = await api.get(
           "/api/appointment/upcoming/patient/" + getIdFromToken(),
           {
             params: search_params,
@@ -56,7 +56,7 @@ function ConsultationsInsight() {
   }, [dropdownLabel, sorter, ascDesc, reload]);
 
   const cancelConsultation = (id) => {
-    axios
+    api
       .put("/api/appointment/cancel-consultation/" + id)
       .then((res) => {
         addToast(res.data, { appearance: "success" });

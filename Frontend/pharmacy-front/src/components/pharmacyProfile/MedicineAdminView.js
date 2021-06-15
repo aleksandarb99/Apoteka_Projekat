@@ -13,7 +13,7 @@ import {
   Pagination,
 } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import { StarFill } from "react-bootstrap-icons";
 
@@ -33,7 +33,7 @@ function MedicinesView({ priceListId, pharmacyId }) {
   useEffect(() => {
     if (priceListId != undefined) {
       async function fetchPriceList() {
-        const request = await axios
+        const request = await api
           .get(`/api/pricelist/${priceListId}`)
           .then((res) => {
             setMedicines(res.data.medicineItems);

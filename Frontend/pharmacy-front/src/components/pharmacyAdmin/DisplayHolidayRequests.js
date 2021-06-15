@@ -4,7 +4,7 @@ import { Tab, Row, Col, Button, Table, Modal, Alert } from "react-bootstrap";
 
 import moment from "moment";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import "../../styling/pharmacy.css";
 import RejectRequestModal from "./RejectRequestModal";
@@ -18,7 +18,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
   const [showAlert, setShowAlert] = useState(false);
 
   async function fetchRequests() {
-    const request = await axios.get(
+    const request = await api.get(
       `/api/vacation/getunresolvedrequestsbypharmacyid/${idOfPharmacy}`
     ).catch(() => { });
     setRequests(!!request ? request.data : []);
@@ -27,7 +27,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
   }
 
   async function rejectRequest(reason) {
-    const request = await axios
+    const request = await api
       .post(`/api/vacation/rejectrequest/${selectedRowId}`, reason)
       .then((res) => {
         fetchRequests();
@@ -44,7 +44,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
   }
 
   async function acceptRequest() {
-    const request = await axios
+    const request = await api
       .post(`/api/vacation/acceptrequest/${selectedRowId}`)
       .then((res) => {
         fetchRequests();

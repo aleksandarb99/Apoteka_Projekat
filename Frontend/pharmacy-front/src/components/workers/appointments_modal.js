@@ -8,7 +8,6 @@ import {
   Container,
   ButtonGroup,
 } from "react-bootstrap";
-import axios from "axios";
 import Moment from "react-moment";
 import moment from "moment";
 import api from "../../app/api";
@@ -28,7 +27,7 @@ function AppointmentsModal(props) {
       let bodyFormData = new FormData();
       bodyFormData.append("patient", props?.info.patient);
       bodyFormData.append("worker", props?.info.worker);
-      const request = axios
+      const request = api
         .post("/api/appointment/byPatWorker", bodyFormData)
         .then((resp) => setAppointments(resp.data))
         .catch(() => setAppointments([]));
@@ -71,7 +70,7 @@ function AppointmentsModal(props) {
     let bodyFormData = new FormData();
     bodyFormData.append("patient", props?.info.patient);
     bodyFormData.append("worker", props?.info.worker);
-    axios
+    api
       .post("/api/appointment/byPatWorker", bodyFormData)
       .then((resp) => setAppointments(resp.data))
       .catch(() => setAppointments([]));

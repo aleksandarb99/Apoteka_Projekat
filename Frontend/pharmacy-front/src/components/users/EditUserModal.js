@@ -10,7 +10,7 @@ import StreetFormGroup from "../utilComponents/formGroups/StreetFormGroup";
 import CountryFormGroup from "../utilComponents/formGroups/CountryFormGroup";
 import { useToasts } from 'react-toast-notifications';
 import { getErrorMessage } from '../../app/errorHandler';
-import axios from "../../app/api";
+import api from "../../app/api";
 import Validator from "../../app/validator";
 
 function EditUserModal(props) {
@@ -79,7 +79,7 @@ function EditUserModal(props) {
   const sendPutRequest = () => {
     const newForm = convertForm(form);
     console.log(newForm);
-    axios
+    api
       .put("/api/users/" + props.user.id, newForm)
       .then(() => {
         setForm({});

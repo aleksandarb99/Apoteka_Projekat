@@ -12,7 +12,7 @@ import {
   Form,
 } from "react-bootstrap";
 
-import axios from "./../../app/api";
+import api from "./../../app/api";
 import moment from "moment";
 import { getIdFromToken, getUserTypeFromToken } from "../../app/jwtTokenUtils";
 
@@ -34,7 +34,7 @@ function AppointmentView({ pharmacyId }) {
   useEffect(() => {
     async function fetchPoints() {
       if (getIdFromToken() == null) return;
-      const request = await axios.get(
+      const request = await api.get(
         "/api/patients/" + getIdFromToken() + "/points"
       ).catch(() => { });
       setPoints(!!request ? request.data : 0);
@@ -46,7 +46,7 @@ function AppointmentView({ pharmacyId }) {
   useEffect(() => {
     async function fetchCategory() {
       if (getIdFromToken() == null) return;
-      const request = await axios.get("/api/ranking-category/points/" + points).catch(() => { });
+      const request = await api.get("/api/ranking-category/points/" + points).catch(() => { });
       setCategory(!!request ? request.data : {});
 
       return request;
@@ -57,7 +57,7 @@ function AppointmentView({ pharmacyId }) {
   useEffect(() => {
     if (pharmacyId != undefined) {
       async function fetchAppointsments() {
-        const request = await axios.get(
+        const request = await api.get(
           `/api/appointment/bypharmacyid/${pharmacyId}`
         ).catch(() => { });
         setAppointsments(!!request ? request.data : []);
@@ -96,7 +96,7 @@ function AppointmentView({ pharmacyId }) {
   };
 
   const reserveAppointment = (a) => {
-    axios
+    api
       .post("/api/appointment/reserve/" + a.id + "/patient/" + getIdFromToken())
       .then((res) => {
         addToast(res.data, { appearance: "success" });
@@ -132,7 +132,7 @@ function AppointmentView({ pharmacyId }) {
       search_params.append("sort", "worker.avgGrade,desc");
     }
 
-    axios
+    api
       .get(`/api/appointment/bypharmacyid/${pharmacyId}/sort`, {
         params: search_params,
       })

@@ -3,7 +3,7 @@ import { Button, Table, Modal } from "react-bootstrap";
 
 import moment from "moment";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 function SelectOfferModal(props) {
   const [offers, setOffers] = useState([]);
@@ -14,7 +14,7 @@ function SelectOfferModal(props) {
   };
 
   async function fetchOffer() {
-    const request = await axios.get(
+    const request = await api.get(
       `/api/suppliers/offers/byorderid/${props.orderId}`
     ).catch(() => { });
     setOffers(!!request ? request.data : []);

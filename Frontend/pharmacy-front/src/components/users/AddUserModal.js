@@ -12,7 +12,7 @@ import CountryFormGroup from "../utilComponents/formGroups/CountryFormGroup";
 import { useToasts } from 'react-toast-notifications';
 import { getErrorMessage } from '../../app/errorHandler';
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import Validator from "../../app/validator";
 
 function AddUserModal(props) {
@@ -66,7 +66,7 @@ function AddUserModal(props) {
 
   const sendPostRequest = () => {
     const newForm = convertForm(form);
-    axios
+    api
       .post("/api/users/", newForm)
       .then(() => {
         setForm({});

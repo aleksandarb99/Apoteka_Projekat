@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Row, Container, Table, Button } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import moment from "moment";
@@ -19,7 +19,7 @@ function ReservedMedicines() {
 
   useEffect(() => {
     async function fetchReservations() {
-      const request = await axios.get(
+      const request = await api.get(
         "/api/medicine-reservation/reserved-medicines/patient/" +
         getIdFromToken()
       ).catch(() => { });;
@@ -31,7 +31,7 @@ function ReservedMedicines() {
   }, [reload]);
 
   const cancelReservation = (id) => {
-    axios
+    api
       .put("/api/medicine-reservation/cancel-reservation/" + id)
       .then((res) => {
         addToast(res.data, { appearance: "success" });

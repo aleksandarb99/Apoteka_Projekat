@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import MedicineSearchAndFilter from "./MedicineSearchAndFilter";
@@ -28,7 +28,7 @@ function MedicinesView() {
 
   useEffect(() => {
     async function fetchMedicines() {
-      const request = await axios.get("/api/medicine/").catch(() => { });;
+      const request = await api.get("/api/medicine/").catch(() => { });;
       setMedicines(!!request ? request.data : []);
 
       return request;
@@ -38,7 +38,7 @@ function MedicinesView() {
 
   useEffect(() => {
     async function fetchMedicines() {
-      const request = await axios.get(`/api/medicine?search=${searchParams}`).catch(() => { });;
+      const request = await api.get(`/api/medicine?search=${searchParams}`).catch(() => { });;
       setMedicines(!!request ? request.data : []);
 
       return request;

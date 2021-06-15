@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
@@ -45,7 +45,7 @@ function PharmaciesWithFreePharmacists() {
 
   useEffect(() => {
     async function fetchPoints() {
-      const request = await axios.get(
+      const request = await api.get(
         "/api/patients/" + getIdFromToken() + "/points"
       ).catch(() => { });;
       setPoints(!!request ? request.data : 0);
@@ -56,7 +56,7 @@ function PharmaciesWithFreePharmacists() {
 
   useEffect(() => {
     async function fetchCategory() {
-      const request = await axios.get("/api/ranking-category/points/" + points).catch(() => { });;
+      const request = await api.get("/api/ranking-category/points/" + points).catch(() => { });;
       setCategory(!!request ? request.data : {});
 
       return request;
@@ -70,7 +70,7 @@ function PharmaciesWithFreePharmacists() {
     async function fetchPharmacies() {
       let search_params = new URLSearchParams();
       search_params.append("date", requestedDate);
-      const request = await axios.get("/api/pharmacy/all/free-pharmacists/", {
+      const request = await api.get("/api/pharmacy/all/free-pharmacists/", {
         params: search_params,
       }).catch(() => { });
       if (request.status == 404) {
@@ -100,7 +100,7 @@ function PharmaciesWithFreePharmacists() {
       let search_params = new URLSearchParams();
       search_params.append("date", requestedDate);
       search_params.append("id", chosenPharmacy.id);
-      const request = await axios.get(
+      const request = await api.get(
         "/api/workers/all/free-pharmacists/pharmacy",
         { params: search_params }
       ).catch(() => { });;
@@ -153,7 +153,7 @@ function PharmaciesWithFreePharmacists() {
   };
 
   const createReservation = () => {
-    axios
+    api
       .post(
         `/api/appointment/reserve-consultation/pharmacy/${chosenPharmacy.id
         }/pharmacist/${selectedWorker.id
@@ -220,7 +220,7 @@ function PharmaciesWithFreePharmacists() {
 
     search_params.append("date", requestedDate);
 
-    axios
+    api
       .get("/api/pharmacy/all/free-pharmacists/", {
         params: search_params,
       })
@@ -248,7 +248,7 @@ function PharmaciesWithFreePharmacists() {
 
     search_params.append("date", requestedDate);
     search_params.append("id", chosenPharmacy.id);
-    axios
+    api
       .get("/api/workers/all/free-pharmacists/pharmacy", {
         params: search_params,
       })

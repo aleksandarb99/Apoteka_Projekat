@@ -4,7 +4,7 @@ import { Search, Reply } from "react-bootstrap-icons";
 
 import { Tab, Row, Col, Button, Table, Form } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/pharmacy.css";
@@ -34,14 +34,14 @@ function DisplayWorkers({ idOfPharmacy }) {
   const [filterPharmacyName, setFilterPharmacyName] = useState("");
 
   async function fetchNames() {
-    const request = await axios.get(`/api/workplace/pharmacies/all/`).catch(() => { });
+    const request = await api.get(`/api/workplace/pharmacies/all/`).catch(() => { });
     setPharamcyNameMap(!!request ? request.data : []);
     return request;
   }
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get("/api/pharmacy/").catch(() => { });
+      const request = await api.get("/api/pharmacy/").catch(() => { });
       setPharmacies(!!request ? request.data : []);
 
       return request;
@@ -50,7 +50,7 @@ function DisplayWorkers({ idOfPharmacy }) {
   }, []);
 
   async function fetchWorkers() {
-    const request = await axios
+    const request = await api
       .get(`/api/workplace/bypharmacyid/${idOfPharmacy}`)
       .then((resp) => {
         setWorkers(resp.data);
@@ -60,7 +60,7 @@ function DisplayWorkers({ idOfPharmacy }) {
   }
 
   async function addWorker(id, dto) {
-    const request = await axios
+    const request = await api
       .post(`/api/workplace/addworker/bypharmacyid/${idOfPharmacy}/${id}`, dto)
       .then((res) => {
         fetchWorkers();
@@ -78,7 +78,7 @@ function DisplayWorkers({ idOfPharmacy }) {
   }
 
   async function removeWorker() {
-    const request = await axios
+    const request = await api
       .delete(
         `/api/workplace/removeworker/bypharmacyid/${idOfPharmacy}/${selectedRowId}`
       )
@@ -129,7 +129,7 @@ function DisplayWorkers({ idOfPharmacy }) {
     if (fsearch.length === 0) {
       fetchWorkers();
     } else {
-      axios
+      api
         .get(`/api/workplace/search/${idOfPharmacy}`, {
           params: { searchValue: fsearch },
         })

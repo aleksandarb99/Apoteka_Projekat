@@ -15,7 +15,7 @@ import {
 
 import Dropdown from "react-bootstrap/Dropdown";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import moment from "moment";
 
@@ -50,7 +50,7 @@ function DisplayPurchaseOrders({
   const [medicineItems, setMedicineItems] = useState([]);
 
   async function fetchPriceList() {
-    const request = await axios
+    const request = await api
       .get(`/api/pricelist/${priceListId}`)
       .then((res) => {
         setMedicineItems(res.data.medicineItems);
@@ -71,7 +71,7 @@ function DisplayPurchaseOrders({
   }, [priceListId, refresh]);
 
   async function fetchOrders() {
-    const request = await axios.get(
+    const request = await api.get(
       `/api/orders/bypharmacyid/${idOfPharmacy}`,
       { params: { filter: filterValue } }
     ).catch(() => { });
@@ -113,7 +113,7 @@ function DisplayPurchaseOrders({
       adminId: getIdFromToken(),
     };
 
-    const request = await axios
+    const request = await api
       .post(`/api/orders/addorder`, dto)
       .then((res) => {
         fetchOrders();
@@ -151,7 +151,7 @@ function DisplayPurchaseOrders({
   };
 
   async function deletePOrder() {
-    const request = await axios
+    const request = await api
       .delete(`/api/orders/${showedOrder.id}`)
       .then((res) => {
         fetchOrders();
@@ -178,7 +178,7 @@ function DisplayPurchaseOrders({
       adminId: getIdFromToken(),
     };
     setShowSpinner(true);
-    const request = await axios
+    const request = await api
       .post(`/api/suppliers/offers/accept/`, dto)
       .then((res) => {
         setShowSpinner(false);
@@ -207,7 +207,7 @@ function DisplayPurchaseOrders({
   };
 
   async function editOrder(date) {
-    const request = await axios
+    const request = await api
       .put(`/api/orders/${showedOrder.id}/${date.getTime()}/`)
       .then((res) => {
         fetchOrders();

@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { Feature, Map, View } from 'ol'
 import Point from 'ol/geom/Point'
 import TileLayer from 'ol/layer/Tile'
@@ -9,6 +8,7 @@ import VectorSource from 'ol/source/Vector'
 import Icon from 'ol/style/Icon'
 import Style from 'ol/style/Style'
 import React, { useEffect, useRef, useState } from 'react'
+import api from '../../app/api'
 
 const MapElement = ({ onChange, defAddress }) => {
     const [map, setMap] = useState()
@@ -78,7 +78,7 @@ const MapElement = ({ onChange, defAddress }) => {
 
     const updateFields = (coords) => {
         let url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + coords[1] + "&lon=" + coords[0];
-        axios
+        api
             .get(url)
             .then((response) => {
                 let jsonData = response.data;

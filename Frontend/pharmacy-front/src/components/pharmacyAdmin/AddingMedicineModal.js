@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { Button, Table, Modal, Form } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 function AddingMedicineModal(props) {
   const [medicineList, setMedicineList] = useState([]);
@@ -13,7 +13,7 @@ function AddingMedicineModal(props) {
   };
 
   async function fetchMedicine() {
-    const request = await axios.get(
+    const request = await api.get(
       `/api/medicine/notexistingmedicinebypharmacyid/${props.idOfPharmacy}`
     ).catch(() => { });
     setMedicineList(!!request ? request.data : []);

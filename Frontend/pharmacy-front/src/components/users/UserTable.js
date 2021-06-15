@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Form, Row, Table } from 'react-bootstrap'
 import AddUserModal from './AddUserModal';
@@ -67,7 +66,7 @@ function UserTable({ initialUserType }) {
   };
 
   const deleteUser = () => {
-    axios
+    api
       .delete("/api/users/" + selected.id)
       .then(() => {
         reloadTable()

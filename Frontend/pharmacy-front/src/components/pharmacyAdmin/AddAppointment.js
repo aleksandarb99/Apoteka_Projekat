@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import moment from "moment";
 
@@ -24,7 +24,7 @@ function AddAppointment({ idOfPharmacy }) {
   useEffect(() => {
     if (idOfPharmacy != undefined) {
       async function fetchDermatologists() {
-        const request = await axios.get(
+        const request = await api.get(
           `/api/workplace/dermatologists/bypharmacyid/${idOfPharmacy}`
         ).catch(() => { });
         setDermatologists(!!request ? request.data : []);
@@ -37,7 +37,7 @@ function AddAppointment({ idOfPharmacy }) {
   useEffect(() => {
     if (dermatogistPicked != 0) {
       async function fetchAppointments() {
-        const request = await axios
+        const request = await api
           .get(`/api/appointment/all/bydermatologistid/${dermatogistPicked}`, {
             params: { date: startDate.getTime() },
           })
@@ -119,7 +119,7 @@ function AddAppointment({ idOfPharmacy }) {
     let request = { duration, price: price, startTime: long };
     console.log(request);
 
-    axios
+    api
       .post(`/api/appointment/${idOfPharmacy}/${dermatogistPicked}`, request)
       .then((res) => {
         addToast(res.data, {

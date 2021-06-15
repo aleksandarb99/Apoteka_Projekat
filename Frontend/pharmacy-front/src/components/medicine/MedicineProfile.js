@@ -9,7 +9,7 @@ import {
   getUserTypeFromToken,
 } from "./../../app/jwtTokenUtils";
 
-import axios from "./../../app/api";
+import api from "./../../app/api";
 
 import "../../styling/medicineProfile.css";
 import "../../styling/allergies.css";
@@ -30,7 +30,7 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchPoints() {
-      const request = await axios.get(
+      const request = await api.get(
         "/api/patients/" + getIdFromToken() + "/points"
       ).catch(() => { });
       setPoints(!!request ? request.data : 0);
@@ -41,7 +41,7 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchCategory() {
-      const request = await axios.get("/api/ranking-category/points/" + points).catch(() => { });
+      const request = await api.get("/api/ranking-category/points/" + points).catch(() => { });
       setCategory(!!request ? request.data : {});
 
       return request;
@@ -51,7 +51,7 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchMedicine() {
-      const request = await axios.get(`/api/medicine/${id}`).catch(() => { });
+      const request = await api.get(`/api/medicine/${id}`).catch(() => { });
       setMedicine(!!request ? request.data : {});
       return request;
     }
@@ -60,7 +60,7 @@ function MedicineProfile() {
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get(`/api/pharmacy/medicine/${id}`).catch(() => { });
+      const request = await api.get(`/api/pharmacy/medicine/${id}`).catch(() => { });
       setPharmacies(!!request ? request.data : []);
       return request;
     }
@@ -89,7 +89,7 @@ function MedicineProfile() {
       price: priceid == -1 ? selectedPharmacy.price : priceid,
     };
 
-    axios
+    api
       .post("/api/medicine-reservation/", forSend)
       .then((res) => {
         addToast(res.data, { appearance: "success" });

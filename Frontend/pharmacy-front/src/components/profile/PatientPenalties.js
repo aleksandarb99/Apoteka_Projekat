@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 function PatientPenalties() {
@@ -7,7 +7,7 @@ function PatientPenalties() {
 
   useEffect(() => {
     async function fetchPenalties() {
-      const request = await axios.get(
+      const request = await api.get(
         "/api/patients/" + getIdFromToken() + "/penalties"
       ).catch(() => { });
       setPenalties(!!request ? request.data : null);

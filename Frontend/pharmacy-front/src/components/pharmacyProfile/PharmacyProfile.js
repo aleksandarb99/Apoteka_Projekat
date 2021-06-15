@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import PharmacyBasic from "./PharmacyBasic";
 import MedicinesAdminView from "./MedicineAdminView";
@@ -32,7 +32,7 @@ function PharmacyProfile() {
 
   useEffect(() => {
     async function fetchPharmacy() {
-      const request = await axios
+      const request = await api
         .get(`/api/pharmacy/${id}`)
         .then((res) => {
           setPharmacyDetails(res.data);
