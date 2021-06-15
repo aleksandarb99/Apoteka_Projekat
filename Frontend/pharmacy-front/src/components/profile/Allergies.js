@@ -6,6 +6,7 @@ import { Plus } from "react-bootstrap-icons";
 import "../../styling/allergies.css";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function Allergies() {
   const [reload, setReload] = useState(false);
@@ -47,7 +48,7 @@ function Allergies() {
         addToast(res.data, { appearance: "success" });
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
       });
   };
 
@@ -59,9 +60,9 @@ function Allergies() {
     axios
       .post(
         "/api/patients/allergies/" +
-          getIdFromToken() +
-          "/" +
-          selectedMedicine.id
+        getIdFromToken() +
+        "/" +
+        selectedMedicine.id
       )
       .then((res) => {
         addToast(res.data, { appearance: "success" });
@@ -70,7 +71,7 @@ function Allergies() {
         setSelectedMedicine({});
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
       });
   };
 

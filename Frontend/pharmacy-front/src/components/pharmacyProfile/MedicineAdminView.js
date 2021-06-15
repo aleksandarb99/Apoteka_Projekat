@@ -20,6 +20,7 @@ import { StarFill } from "react-bootstrap-icons";
 import "../../styling/pharmaciesAndMedicines.css";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function MedicinesView({ priceListId, pharmacyId }) {
   const { addToast } = useToasts();
@@ -38,7 +39,7 @@ function MedicinesView({ priceListId, pharmacyId }) {
             setMedicines(res.data.medicineItems);
           })
           .catch((err) => {
-            addToast(err.response.data, {
+            addToast(getErrorMessage(err), {
               appearance: "error",
             });
           });

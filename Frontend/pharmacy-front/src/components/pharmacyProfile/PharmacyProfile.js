@@ -21,6 +21,7 @@ import { useToasts } from "react-toast-notifications";
 import ERecipeSearchInPharmacy from "./ERecipeSearchInPharmacy";
 
 import { getUserTypeFromToken } from "../../app/jwtTokenUtils.js";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function PharmacyProfile() {
   const { addToast } = useToasts();
@@ -37,7 +38,7 @@ function PharmacyProfile() {
           setPharmacyDetails(res.data);
         })
         .catch((err) => {
-          addToast(err.response.data, {
+          addToast(getErrorMessage(err), {
             appearance: "error",
           });
         });

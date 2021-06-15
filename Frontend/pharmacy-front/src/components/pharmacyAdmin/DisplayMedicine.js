@@ -10,6 +10,7 @@ import AddingMedicineModal from "./AddingMedicineModal";
 import ChangePriceModal from "./ChangePriceModal";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function DisplayMedicine({
   idOfPharmacy,
@@ -33,7 +34,7 @@ function DisplayMedicine({
         setMedicineItems(res.data.medicineItems);
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -65,7 +66,7 @@ function DisplayMedicine({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -83,7 +84,7 @@ function DisplayMedicine({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -102,7 +103,7 @@ function DisplayMedicine({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -157,9 +158,8 @@ function DisplayMedicine({
                     onClick={() => {
                       handleClick(item.id, item.price);
                     }}
-                    className={`${
-                      selectedRowId == item.id ? "selectedRow" : "pointer"
-                    } `}
+                    className={`${selectedRowId == item.id ? "selectedRow" : "pointer"
+                      } `}
                   >
                     <td>{index + 1}</td>
                     <td>{item.medicine.code}</td>

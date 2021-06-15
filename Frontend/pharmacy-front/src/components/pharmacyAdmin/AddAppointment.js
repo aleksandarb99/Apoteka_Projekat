@@ -7,6 +7,7 @@ import moment from "moment";
 import { Button, Tab, Row, Col, Table, Form, Alert } from "react-bootstrap";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function AddAppointment({ idOfPharmacy }) {
   const { addToast } = useToasts();
@@ -44,7 +45,7 @@ function AddAppointment({ idOfPharmacy }) {
             setAppointments(res.data);
           })
           .catch((err) => {
-            addToast(err.response.data, {
+            addToast(getErrorMessage(err), {
               appearance: "error",
             });
           });
@@ -127,7 +128,7 @@ function AddAppointment({ idOfPharmacy }) {
         reloadForm();
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });

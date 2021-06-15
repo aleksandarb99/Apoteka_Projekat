@@ -14,6 +14,7 @@ import axios from "./../../app/api";
 import "../../styling/medicineProfile.css";
 import "../../styling/allergies.css";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function MedicineProfile() {
   const [medicine, setMedicine] = useState({});
@@ -94,7 +95,7 @@ function MedicineProfile() {
         addToast(res.data, { appearance: "success" });
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
       });
 
     setSelectedPharmacy({});
@@ -208,7 +209,7 @@ function MedicineProfile() {
               }}
             >
               You have a discount of {category.discount}%
-          </p>
+            </p>
             <p
               style={{
                 textAlign: "center",
@@ -250,7 +251,7 @@ function MedicineProfile() {
               }}
             >
               Reserve
-          </Button>
+            </Button>
           </div>
         </div>
       </div>

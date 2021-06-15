@@ -21,6 +21,7 @@ import DisplayReports from "./DisplayReports";
 import AdvertismentTab from "./AdvertismentTab";
 import { useToasts } from "react-toast-notifications";
 import SetPasswordModal from "../utilComponents/modals/SetPasswordModal";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function PharmacyAdminHomePage() {
   const { addToast } = useToasts();
@@ -41,10 +42,7 @@ function PharmacyAdminHomePage() {
         setPharmacyId(res.data);
       })
       .catch((err) => {
-        addToast(
-          err.response.data.message == undefined
-            ? err.response.data
-            : err.response.data.message,
+        addToast(getErrorMessage(err),
           {
             appearance: "error",
           }
@@ -60,7 +58,7 @@ function PharmacyAdminHomePage() {
         setPharmacyDetails(res.data);
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });

@@ -4,6 +4,7 @@ import { Button, Table, Modal, Form, Row, Col } from "react-bootstrap";
 import axios from "../../app/api";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function AddingWorkerModal(props) {
   const { addToast } = useToasts();
@@ -47,7 +48,7 @@ function AddingWorkerModal(props) {
         setWorkerList(res.data);
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -203,9 +204,8 @@ function AddingWorkerModal(props) {
                       onClick={() => {
                         handleClick(item.id);
                       }}
-                      className={`${
-                        selectedRowId == item.id ? "selectedRow" : "pointer"
-                      }`}
+                      className={`${selectedRowId == item.id ? "selectedRow" : "pointer"
+                        }`}
                     >
                       <td>{index + 1}</td>
                       <td>{item?.roleName}</td>
