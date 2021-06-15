@@ -19,16 +19,16 @@ function EditPharmacyModal(props) {
     const [selected, setSelected] = useState();
     const { addToast } = useToasts();
 
-    useEffect(() => {
-        async function fetchData() {
-            await api
-                .get('http://localhost:8080/api/users/?type=PHARMACY_ADMIN')
-                .then((res) => {
-                    setPharmacyAdmins(res.data);
-                });
-        }
-        fetchData();
-    }, [])
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         await api
+    //             .get('http://localhost:8080/api/users/?type=PHARMACY_ADMIN')
+    //             .then((res) => {
+    //                 setPharmacyAdmins(res.data);
+    //             });
+    //     }
+    //     fetchData();
+    // }, [])
 
     const showHandler = () => {
         setForm({
@@ -94,8 +94,8 @@ function EditPharmacyModal(props) {
         } else {
             if (!validateAddress())
                 addToast("Please select valid address", { appearance: 'warning' })
-            else if (!validateAdmin())
-                addToast("Please select pharmacy admin", { appearance: 'warning' })
+            // else if (!validateAdmin())
+            //     addToast("Please select pharmacy admin", { appearance: 'warning' })
             else
                 sendPutRequest()
         }
@@ -140,10 +140,9 @@ function EditPharmacyModal(props) {
                         <Form.Label>
                             Pharmacy admin
                         </Form.Label>
-                        <Form.Control as="select" custom onChange={(event) => { setSelected(event.target.value) }}>
-                            <option value="">Not selected...</option>
-                            {pharmacyAdmins.map((pa) => {
-                                return <option value={pa.id}>{pa.firstName + " " + pa.lastName}</option>
+                        <Form.Control as="select" custom >
+                            {!!props.pharmacy.admins && props.pharmacy.admins.map((pa) => {
+                                return <option value={pa.id}>{pa.name}</option>
                             })}
                         </Form.Control>
                     </Form.Group>

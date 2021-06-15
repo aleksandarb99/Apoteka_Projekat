@@ -4,4 +4,6 @@ import java.util.List;
 
 public interface MedicineFormService {
     List<MedicineForm> getAllForms();
+
+    void addNew(MedicineForm mf);
 }

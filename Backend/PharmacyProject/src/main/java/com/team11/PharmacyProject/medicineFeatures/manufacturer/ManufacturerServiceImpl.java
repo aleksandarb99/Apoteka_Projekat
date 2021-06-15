@@ -15,4 +15,9 @@ public class ManufacturerServiceImpl implements ManufacturerService{
     public List<Manufacturer> getAllManufacturers() {
         return manufacturerRepository.findAll();
     }
+
+    @Override
+    public void addNew(Manufacturer mt) {
+        manufacturerRepository.save(mt);
+    }
 }

@@ -12,8 +12,7 @@ const AddMedicineFormModal = (props) => {
         e.preventDefault();
         e.stopPropagation();
 
-        let data = { name: form }
-        api.post(`http://localhost:8080/api/medicine-forms/`, data)
+        api.post(`http://localhost:8080/api/medicine-forms/${form}`)
             .then(() => {
                 addToast("Medicine form added successfully", { appearance: "success" })
                 props.onHide()

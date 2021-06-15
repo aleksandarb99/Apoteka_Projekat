@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public interface MedicineRepository extends JpaRepository<Medicine, Long>, MedicineRepositoryCustom {
 
-    // TODO da li umesto ':id' treba '?1'
     @Query("SELECT m FROM Medicine m JOIN FETCH m.medicineForm JOIN FETCH m.medicineType JOIN FETCH m.manufacturer WHERE m.id = (:id)")
     Medicine findByIdAndFetchFormTypeManufacturer(@Param("id") Long id);
 
@@ -24,4 +23,6 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long>, Medic
     @Query("SELECT m FROM Medicine m WHERE m.code = (:medicineCode)")
     Medicine findByMedicineCode(String medicineCode);
 
+    @Query("SELECT DISTINCT m FROM Medicine m JOIN FETCH m.medicineForm JOIN FETCH m.medicineType JOIN FETCH m.manufacturer LEFT JOIN FETCH m.alternativeMedicine")
+    List<Medicine> fetchFormTypeManufacturerAlternative();
 }

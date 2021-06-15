@@ -201,6 +201,13 @@ insert into my_user (password, first_name, last_name, email, telephone, role_id,
 insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
                     values ('$2y$12$tPT/EHBxszNtPA17Hu9p4OgHuZwJZMsrhT5.jYuBB6arrpaPG5gx6',
                             'Dusko', 'Dragic Novi Profil', 'duskousko2@gmail.com', '0628832344', 2, 3, false, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$tPT/EHBxszNtPA17Hu9p4OgHuZwJZMsrhT5.jYuBB6arrpaPG5gx6',
+                            'Dusko', 'Dragic Novi Profil ADMIN', 'duskousko3@gmail.com', '0628832399', 5, 3, true, true);
+insert into my_user (password, first_name, last_name, email, telephone, role_id, address_id, is_password_changed, is_email_verified)
+                    values ('$2y$12$tPT/EHBxszNtPA17Hu9p4OgHuZwJZMsrhT5.jYuBB6arrpaPG5gx6',
+                            'Dusko', 'Dragic admin apoteke', 'duskousko4@gmail.com', '0628832777', 5, 3, true, true);
+
 /*Pharmacy Workers*/
 insert into pharmacy_worker (avg_grade, id) values (4.8, 6);
 insert into pharmacy_worker (avg_grade, id) values (4.8, 7);

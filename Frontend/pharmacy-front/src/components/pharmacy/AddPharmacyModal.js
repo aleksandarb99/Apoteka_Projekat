@@ -4,12 +4,15 @@ import Map from '../utilComponents/MapElement'
 import { useToasts } from 'react-toast-notifications';
 import { getErrorMessage } from '../../app/errorHandler';
 import api from '../../app/api'
-import { Typeahead } from 'react-bootstrap-typeahead';
+import { Token, Typeahead } from 'react-bootstrap-typeahead';
 
 function AddPharmacyModal(props) {
 
     const [form, setForm] = useState({
-        pharmacyAdmin: '',
+        pharmacyAdmin: {
+            id: -1,
+            name: ''
+        },
         name: '',
         description: '',
         pointsForAppointment: 0,
@@ -26,7 +29,7 @@ function AddPharmacyModal(props) {
     const [address, setAddress] = useState({});
     const [errors, setErrors] = useState({});
     const [pharmacyAdmins, setPharmacyAdmins] = useState([]);
-    const [selected, setSelected] = useState();
+    const [multiSelections, setMultiSelections] = useState([]);
     const { addToast } = useToasts();
 
     useEffect(() => {
@@ -79,7 +82,7 @@ function AddPharmacyModal(props) {
     }
 
     const validateAdmin = () => {
-        return (!!selected)
+        return (!!multiSelections || multiSelections.length === 0)
     }
 
     const handleSubmit = e => {
@@ -93,7 +96,7 @@ function AddPharmacyModal(props) {
             if (!validateAddress())
                 addToast("Please select valid address", { appearance: 'warning' })
             else if (!validateAdmin())
-                addToast("Please select pharmacy admin", { appearance: 'warning' })
+                addToast("Please select pharmacy admins", { appearance: 'warning' })
             else
                 sendPostRequest()
         }
@@ -119,6 +122,7 @@ function AddPharmacyModal(props) {
         data.name = form.name;
         data.description = form.description;
         data.address = address
+        data.admins = multiSelections.map(pa => { return { 'id': pa.id, 'name': `${pa.firstName} ${pa.lastName}` } })
         return data;
     }
 
@@ -133,14 +137,25 @@ function AddPharmacyModal(props) {
                 <Form>
                     <Form.Group>
                         <Form.Label>
-                            Pharmacy admin
+                            Admins
                         </Form.Label>
-                        <Form.Control as="select" custom onChange={(event) => { setSelected(event.target.value) }}>
-                            <option value="">Not selected...</option>
-                            {pharmacyAdmins.map((pa) => {
-                                return <option value={pa.id}>{pa.firstName + " " + pa.lastName}</option>
-                            })}
-                        </Form.Control>
+                        <Typeahead
+                            id="basic-typeahead-multiple-admins"
+                            labelKey={(option) => `${option.firstName} ${option.lastName}`}
+                            multiple
+                            onChange={setMultiSelections}
+                            options={pharmacyAdmins}
+                            placeholder="Select admins..."
+                            selected={multiSelections}
+                            renderToken={(option, { onRemove }, index) => (
+                                <Token
+                                    key={index}
+                                    onRemove={onRemove}
+                                    option={option}>
+                                    {`${option.firstName} ${option.lastName}`}
+                                </Token>
+                            )}
+                        />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Name</Form.Label>

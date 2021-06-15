@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
+import com.team11.PharmacyProject.exceptions.CustomException;
+
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
@@ -10,11 +12,11 @@ public interface MedicineService {
 
     List<Medicine> getNotExistingMedicineFromPharmacy(long id);
 
-    boolean insertMedicine(Medicine medicine);
+    void insertMedicine(Medicine medicine) throws CustomException;
 
     boolean delete(long id);
 
-    boolean update(long id, Medicine medicine);
+    boolean update(long id, Medicine medicine) throws CustomException;
 
     Medicine getMedicineById(Long id);
 

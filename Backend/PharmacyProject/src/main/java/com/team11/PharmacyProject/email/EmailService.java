@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.email;
 
 import com.team11.PharmacyProject.advertisement.Advertisement;
+import com.team11.PharmacyProject.complaintResponse.ComplaintResponse;
 import com.team11.PharmacyProject.dto.appointment.AppointmentReservationDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationNotifyPatientDTO;
 import com.team11.PharmacyProject.dto.medicineReservation.MedicineReservationWorkerDTO;
@@ -232,6 +233,7 @@ public class EmailService {
 
     }
 
+    @Async
     public void sendVerificationEmail(MyUser user, String token) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(user.getEmail());
@@ -241,6 +243,19 @@ public class EmailService {
         String sb = "Poštovani, kako biste izvršili potvrdu naloga, kliknite na link ispod\n\n" +
                 // todo change
                 "http://localhost:8080/verification?token=" + token;
+        mail.setText(sb);
+        javaMailSender.send(mail);
+    }
+
+    @Async
+    public void NotifyResponse(ComplaintResponse cr) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(cr.getComplaint().getPatient().getEmail());
+        //mail.setTo("deja99@live.com");
+        mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
+        mail.setSubject("Odgovor na žalbu");
+        String sb = "Poštovani, stigao je odgovor na vašu žalbu\n\n" +
+                cr.getResponseText();
         mail.setText(sb);
         javaMailSender.send(mail);
     }

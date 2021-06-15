@@ -12,8 +12,7 @@ const AddManufacturerModal = (props) => {
         e.preventDefault();
         e.stopPropagation();
 
-        let data = { name: manufacturer }
-        api.post(`http://localhost:8080/api/manufacturers/`, data)
+        api.post(`http://localhost:8080/api/manufacturers/${manufacturer}`)
             .then(() => {
                 addToast("Manufacturer added successfully", { appearance: "success" })
                 props.onHide()

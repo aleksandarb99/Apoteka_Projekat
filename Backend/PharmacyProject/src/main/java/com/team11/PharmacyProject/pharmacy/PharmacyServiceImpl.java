@@ -4,12 +4,14 @@ import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.appointment.AppointmentService;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyERecipeDTO;
+import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
 import com.team11.PharmacyProject.eRecipe.ERecipe;
 import com.team11.PharmacyProject.eRecipe.ERecipeRepository;
 import com.team11.PharmacyProject.eRecipe.ERecipeService;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.ERecipeState;
 import com.team11.PharmacyProject.enums.ReservationState;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.inquiry.Inquiry;
 import com.team11.PharmacyProject.inquiry.InquiryRepository;
 import com.team11.PharmacyProject.inquiry.InquiryService;
@@ -30,6 +32,7 @@ import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.users.user.MyUser;
+import com.team11.PharmacyProject.users.user.UserRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
 import org.modelmapper.ModelMapper;
@@ -55,6 +58,9 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Autowired
     PriceListRepository priceListRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     MedicineService medicineService;
@@ -373,22 +379,25 @@ public class PharmacyServiceImpl implements PharmacyService {
         return pharmacyRepository.searchPharmaciesByNameOrCity(searchValue);
     }
 
-    public boolean insertPharmacy(Pharmacy pharmacy) {
-        if (pharmacy != null) {
-            pharmacyRepository.save(pharmacy);
-            return true;
-        } else {
-            return false;
+    public void insertPharmacy(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> pharmacyAdmins) throws CustomException {
+        if (pharmacy == null) {
+            throw new CustomException("Null pharmacy?");
         }
+        pharmacy.getAdmins().clear();
+        for (var pwi: pharmacyAdmins) {
+            var admin = userRepository.findFirstById(pwi.getId());
+            if (admin == null) {
+                throw new CustomException("Admin not found");
+            }
+            pharmacy.getAdmins().add(admin);
+        }
+        pharmacyRepository.save(pharmacy);
     }
 
-    public boolean delete(long id) {
-        if (pharmacyRepository.findById(id).isPresent()) {
-            pharmacyRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+    public void delete(long id) throws CustomException {
+        if (pharmacyRepository.findById(id).isEmpty())
+            throw new CustomException("Pharmacy not found");
+        pharmacyRepository.deleteById(id);
     }
 
     public void update(long id, Pharmacy pharmacy) {
@@ -407,7 +416,7 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     public List<Pharmacy> getAll() {
-        return pharmacyRepository.findAll();
+        return pharmacyRepository.findPharmacyFetchAdmins();
     }
 
     @Override

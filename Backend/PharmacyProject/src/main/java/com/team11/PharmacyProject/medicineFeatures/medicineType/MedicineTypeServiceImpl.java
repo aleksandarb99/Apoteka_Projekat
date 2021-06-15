@@ -15,4 +15,9 @@ public class MedicineTypeServiceImpl implements MedicineTypeService {
     public List<MedicineType> getAllTypes() {
         return medicineTypeRepository.findAll();
     }
+
+    @Override
+    public void addNew(MedicineType mt) {
+        medicineTypeRepository.save(mt);
+    }
 }

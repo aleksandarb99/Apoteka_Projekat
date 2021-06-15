@@ -3,6 +3,7 @@ package com.team11.PharmacyProject.complaintResponse;
 import com.team11.PharmacyProject.complaint.Complaint;
 import com.team11.PharmacyProject.complaint.ComplaintRepository;
 import com.team11.PharmacyProject.dto.complaintResponse.ComplaintResponseDTO;
+import com.team11.PharmacyProject.email.EmailService;
 import com.team11.PharmacyProject.enums.ComplaintState;
 import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.users.user.MyUser;
@@ -17,6 +18,8 @@ import java.util.Optional;
 @Service
 public class ComplaintResponseServiceImpl implements ComplaintResponseService {
 
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private ComplaintResponseRepository complaintResponseRepository;
     @Autowired
@@ -50,6 +53,10 @@ public class ComplaintResponseServiceImpl implements ComplaintResponseService {
             throw new CustomException("Already resolved");
         }
 
+        if (complaintResponseDTO.getResponseText().length() == 0) {
+            throw new CustomException("Response text?");
+        }
+
         Complaint c = complaint.get();
         c.setState(ComplaintState.RESOLVED);
 
@@ -61,6 +68,7 @@ public class ComplaintResponseServiceImpl implements ComplaintResponseService {
         );
 
         complaintResponseRepository.save(cr);
+        emailService.NotifyResponse(cr);
     }
 
     @Override
