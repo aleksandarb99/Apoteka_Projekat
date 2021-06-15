@@ -17,7 +17,7 @@ function AdminHomePage() {
     api.get("http://localhost:8080/api/users/" + id)
       .then((res) => {
         setShowModalPWChange(!res.data.passwordChanged)
-      })
+      }).catch(() => { })
   }, [])
 
   return (
@@ -30,19 +30,19 @@ function AdminHomePage() {
                 <Nav.Item>
                   <Nav.Link className="my__nav__link" eventKey="first">
                     Pharmacies
-                </Nav.Link>
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                   <Nav.Link className="my__nav__link" eventKey="third">
                     Medicines
-                </Nav.Link>
+                  </Nav.Link>
                 </Nav.Item>
               </Nav>
               <Nav variant="pills" className="flex-column">
                 <Nav.Item>
                   <Nav.Link className="my__nav__link" eventKey="fifth">
                     Holiday requests
-                </Nav.Link>
+                  </Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>

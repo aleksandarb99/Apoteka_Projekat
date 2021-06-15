@@ -105,10 +105,10 @@ public class SupplierController {
             return new ResponseEntity<>("Offer added successfully", HttpStatus.OK);
         } catch (PessimisticLockingFailureException e) {
             return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
-        } catch (CustomException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (CustomException ce) {
+            return new ResponseEntity<>(ce.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops!!", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -117,8 +117,10 @@ public class SupplierController {
         try {
             supplierService.updateOffer(id, offerDTO);
             return new ResponseEntity<>("Offer updated successfully", HttpStatus.OK);
+        } catch (CustomException ce) {
+            return new ResponseEntity<>(ce.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
 }

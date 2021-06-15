@@ -10,7 +10,7 @@ const ComplaintHistory = () => {
     async function fetchComplaints() {
       api.get(`/api/complaints/patient/${getIdFromToken()}`).then((res) => {
         setComplaints(res.data);
-      });
+      }).catch(() => { });
     }
     fetchComplaints();
   }, []);

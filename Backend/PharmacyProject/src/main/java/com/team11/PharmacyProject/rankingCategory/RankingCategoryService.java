@@ -1,5 +1,7 @@
 package com.team11.PharmacyProject.rankingCategory;
 
+import com.team11.PharmacyProject.exceptions.CustomException;
+
 import java.util.List;
 
 public interface RankingCategoryService {
@@ -7,7 +9,7 @@ public interface RankingCategoryService {
 
     List<RankingCategory> getCategories();
 
-    boolean updateCategory(RankingCategory category);
+    void updateCategory(RankingCategory category) throws CustomException;
 
-    boolean deleteCategory(long categoryId);
+    void deleteCategory(long categoryId);
 }

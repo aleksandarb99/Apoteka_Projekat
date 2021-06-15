@@ -38,7 +38,7 @@ function AddPharmacyModal(props) {
                 .get('http://localhost:8080/api/users/?type=PHARMACY_ADMIN')
                 .then((res) => {
                     setPharmacyAdmins(res.data);
-                });
+                }).catch(() => { });
         }
         fetchData();
     }, [])

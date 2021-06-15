@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.rankingCategory;
 
 import com.team11.PharmacyProject.dto.rankingcategory.RankingCategoryDTO;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import jdk.jfr.Category;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,22 +40,23 @@ public class RankingCategoryController {
     @PostMapping(value = "/")
     public ResponseEntity<String> updateCategory(@RequestBody @Valid RankingCategoryDTO categoryDTO ) {
         RankingCategory category = modelMapper.map(categoryDTO, RankingCategory.class);
-        boolean success = rankingService.updateCategory(category);
-        if (success) {
+        try {
+            rankingService.updateCategory(category);
             return new ResponseEntity<>("Category added/updated", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error.", HttpStatus.BAD_REQUEST);
+        } catch (CustomException ce) {
+            return new ResponseEntity<>(ce.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable("id") long categoryId) {
-        boolean success = rankingService.deleteCategory(categoryId);
-        if (success) {
+    public ResponseEntity<String> deleteCategory(@PathVariable("id") long categoryId) {
+        try {
+            rankingService.deleteCategory(categoryId);
             return new ResponseEntity<>("Category deleted", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error.", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
-
 }

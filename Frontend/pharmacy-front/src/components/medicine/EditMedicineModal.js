@@ -64,18 +64,18 @@ function EditMedicineModal(props) {
         api.get(`/api/medicine/`)
             .then((res) => {
                 setMedicines(res.data);
-            });
+            }).catch(() => { });
     }
 
     function fetchTypesAndForms() {
         api.get(`/api/medicine-types/`)
             .then((res) => {
                 setMedTypes(res.data)
-            });
+            }).catch(() => { });
         api.get(`/api/medicine-forms/`)
             .then((res) => {
                 setMedForms(res.data)
-            });
+            }).catch(() => { });
     }
 
     function fetchManufacturers() {

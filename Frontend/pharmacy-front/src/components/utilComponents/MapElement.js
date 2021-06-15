@@ -83,7 +83,7 @@ const MapElement = ({ onChange, defAddress }) => {
             .then((response) => {
                 let jsonData = response.data;
                 parseJsonData(jsonData);
-            });
+            }).catch(() => { });
     }
 
     const parseJsonData = (data) => {

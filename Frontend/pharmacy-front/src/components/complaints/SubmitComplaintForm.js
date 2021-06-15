@@ -32,7 +32,7 @@ const SubmitComplaintForm = () => {
     api.get(url).then((res) => {
       setOptions(res.data);
       setSingleSelection([]);
-    });
+    }).catch(() => { });
   }, [complaintType]);
 
   const getLabelKey = (option) => {

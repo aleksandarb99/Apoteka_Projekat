@@ -59,7 +59,7 @@ function AddMedicineModal(props) {
         api.get(`http://localhost:8080/api/medicine/`)
             .then((res) => {
                 setMedicines(res.data);
-            });
+            }).catch(() => { });
     }
 
     function fetchTypesAndForms() {
@@ -67,12 +67,12 @@ function AddMedicineModal(props) {
             .then((res) => {
                 setMedTypes(res.data)
                 setField('medicineTypeName', res.data[0].name || '');
-            });
+            }).catch(() => { });
         api.get(`http://localhost:8080/api/medicine-forms/`)
             .then((res) => {
                 setMedForms(res.data)
                 setField('medicineFormName', res.data[0].name || '');
-            });
+            }).catch(() => { });
     }
 
     function fetchManufacturers() {
@@ -80,7 +80,7 @@ function AddMedicineModal(props) {
             .then((res) => {
                 setManufacturers(res.data)
                 setField('manufacturer', res.data[0].name || '');
-            });
+            }).catch(() => { });
     }
 
 
