@@ -75,9 +75,8 @@ function PharmacyBasic({ details }) {
       api
         .get(`/api/pharmacy/${details.id}/subscribe/${getIdFromToken()}`)
         .then((res) => {
-          console.log(res.data);
           setIsUserSubscribed(res.data);
-        });
+        }).catch(() => { });
     }
   };
 

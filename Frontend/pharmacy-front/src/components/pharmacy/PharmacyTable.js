@@ -19,7 +19,7 @@ function PharmacyTable(props) {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("/api/pharmacy/crud");
+      const response = await axios.get("/api/pharmacy/crud").catch(() => { });
       setPharmacies(response.data);
     }
     fetchData();

@@ -66,7 +66,7 @@ function Rating() {
       )
       .then((res) => {
         setRating(res.data);
-      });
+      }).catch(() => { });
   };
 
   const ratingChanged = (newRating) => {

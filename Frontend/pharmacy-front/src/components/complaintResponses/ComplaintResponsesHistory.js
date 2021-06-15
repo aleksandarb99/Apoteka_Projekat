@@ -12,7 +12,7 @@ const ComplaintResponsesHistory = () => {
         .get(`/api/complaint-responses/admin/${getIdFromToken()}`)
         .then((res) => {
           setComplaintResponses(res.data);
-        });
+        }).catch(() => { });
     }
     fetchComplaints();
   }, []);

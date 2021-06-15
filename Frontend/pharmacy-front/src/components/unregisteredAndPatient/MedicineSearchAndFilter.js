@@ -4,27 +4,27 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import api from "../../app/api";
 
 const MedicineSearchAndFilter = (props) => {
-  const [medicineType, setMedicineType] = useState("");
-  const [medicineForm, setMedicineForm] = useState("");
-  const [medTypes, setMedTypes] = useState([]);
-  const [medForms, setMedForms] = useState([]);
-  const [medName, setMedName] = useState("");
+    const [medicineType, setMedicineType] = useState("");
+    const [medicineForm, setMedicineForm] = useState("");
+    const [medTypes, setMedTypes] = useState([]);
+    const [medForms, setMedForms] = useState([]);
+    const [medName, setMedName] = useState("");
 
-  useEffect(() => {
-    api.get(`/api/medicine-types/`).then((res) => {
-      setMedTypes(res.data);
-    });
-    api.get(`/api/medicine-forms/`).then((res) => {
-      setMedForms(res.data);
-    });
-  }, []);
+    useEffect(() => {
+        api.get(`/api/medicine-types/`).then((res) => {
+            setMedTypes(res.data);
+        }).catch(() => { });
+        api.get(`/api/medicine-forms/`).then((res) => {
+            setMedForms(res.data);
+        }).catch(() => { });
+    }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-    props.updateParams(generateSearchParams());
-  };
+        props.updateParams(generateSearchParams());
+    };
 
     const generateSearchParams = () => {
         let searchParam = `name:${medName},medicineType:${medicineType},medicineForm:${medicineForm}`

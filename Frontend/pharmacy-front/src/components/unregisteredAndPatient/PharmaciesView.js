@@ -55,7 +55,7 @@ function PharmaciesView() {
       axios.get("/api/pharmacy/").then((resp) => {
         setPharmacies(resp.data);
         setBackup(resp.data);
-      });
+      }).catch(() => { });
     } else {
       axios
         .get("/api/pharmacy/search", {
@@ -64,7 +64,7 @@ function PharmaciesView() {
         .then((resp) => {
           setPharmacies(resp.data);
           setBackup(resp.data);
-        });
+        }).catch(() => { });
     }
   };
 
