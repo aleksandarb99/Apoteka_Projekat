@@ -241,7 +241,7 @@ public class EmailService {
         mail.setSubject("Potvrda naloga");
         String sb = "Poštovani, kako biste izvršili potvrdu naloga, kliknite na link ispod\n\n" +
                 // todo change
-                "http://localhost:8080/verification?token=" + token;
+                "https://apotekaprojekat.herokuapp.com/verification?token=" + token;
         mail.setText(sb);
         javaMailSender.send(mail);
     }
