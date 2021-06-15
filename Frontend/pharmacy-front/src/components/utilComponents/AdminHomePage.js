@@ -14,7 +14,7 @@ function AdminHomePage() {
 
   useEffect(() => {
     let id = getIdFromToken();
-    api.get("http://localhost:8080/api/users/" + id)
+    api.get("/api/users/" + id)
       .then((res) => {
         setShowModalPWChange(!res.data.passwordChanged)
       }).catch(() => { })

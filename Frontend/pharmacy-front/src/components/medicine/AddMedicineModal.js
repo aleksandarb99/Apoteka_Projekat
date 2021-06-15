@@ -55,19 +55,19 @@ function AddMedicineModal(props) {
     }, [])
 
     function fetchMedicine() {
-        api.get(`http://localhost:8080/api/medicine/`)
+        api.get(`/api/medicine/`)
             .then((res) => {
                 setMedicines(res.data);
             }).catch(() => { });
     }
 
     function fetchTypesAndForms() {
-        api.get(`http://localhost:8080/api/medicine-types/`)
+        api.get(`/api/medicine-types/`)
             .then((res) => {
                 setMedTypes(res.data)
                 setField('medicineTypeName', res.data[0].name || '');
             }).catch(() => { });
-        api.get(`http://localhost:8080/api/medicine-forms/`)
+        api.get(`/api/medicine-forms/`)
             .then((res) => {
                 setMedForms(res.data)
                 setField('medicineFormName', res.data[0].name || '');
@@ -75,7 +75,7 @@ function AddMedicineModal(props) {
     }
 
     function fetchManufacturers() {
-        api.get(`http://localhost:8080/api/manufacturers/`)
+        api.get(`/api/manufacturers/`)
             .then((res) => {
                 setManufacturers(res.data)
                 setField('manufacturer', res.data[0].name || '');
@@ -118,7 +118,7 @@ function AddMedicineModal(props) {
             return
         }
         api
-            .post('http://localhost:8080/api/medicine/', data)
+            .post('/api/medicine/', data)
             .then(() => {
                 setForm({})
                 props.onSuccess()

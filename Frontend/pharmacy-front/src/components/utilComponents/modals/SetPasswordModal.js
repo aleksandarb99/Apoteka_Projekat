@@ -41,7 +41,7 @@ const SetPasswordModal = (props) => {
         let data = {
             newPassword: password
         }
-        api.put("http://localhost:8080/api/users/set-password/" + getIdFromToken(), data)
+        api.put("/api/users/set-password/" + getIdFromToken(), data)
             .then(() => {
                 props.onPasswordSet()
             })

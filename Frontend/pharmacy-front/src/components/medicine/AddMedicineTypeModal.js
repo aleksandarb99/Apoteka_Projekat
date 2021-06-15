@@ -12,7 +12,7 @@ const AddMedicineTypeModal = (props) => {
         e.preventDefault();
         e.stopPropagation();
 
-        api.post(`http://localhost:8080/api/medicine-types/${type}`)
+        api.post(`/api/medicine-types/${type}`)
             .then(() => {
                 addToast("Medicine type added successfully", { appearance: "success" })
                 props.onHide()

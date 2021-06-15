@@ -334,7 +334,7 @@ public class MedicineServiceImpl implements MedicineService {
         for (Medicine alt: m.getAlternativeMedicine()) {
             Chunk c = new Chunk(String.format("%s - %s\n", alt.getName(), alt.getCode()), textFont);
             // TODO change base URL if needed
-            String baseURL = "http://localhost:8080/api/medicine/{id}/get-pdf";
+            String baseURL = "https://apotekaprojekat.herokuapp.com/api/medicine/{id}/get-pdf";
             String altUrl = baseURL.replace("{id}", alt.getId().toString());
             c.setAnchor(altUrl);
             bodyParagraph.add(c);

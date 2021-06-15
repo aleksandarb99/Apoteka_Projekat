@@ -23,7 +23,7 @@ const MedicineRow = ({
           <Button
             variant="info"
             onClick={() =>
-              window.open(`http://localhost:8080/api/medicine/${medicine.id}/get-pdf`, "_blank")
+              window.open(`https://apotekaprojekat.herokuapp.com/api/medicine/${medicine.id}/get-pdf`, "_blank")
             }
           >
             {" "}

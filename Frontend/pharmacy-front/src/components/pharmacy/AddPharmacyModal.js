@@ -35,7 +35,7 @@ function AddPharmacyModal(props) {
     useEffect(() => {
         async function fetchData() {
             await api
-                .get('http://localhost:8080/api/users/?type=PHARMACY_ADMIN')
+                .get('/api/users/?type=PHARMACY_ADMIN')
                 .then((res) => {
                     setPharmacyAdmins(res.data);
                 }).catch(() => { });
@@ -105,7 +105,7 @@ function AddPharmacyModal(props) {
     const sendPostRequest = () => {
         let data = convertForm();
         api
-            .post('http://localhost:8080/api/pharmacy/', data)
+            .post('/api/pharmacy/', data)
             .then(() => {
                 setForm({})
                 props.onSuccess()

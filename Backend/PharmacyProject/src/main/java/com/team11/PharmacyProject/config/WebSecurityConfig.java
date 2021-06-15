@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/verification").permitAll()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/h2-console/").permitAll()    // /h2-console/ ako se koristi H2 baza)
-                //.antMatchers("/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

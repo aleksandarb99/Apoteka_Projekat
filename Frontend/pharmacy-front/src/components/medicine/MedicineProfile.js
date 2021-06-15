@@ -107,7 +107,7 @@ function MedicineProfile() {
       <div className="medicine__content">
         <p className="my__medicine__header">
           <h2>{medicine.name}</h2>
-          <a href={`http://localhost:8080/api/medicine/${id}/get-pdf`} target="_blank" rel="noopener noreferrer">
+          <a href={`https://apotekaprojekat.herokuapp.com/api/medicine/${id}/get-pdf`} target="_blank" rel="noopener noreferrer">
             <h4><FileEarmarkText /></h4>
           </a>
         </p>

@@ -25,7 +25,7 @@ const ComplaintResponse = ({ complaint, onSuccessfulSubmit }) => {
             "date": Date.now(),
         }
 
-        let url = `http://localhost:8080/api/complaint-responses/${complaint.id}`;
+        let url = `/api/complaint-responses/${complaint.id}`;
         api.post(url, JSON.stringify(data))
             .then(() => {
                 onSuccessfulSubmit()

@@ -104,7 +104,7 @@ function EditPharmacyModal(props) {
     const sendPutRequest = () => {
         let data = convertForm();
         api
-            .put('http://localhost:8080/api/pharmacy/' + props.pharmacy.id, data)
+            .put('/api/pharmacy/' + props.pharmacy.id, data)
             .then(() => {
                 setForm({})
                 addToast("Pharmacy updated successfully.", { appearance: 'success' });
