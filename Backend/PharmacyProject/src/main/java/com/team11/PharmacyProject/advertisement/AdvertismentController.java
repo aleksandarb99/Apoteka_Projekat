@@ -32,7 +32,7 @@ public class AdvertismentController {
             return new ResponseEntity<>(advertisementDTOS, HttpStatus.OK);
         } catch (Exception ignored) {
         }
-        return new ResponseEntity<>("Failed to load advertisment!", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Failed to load advertisement!", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE )
@@ -40,7 +40,7 @@ public class AdvertismentController {
     public ResponseEntity<String> addAdvertisment(@PathVariable("id") Long id, @RequestBody AdvertismentDTORequest dto) {
         try {
             advertismentService.addAdvertisment(id, dto);
-            return new ResponseEntity<>("Successully added advertisment", HttpStatus.OK);
+            return new ResponseEntity<>("Successfully added advertisement", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

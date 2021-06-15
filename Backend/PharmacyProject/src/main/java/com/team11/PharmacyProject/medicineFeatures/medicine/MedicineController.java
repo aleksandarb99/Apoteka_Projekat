@@ -93,7 +93,7 @@ public class MedicineController {
         if (medicineService.delete(id)) {
             return new ResponseEntity<>("Medicine deleted successfully", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
 

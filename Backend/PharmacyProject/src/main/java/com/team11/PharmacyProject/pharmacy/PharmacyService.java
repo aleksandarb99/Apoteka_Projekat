@@ -45,7 +45,7 @@ public interface PharmacyService {
 
     Pharmacy getPharmacyIdByAdminId(Long id);
 
-    boolean subscribe(long pharmacyId, long patientId);
+    boolean subscribe(long pharmacyId, long patientId) throws CustomException;
 
     boolean unsubscribe(long pharmacyId, long patientId);
 
@@ -53,7 +53,7 @@ public interface PharmacyService {
 
     boolean createInquiry(Long workerID, Long medicineItemID, Pharmacy pharmacy);
 
-    List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order);
+    List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order) throws CustomException;
 
     Map<String, Double> getInfoForReport(String period, Long pharmacyId, int duration);
 

@@ -301,15 +301,15 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
-    public boolean subscribe(long pharmacyId, long patientId) {
+    public boolean subscribe(long pharmacyId, long patientId) throws CustomException {
         Optional<Pharmacy> pharmacy = pharmacyRepository.findPharmacyByIdFetchSubscribed(pharmacyId);
         if (pharmacy.isEmpty())
-            return false;
+            throw new CustomException("Invalid pharmacy");
         Optional<Patient> patient = patientRepository.findById(patientId);
         if (patient.isEmpty())
-            return false;
+            throw new CustomException("Invalid patient");
         if (pharmacy.get().getSubscribers().stream().anyMatch(p -> p.getId() == patientId))
-            return false;
+            throw new CustomException("Already subscribed");
         pharmacy.get().getSubscribers().add(patient.get());
         pharmacyRepository.save(pharmacy.get());
         return true;
@@ -606,28 +606,27 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
-    public List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order) {
-        // TODO provera alergena, podataka i tako to
+    public List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order) throws CustomException {
         if (eRecipeDTO.getState() == ERecipeState.REJECTED) {
-            throw new RuntimeException("This prescription in not valid");
+            throw new CustomException("This prescription in not valid");
         }
         if (eRecipeDTO.getState() == ERecipeState.PROCESSED) {
-            throw new RuntimeException("This prescription has already been processes");
+            throw new CustomException("This prescription has already been processes");
         }
         for (var er : eRecipeDTO.geteRecipeItems()) {
             if (er.getQuantity() <= 0) {
-                throw new RuntimeException("Quantity must be grater than 0");
+                throw new CustomException("Quantity must be grater than 0");
             }
         }
         if (eRecipeDTO.getCode() == null) {
-            throw new RuntimeException("Prescription code can not be null");
+            throw new CustomException("Prescription code can not be null");
         }
         if (eRecipeDTO.getPrescriptionDate() > System.currentTimeMillis()) {
-            throw new RuntimeException("Prescription date is not valid");
+            throw new CustomException("Prescription date is not valid");
         }
         Optional<Patient> pat = patientRepository.findById(eRecipeDTO.getPatientId());
         if (pat.isEmpty()) {
-            throw new RuntimeException("Invalid patient's ID");
+            throw new CustomException("Invalid patient's ID");
         }
         // get pharmacies with required medicine
         List<Pharmacy> pharmaciesWithMedInStock = pharmacyRepository.findPharmacyWithMedOnStock(eRecipeDTO.geteRecipeItems());

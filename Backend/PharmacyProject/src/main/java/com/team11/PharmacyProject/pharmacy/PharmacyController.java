@@ -79,10 +79,10 @@ public class PharmacyController {
     @PostMapping(value = "/{pharmacyId}/subscribe/{patientId}")
     @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> subscribe(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
-        boolean b = pharmacyService.subscribe(pharmacyId, patientId);
-        if (b) {
+        try {
+            pharmacyService.subscribe(pharmacyId, patientId);
             return new ResponseEntity<>("User successfully subscribed", HttpStatus.OK);
-        } else {
+        } catch (Exception e) {
             return new ResponseEntity<>("Error. User not subscribed", HttpStatus.BAD_REQUEST);
         }
     }
@@ -115,8 +115,14 @@ public class PharmacyController {
         if (order != null && order.equals("DESC")) {
             dir = "DESC";
         }
-        List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO, criteria, dir);
-        return new ResponseEntity<>(pharmacyERecipeDTOS, HttpStatus.OK);
+        try {
+            List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO, criteria, dir);
+            return new ResponseEntity<>(pharmacyERecipeDTOS, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<PharmacyERecipeDTO>(), HttpStatus.OK);
+        }
+
+
     }
 
     @PostMapping(value = "/e-recipe/{pharmacyId}")
@@ -199,7 +205,7 @@ public class PharmacyController {
             pharmacyService.update(id, pharmacy);
             return new ResponseEntity<>("Pharmacy updated successfully", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -233,8 +239,6 @@ public class PharmacyController {
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyAllDTO>> searchPharmaciesByNameOrCity
             (@Valid @RequestParam(value = "searchValue", required = false) String searchValue) throws Exception {
-
-        // TODO vidi kako cemo hanladati errore, da li moram rucno proverati da li je prsledjeni atribut prazan string ili predugacak, null, itd.
 
         List<Pharmacy> pharmacyResult = pharmacyService.searchPharmaciesByNameOrCity(searchValue);
         List<PharmacyAllDTO> pharmacyDTOS = new ArrayList<>();
@@ -296,7 +300,7 @@ public class PharmacyController {
         List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByPatientId(id);
 
         if (pharmacies == null) {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
 
         List<RatingGetEntitiesDTO> retVal = pharmacies.stream().map(RatingGetEntitiesDTO::new).collect(Collectors.toList());
