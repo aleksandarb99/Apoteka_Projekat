@@ -73,12 +73,12 @@ function App() {
             <GuardedRoute
               path="/pharmacy/:id"
               component={PharmacyProfile}
-              userType={[null, "PATIENT"]}
+              userType={[null, "PATIENT", "PHARMACY_ADMIN", "ADMIN", "DERMATOLOGIST", "PHARMACIST"]}
             />
             <GuardedRoute
               path="/medicine/:id/pharmacy/:pid/price/:priceid"
               component={MedicineProfile}
-              userType={[null, "PATIENT"]}
+              userType={[null, "PATIENT", "PHARMACY_ADMIN", "ADMIN", "DERMATOLOGIST", "PHARMACIST"]}
             />
 
             <GuardedRoute

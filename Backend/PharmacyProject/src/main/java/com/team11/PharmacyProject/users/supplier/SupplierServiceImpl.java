@@ -14,6 +14,7 @@ import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.myOrder.MyOrder;
 import com.team11.PharmacyProject.myOrder.MyOrderRepository;
 import com.team11.PharmacyProject.offer.Offer;
+import com.team11.PharmacyProject.offer.OfferRepository;
 import com.team11.PharmacyProject.offer.OfferService;
 import com.team11.PharmacyProject.orderItem.OrderItem;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
@@ -50,6 +51,8 @@ public class SupplierServiceImpl implements SupplierService {
     private EmailService emailService;
     @Autowired
     private SupplierItemRepository supplierItemRepository;
+    @Autowired
+    private OfferRepository offerRepository;
 
     @Override
     public List<SupplierItem> getStockForId(long id) {
@@ -242,6 +245,7 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
+    @Transactional
     public void updateOffer(long suppId, OfferListDTO offerDTO) throws CustomException {
         if (offerDTO == null) {
             throw new CustomException("Oops");
@@ -276,6 +280,6 @@ public class SupplierServiceImpl implements SupplierService {
         offerToUpdate.get().setPrice(offerDTO.getPrice());
         offerToUpdate.get().setDeliveryDate(offerDTO.getDeliveryDate());
         offerToUpdate.get().setOfferState(offerDTO.getOfferState());
-        supplierRepository.save(supp);
+        offerRepository.save(offerToUpdate.get());
     }
 }

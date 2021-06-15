@@ -4,7 +4,7 @@ import { Row, Table, Form } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import moment from "moment";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
@@ -23,7 +23,7 @@ function EPrescriptionReview() {
 
   useEffect(() => {
     async function fetchEntities() {
-      const request = await axios
+      const request = await api
         .get("/api/e-recipes/patient/" + getIdFromToken())
         .then((res) => {
           setEntitites(res.data);

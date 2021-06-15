@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import UserRow from './UserRow';
 import { useToasts } from 'react-toast-notifications';
 import { getErrorMessage } from '../../app/errorHandler';
+import api from '../../app/api';
 
 function UserTable({ initialUserType }) {
   const [reload, setReload] = useState(false);
@@ -26,7 +27,7 @@ function UserTable({ initialUserType }) {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get('/api/users/?type=' + currentUserType).catch(() => { });
+      const response = await api.get('/api/users/?type=' + currentUserType).catch(() => { });
       setUsers(!!response ? response.data : []);
     }
     fetchData();
