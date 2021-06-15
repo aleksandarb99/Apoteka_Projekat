@@ -56,11 +56,9 @@ public class MedicineReservationServiceImpl implements MedicineReservationServic
 
     @Override
     public boolean isMedicineItemReserved(Long id) {
-        MedicineReservation reservation =  reservationRepository.findReservationByMedicineItemId(id);
-        
-        if(reservation != null)
-            return true;
-        return false;
+        List<MedicineReservation> reservations =  reservationRepository.findReservationByMedicineItemId(id);
+
+        return !reservations.isEmpty();
     }
 
     @Override

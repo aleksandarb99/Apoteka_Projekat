@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.users.user;
 
 import com.team11.PharmacyProject.address.Address;
+import com.team11.PharmacyProject.verificationToken.VerificationToken;
 
 import javax.persistence.*;
 
@@ -40,6 +41,9 @@ public class MyUser {
 
     @Column(name = "is_email_verified", nullable = false)
     private boolean emailVerified = false;
+
+    @OneToOne
+    VerificationToken token;
 
     @Version
     @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
@@ -146,5 +150,13 @@ public class MyUser {
 
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
+    }
+
+    public VerificationToken getToken() {
+        return token;
+    }
+
+    public void setToken(VerificationToken token) {
+        this.token = token;
     }
 }

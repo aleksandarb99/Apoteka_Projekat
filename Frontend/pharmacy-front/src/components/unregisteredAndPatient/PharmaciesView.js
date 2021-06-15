@@ -17,7 +17,7 @@ import {
 import { StarFill, Search, Reply } from "react-bootstrap-icons";
 import Dropdown from "react-bootstrap/Dropdown";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import "../../styling/pharmaciesAndMedicines.css";
 
@@ -39,9 +39,9 @@ function PharmaciesView() {
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get("/api/pharmacy/");
-      setPharmacies(request.data);
-      setBackup(request.data);
+      const request = await api.get("/api/pharmacy/").catch(() => { });;
+      setPharmacies(!!request ? request.data : []);
+      setBackup(!!request ? request.data : []);
 
       return request;
     }
@@ -52,19 +52,19 @@ function PharmaciesView() {
     event.preventDefault();
 
     if (fsearch.length === 0) {
-      axios.get("/api/pharmacy/").then((resp) => {
+      api.get("/api/pharmacy/").then((resp) => {
         setPharmacies(resp.data);
         setBackup(resp.data);
-      });
+      }).catch(() => { });
     } else {
-      axios
+      api
         .get("/api/pharmacy/search", {
           params: { searchValue: fsearch },
         })
         .then((resp) => {
           setPharmacies(resp.data);
           setBackup(resp.data);
-        });
+        }).catch(() => { });
     }
   };
 
@@ -162,7 +162,7 @@ function PharmaciesView() {
   };
 
   const resetSearch = function () {
-    axios
+    api
       .get("/api/pharmacy/")
       .then((resp) => {
         setPharmacies(resp.data);

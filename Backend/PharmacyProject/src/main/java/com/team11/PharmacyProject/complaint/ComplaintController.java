@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.complaint;
 
 import com.team11.PharmacyProject.dto.complaint.ComplaintCrudDTO;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,9 +21,12 @@ public class ComplaintController {
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addComplaint(@RequestBody @Valid ComplaintCrudDTO complaintCrudDTO) {
-        if (complaintService.addComplaint(complaintCrudDTO)) {
+        try {
+            complaintService.addComplaint(complaintCrudDTO);
             return new ResponseEntity<>("Complaint added successfully", HttpStatus.OK);
-        } else {
+        } catch (CustomException ce) {
+            return new ResponseEntity<>(ce.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             return new ResponseEntity<>("Error. Complaint not added", HttpStatus.BAD_REQUEST);
         }
     }

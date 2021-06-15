@@ -1,9 +1,11 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
 import com.team11.PharmacyProject.dto.medicine.MedicineCrudDTO;
+import com.team11.PharmacyProject.dto.medicine.MedicineCrudEditDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineInfoDTO;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,30 +76,38 @@ public class MedicineController {
     }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> addMedicine(@RequestBody MedicineCrudDTO medicineCrudDto) {
-        Medicine medicine = convertToEntity(medicineCrudDto);
-        if (medicineService.insertMedicine(medicine)) {
+    public ResponseEntity<String> addMedicine(@RequestBody MedicineCrudEditDTO medicineCrudDto) {
+        Medicine medicine = mapper.map(medicineCrudDto, Medicine.class);
+        try {
+            medicineService.insertMedicine(medicine);
             return new ResponseEntity<>("Medicine added successfully", HttpStatus.OK);
-        } else {
+        } catch(CustomException ce) {
+            return new ResponseEntity<>(ce.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> deleteMedicine(@PathVariable("id") long id) {
         if (medicineService.delete(id)) {
             return new ResponseEntity<>("Medicine deleted successfully", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updateMedicine(@PathVariable("id") long id, @RequestBody MedicineCrudDTO medicineCrudDto) {
-        Medicine medicine = convertToEntity(medicineCrudDto);
-        if (medicineService.update(id, medicine)) {
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<String> updateMedicine(@PathVariable("id") long id, @RequestBody MedicineCrudEditDTO medicineCrudDto) {
+        Medicine medicine = mapper.map(medicineCrudDto, Medicine.class);
+        try {
+            medicineService.update(id, medicine);
             return new ResponseEntity<>("Medicine updated successfully", HttpStatus.OK);
-        } else {
+        } catch(CustomException ce) {
+            return new ResponseEntity<>(ce.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
         }
     }
@@ -130,10 +140,6 @@ public class MedicineController {
 
         List<RatingGetEntitiesDTO> retVal = medicines.stream().map(RatingGetEntitiesDTO::new).collect(Collectors.toList());
         return new ResponseEntity<>(retVal, HttpStatus.OK);
-    }
-
-    private Medicine convertToEntity(MedicineCrudDTO medicineCrudDto) {
-        return mapper.map(medicineCrudDto, Medicine.class);
     }
 
     private MedicineCrudDTO convertToCrudDto(Medicine medicine) {

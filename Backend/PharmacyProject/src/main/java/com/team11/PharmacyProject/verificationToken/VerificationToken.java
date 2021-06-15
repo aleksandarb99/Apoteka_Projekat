@@ -18,8 +18,8 @@ public class VerificationToken {
 
     private String token;
 
-    @OneToOne(targetEntity = MyUser.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
+    @OneToOne(targetEntity = MyUser.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
+    @JoinColumn(nullable = true, name = "user_id")
     private MyUser user;
 
     private Date expiryDate;

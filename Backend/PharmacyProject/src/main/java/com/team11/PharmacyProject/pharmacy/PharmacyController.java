@@ -6,7 +6,10 @@ import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineTherapyDTO;
 import com.team11.PharmacyProject.dto.pharmacy.*;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
+import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
+import com.team11.PharmacyProject.priceList.PriceList;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -77,10 +80,10 @@ public class PharmacyController {
     @PostMapping(value = "/{pharmacyId}/subscribe/{patientId}")
     @PreAuthorize("hasAuthority('PATIENT')")
     public ResponseEntity<String> subscribe(@PathVariable("pharmacyId") long pharmacyId, @PathVariable("patientId") long patientId) {
-        boolean b = pharmacyService.subscribe(pharmacyId, patientId);
-        if (b) {
+        try {
+            pharmacyService.subscribe(pharmacyId, patientId);
             return new ResponseEntity<>("User successfully subscribed", HttpStatus.OK);
-        } else {
+        } catch (Exception e) {
             return new ResponseEntity<>("Error. User not subscribed", HttpStatus.BAD_REQUEST);
         }
     }
@@ -113,8 +116,14 @@ public class PharmacyController {
         if (order != null && order.equals("DESC")) {
             dir = "DESC";
         }
-        List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO, criteria, dir);
-        return new ResponseEntity<>(pharmacyERecipeDTOS, HttpStatus.OK);
+        try {
+            List<PharmacyERecipeDTO> pharmacyERecipeDTOS = pharmacyService.getAllWithMedicineInStock(eRecipeDTO, criteria, dir);
+            return new ResponseEntity<>(pharmacyERecipeDTOS, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<PharmacyERecipeDTO>(), HttpStatus.OK);
+        }
+
+
     }
 
     @PostMapping(value = "/e-recipe/{pharmacyId}")
@@ -167,44 +176,62 @@ public class PharmacyController {
     }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> insertPharmacy(@Valid @RequestBody PharmacyCrudDTO pharmacyCrudDTO) {
         Pharmacy pharmacy = convertCrudDTOToEntity(pharmacyCrudDTO);
-        if (pharmacyService.insertPharmacy(pharmacy)) {
+        try {
+            pharmacyService.insertPharmacy(pharmacy, pharmacyCrudDTO.getAdmins());
             return new ResponseEntity<>("Pharmacy added successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> deletePharmacy(@PathVariable("id") long id) {
-        if (pharmacyService.delete(id)) {
+        try {
+            pharmacyService.delete(id);
             return new ResponseEntity<>("Pharmacy deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        } catch (CustomException ce) {
+            return new ResponseEntity<>(ce.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping(value = "/{id}")
-    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('PHARMACY_ADMIN', 'ADMIN')")
     public ResponseEntity<String> updatePharmacy(@PathVariable("id") long id, @Valid @RequestBody PharmacyDTO pharmacyDTO) {
         Pharmacy pharmacy = convertToEntity(pharmacyDTO);
         try {
             pharmacyService.update(id, pharmacy);
             return new ResponseEntity<>("Pharmacy updated successfully", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @GetMapping(value = "/crud", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PharmacyCrudDTO>> getAllPharmaciesDTO() {
-        List<PharmacyCrudDTO> pharmacyCrudDTOs = pharmacyService.getAll().stream().map(this::convertToCrudDTO).collect(Collectors.toList());
+        List<Pharmacy> pharmacies = pharmacyService.getAll();
+        List<PharmacyCrudDTO> pharmacyCrudDTOs = new ArrayList<>();
+        for (var p: pharmacies) {
+            var pcd = new PharmacyCrudDTO();
+            pcd.setAdmins(p.getAdmins().stream().map(PharmacyWorkerInfoDTO::new).collect(Collectors.toList()));
+            pcd.setAddress(p.getAddress());
+            pcd.setDescription(p.getDescription());
+            pcd.setName(p.getName());
+            pcd.setAvgGrade(p.getAvgGrade());
+            pcd.setPointsForAppointment(p.getPointsForAppointment());
+            pcd.setId(p.getId());
+            pharmacyCrudDTOs.add(pcd);
+        }
         return new ResponseEntity<>(pharmacyCrudDTOs, HttpStatus.OK);
     }
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    // Svi mogu pristupiti
     public ResponseEntity<List<PharmacyDTO>> getAllPharmacies() {
         List<PharmacyDTO> list = new ArrayList<>();
         for (Pharmacy p : pharmacyService.getAll()) {
@@ -214,10 +241,9 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    // Svi mogu pristupiti
     public ResponseEntity<List<PharmacyAllDTO>> searchPharmaciesByNameOrCity
             (@Valid @RequestParam(value = "searchValue", required = false) String searchValue) throws Exception {
-
-        // TODO vidi kako cemo hanladati errore, da li moram rucno proverati da li je prsledjeni atribut prazan string ili predugacak, null, itd.
 
         List<Pharmacy> pharmacyResult = pharmacyService.searchPharmaciesByNameOrCity(searchValue);
         List<PharmacyAllDTO> pharmacyDTOS = new ArrayList<>();
@@ -279,7 +305,7 @@ public class PharmacyController {
         List<Pharmacy> pharmacies = pharmacyService.getPharmaciesByPatientId(id);
 
         if (pharmacies == null) {
-            return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
 
         List<RatingGetEntitiesDTO> retVal = pharmacies.stream().map(RatingGetEntitiesDTO::new).collect(Collectors.toList());

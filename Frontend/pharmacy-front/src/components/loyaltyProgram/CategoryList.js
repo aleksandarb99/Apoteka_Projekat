@@ -12,7 +12,7 @@ const CategoryList = () => {
   useEffect(() => {
     api.get(`/api/ranking-category/`).then((res) => {
       setComponents(res.data);
-    });
+    }).catch(() => { });
   }, [refresh]);
 
   const addCategory = () => {

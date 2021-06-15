@@ -4,11 +4,12 @@ import { Row, Table, Form } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import moment from "moment";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
+import { getErrorMessage } from '../../app/errorHandler';
 import { useToasts } from "react-toast-notifications";
 
 function EPrescriptionReview() {
@@ -22,14 +23,14 @@ function EPrescriptionReview() {
 
   useEffect(() => {
     async function fetchEntities() {
-      const request = await axios
+      const request = await api
         .get("/api/e-recipes/patient/" + getIdFromToken())
         .then((res) => {
           setEntitites(res.data);
           setReload2(!reload2);
         })
         .catch((err) => {
-          addToast(err.response.data, { appearance: "error" });
+          addToast(getErrorMessage(err), { appearance: "error" });
         });
 
       return request;

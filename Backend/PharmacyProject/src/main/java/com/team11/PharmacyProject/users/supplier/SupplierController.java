@@ -33,6 +33,7 @@ public class SupplierController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/stock/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPPLIER')")
     public ResponseEntity<List<SupplierStockItemDTO>> getStock(@PathVariable("id") long supplierId) {
         List<SupplierItem> supplierStock = supplierService.getStockForId(supplierId);
         List<SupplierStockItemDTO> supplierStockItemDTOS = supplierStock.stream()
@@ -42,6 +43,7 @@ public class SupplierController {
     }
 
     @PostMapping(value = "/stock/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPPLIER')")
     public ResponseEntity<String> addItemToStock(@PathVariable("id") long id, @RequestBody SupplierStockItemDTO stockItemDTO) {
         try {
             supplierService.insertStockItem(id, stockItemDTO);
@@ -97,6 +99,7 @@ public class SupplierController {
     }
 
     @PostMapping(value = "/offers/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPPLIER')")
     public ResponseEntity<String> addOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
         // Uvek ce biti pending kada treba da se doda
         offerDTO.setOfferState(OfferState.PENDING);
@@ -105,20 +108,23 @@ public class SupplierController {
             return new ResponseEntity<>("Offer added successfully", HttpStatus.OK);
         } catch (PessimisticLockingFailureException e) {
             return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
-        } catch (CustomException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (CustomException ce) {
+            return new ResponseEntity<>(ce.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>("Oops! Something went wrong!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops!!", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping(value = "/offers/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPPLIER')")
     public ResponseEntity<String> updateOffer(@PathVariable("id") long id, @RequestBody OfferListDTO offerDTO) {
         try {
             supplierService.updateOffer(id, offerDTO);
             return new ResponseEntity<>("Offer updated successfully", HttpStatus.OK);
+        } catch (CustomException ce) {
+            return new ResponseEntity<>(ce.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Oops!", HttpStatus.BAD_REQUEST);
         }
     }
 }

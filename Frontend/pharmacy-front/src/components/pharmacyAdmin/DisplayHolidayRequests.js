@@ -4,12 +4,13 @@ import { Tab, Row, Col, Button, Table, Modal, Alert } from "react-bootstrap";
 
 import moment from "moment";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import "../../styling/pharmacy.css";
 import RejectRequestModal from "./RejectRequestModal";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 function DisplayHolidayRequests({ idOfPharmacy }) {
   const { addToast } = useToasts();
   const [requests, setRequests] = useState([]);
@@ -17,16 +18,16 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
   const [showAlert, setShowAlert] = useState(false);
 
   async function fetchRequests() {
-    const request = await axios.get(
+    const request = await api.get(
       `/api/vacation/getunresolvedrequestsbypharmacyid/${idOfPharmacy}`
-    );
-    setRequests(request.data);
+    ).catch(() => { });
+    setRequests(!!request ? request.data : []);
 
     return request;
   }
 
   async function rejectRequest(reason) {
-    const request = await axios
+    const request = await api
       .post(`/api/vacation/rejectrequest/${selectedRowId}`, reason)
       .then((res) => {
         fetchRequests();
@@ -35,7 +36,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -43,7 +44,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
   }
 
   async function acceptRequest() {
-    const request = await axios
+    const request = await api
       .post(`/api/vacation/acceptrequest/${selectedRowId}`)
       .then((res) => {
         fetchRequests();
@@ -52,7 +53,7 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -104,9 +105,8 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
                     onClick={() => {
                       handleClick(item.id);
                     }}
-                    className={`${
-                      selectedRowId == item.id ? "selectedRow" : "pointer"
-                    } `}
+                    className={`${selectedRowId == item.id ? "selectedRow" : "pointer"
+                      } `}
                   >
                     <td>{index + 1}</td>
                     <td>{item.absenceType}</td>

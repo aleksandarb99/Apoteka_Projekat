@@ -4,7 +4,7 @@ import { Table, Tab, Row, Col } from "react-bootstrap";
 
 import Dropdown from "react-bootstrap/Dropdown";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import moment from "moment";
 
@@ -14,10 +14,10 @@ function DisplayInquiries({ idOfPharmacy, refreshInq }) {
   const [dropdownLabel, setDropdownLabel] = useState("Active");
 
   async function fetchInquiries() {
-    const request = await axios.get(
+    const request = await api.get(
       `/api/inquiry/bypharmacyid/${idOfPharmacy}`
-    );
-    setInquiries(request.data);
+    ).catch(() => { });
+    setInquiries(!!request ? request.data : []);
     return request;
   }
 

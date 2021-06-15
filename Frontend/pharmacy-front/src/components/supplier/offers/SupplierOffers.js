@@ -14,8 +14,8 @@ const SupplierOffers = () => {
     async function fetchOffers() {
       const response = await api.get(
         `/api/suppliers/offers/${id}/?type=${currentOfferType}`
-      );
-      setOffers(response.data);
+      ).catch(() => { });
+      setOffers(!!response ? response.data : []);
     }
     fetchOffers();
   }, [reload, currentOfferType]);

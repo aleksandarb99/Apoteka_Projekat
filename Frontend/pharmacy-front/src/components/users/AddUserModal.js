@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import React, { useRef, useState } from "react";
+import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import FirstNameFormGroup from "../utilComponents/formGroups/FirstNameFormGroup";
 import LastNameFormGroup from "../utilComponents/formGroups/LastNameFormGroup";
@@ -9,17 +9,28 @@ import PasswordFormGroup from "../utilComponents/formGroups/PasswordFormGroup";
 import CityFormGroup from "../utilComponents/formGroups/CityFormGroup";
 import StreetFormGroup from "../utilComponents/formGroups/StreetFormGroup";
 import CountryFormGroup from "../utilComponents/formGroups/CountryFormGroup";
-import ErrorModal from "../utilComponents/modals/ErrorModal";
-import SuccessModal from "../utilComponents/modals/SuccessModal";
+import { useToasts } from 'react-toast-notifications';
+import { getErrorMessage } from '../../app/errorHandler';
 
-import axios from "../../app/api";
+import api from "../../app/api";
+import Validator from "../../app/validator";
 
 function AddUserModal(props) {
-  const [form, setForm] = useState({});
-  const [validated, setValidated] = useState(false);
+  const [form, setForm] = useState(
+    {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      repeatPassword: '',
+      telephone: '',
+      city: '',
+      street: '',
+      country: ''
+    }
+  );
+  const { addToast } = useToasts();
 
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const setField = (field, value) => {
     setForm({
@@ -28,31 +39,43 @@ function AddUserModal(props) {
     });
   };
 
+  const validateForm = () => {
+    return Validator['firstName'](form['firstName'])
+      && Validator['lastName'](form['lastName'])
+      && Validator['email'](form['email'])
+      && Validator['password'](form['password'])
+      && Validator['password'](form['repeatPassword'])
+      && Validator['telephone'](form['telephone'])
+      && Validator['city'](form['city'])
+      && Validator['street'](form['street'])
+      && Validator['country'](form['country'])
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const f = event.currentTarget;
-
-    if (f.checkValidity() === true) {
-      setValidated(true);
+    if (validateForm()) {
+      if (form['password'] !== form['repeatPassword']) {
+        addToast("Passwords do not match", { appearance: 'warning' })
+        return;
+      }
       sendPostRequest();
     }
   };
 
   const sendPostRequest = () => {
     const newForm = convertForm(form);
-    console.log(newForm);
-    axios
+    api
       .post("/api/users/", newForm)
       .then(() => {
         setForm({});
         props.onSuccess();
         props.onHide();
-        setShowSuccessModal(true);
+        addToast("User added successfully.", { appearance: 'success' });
       })
-      .catch(() => {
-        setShowErrorModal(true);
+      .catch((err) => {
+        addToast(getErrorMessage(err), { appearance: 'error' });
       });
   };
 
@@ -84,22 +107,43 @@ function AddUserModal(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <FirstNameFormGroup
-            onChange={(event) => setField("firstName", event.target.value)}
-          />
-          <LastNameFormGroup
-            onChange={(event) => setField("lastName", event.target.value)}
-          />
-          <EmailFormGroup
-            onChange={(event) => setField("email", event.target.value)}
-          ></EmailFormGroup>
-          <PasswordFormGroup
-            onChange={(event) => setField("password", event.target.value)}
-          ></PasswordFormGroup>
-          <PhoneNumberFormGroup
-            onChange={(event) => setField("telephone", event.target.value)}
-          ></PhoneNumberFormGroup>
+        <Form noValidate onSubmit={handleSubmit}>
+          <Row>
+            <Col md={6}>
+              <FirstNameFormGroup
+                onChange={(event) => setField("firstName", event.target.value)}
+              />
+            </Col>
+            <Col md={6}>
+              <LastNameFormGroup
+                onChange={(event) => setField("lastName", event.target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              <EmailFormGroup
+                onChange={(event) => setField("email", event.target.value)}
+              ></EmailFormGroup>
+            </Col>
+            <Col md={6}>
+              <PhoneNumberFormGroup
+                onChange={(event) => setField("telephone", event.target.value)}
+              ></PhoneNumberFormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              <PasswordFormGroup
+                onChange={(event) => setField("password", event.target.value)}
+              ></PasswordFormGroup>
+            </Col>
+            <Col md={6}>
+              <PasswordFormGroup
+                name="Repeat password" onChange={(event) => setField("repeatPassword", event.target.value)}
+              ></PasswordFormGroup>
+            </Col>
+          </Row>
           <CityFormGroup
             onChange={(event) => setField("city", event.target.value)}
           ></CityFormGroup>
@@ -114,18 +158,8 @@ function AddUserModal(props) {
           </Button>
         </Form>
       </Modal.Body>
-      <Modal.Footer></Modal.Footer>
-      <ErrorModal
-        show={showErrorModal}
-        onHide={() => setShowErrorModal(false)}
-        message="Something went wrong. User registration failed."
-      ></ErrorModal>
-      <SuccessModal
-        show={showSuccessModal}
-        onHide={() => setShowSuccessModal(false)}
-        message="User added successfully."
-      ></SuccessModal>
-    </Modal>
+      <Modal.Footer />
+    </Modal >
   );
 }
 

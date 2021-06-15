@@ -5,7 +5,7 @@ public class MedicineItemDTO {
 
     public MedicineDTO medicine;
     private Long id;
-    private double price;
+    private double price2;
     private int amount;
 
     public MedicineItemDTO() {
@@ -14,7 +14,7 @@ public class MedicineItemDTO {
     public MedicineItemDTO(MedicineDTO medicine, Long id, double price, int amount) {
         this.medicine = medicine;
         this.id = id;
-        this.price = price;
+        this.price2 = price;
         this.amount = amount;
     }
 
@@ -34,12 +34,12 @@ public class MedicineItemDTO {
         this.id = id;
     }
 
-    public double getPrice() {
-        return price;
+    public double getPrice2() {
+        return price2;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setPrice2(double price) {
+        this.price2 = price;
     }
 
     public MedicineDTO getMedicine() {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import PharmacyBasic from "./PharmacyBasic";
 import MedicinesAdminView from "./MedicineAdminView";
@@ -21,6 +21,7 @@ import { useToasts } from "react-toast-notifications";
 import ERecipeSearchInPharmacy from "./ERecipeSearchInPharmacy";
 
 import { getUserTypeFromToken } from "../../app/jwtTokenUtils.js";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function PharmacyProfile() {
   const { addToast } = useToasts();
@@ -31,13 +32,13 @@ function PharmacyProfile() {
 
   useEffect(() => {
     async function fetchPharmacy() {
-      const request = await axios
+      const request = await api
         .get(`/api/pharmacy/${id}`)
         .then((res) => {
           setPharmacyDetails(res.data);
         })
         .catch((err) => {
-          addToast(err.response.data, {
+          addToast(getErrorMessage(err), {
             appearance: "error",
           });
         });

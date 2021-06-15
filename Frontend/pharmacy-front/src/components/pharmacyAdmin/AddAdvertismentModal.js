@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { Button, Row, Col, Container, Modal, Form } from "react-bootstrap";
-
-import axios from "../../app/api";
+import { getErrorMessage } from "../../app/errorHandler";
+import api from "../../app/api";
 
 import { useToasts } from "react-toast-notifications";
 
@@ -16,13 +16,13 @@ function AddAdvertismentModal(props) {
   const [selectedRowId, setSelectedRowId] = useState(0);
 
   async function fetchPriceList() {
-    const request = await axios
+    const request = await api
       .get(`/api/pricelist/${props.priceListId}`)
       .then((res) => {
         setMedicineItems(res.data.medicineItems);
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });

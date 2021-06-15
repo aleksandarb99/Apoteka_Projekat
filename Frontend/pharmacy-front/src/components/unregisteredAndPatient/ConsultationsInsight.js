@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Container, Table, Button, Form } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import moment from "moment";
@@ -12,6 +12,7 @@ import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function ConsultationsInsight() {
   const [consultations, setConsultations] = useState([]);
@@ -27,26 +28,26 @@ function ConsultationsInsight() {
         let search_params = new URLSearchParams();
         if (sorter != "none" && ascDesc != "none")
           search_params.append("sort", sorter + ascDesc);
-        const request = await axios.get(
+        const request = await api.get(
           "/api/appointment/history/patient/" + getIdFromToken(),
           {
             params: search_params,
           }
-        );
-        setConsultations(request.data);
+        ).catch(() => { });;
+        setConsultations(!!request ? request.data : []);
 
         return request;
       } else {
         let search_params = new URLSearchParams();
         if (sorter != "none" && ascDesc != "none")
           search_params.append("sort", sorter + ascDesc);
-        const request = await axios.get(
+        const request = await api.get(
           "/api/appointment/upcoming/patient/" + getIdFromToken(),
           {
             params: search_params,
           }
-        );
-        setConsultations(request.data);
+        ).catch(() => { });
+        setConsultations(!!request ? request.data : []);
 
         return request;
       }
@@ -55,14 +56,14 @@ function ConsultationsInsight() {
   }, [dropdownLabel, sorter, ascDesc, reload]);
 
   const cancelConsultation = (id) => {
-    axios
+    api
       .put("/api/appointment/cancel-consultation/" + id)
       .then((res) => {
         addToast(res.data, { appearance: "success" });
         setReload(!reload);
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
         setReload(!reload);
       });
   };
@@ -214,7 +215,7 @@ function ConsultationsInsight() {
                         style={{
                           display:
                             dropdownLabel === "Upcoming" &&
-                            differenceInMinutes(fc.startTime)
+                              differenceInMinutes(fc.startTime)
                               ? "inline-block"
                               : "none",
                         }}

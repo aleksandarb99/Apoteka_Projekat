@@ -1,5 +1,6 @@
 package com.team11.PharmacyProject.rankingCategory;
 
+import com.team11.PharmacyProject.exceptions.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -38,12 +39,12 @@ public class RankingCategoryServiceImpl implements RankingCategoryService {
     }
 
     @Override
-    public boolean updateCategory(RankingCategory category) {
+    public void updateCategory(RankingCategory category) throws CustomException {
         if (category.getDiscount() < 0 || category.getDiscount() > 100) {
-            throw new RuntimeException("Discount must be between 0 and 100");
+            throw new CustomException("Discount must be between 0 and 100");
         }
         if (category.getPointsRequired() < 0) {
-            throw new RuntimeException("Points must be grater than 0");
+            throw new CustomException("Points must be grater than 0");
         }
 
         Optional<RankingCategory> rankingCategoryOp = rankingRepository.findById(category.getId());
@@ -55,12 +56,10 @@ public class RankingCategoryServiceImpl implements RankingCategoryService {
         rc.setDiscount(category.getDiscount());
         rc.setPointsRequired(category.getPointsRequired());
         rankingRepository.save(rc);
-        return true;
     }
 
     @Override
-    public boolean deleteCategory(long categoryId) {
+    public void deleteCategory(long categoryId) {
         rankingRepository.deleteById(categoryId);
-        return true;
     }
 }

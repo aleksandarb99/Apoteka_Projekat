@@ -2,6 +2,7 @@ package com.team11.PharmacyProject.complaint;
 
 import com.team11.PharmacyProject.dto.complaint.ComplaintCrudDTO;
 import com.team11.PharmacyProject.enums.ComplaintState;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.users.patient.Patient;
 import com.team11.PharmacyProject.users.patient.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,10 @@ public class ComplaintServiceImpl implements ComplaintService {
     PatientRepository patientRepository;
 
     @Override
-    public boolean addComplaint(ComplaintCrudDTO complaintCrudDTO) {
-        //TODO check with invalid staff/pharmacies
+    public void addComplaint(ComplaintCrudDTO complaintCrudDTO) throws CustomException {
         Optional<Patient> patient = patientRepository.findById(complaintCrudDTO.getPatientId());
         if (patient.isEmpty())
-            return false;
+            throw new CustomException("Invalid patient");
         Complaint c = new Complaint(
                 complaintCrudDTO.getId(),
                 complaintCrudDTO.getContent(),
@@ -36,7 +36,6 @@ public class ComplaintServiceImpl implements ComplaintService {
                 patient.get()
         );
         complaintRepository.save(c);
-        return true;
     }
 
     @Override

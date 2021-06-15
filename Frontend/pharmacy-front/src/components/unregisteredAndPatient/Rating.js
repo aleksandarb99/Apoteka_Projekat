@@ -6,12 +6,13 @@ import ReactStars from "react-rating-stars-component";
 import { StarFill } from "react-bootstrap-icons";
 import moment from "moment";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function Rating() {
   const [dropdownLabel, setDropdownLabel] = useState("Dermatologist");
@@ -36,7 +37,7 @@ function Rating() {
         url = "/api/pharmacy/all-pharmacies/patient/";
       }
 
-      const request = await axios
+      const request = await api
         .get(url + getIdFromToken())
         .then((res) => {
           setEntitites(res.data);
@@ -53,19 +54,19 @@ function Rating() {
   const updateSelectedEntity = (selectedEntity) => {
     setSelectedEntity(selectedEntity);
 
-    axios
+    api
       .get(
         "/api/rating/" +
-          dropdownLabel.toLowerCase() +
-          "/" +
-          selectedEntity.id +
-          "/patient/" +
-          getIdFromToken() +
-          "/grade"
+        dropdownLabel.toLowerCase() +
+        "/" +
+        selectedEntity.id +
+        "/patient/" +
+        getIdFromToken() +
+        "/grade"
       )
       .then((res) => {
         setRating(res.data);
-      });
+      }).catch(() => { });
   };
 
   const ratingChanged = (newRating) => {
@@ -83,7 +84,7 @@ function Rating() {
     };
 
     if (enabledRating === false) {
-      axios
+      api
         .post("/api/rating/", forSend)
         .then((res) => {
           addToast(res.data, { appearance: "success" });
@@ -92,11 +93,11 @@ function Rating() {
           setReload(!reload);
         })
         .catch((err) => {
-          addToast(err.response.data, { appearance: "error" });
+          addToast(getErrorMessage(err), { appearance: "error" });
         });
     } else {
       forSend.id = rating.id;
-      axios
+      api
         .put("/api/rating/", forSend)
         .then((res) => {
           addToast(res.data, { appearance: "success" });
@@ -105,7 +106,7 @@ function Rating() {
           setReload(!reload);
         })
         .catch((err) => {
-          addToast(err.response.data, { appearance: "error" });
+          addToast(getErrorMessage(err), { appearance: "error" });
         });
     }
   };
@@ -181,7 +182,7 @@ function Rating() {
             display:
               (dropdownLabel == "Dermatologist" ||
                 dropdownLabel == "Pharmacist") &&
-              entities.length > 0
+                entities.length > 0
                 ? "flex"
                 : "none",
           }}

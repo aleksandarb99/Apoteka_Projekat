@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Container, Table, Button, Form } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import moment from "moment";
@@ -11,6 +11,7 @@ import moment from "moment";
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function CheckupsInsight() {
   const [checkups, setCheckups] = useState([]);
@@ -26,26 +27,26 @@ function CheckupsInsight() {
         let search_params = new URLSearchParams();
         if (sorter != "none" && ascDesc != "none")
           search_params.append("sort", sorter + ascDesc);
-        const request = await axios.get(
+        const request = await api.get(
           "/api/appointment/checkups/history/patient/" + getIdFromToken(),
           {
             params: search_params,
           }
-        );
-        setCheckups(request.data);
+        ).catch(() => { });
+        setCheckups(!!request ? request.data : []);
 
         return request;
       } else {
         let search_params = new URLSearchParams();
         if (sorter != "none" && ascDesc != "none")
           search_params.append("sort", sorter + ascDesc);
-        const request = await axios.get(
+        const request = await api.get(
           "/api/appointment/checkups/upcoming/patient/" + getIdFromToken(),
           {
             params: search_params,
           }
-        );
-        setCheckups(request.data);
+        ).catch(() => { });
+        setCheckups(!!request ? request.data : []);
 
         return request;
       }
@@ -54,14 +55,14 @@ function CheckupsInsight() {
   }, [dropdownLabel, sorter, ascDesc, reload]);
 
   const cancelCheckup = (id) => {
-    axios
+    api
       .put("/api/appointment/cancel-checkup/" + id)
       .then((res) => {
         addToast(res.data, { appearance: "success" });
         setReload(!reload);
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
         setReload(!reload);
       });
   };
@@ -211,7 +212,7 @@ function CheckupsInsight() {
                         style={{
                           display:
                             dropdownLabel === "Upcoming" &&
-                            differenceInMinutes(c.startTime)
+                              differenceInMinutes(c.startTime)
                               ? "inline-block"
                               : "none",
                         }}

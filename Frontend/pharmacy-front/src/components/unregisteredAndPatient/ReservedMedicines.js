@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Row, Container, Table, Button } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import moment from "moment";
@@ -10,6 +10,7 @@ import moment from "moment";
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function ReservedMedicines() {
   const [reservations, setReservations] = useState([]);
@@ -18,11 +19,11 @@ function ReservedMedicines() {
 
   useEffect(() => {
     async function fetchReservations() {
-      const request = await axios.get(
+      const request = await api.get(
         "/api/medicine-reservation/reserved-medicines/patient/" +
-          getIdFromToken()
-      );
-      setReservations(request.data);
+        getIdFromToken()
+      ).catch(() => { });;
+      setReservations(!!request ? request.data : []);
 
       return request;
     }
@@ -30,14 +31,14 @@ function ReservedMedicines() {
   }, [reload]);
 
   const cancelReservation = (id) => {
-    axios
+    api
       .put("/api/medicine-reservation/cancel-reservation/" + id)
       .then((res) => {
         addToast(res.data, { appearance: "success" });
         setReload(!reload);
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
         setReload(!reload);
       });
   };

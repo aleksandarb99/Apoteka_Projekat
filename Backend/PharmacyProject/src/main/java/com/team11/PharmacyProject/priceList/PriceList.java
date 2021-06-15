@@ -14,7 +14,8 @@ public class PriceList {
     @Column(name = "pharmacy_id")
     private Long id;
 
-    @OneToMany(mappedBy = "priceList", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "priceList", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true,
+                targetEntity = MedicineItem.class)
     private List<MedicineItem> medicineItems;
 
     @OneToOne

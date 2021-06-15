@@ -15,7 +15,7 @@ import {
 
 import Dropdown from "react-bootstrap/Dropdown";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import moment from "moment";
 
@@ -23,6 +23,7 @@ import AddPurchaseOrderModal from "./AddPurchaseOrderModal";
 import SelectOfferModal from "./SelectOfferModal";
 import EditOrderModal from "./EditOrderModal";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function DisplayPurchaseOrders({
   idOfPharmacy,
@@ -49,13 +50,13 @@ function DisplayPurchaseOrders({
   const [medicineItems, setMedicineItems] = useState([]);
 
   async function fetchPriceList() {
-    const request = await axios
+    const request = await api
       .get(`/api/pricelist/${priceListId}`)
       .then((res) => {
         setMedicineItems(res.data.medicineItems);
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -70,11 +71,11 @@ function DisplayPurchaseOrders({
   }, [priceListId, refresh]);
 
   async function fetchOrders() {
-    const request = await axios.get(
+    const request = await api.get(
       `/api/orders/bypharmacyid/${idOfPharmacy}`,
       { params: { filter: filterValue } }
-    );
-    setOrders(request.data);
+    ).catch(() => { });
+    setOrders(!!request ? request.data : []);
     return request;
   }
 
@@ -112,7 +113,7 @@ function DisplayPurchaseOrders({
       adminId: getIdFromToken(),
     };
 
-    const request = await axios
+    const request = await api
       .post(`/api/orders/addorder`, dto)
       .then((res) => {
         fetchOrders();
@@ -121,7 +122,7 @@ function DisplayPurchaseOrders({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -150,7 +151,7 @@ function DisplayPurchaseOrders({
   };
 
   async function deletePOrder() {
-    const request = await axios
+    const request = await api
       .delete(`/api/orders/${showedOrder.id}`)
       .then((res) => {
         fetchOrders();
@@ -159,7 +160,7 @@ function DisplayPurchaseOrders({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -177,7 +178,7 @@ function DisplayPurchaseOrders({
       adminId: getIdFromToken(),
     };
     setShowSpinner(true);
-    const request = await axios
+    const request = await api
       .post(`/api/suppliers/offers/accept/`, dto)
       .then((res) => {
         setShowSpinner(false);
@@ -189,7 +190,7 @@ function DisplayPurchaseOrders({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -206,7 +207,7 @@ function DisplayPurchaseOrders({
   };
 
   async function editOrder(date) {
-    const request = await axios
+    const request = await api
       .put(`/api/orders/${showedOrder.id}/${date.getTime()}/`)
       .then((res) => {
         fetchOrders();
@@ -215,7 +216,7 @@ function DisplayPurchaseOrders({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });

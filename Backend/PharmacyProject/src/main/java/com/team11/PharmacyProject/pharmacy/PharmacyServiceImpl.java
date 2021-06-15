@@ -4,12 +4,14 @@ import com.team11.PharmacyProject.appointment.Appointment;
 import com.team11.PharmacyProject.appointment.AppointmentService;
 import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.dto.pharmacy.PharmacyERecipeDTO;
+import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
 import com.team11.PharmacyProject.eRecipe.ERecipe;
 import com.team11.PharmacyProject.eRecipe.ERecipeRepository;
 import com.team11.PharmacyProject.eRecipe.ERecipeService;
 import com.team11.PharmacyProject.enums.AppointmentState;
 import com.team11.PharmacyProject.enums.ERecipeState;
 import com.team11.PharmacyProject.enums.ReservationState;
+import com.team11.PharmacyProject.exceptions.CustomException;
 import com.team11.PharmacyProject.inquiry.Inquiry;
 import com.team11.PharmacyProject.inquiry.InquiryRepository;
 import com.team11.PharmacyProject.inquiry.InquiryService;
@@ -30,6 +32,7 @@ import com.team11.PharmacyProject.users.patient.PatientRepository;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorker;
 import com.team11.PharmacyProject.users.pharmacyWorker.PharmacyWorkerRepository;
 import com.team11.PharmacyProject.users.user.MyUser;
+import com.team11.PharmacyProject.users.user.UserRepository;
 import com.team11.PharmacyProject.workDay.WorkDay;
 import com.team11.PharmacyProject.workplace.Workplace;
 import org.modelmapper.ModelMapper;
@@ -55,6 +58,9 @@ public class PharmacyServiceImpl implements PharmacyService {
 
     @Autowired
     PriceListRepository priceListRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     MedicineService medicineService;
@@ -295,15 +301,15 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
-    public boolean subscribe(long pharmacyId, long patientId) {
+    public boolean subscribe(long pharmacyId, long patientId) throws CustomException {
         Optional<Pharmacy> pharmacy = pharmacyRepository.findPharmacyByIdFetchSubscribed(pharmacyId);
         if (pharmacy.isEmpty())
-            return false;
+            throw new CustomException("Invalid pharmacy");
         Optional<Patient> patient = patientRepository.findById(patientId);
         if (patient.isEmpty())
-            return false;
+            throw new CustomException("Invalid patient");
         if (pharmacy.get().getSubscribers().stream().anyMatch(p -> p.getId() == patientId))
-            return false;
+            throw new CustomException("Already subscribed");
         pharmacy.get().getSubscribers().add(patient.get());
         pharmacyRepository.save(pharmacy.get());
         return true;
@@ -373,22 +379,30 @@ public class PharmacyServiceImpl implements PharmacyService {
         return pharmacyRepository.searchPharmaciesByNameOrCity(searchValue);
     }
 
-    public boolean insertPharmacy(Pharmacy pharmacy) {
-        if (pharmacy != null) {
-            pharmacyRepository.save(pharmacy);
-            return true;
-        } else {
-            return false;
+    public void insertPharmacy(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> pharmacyAdmins) throws CustomException {
+        if (pharmacy == null) {
+            throw new CustomException("Null pharmacy?");
         }
+        pharmacy.getAdmins().clear();
+        for (var pwi: pharmacyAdmins) {
+            var admin = userRepository.findFirstById(pwi.getId());
+            if (admin == null) {
+                throw new CustomException("Admin not found");
+            }
+            pharmacy.getAdmins().add(admin);
+        }
+        PriceList aa = new PriceList();
+        aa.setMedicineItems(new ArrayList<MedicineItem>());
+        aa.setPharmacy(pharmacy);
+        pharmacy.setPriceList(aa);
+        pharmacy.setConsultationPrice(500d);
+        pharmacyRepository.save(pharmacy);
     }
 
-    public boolean delete(long id) {
-        if (pharmacyRepository.findById(id).isPresent()) {
-            pharmacyRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+    public void delete(long id) throws CustomException {
+        if (pharmacyRepository.findById(id).isEmpty())
+            throw new CustomException("Pharmacy not found");
+        pharmacyRepository.deleteById(id);
     }
 
     public void update(long id, Pharmacy pharmacy) {
@@ -407,7 +421,7 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     public List<Pharmacy> getAll() {
-        return pharmacyRepository.findAll();
+        return pharmacyRepository.findPharmacyFetchAdmins();
     }
 
     @Override
@@ -597,28 +611,27 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     @Override
-    public List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order) {
-        // TODO provera alergena, podataka i tako to
+    public List<PharmacyERecipeDTO> getAllWithMedicineInStock(ERecipeDTO eRecipeDTO, String sortBy, String order) throws CustomException {
         if (eRecipeDTO.getState() == ERecipeState.REJECTED) {
-            throw new RuntimeException("This prescription in not valid");
+            throw new CustomException("This prescription in not valid");
         }
         if (eRecipeDTO.getState() == ERecipeState.PROCESSED) {
-            throw new RuntimeException("This prescription has already been processes");
+            throw new CustomException("This prescription has already been processes");
         }
         for (var er : eRecipeDTO.geteRecipeItems()) {
             if (er.getQuantity() <= 0) {
-                throw new RuntimeException("Quantity must be grater than 0");
+                throw new CustomException("Quantity must be grater than 0");
             }
         }
         if (eRecipeDTO.getCode() == null) {
-            throw new RuntimeException("Prescription code can not be null");
+            throw new CustomException("Prescription code can not be null");
         }
         if (eRecipeDTO.getPrescriptionDate() > System.currentTimeMillis()) {
-            throw new RuntimeException("Prescription date is not valid");
+            throw new CustomException("Prescription date is not valid");
         }
         Optional<Patient> pat = patientRepository.findById(eRecipeDTO.getPatientId());
         if (pat.isEmpty()) {
-            throw new RuntimeException("Invalid patient's ID");
+            throw new CustomException("Invalid patient's ID");
         }
         // get pharmacies with required medicine
         List<Pharmacy> pharmaciesWithMedInStock = pharmacyRepository.findPharmacyWithMedOnStock(eRecipeDTO.geteRecipeItems());

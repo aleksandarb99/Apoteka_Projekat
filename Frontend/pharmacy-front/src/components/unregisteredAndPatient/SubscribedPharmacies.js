@@ -3,7 +3,6 @@ import { XCircle } from "react-bootstrap-icons";
 
 import { Row, Container, Table } from "react-bootstrap";
 
-import axios from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
@@ -23,10 +22,10 @@ function SubscribedPharmacies() {
 
   const loadPharmacies = () => {
     async function fetchPharmacies() {
-      const request = await axios.get(
+      const request = await api.get(
         "/api/pharmacy/subscribed/patient/" + getIdFromToken()
-      );
-      setPharmacies(request.data);
+      ).catch(() => { });;
+      setPharmacies(!!request ? request.data : []);
 
       return request;
     }

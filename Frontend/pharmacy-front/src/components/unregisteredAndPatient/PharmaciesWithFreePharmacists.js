@@ -14,13 +14,14 @@ import {
 } from "react-bootstrap";
 import { StarFill } from "react-bootstrap-icons";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 import { getIdFromToken } from "../../app/jwtTokenUtils";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/consultation.css";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function PharmaciesWithFreePharmacists() {
   const [startDate, setStartDate] = useState(new Date());
@@ -38,16 +39,16 @@ function PharmaciesWithFreePharmacists() {
   const [reload, setReload] = useState(false);
   const [sorter2, setSorter2] = useState("none");
   const [reload2, setReload2] = useState(false);
-  const [points, setPoints] = useState({});
+  const [points, setPoints] = useState(0);
   const [category, setCategory] = useState({});
   const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchPoints() {
-      const request = await axios.get(
+      const request = await api.get(
         "/api/patients/" + getIdFromToken() + "/points"
-      );
-      setPoints(request.data);
+      ).catch(() => { });;
+      setPoints(!!request ? request.data : 0);
       return request;
     }
     fetchPoints();
@@ -55,8 +56,8 @@ function PharmaciesWithFreePharmacists() {
 
   useEffect(() => {
     async function fetchCategory() {
-      const request = await axios.get("/api/ranking-category/points/" + points);
-      setCategory(request.data);
+      const request = await api.get("/api/ranking-category/points/" + points).catch(() => { });;
+      setCategory(!!request ? request.data : {});
 
       return request;
     }
@@ -69,9 +70,9 @@ function PharmaciesWithFreePharmacists() {
     async function fetchPharmacies() {
       let search_params = new URLSearchParams();
       search_params.append("date", requestedDate);
-      const request = await axios.get("/api/pharmacy/all/free-pharmacists/", {
+      const request = await api.get("/api/pharmacy/all/free-pharmacists/", {
         params: search_params,
-      });
+      }).catch(() => { });
       if (request.status == 404) {
         addToast(request.data, { appearance: "error" });
         setPharmacies([]);
@@ -99,10 +100,10 @@ function PharmaciesWithFreePharmacists() {
       let search_params = new URLSearchParams();
       search_params.append("date", requestedDate);
       search_params.append("id", chosenPharmacy.id);
-      const request = await axios.get(
+      const request = await api.get(
         "/api/workers/all/free-pharmacists/pharmacy",
         { params: search_params }
-      );
+      ).catch(() => { });;
       if (request.status == 404) {
         addToast(request.data, { appearance: "error" });
         setWorkers([]);
@@ -152,12 +153,10 @@ function PharmaciesWithFreePharmacists() {
   };
 
   const createReservation = () => {
-    axios
+    api
       .post(
-        `/api/appointment/reserve-consultation/pharmacy/${
-          chosenPharmacy.id
-        }/pharmacist/${
-          selectedWorker.id
+        `/api/appointment/reserve-consultation/pharmacy/${chosenPharmacy.id
+        }/pharmacist/${selectedWorker.id
         }/patient/${getIdFromToken()}/date/${requestedDate}/`
       )
       .then((res) => {
@@ -167,7 +166,7 @@ function PharmaciesWithFreePharmacists() {
         setReloadPharmacies(!reloadPharmacies);
       })
       .catch((err) => {
-        addToast(err.response.data, { appearance: "error" });
+        addToast(getErrorMessage(err), { appearance: "error" });
         setReloadPharmacies(!reloadPharmacies);
       });
     setChosenPharmacy(null);
@@ -221,7 +220,7 @@ function PharmaciesWithFreePharmacists() {
 
     search_params.append("date", requestedDate);
 
-    axios
+    api
       .get("/api/pharmacy/all/free-pharmacists/", {
         params: search_params,
       })
@@ -249,7 +248,7 @@ function PharmaciesWithFreePharmacists() {
 
     search_params.append("date", requestedDate);
     search_params.append("id", chosenPharmacy.id);
-    axios
+    api
       .get("/api/workers/all/free-pharmacists/pharmacy", {
         params: search_params,
       })
@@ -513,7 +512,7 @@ function PharmaciesWithFreePharmacists() {
             style={{
               display:
                 Object.keys(selectedWorker).length === 0 ||
-                chosenPharmacy == null
+                  chosenPharmacy == null
                   ? "none"
                   : "inline-block",
               margin: "auto",

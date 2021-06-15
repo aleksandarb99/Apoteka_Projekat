@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Tab, Row, Col, Button, Table, Modal, Alert } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import "../../styling/pharmacy.css";
 
@@ -10,6 +10,7 @@ import AddingMedicineModal from "./AddingMedicineModal";
 import ChangePriceModal from "./ChangePriceModal";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function DisplayMedicine({
   idOfPharmacy,
@@ -27,13 +28,13 @@ function DisplayMedicine({
   const [removeModalShow, setRemoveModalShow] = useState(false);
 
   async function fetchPriceList() {
-    const request = await axios
+    const request = await api
       .get(`/api/pricelist/${priceListId}`)
       .then((res) => {
         setMedicineItems(res.data.medicineItems);
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -53,7 +54,7 @@ function DisplayMedicine({
   };
 
   async function addMedicine(selectedMedicineId, price) {
-    const request = await axios
+    const request = await api
       .post(
         `/api/pricelist/${priceListId}/addmedicine/${selectedMedicineId}/${price}`
       )
@@ -65,7 +66,7 @@ function DisplayMedicine({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -73,7 +74,7 @@ function DisplayMedicine({
   }
 
   async function removeMedicine() {
-    const request = await axios
+    const request = await api
       .delete(`/api/pricelist/${priceListId}/removemedicine/${selectedRowId}`)
       .then((res) => {
         fetchPriceList();
@@ -83,7 +84,7 @@ function DisplayMedicine({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -91,7 +92,7 @@ function DisplayMedicine({
   }
 
   async function changePrice(price) {
-    const request = await axios
+    const request = await api
       .post(
         `/api/pricelist/${priceListId}/changeprice/${selectedRowId}/${price}`
       )
@@ -102,7 +103,7 @@ function DisplayMedicine({
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -155,18 +156,17 @@ function DisplayMedicine({
                 medicineItems?.map((item, index) => (
                   <tr
                     onClick={() => {
-                      handleClick(item.id, item.price);
+                      handleClick(item.id, item.price2);
                     }}
-                    className={`${
-                      selectedRowId == item.id ? "selectedRow" : "pointer"
-                    } `}
+                    className={`${selectedRowId == item.id ? "selectedRow" : "pointer"
+                      } `}
                   >
                     <td>{index + 1}</td>
                     <td>{item.medicine.code}</td>
                     <td>{item.medicine.name}</td>
                     <td>{item.medicine.content}</td>
                     <td>{item.medicine.avgGrade}</td>
-                    <td>{item.price}$</td>
+                    <td>{item.price2}$</td>
                     <td>{item.amount}</td>
                   </tr>
                 ))}

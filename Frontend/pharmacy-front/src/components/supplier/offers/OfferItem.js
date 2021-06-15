@@ -16,8 +16,8 @@ const OfferItem = (props) => {
 
   useEffect(() => {
     async function fetchOrder() {
-      const res = await api.get(`/api/orders/${props.offer.orderId}`);
-      setOrder(res.data);
+      const res = await api.get(`/api/orders/${props.offer.orderId}`).catch(() => { });
+      setOrder(!!res ? res.data : {});
     }
     fetchOrder();
   }, []);

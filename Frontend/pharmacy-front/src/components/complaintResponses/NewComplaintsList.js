@@ -14,7 +14,7 @@ const NewComplaintsList = () => {
     async function fetchComplaints() {
       api.get(`/api/complaints/new`).then((res) => {
         setComplaints(res.data);
-      });
+      }).catch(() => { });
     }
     fetchComplaints();
   };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import Tab from "react-bootstrap/Tab";
 import Row from "react-bootstrap/Row";
@@ -16,6 +16,7 @@ import { fromLonLat, toLonLat } from "ol/proj";
 
 import "../../styling/pharmacyHomePage.css";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
   const { addToast } = useToasts();
@@ -64,7 +65,7 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
       },
     };
 
-    axios
+    api
       .put(`/api/pharmacy/${pharmacyDetails.id}`, dto)
       .then((res) => {
         changedPharmacy();
@@ -73,7 +74,7 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -100,7 +101,7 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
       setValid(true);
     }
     // Try finding city and country
-    axios
+    api
       .get(
         `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
       )
@@ -114,7 +115,7 @@ function EditBasicInfo({ pharmacyDetails, changedPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });

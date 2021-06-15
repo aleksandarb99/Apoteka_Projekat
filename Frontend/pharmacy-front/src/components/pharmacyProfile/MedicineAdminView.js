@@ -13,13 +13,14 @@ import {
   Pagination,
 } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import { StarFill } from "react-bootstrap-icons";
 
 import "../../styling/pharmaciesAndMedicines.css";
 
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function MedicinesView({ priceListId, pharmacyId }) {
   const { addToast } = useToasts();
@@ -32,13 +33,13 @@ function MedicinesView({ priceListId, pharmacyId }) {
   useEffect(() => {
     if (priceListId != undefined) {
       async function fetchPriceList() {
-        const request = await axios
+        const request = await api
           .get(`/api/pricelist/${priceListId}`)
           .then((res) => {
             setMedicines(res.data.medicineItems);
           })
           .catch((err) => {
-            addToast(err.response.data, {
+            addToast(getErrorMessage(err), {
               appearance: "error",
             });
           });
@@ -86,7 +87,7 @@ function MedicinesView({ priceListId, pharmacyId }) {
                 <Nav.Link
                   as={Link}
                   className="my__nav__link__card"
-                  to={`/medicine/${medicine?.medicine?.id}/pharmacy/${pharmacyId}/price/${medicine?.price}`}
+                  to={`/medicine/${medicine?.medicine?.id}/pharmacy/${pharmacyId}/price/${medicine?.price2}`}
                 >
                   <Card className="my__card" style={{ width: "18rem" }}>
                     <Card.Body>
@@ -96,7 +97,7 @@ function MedicinesView({ priceListId, pharmacyId }) {
                     </Card.Body>
                     <ListGroup className="list-group-flush">
                       <ListGroupItem className="my__flex">
-                        {medicine?.price}$
+                        {medicine?.price2}$
                       </ListGroupItem>
                       <ListGroupItem className="my__flex">
                         {medicines &&

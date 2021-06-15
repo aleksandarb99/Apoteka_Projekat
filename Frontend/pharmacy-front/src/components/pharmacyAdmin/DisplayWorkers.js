@@ -4,13 +4,14 @@ import { Search, Reply } from "react-bootstrap-icons";
 
 import { Tab, Row, Col, Button, Table, Form } from "react-bootstrap";
 
-import axios from "../../app/api";
+import api from "../../app/api";
 
 import "../../styling/pharmaciesAndMedicines.css";
 import "../../styling/pharmacy.css";
 import AddingWorkerModal from "./AddingWorkerModal";
 import DetailsOfWorkerModal from "./DetailsOfWorkerModal";
 import { useToasts } from "react-toast-notifications";
+import { getErrorMessage } from "../../app/errorHandler";
 
 function DisplayWorkers({ idOfPharmacy }) {
   const { addToast } = useToasts();
@@ -33,15 +34,15 @@ function DisplayWorkers({ idOfPharmacy }) {
   const [filterPharmacyName, setFilterPharmacyName] = useState("");
 
   async function fetchNames() {
-    const request = await axios.get(`/api/workplace/pharmacies/all/`);
-    setPharamcyNameMap(request.data);
+    const request = await api.get(`/api/workplace/pharmacies/all/`).catch(() => { });
+    setPharamcyNameMap(!!request ? request.data : []);
     return request;
   }
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get("/api/pharmacy/");
-      setPharmacies(request.data);
+      const request = await api.get("/api/pharmacy/").catch(() => { });
+      setPharmacies(!!request ? request.data : []);
 
       return request;
     }
@@ -49,17 +50,17 @@ function DisplayWorkers({ idOfPharmacy }) {
   }, []);
 
   async function fetchWorkers() {
-    const request = await axios
+    const request = await api
       .get(`/api/workplace/bypharmacyid/${idOfPharmacy}`)
       .then((resp) => {
         setWorkers(resp.data);
-      });
+      }).catch(() => { });
 
     return request;
   }
 
   async function addWorker(id, dto) {
-    const request = await axios
+    const request = await api
       .post(`/api/workplace/addworker/bypharmacyid/${idOfPharmacy}/${id}`, dto)
       .then((res) => {
         fetchWorkers();
@@ -68,7 +69,7 @@ function DisplayWorkers({ idOfPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -77,7 +78,7 @@ function DisplayWorkers({ idOfPharmacy }) {
   }
 
   async function removeWorker() {
-    const request = await axios
+    const request = await api
       .delete(
         `/api/workplace/removeworker/bypharmacyid/${idOfPharmacy}/${selectedRowId}`
       )
@@ -88,7 +89,7 @@ function DisplayWorkers({ idOfPharmacy }) {
         });
       })
       .catch((err) => {
-        addToast(err.response.data, {
+        addToast(getErrorMessage(err), {
           appearance: "error",
         });
       });
@@ -128,13 +129,13 @@ function DisplayWorkers({ idOfPharmacy }) {
     if (fsearch.length === 0) {
       fetchWorkers();
     } else {
-      axios
+      api
         .get(`/api/workplace/search/${idOfPharmacy}`, {
           params: { searchValue: fsearch },
         })
         .then((resp) => {
           setWorkers(resp.data);
-        });
+        }).catch(() => { });
     }
   };
 
@@ -277,9 +278,8 @@ function DisplayWorkers({ idOfPharmacy }) {
                     onClick={() => {
                       handleClick(item.id, item.worker.id);
                     }}
-                    className={`${
-                      selectedRowId == item.id ? "selectedRow" : "pointer"
-                    } `}
+                    className={`${selectedRowId == item.id ? "selectedRow" : "pointer"
+                      } `}
                   >
                     <td>{index + 1}</td>
                     <td>{item?.worker?.roleName}</td>

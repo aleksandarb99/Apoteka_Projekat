@@ -13,7 +13,7 @@ import javax.persistence.QueryHint;
 @Repository
 public interface PriceListRepository extends JpaRepository<PriceList, Long> {
 
-    @Query("SELECT pl FROM PriceList pl JOIN FETCH pl.medicineItems mi JOIN FETCH mi.medicine m WHERE pl.id = (:id)")
+    @Query("SELECT pl FROM PriceList pl LEFT JOIN FETCH pl.medicineItems mi JOIN FETCH mi.medicine m WHERE pl.id = (:id)")
     PriceList findByIdAndFetchMedicineItems(@Param("id") Long id);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

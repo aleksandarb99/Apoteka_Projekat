@@ -1,11 +1,11 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Button, Container, Row, Table } from "react-bootstrap";
-import DeleteModal from "../utilComponents/modals/DeleteModal";
-import AddPharmacyModal from "./AddPharmacyModal";
-import EditPharmacyModal from "./EditPharmacyModal";
-import ErrorModal from "../utilComponents/modals/ErrorModal";
-import SuccessModal from "../utilComponents/modals/SuccessModal";
+import React, { useEffect, useState } from 'react'
+import { Button, Container, Row, Table } from 'react-bootstrap'
+import DeleteModal from '../utilComponents/modals/DeleteModal';
+import AddPharmacyModal from './AddPharmacyModal';
+import EditPharmacyModal from './EditPharmacyModal';
+import { useToasts } from 'react-toast-notifications';
+import { getErrorMessage } from '../../app/errorHandler';
+import api from '../../app/api';
 
 function PharmacyTable(props) {
   const [reload, setReload] = useState(false);
@@ -15,34 +15,32 @@ function PharmacyTable(props) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const { addToast } = useToasts();
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("/api/pharmacy/crud");
-      setPharmacies(response.data);
+      const response = await api.get("/api/pharmacy/crud").catch(() => { });
+      setPharmacies(!!response ? response.data : []);
     }
     fetchData();
   }, [reload]);
 
   const reloadTable = () => {
-    setReload(!reload);
+    setReload(!reload)
   };
 
   const deletePharmacy = () => {
-    axios
+    api
       .delete("/api/pharmacy/" + selected.id)
       .then(() => {
-        reloadTable();
-        setShowDeleteModal(false);
-        setShowSuccessModal(true);
+        reloadTable()
+        setShowDeleteModal(false)
+        addToast("Pharmacy deleted successfully.", { appearance: 'success' });
       })
-      .catch(() => {
-        setShowErrorModal(true);
-      });
-  };
+      .catch((err) => {
+        addToast(getErrorMessage(err), { appearance: 'error' })
+      })
+  }
 
   const updateSelected = (selectedPharmacy) => {
     setSelected(selectedPharmacy);
@@ -85,36 +83,11 @@ function PharmacyTable(props) {
           ))}
         </tbody>
       </Table>
-
-      <AddPharmacyModal
-        show={showAddModal}
-        onHide={() => setShowAddModal(false)}
-        onSuccess={reloadTable}
-      />
-      <EditPharmacyModal
-        show={showEditModal}
-        pharmacy={selected}
-        onHide={() => setShowEditModal(false)}
-        onSuccess={reloadTable}
-      />
-      <DeleteModal
-        title={"Remove " + selected.name}
-        show={showDeleteModal}
-        onHide={() => setShowDeleteModal(false)}
-        onDelete={deletePharmacy}
-      />
-      <ErrorModal
-        show={showErrorModal}
-        onHide={() => setShowErrorModal(false)}
-        message="Something went wrong."
-      ></ErrorModal>
-      <SuccessModal
-        show={showSuccessModal}
-        onHide={() => setShowSuccessModal(false)}
-        message="Pharmacy deleted successfully."
-      ></SuccessModal>
-    </Container>
-  );
+      <AddPharmacyModal show={showAddModal} onHide={() => setShowAddModal(false)} onSuccess={reloadTable} />
+      <EditPharmacyModal show={showEditModal} pharmacy={selected} onHide={() => setShowEditModal(false)} onSuccess={reloadTable} />
+      <DeleteModal title={"Remove " + selected.name} show={showDeleteModal} onHide={() => setShowDeleteModal(false)} onDelete={deletePharmacy} />
+    </Container >
+  )
 }
 
 export default PharmacyTable;

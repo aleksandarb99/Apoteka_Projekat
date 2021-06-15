@@ -1,9 +1,11 @@
 package com.team11.PharmacyProject.dto.pharmacy;
 
 import com.team11.PharmacyProject.address.Address;
+import com.team11.PharmacyProject.dto.user.PharmacyWorkerInfoDTO;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class PharmacyCrudDTO {
     private long id;
@@ -18,6 +20,8 @@ public class PharmacyCrudDTO {
 
     @NotNull
     private Address address;
+
+    private List<PharmacyWorkerInfoDTO> admins;
 
     public PharmacyCrudDTO() {
     }
@@ -69,5 +73,13 @@ public class PharmacyCrudDTO {
 
     public void setPointsForAppointment(int pointsForAppointment) {
         this.pointsForAppointment = pointsForAppointment;
+    }
+
+    public List<PharmacyWorkerInfoDTO> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(List<PharmacyWorkerInfoDTO> admins) {
+        this.admins = admins;
     }
 }

@@ -13,8 +13,8 @@ const AddEditStockItemModal = (props) => {
 
   useEffect(() => {
     async function fetchMedicine() {
-      const response = await api.get(`/api/medicine/`);
-      setOptions(response.data);
+      const response = await api.get(`/api/medicine/`).catch(() => { });
+      setOptions(!!response ? response.data : []);
     }
     fetchMedicine();
   }, []);

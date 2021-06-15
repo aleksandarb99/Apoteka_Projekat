@@ -16,4 +16,9 @@ public class MedicineFormServiceImpl implements MedicineFormService {
     public List<MedicineForm> getAllForms() {
         return medicineFormRepository.findAll();
     }
+
+    @Override
+    public void addNew(MedicineForm mf) {
+        medicineFormRepository.save(mf);
+    }
 }

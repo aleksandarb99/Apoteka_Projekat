@@ -80,7 +80,7 @@ public class ERecipeServiceImpl implements ERecipeService {
             ERecipeDTO eRecipeDTO = objectMapper.readValue(qrCodeText, ERecipeDTO.class);
 
             if (patientId != eRecipeDTO.getPatientId()) {
-                throw new RuntimeException("Invalid patient Id");
+                throw new CustomException("Invalid patient Id");
             }
 
             // Set state depending on eRecipeCode
@@ -99,7 +99,7 @@ public class ERecipeServiceImpl implements ERecipeService {
 
             Set<ConstraintViolation<ERecipeDTO>> violations = validator.validate(eRecipeDTO);
             if (!violations.isEmpty()) {
-                throw new RuntimeException("Invalid QR code");
+                throw new CustomException("Invalid QR code");
             }
 
             return eRecipeDTO;

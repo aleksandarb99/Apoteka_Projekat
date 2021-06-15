@@ -22,7 +22,7 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
     @Query("SELECT p FROM Pharmacy p JOIN FETCH p.priceList pl JOIN FETCH pl.medicineItems mi JOIN FETCH mi.medicine m WHERE p.id = (:pharmacyId) and m.id = (:medicineId)")
     Pharmacy findPharmacyByPharmacyAndMedicineId(@Param("pharmacyId") Long pharmacyId, @Param("medicineId") Long medicineId);
 
-    @Query("SELECT p FROM Pharmacy p JOIN FETCH p.priceList pl WHERE p.id = (:id)")
+    @Query("SELECT p FROM Pharmacy p LEFT JOIN FETCH p.priceList pl WHERE p.id = (:id)")
     Pharmacy getPharmacyByIdAndPriceList(@Param("id") Long id);
 
     @Query("SELECT p FROM Pharmacy p JOIN FETCH p.workplaces wp WHERE p.id = (:id)")
@@ -77,4 +77,11 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long>, Pharm
 
     @Query("SELECT p FROM Pharmacy p JOIN FETCH p.priceList pl WHERE p.id = ?1")
     Pharmacy findPharmacyFetchPriceList(Long pharmacyId);
+
+    @Query("SELECT DISTINCT p FROM Pharmacy p LEFT JOIN FETCH p.admins a")
+    List<Pharmacy> findPharmacyFetchAdmins();
+
+    @Transactional
+    @Query(nativeQuery = true, value = "INSERT INTO pharmacy_admins VALUES (?1, ?2)")
+    void addAdmin(long pharmacyId, long adminId);
 }
