@@ -39,9 +39,9 @@ function PharmaciesView() {
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get("/api/pharmacy/");
-      setPharmacies(request.data);
-      setBackup(request.data);
+      const request = await axios.get("/api/pharmacy/").catch(() => { });;
+      setPharmacies(!!request ? request.data : []);
+      setBackup(!!request ? request.data : []);
 
       return request;
     }

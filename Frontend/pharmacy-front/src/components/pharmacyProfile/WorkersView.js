@@ -26,8 +26,8 @@ function WorkersView({ pharmacyId }) {
       async function fetchWorkers() {
         const request = await axios.get(
           `/api/workplace/bypharmacyid/${pharmacyId}`
-        );
-        setWorkers(request.data);
+        ).catch(() => { });
+        setWorkers(!!request ? request.data : []);
 
         return request;
       }

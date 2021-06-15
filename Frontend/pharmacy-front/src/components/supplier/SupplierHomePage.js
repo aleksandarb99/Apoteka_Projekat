@@ -16,7 +16,7 @@ const SupplierHomePage = () => {
         api.get("http://localhost:8080/api/users/" + id)
             .then((res) => {
                 setShowModalPWChange(!res.data.passwordChanged)
-            })
+            }).catch(() => { })
     }, [])
 
     return (

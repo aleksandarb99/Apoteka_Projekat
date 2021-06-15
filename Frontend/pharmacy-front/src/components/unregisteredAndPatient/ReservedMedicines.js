@@ -22,8 +22,8 @@ function ReservedMedicines() {
       const request = await axios.get(
         "/api/medicine-reservation/reserved-medicines/patient/" +
         getIdFromToken()
-      );
-      setReservations(request.data);
+      ).catch(() => { });;
+      setReservations(!!request ? request.data : []);
 
       return request;
     }

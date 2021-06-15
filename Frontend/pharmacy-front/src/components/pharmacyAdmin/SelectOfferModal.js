@@ -16,8 +16,8 @@ function SelectOfferModal(props) {
   async function fetchOffer() {
     const request = await axios.get(
       `/api/suppliers/offers/byorderid/${props.orderId}`
-    );
-    setOffers(request.data);
+    ).catch(() => { });
+    setOffers(!!request ? request.data : []);
     return request;
   }
 
@@ -59,9 +59,8 @@ function SelectOfferModal(props) {
                   onClick={() => {
                     handleClick(item.id);
                   }}
-                  className={`${
-                    selectedRowId == item.id ? "selectedRow" : "pointer"
-                  }`}
+                  className={`${selectedRowId == item.id ? "selectedRow" : "pointer"
+                    }`}
                 >
                   <td>{index + 1}</td>
                   <td>{item.price}</td>

@@ -175,6 +175,7 @@ public class PharmacyController {
     }
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> insertPharmacy(@Valid @RequestBody PharmacyCrudDTO pharmacyCrudDTO) {
         Pharmacy pharmacy = convertCrudDTOToEntity(pharmacyCrudDTO);
         try {
@@ -186,6 +187,7 @@ public class PharmacyController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> deletePharmacy(@PathVariable("id") long id) {
         try {
             pharmacyService.delete(id);
@@ -228,6 +230,7 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    // Svi mogu pristupiti
     public ResponseEntity<List<PharmacyDTO>> getAllPharmacies() {
         List<PharmacyDTO> list = new ArrayList<>();
         for (Pharmacy p : pharmacyService.getAll()) {
@@ -237,6 +240,7 @@ public class PharmacyController {
     }
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    // Svi mogu pristupiti
     public ResponseEntity<List<PharmacyAllDTO>> searchPharmaciesByNameOrCity
             (@Valid @RequestParam(value = "searchValue", required = false) String searchValue) throws Exception {
 

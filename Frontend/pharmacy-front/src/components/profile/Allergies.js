@@ -20,8 +20,8 @@ function Allergies() {
     async function fetchData() {
       const response = await axios.get(
         "/api/patients/allergies/all/" + getIdFromToken()
-      );
-      setAllergies(response.data);
+      ).catch(() => { });
+      setAllergies(!!response ? response.data : []);
       if (response.data == "") setAllergies(null);
     }
     fetchData();
@@ -29,8 +29,8 @@ function Allergies() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("/api/medicine/");
-      setMedicines(response.data);
+      const response = await axios.get("/api/medicine/").catch(() => { });
+      setMedicines(!!response ? response.data : []);
       if (response.data == "") setMedicines(null);
     }
     fetchData();

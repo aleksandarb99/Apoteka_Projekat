@@ -28,7 +28,7 @@ function MedicineTable() {
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get("/api/medicine/crud").catch(() => { });
-      setMedicine(response.data);
+      setMedicine(!!response ? response.data : []);
     }
     fetchData();
   }, [reload]);

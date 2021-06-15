@@ -74,8 +74,8 @@ function DisplayPurchaseOrders({
     const request = await axios.get(
       `/api/orders/bypharmacyid/${idOfPharmacy}`,
       { params: { filter: filterValue } }
-    );
-    setOrders(request.data);
+    ).catch(() => { });
+    setOrders(!!request ? request.data : []);
     return request;
   }
 

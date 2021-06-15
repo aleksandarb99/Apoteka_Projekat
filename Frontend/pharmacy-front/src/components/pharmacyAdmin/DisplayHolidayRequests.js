@@ -20,8 +20,8 @@ function DisplayHolidayRequests({ idOfPharmacy }) {
   async function fetchRequests() {
     const request = await axios.get(
       `/api/vacation/getunresolvedrequestsbypharmacyid/${idOfPharmacy}`
-    );
-    setRequests(request.data);
+    ).catch(() => { });
+    setRequests(!!request ? request.data : []);
 
     return request;
   }

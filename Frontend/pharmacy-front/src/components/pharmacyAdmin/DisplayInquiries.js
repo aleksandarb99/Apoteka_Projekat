@@ -16,8 +16,8 @@ function DisplayInquiries({ idOfPharmacy, refreshInq }) {
   async function fetchInquiries() {
     const request = await axios.get(
       `/api/inquiry/bypharmacyid/${idOfPharmacy}`
-    );
-    setInquiries(request.data);
+    ).catch(() => { });
+    setInquiries(!!request ? request.data : []);
     return request;
   }
 

@@ -33,8 +33,8 @@ function ConsultationsInsight() {
           {
             params: search_params,
           }
-        );
-        setConsultations(request.data);
+        ).catch(() => { });;
+        setConsultations(!!request ? request.data : []);
 
         return request;
       } else {
@@ -46,8 +46,8 @@ function ConsultationsInsight() {
           {
             params: search_params,
           }
-        );
-        setConsultations(request.data);
+        ).catch(() => { });
+        setConsultations(!!request ? request.data : []);
 
         return request;
       }

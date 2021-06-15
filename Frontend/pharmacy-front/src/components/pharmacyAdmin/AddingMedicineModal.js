@@ -15,8 +15,8 @@ function AddingMedicineModal(props) {
   async function fetchMedicine() {
     const request = await axios.get(
       `/api/medicine/notexistingmedicinebypharmacyid/${props.idOfPharmacy}`
-    );
-    setMedicineList(request.data);
+    ).catch(() => { });
+    setMedicineList(!!request ? request.data : []);
     return request;
   }
 
@@ -60,9 +60,8 @@ function AddingMedicineModal(props) {
                   onClick={() => {
                     handleClick(item.id);
                   }}
-                  className={`${
-                    selectedRowId == item.id ? "selectedRow" : "pointer"
-                  }`}
+                  className={`${selectedRowId == item.id ? "selectedRow" : "pointer"
+                    }`}
                 >
                   <td>{index + 1}</td>
                   <td>{item.code}</td>

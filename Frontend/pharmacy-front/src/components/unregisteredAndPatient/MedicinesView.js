@@ -28,8 +28,8 @@ function MedicinesView() {
 
   useEffect(() => {
     async function fetchMedicines() {
-      const request = await axios.get("/api/medicine/");
-      setMedicines(request.data);
+      const request = await axios.get("/api/medicine/").catch(() => { });;
+      setMedicines(!!request ? request.data : []);
 
       return request;
     }
@@ -38,8 +38,8 @@ function MedicinesView() {
 
   useEffect(() => {
     async function fetchMedicines() {
-      const request = await axios.get(`/api/medicine?search=${searchParams}`);
-      setMedicines(request.data);
+      const request = await axios.get(`/api/medicine?search=${searchParams}`).catch(() => { });;
+      setMedicines(!!request ? request.data : []);
 
       return request;
     }

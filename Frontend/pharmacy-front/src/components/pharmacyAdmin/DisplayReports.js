@@ -39,24 +39,24 @@ function DisplayReports({ pharmacyDetails }) {
   async function fetchDataOfAppointmentsForReport() {
     const request = await axios.get(
       `/api/appointment/report/${pharmacyDetails?.id}/${selectedPeriod}`
-    );
-    setAppointmentsData(request.data);
+    ).catch(() => { });
+    setAppointmentsData(!!request ? request.data : null);
     return request;
   }
 
   async function fetchDataForDrugConsumptionForReport() {
     const request = await axios.get(
       `/api/medicine-reservation/report/${pharmacyDetails?.id}/${selectedPeriod}`
-    );
-    setDrugConsumptionData(request.data);
+    ).catch(() => { });
+    setDrugConsumptionData(!!request ? request.data : null);
     return request;
   }
 
   async function fetchProfitReport() {
     const request = await axios.get(
       `/api/pharmacy/report/${pharmacyDetails?.id}/${selectedPeriod}/${duration}`
-    );
-    setProfitData(request.data);
+    ).catch(() => { });
+    setProfitData(!!request ? request.data : null);
     return request;
   }
 

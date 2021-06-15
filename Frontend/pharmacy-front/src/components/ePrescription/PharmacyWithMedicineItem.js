@@ -7,26 +7,26 @@ const PharmacyWithMedicineItem = ({ pharmacy, doBuy }) => {
     const [points, setPoints] = useState(0)
     const [category, setCategory] = useState({})
 
-  useEffect(() => {
-    async function fetchPoints() {
-      const request = await api.get(
-        "/api/patients/" + getIdFromToken() + "/points"
-      );
-      setPoints(request.data);
-      return request;
-    }
-    fetchPoints();
-  }, []);
+    useEffect(() => {
+        async function fetchPoints() {
+            const request = await api.get(
+                "/api/patients/" + getIdFromToken() + "/points"
+            ).catch(() => { });
+            setPoints(request ? request.data : 0);
+            return request;
+        }
+        fetchPoints();
+    }, []);
 
-  useEffect(() => {
-    async function fetchCategory() {
-      const request = await api.get("/api/ranking-category/points/" + points);
-      setCategory(request.data);
+    useEffect(() => {
+        async function fetchCategory() {
+            const request = await api.get("/api/ranking-category/points/" + points).catch(() => { });
+            setCategory(request ? request.data : {});
 
-      return request;
-    }
-    fetchCategory();
-  }, [points]);
+            return request;
+        }
+        fetchCategory();
+    }, [points]);
 
     return (
         <Card style={{ marginBottom: '20px' }}>

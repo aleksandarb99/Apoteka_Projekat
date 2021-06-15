@@ -15,7 +15,6 @@ const ComplaintDetails = ({ complaint }) => {
     useEffect(() => {
         async function fetchResponse() {
             api.get(`/api/complaint-responses/${complaint.id}`).then((res) => {
-                console.log(res);
                 setResponse(res.data ? res.data.responseText : "");
             }).catch(() => { });
         }

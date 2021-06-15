@@ -32,8 +32,8 @@ function CheckupsInsight() {
           {
             params: search_params,
           }
-        );
-        setCheckups(request.data);
+        ).catch(() => { });
+        setCheckups(!!request ? request.data : []);
 
         return request;
       } else {
@@ -45,8 +45,8 @@ function CheckupsInsight() {
           {
             params: search_params,
           }
-        );
-        setCheckups(request.data);
+        ).catch(() => { });
+        setCheckups(!!request ? request.data : []);
 
         return request;
       }

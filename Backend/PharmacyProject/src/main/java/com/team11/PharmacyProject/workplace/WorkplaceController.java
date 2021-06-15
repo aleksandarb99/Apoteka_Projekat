@@ -111,7 +111,7 @@ public class WorkplaceController {
     }
 
     @GetMapping(value = "/pharmacies/all/", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('PHARMACY_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('PHARMACY_ADMIN', 'PATIENT')")
     public ResponseEntity<Map<Long, List<String>>> getAllPharmacyNames() {
         Map<Long, List<String>> pharmacies = workplaceServiseImpl.getAllPharmacyNames();
 

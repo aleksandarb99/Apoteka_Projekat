@@ -26,8 +26,8 @@ function AddAppointment({ idOfPharmacy }) {
       async function fetchDermatologists() {
         const request = await axios.get(
           `/api/workplace/dermatologists/bypharmacyid/${idOfPharmacy}`
-        );
-        setDermatologists(request.data);
+        ).catch(() => { });
+        setDermatologists(!!request ? request.data : []);
         return request;
       }
       fetchDermatologists();

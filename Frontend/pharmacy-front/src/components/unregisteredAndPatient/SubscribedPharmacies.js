@@ -25,8 +25,8 @@ function SubscribedPharmacies() {
     async function fetchPharmacies() {
       const request = await axios.get(
         "/api/pharmacy/subscribed/patient/" + getIdFromToken()
-      );
-      setPharmacies(request.data);
+      ).catch(() => { });;
+      setPharmacies(!!request ? request.data : []);
 
       return request;
     }

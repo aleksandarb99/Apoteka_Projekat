@@ -84,7 +84,7 @@ function PharmacyAdminHomePage() {
         setShowModalPWChange(false);
         setLoadingPWChanged(false);
       }
-    });
+    }).catch(() => { });
   }, []);
 
   return (

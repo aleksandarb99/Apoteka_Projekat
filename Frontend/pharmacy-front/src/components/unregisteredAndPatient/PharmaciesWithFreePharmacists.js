@@ -39,7 +39,7 @@ function PharmaciesWithFreePharmacists() {
   const [reload, setReload] = useState(false);
   const [sorter2, setSorter2] = useState("none");
   const [reload2, setReload2] = useState(false);
-  const [points, setPoints] = useState({});
+  const [points, setPoints] = useState(0);
   const [category, setCategory] = useState({});
   const { addToast } = useToasts();
 
@@ -47,8 +47,8 @@ function PharmaciesWithFreePharmacists() {
     async function fetchPoints() {
       const request = await axios.get(
         "/api/patients/" + getIdFromToken() + "/points"
-      );
-      setPoints(request.data);
+      ).catch(() => { });;
+      setPoints(!!request ? request.data : 0);
       return request;
     }
     fetchPoints();
@@ -56,8 +56,8 @@ function PharmaciesWithFreePharmacists() {
 
   useEffect(() => {
     async function fetchCategory() {
-      const request = await axios.get("/api/ranking-category/points/" + points);
-      setCategory(request.data);
+      const request = await axios.get("/api/ranking-category/points/" + points).catch(() => { });;
+      setCategory(!!request ? request.data : {});
 
       return request;
     }
@@ -72,7 +72,7 @@ function PharmaciesWithFreePharmacists() {
       search_params.append("date", requestedDate);
       const request = await axios.get("/api/pharmacy/all/free-pharmacists/", {
         params: search_params,
-      });
+      }).catch(() => { });
       if (request.status == 404) {
         addToast(request.data, { appearance: "error" });
         setPharmacies([]);
@@ -103,7 +103,7 @@ function PharmaciesWithFreePharmacists() {
       const request = await axios.get(
         "/api/workers/all/free-pharmacists/pharmacy",
         { params: search_params }
-      );
+      ).catch(() => { });;
       if (request.status == 404) {
         addToast(request.data, { appearance: "error" });
         setWorkers([]);

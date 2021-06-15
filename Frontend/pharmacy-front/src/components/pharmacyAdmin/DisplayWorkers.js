@@ -34,15 +34,15 @@ function DisplayWorkers({ idOfPharmacy }) {
   const [filterPharmacyName, setFilterPharmacyName] = useState("");
 
   async function fetchNames() {
-    const request = await axios.get(`/api/workplace/pharmacies/all/`);
-    setPharamcyNameMap(request.data);
+    const request = await axios.get(`/api/workplace/pharmacies/all/`).catch(() => { });
+    setPharamcyNameMap(!!request ? request.data : []);
     return request;
   }
 
   useEffect(() => {
     async function fetchPharmacies() {
-      const request = await axios.get("/api/pharmacy/");
-      setPharmacies(request.data);
+      const request = await axios.get("/api/pharmacy/").catch(() => { });
+      setPharmacies(!!request ? request.data : []);
 
       return request;
     }
@@ -54,7 +54,7 @@ function DisplayWorkers({ idOfPharmacy }) {
       .get(`/api/workplace/bypharmacyid/${idOfPharmacy}`)
       .then((resp) => {
         setWorkers(resp.data);
-      });
+      }).catch(() => { });
 
     return request;
   }
@@ -135,7 +135,7 @@ function DisplayWorkers({ idOfPharmacy }) {
         })
         .then((resp) => {
           setWorkers(resp.data);
-        });
+        }).catch(() => { });
     }
   };
 

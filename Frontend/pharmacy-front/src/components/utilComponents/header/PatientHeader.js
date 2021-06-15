@@ -14,8 +14,8 @@ const PatientHeader = () => {
     async function fetchPenalties() {
       const request = await axios.get(
         "/api/patients/" + getIdFromToken() + "/penalties"
-      );
-      setPenalties(request.data);
+      ).catch(() => { });;
+      setPenalties(!!request ? request.data : null);
 
       return request;
     }
