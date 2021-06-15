@@ -389,20 +389,19 @@ public class PharmacyServiceImpl implements PharmacyService {
     }
 
     public void addAdmins(Pharmacy pharmacy, List<PharmacyWorkerInfoDTO> pharmacyAdmins) throws CustomException {
-        List<MyUser> aaa = new ArrayList<>();
-        //int i = 0;
+        var p = pharmacyRepository.findPharmacyFetchAdmins().stream().filter(pharmacy1 -> pharmacy1.getId().equals(pharmacy.getId())).findFirst();
+        if (p.isEmpty()) {
+            throw new CustomException("AAA");
+        }
+        p.get().getAdmins().clear();
         for (var pwi: pharmacyAdmins) {
             var admin = userRepository.findFirstById(pwi.getId());
             if (admin == null) {
                 throw new CustomException("Admin not found");
             }
-            aaa.add(admin);
+            p.get().getAdmins().add(admin);
         }
-        var p = pharmacyRepository.findById(pharmacy.getId());
-        if (p.isEmpty()) {
-            throw new CustomException("AAA");
-        }
-        p.get().setAdmins(aaa);
+
         pharmacyRepository.save(p.get());
     }
 
