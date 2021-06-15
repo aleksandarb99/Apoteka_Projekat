@@ -7,7 +7,7 @@ import com.team11.PharmacyProject.medicineFeatures.medicineType.MedicineType;
 
 import java.util.List;
 
-public class MedicineCrudDTO {
+public class MedicineCrudEditDTO {
     private Long id;
     private String code;
     private String name;
@@ -17,9 +17,9 @@ public class MedicineCrudDTO {
     private double dailyIntake;
     private int points;
     private String additionalNotes;
-    private MedicineForm medicineForm;
-    private MedicineType medicineType;
-    private Manufacturer manufacturer;
+    private String medicineFormName;
+    private String medicineTypeName;
+    private String manufacturerName;
     private List<MedicineDTO> alternativeMedicine;
 
     public Long getId() {
@@ -78,14 +78,6 @@ public class MedicineCrudDTO {
         this.dailyIntake = dailyIntake;
     }
 
-    public String getAdditionalNotes() {
-        return additionalNotes;
-    }
-
-    public void setAdditionalNotes(String additionalNotes) {
-        this.additionalNotes = additionalNotes;
-    }
-
     public int getPoints() {
         return points;
     }
@@ -94,20 +86,36 @@ public class MedicineCrudDTO {
         this.points = points;
     }
 
-    public MedicineForm getMedicineForm() {
-        return medicineForm;
+    public String getAdditionalNotes() {
+        return additionalNotes;
     }
 
-    public void setMedicineForm(MedicineForm medicineForm) {
-        this.medicineForm = medicineForm;
+    public void setAdditionalNotes(String additionalNotes) {
+        this.additionalNotes = additionalNotes;
     }
 
-    public MedicineType getMedicineType() {
-        return medicineType;
+    public String getMedicineFormName() {
+        return medicineFormName;
     }
 
-    public void setMedicineType(MedicineType medicineType) {
-        this.medicineType = medicineType;
+    public void setMedicineFormName(String medicineFormName) {
+        this.medicineFormName = medicineFormName;
+    }
+
+    public String getMedicineTypeName() {
+        return medicineTypeName;
+    }
+
+    public void setMedicineTypeName(String medicineTypeName) {
+        this.medicineTypeName = medicineTypeName;
+    }
+
+    public String getManufacturerName() {
+        return manufacturerName;
+    }
+
+    public void setManufacturerName(String manufacturerName) {
+        this.manufacturerName = manufacturerName;
     }
 
     public List<MedicineDTO> getAlternativeMedicine() {
@@ -116,13 +124,5 @@ public class MedicineCrudDTO {
 
     public void setAlternativeMedicine(List<MedicineDTO> alternativeMedicine) {
         this.alternativeMedicine = alternativeMedicine;
-    }
-
-    public Manufacturer getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(Manufacturer manufacturer) {
-        this.manufacturer = manufacturer;
     }
 }

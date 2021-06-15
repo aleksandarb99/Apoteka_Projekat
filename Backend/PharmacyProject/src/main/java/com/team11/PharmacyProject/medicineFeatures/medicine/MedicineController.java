@@ -1,6 +1,7 @@
 package com.team11.PharmacyProject.medicineFeatures.medicine;
 
 import com.team11.PharmacyProject.dto.medicine.MedicineCrudDTO;
+import com.team11.PharmacyProject.dto.medicine.MedicineCrudEditDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineDTO;
 import com.team11.PharmacyProject.dto.medicine.MedicineInfoDTO;
 import com.team11.PharmacyProject.dto.rating.RatingGetEntitiesDTO;
@@ -93,8 +94,8 @@ public class MedicineController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updateMedicine(@PathVariable("id") long id, @RequestBody MedicineCrudDTO medicineCrudDto) {
-        Medicine medicine = convertToEntity(medicineCrudDto);
+    public ResponseEntity<String> updateMedicine(@PathVariable("id") long id, @RequestBody MedicineCrudEditDTO medicineCrudDto) {
+        Medicine medicine = mapper.map(medicineCrudDto, Medicine.class);
         if (medicineService.update(id, medicine)) {
             return new ResponseEntity<>("Medicine updated successfully", HttpStatus.OK);
         } else {

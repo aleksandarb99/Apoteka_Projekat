@@ -6,8 +6,11 @@ import com.team11.PharmacyProject.dto.erecipe.ERecipeDTO;
 import com.team11.PharmacyProject.eRecipe.ERecipeService;
 import com.team11.PharmacyProject.eRecipeItem.ERecipeItem;
 import com.team11.PharmacyProject.enums.ReservationState;
+import com.team11.PharmacyProject.medicineFeatures.manufacturer.ManufacturerRepository;
+import com.team11.PharmacyProject.medicineFeatures.medicineForm.MedicineFormRepository;
 import com.team11.PharmacyProject.medicineFeatures.medicineItem.MedicineItem;
 import com.team11.PharmacyProject.medicineFeatures.medicineReservation.MedicineReservation;
+import com.team11.PharmacyProject.medicineFeatures.medicineType.MedicineTypeRepository;
 import com.team11.PharmacyProject.pharmacy.Pharmacy;
 import com.team11.PharmacyProject.pharmacy.PharmacyService;
 import com.team11.PharmacyProject.priceList.PriceListService;
@@ -47,6 +50,15 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Autowired
     private ERecipeService eRecipeService;
+
+    @Autowired
+    private MedicineFormRepository medicineFormRepository;
+
+    @Autowired
+    private MedicineTypeRepository medicineTypeRepository;
+
+    @Autowired
+    private ManufacturerRepository manufacturerRepository;
 
     @Override
     public Medicine findOne(long id) {
@@ -128,6 +140,19 @@ public class MedicineServiceImpl implements MedicineService {
             m2.setDailyIntake(medicine.getDailyIntake());
             if (medicine.getAdditionalNotes() != null) {
                 m2.setAdditionalNotes(medicine.getAdditionalNotes());
+            }
+
+            if (medicine.getMedicineForm() != null) {
+                var mf = medicineFormRepository.findByName(medicine.getMedicineForm().getName());
+                mf.ifPresent(m2::setMedicineForm);
+            }
+            if (medicine.getMedicineType() != null) {
+                var mt = medicineTypeRepository.findByName(medicine.getMedicineType().getName());
+                mt.ifPresent(m2::setMedicineType);
+            }
+            if (medicine.getManufacturer() != null) {
+                var man = manufacturerRepository.findByName(medicine.getManufacturer().getName());
+                man.ifPresent(m2::setManufacturer);
             }
             medicineRepository.save(m2);
             return true;
